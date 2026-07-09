@@ -1742,3 +1742,126 @@ html { scroll-padding-top: calc(var(--nav-h) + 16px); }
   background: var(--bg-soft); padding: 12px 16px; border-radius: var(--r-md);
 }
 .future-card__list li svg { width: 18px; height: 18px; color: var(--brand); flex-shrink: 0; }
+
+/* =========================================================================
+   Gyan Seva Homepage Promo Section Styles
+   ========================================================================= */
+.gyan-seva-promo {
+  padding: 60px 0;
+  background: var(--bg);
+}
+.gyan-seva-promo__card {
+  background: var(--surface);
+  border-radius: var(--r-xl);
+  border: 1px solid rgba(47, 107, 58, 0.12);
+  padding: clamp(32px, 5vw, 60px);
+  box-shadow: var(--shadow-md);
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 40px;
+  align-items: center;
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.gyan-seva-promo__card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg), 0 10px 40px rgba(47, 107, 58, 0.05);
+  border-color: rgba(47, 107, 58, 0.25);
+}
+.gyan-seva-promo__content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+.gyan-seva-promo__title {
+  font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+  color: var(--brand-deep);
+  line-height: 1.15;
+  margin: 0;
+}
+.gyan-seva-promo__sub {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+}
+.gyan-seva-promo__visual {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--brand-soft);
+  border-radius: var(--r-lg);
+  padding: 40px 24px;
+  border: 1px dashed rgba(47, 107, 58, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+.promo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brand-deep);
+  border: 1px solid rgba(47, 107, 58, 0.15);
+  margin-bottom: 24px;
+  z-index: 2;
+}
+.promo-badge__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+  animation: gs-pulse 2s infinite;
+}
+.promo-experts-avatars {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  z-index: 2;
+}
+.promo-expert-avatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.promo-expert-avatar img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--surface);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.3s ease;
+}
+.promo-expert-avatar:hover img {
+  transform: scale(1.08) translateY(-2px);
+}
+.promo-expert-avatar span {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--brand-deep);
+}
+@media (max-width: 900px) {
+  .gyan-seva-promo__card {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .gyan-seva-promo__content {
+    align-items: center;
+    text-align: center;
+  }
+  .gyan-seva-promo__visual {
+    width: 100%;
+  }
+}
+

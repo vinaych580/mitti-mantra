@@ -24,6 +24,10 @@
       "dest": "/api/index.py"
     },
     {
+      "src": "/gyan-seva",
+      "dest": "/frontend/gyan-seva.html"
+    },
+    {
       "src": "/(.*)",
       "dest": "/frontend/$1"
     }

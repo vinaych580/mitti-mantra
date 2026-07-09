@@ -649,6 +649,11 @@ async def chat(req: ChatRequest):
 # Mount frontend files at /
 frontend_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend")
 if os.path.exists(frontend_dir):
+    from fastapi.responses import FileResponse
+    @app.api_route("/gyan-seva", methods=["GET", "HEAD"])
+    async def gyan_seva_route(request: Request):
+        return FileResponse(os.path.join(frontend_dir, "gyan-seva.html"))
+
     app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="frontend")
 
 if __name__ == "__main__":
