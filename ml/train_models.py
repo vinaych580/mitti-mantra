@@ -36,6 +36,25 @@ from sklearn.preprocessing import LabelEncoder
 
 warnings.filterwarnings("ignore", category=UserWarning)
 
+from utils.calculations import CropParameter, calculate_climate_factor, calculate_soil_factor
+
+def make_crop_param(r: dict) -> CropParameter:
+    return CropParameter(
+        crop_id=r["crop_id"],
+        crop_name=r["crop_name"],
+        season=r["season"],
+        base_yield_kg_per_acre=float(r["base_yield_kg_per_acre"]),
+        water_requirement_mm=float(r["water_requirement_mm"]),
+        temp_min_c=float(r["temp_min_c"]),
+        temp_max_c=float(r["temp_max_c"]),
+        avg_input_cost_inr_per_acre=float(r["avg_input_cost_inr_per_acre"]),
+        mandi_price_min_inr_per_kg=float(r["mandi_price_min_inr_per_kg"]),
+        mandi_price_max_inr_per_kg=float(r["mandi_price_max_inr_per_kg"]),
+        npk_n_kg_per_acre=float(r["npk_n_kg_per_acre"]),
+        npk_p_kg_per_acre=float(r["npk_p_kg_per_acre"]),
+        npk_k_kg_per_acre=float(r["npk_k_kg_per_acre"]),
+    )
+
 DATASET_DIR = Path(__file__).resolve().parents[1] / "dataset"
 MODEL_DIR = Path(__file__).resolve().parent / "models"
 MODEL_DIR.mkdir(exist_ok=True)
@@ -111,6 +130,33 @@ def _build_yield_dataset() -> tuple[np.ndarray, np.ndarray]:
                                    irrigation=0.5)
         rows_X.append(features)
         rows_y.append(yld)
+
+    # ---- Inject Negative/Mismatched Crop-Climate Examples ----
+    # This trains the ML model directly to learn climate bounds (drought, flood)
+    for rid in all_regions:
+        soil = soil_data[rid]
+        for season in ["kharif", "rabi"]:
+            wkey = (rid, season)
+            weather = weather_data.get(wkey)
+            if not weather:
+                continue
+            
+            weather_parsed = {
+                "rainfall_mm": float(weather.get("rainfall_mm", 800)),
+                "avg_temp_c": float(weather.get("avg_temp_c", 28)),
+            }
+            
+            for cid, cp_row in crop_params.items():
+                cp = make_crop_param(cp_row)
+                climate_factor = calculate_climate_factor(weather_parsed, cp)
+                if climate_factor < 0.65:
+                    # Severe climate mismatch
+                    mismatched_yield = float(cp_row["base_yield_kg_per_acre"]) * climate_factor * 0.1
+                    features = _yield_features(cid, rid, season, cp_row, soil, weather,
+                                               crop_le, region_le, season_le,
+                                               irrigation=0.5)
+                    rows_X.append(features)
+                    rows_y.append(mismatched_yield)
 
     # ---- Data augmentation ----
     # With only ~70 real rows, we augment by perturbing numeric features ±10%
@@ -363,9 +409,9 @@ def _build_recommendation_dataset() -> tuple[np.ndarray, np.ndarray]:
             return default
 
     # Wider parameter sweeps + synthetic soil/weather combos for diversity
-    ph_variants = [5.5, 6.0, 6.5, 7.0, 7.5, 8.0]
-    rain_variants = [400, 600, 800, 1000, 1200]
-    temp_variants = [22, 25, 28, 31, 35]
+    ph_variants = [5.0, 6.0, 6.8, 7.5, 8.2]
+    rain_variants = [300, 600, 1000, 1500, 2200]
+    temp_variants = [18, 24, 28, 32, 37]
 
     for rid in all_regions:
         base_soil = soil_data[rid]
@@ -394,39 +440,19 @@ def _build_recommendation_dataset() -> tuple[np.ndarray, np.ndarray]:
                                         (rid, cid),
                                         (float(cp["mandi_price_min_inr_per_kg"]) +
                                          float(cp["mandi_price_max_inr_per_kg"])) / 2)
-                                    water_req = float(cp["water_requirement_mm"])
-                                    temp_min = float(cp["temp_min_c"])
-                                    temp_max = float(cp["temp_max_c"])
-                                    n_req = float(cp["npk_n_kg_per_acre"])
-
                                     # Budget penalty: if cost > budget, heavy penalty
                                     budget_fit = 1.0 if budget >= cost else budget / cost * 0.5
 
-                                    # Water fit: compare rainfall+irrigation vs crop need
-                                    water_supply = rain + irr * water_req
-                                    water_fit = min(water_supply / max(water_req, 1), 1.3)
-                                    water_fit = max(water_fit, 0.3)
+                                    # Use the official climate factor calculation
+                                    weather_sim = {"rainfall_mm": rain, "avg_temp_c": temp}
+                                    cp_obj = make_crop_param(cp)
+                                    climate_factor = calculate_climate_factor(weather_sim, cp_obj)
 
-                                    # Temperature fitness
-                                    if temp_min <= temp <= temp_max:
-                                        temp_fit = 1.0
-                                    elif temp < temp_min:
-                                        temp_fit = max(0.3, 1.0 - (temp_min - temp) / 10)
-                                    else:
-                                        temp_fit = max(0.3, 1.0 - (temp - temp_max) / 10)
+                                    # Use the official soil suitability factor
+                                    soil_sim = {"ph": ph, "n_kg_per_acre": sf(base_soil, "n_kg_per_acre", 40)}
+                                    soil_factor = calculate_soil_factor(soil_sim, cp_obj)
 
-                                    # pH suitability (most crops prefer 6-7.5)
-                                    ph_fit = max(0.4, 1.0 - abs(ph - 6.8) / 3)
-                                    if cid in ("rice",) and ph < 6.5:
-                                        ph_fit *= 0.7
-                                    if cid in ("pulses", "groundnut") and ph > 7.5:
-                                        ph_fit *= 0.8
-
-                                    # Soil N bonus for heavy feeders
-                                    soil_n = sf(base_soil, "n_kg_per_acre", 40) * (ph / 7.0)
-                                    n_fit = min(soil_n / max(n_req, 1), 1.2)
-
-                                    yield_est = base_yield * water_fit * temp_fit * ph_fit * n_fit * (0.6 + 0.5 * irr)
+                                    yield_est = base_yield * climate_factor * soil_factor * (0.6 + 0.5 * irr)
                                     revenue = yield_est * price
                                     profit = (revenue - cost) * budget_fit
                                     score = profit

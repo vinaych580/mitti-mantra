@@ -245,11 +245,7 @@ def predict_yield_kg_per_acre(
     ml_pred = _ml_predict_yield(
         crop_id, region_id, season, crop_params, soil, weather, irrigation_level,
     )
-    from utils.calculations import calculate_climate_factor
-    climate_factor = calculate_climate_factor(weather, crop)
     if ml_pred is not None and ml_pred > 0:
-        if climate_factor < 0.75:
-            ml_pred = ml_pred * (climate_factor / 0.75)
         return round(ml_pred, 2)
 
     # Fallback: heuristic formula
