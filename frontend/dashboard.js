@@ -518,9 +518,6 @@
           <div class="kpi kpi--good"><div class="kpi__lbl">Profit (${area} ac)</div>
             <div class="kpi__val">${TT(top.expected_profit, INR(top.expected_profit))}</div>
             <div class="kpi__sub">ROI ${PCT(top.roi_percent)}</div></div>
-          <div class="kpi kpi--info"><div class="kpi__lbl">ML confidence</div>
-            <div class="kpi__val">${PCT((top.ml_confidence || 0) * 100)}</div>
-            <div class="kpi__sub">${top.prediction_source || 'ml_model'}</div></div>
         </div>
 
         ${top.reasons ? `
