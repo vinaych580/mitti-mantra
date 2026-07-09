@@ -245,7 +245,22 @@
     try { regions = await fetch("/api/regions").then(r => r.json()); } catch (_) {}
     const regSel = bar.querySelector('[data-mm="region_id"]');
     if (Array.isArray(regions) && regions.length) {
-      regSel.innerHTML = regions.map(r => `<option value="${r.id || r.region_id}">${r.name || r.id}</option>`).join("");
+      let opts = regions.map(r => `<option value="${r.id || r.region_id}">${r.name || r.id}</option>`).join("");
+      let savedFarm = null;
+      try {
+        savedFarm = JSON.parse(
+          localStorage.getItem('mittimantra_selectedFarm') ||
+          localStorage.getItem('agrisim_farm') ||
+          'null'
+        );
+      } catch (_) {}
+      if (savedFarm && savedFarm.region_id) {
+        const farmName = (savedFarm.state && savedFarm.district)
+          ? `${savedFarm.state} · ${savedFarm.district} (My Farm)`
+          : "My Farm";
+        opts = `<option value="${savedFarm.region_id}">${farmName}</option>` + opts;
+      }
+      regSel.innerHTML = opts;
     }
 
     // Load current profile into bar

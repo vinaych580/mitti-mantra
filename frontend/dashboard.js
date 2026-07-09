@@ -226,11 +226,18 @@
     api('/api/crops').catch(() => Object.keys(CROP_LABELS).map(c => ({ crop_id: c, crop_name: CROP_LABELS[c] })))
   ]).then(([regions, crops]) => {
     $$('select[data-regions]').forEach(sel => {
-      sel.innerHTML = regions.map(r => {
+      let optsHtml = regions.map(r => {
         const id = r.id || r.region_id;
         const name = r.name || r.region_name || id;
         return `<option value="${id}">${name}</option>`;
       }).join('');
+      if (savedFarm && savedFarm.region_id) {
+        const farmName = (savedFarm.state && savedFarm.district)
+          ? `${savedFarm.state} · ${savedFarm.district} (My Farm)`
+          : "My Farm";
+        optsHtml = `<option value="${savedFarm.region_id}">${farmName}</option>` + optsHtml;
+      }
+      sel.innerHTML = optsHtml;
     });
     $$('select[data-crops]').forEach(sel => {
       const hasAny = sel.querySelector('option[value=""]');
@@ -1921,9 +1928,9 @@
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg>
             ${lat}°N, ${lon}°E
           </span>
-          ${regionDisplay ? `<span class="fp-meta__item fp-meta__item--region">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 6-9 13-9 13S3 16 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            ${regionDisplay}
+          ${regionDisplay ? `<span class="fp-meta__item fp-meta__item--region" title="This matched backend dataset profile will be used for regional predictions.">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            Dataset profile: ${regionDisplay}
           </span>` : ''}
         </div>
         <div class="fp-chips">${locChips}</div>
