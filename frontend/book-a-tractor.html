@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Book a tractor for your farm — Mitti Mantra connects you with the right machine for your plot size, crop, and soil. Coming soon to farmers across India.">
+  <title>Book a Tractor — Mitti Mantra</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="assets/logo-192.png" type="image/png">
+
+  <!-- Leaflet (map for Nearby Tractor Discovery) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <style>
+    /* ===== Page-scoped overrides — Book a Tractor ===== */
+
+    /* Hero */
+    .tractor-hero {
+      position: relative;
+      padding: calc(var(--nav-h) + 80px) 0 72px;
+      background: linear-gradient(160deg, var(--brand-soft) 0%, var(--bg) 70%);
+      overflow: hidden;
+      text-align: center;
+    }
+    .tractor-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 80% 0%, rgba(47,107,58,.08) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 60% at 20% 100%, rgba(200,138,58,.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .tractor-hero__inner { position: relative; z-index: 1; }
+    .tractor-hero__badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 16px; border-radius: 999px;
+      background: var(--surface); box-shadow: var(--shadow-sm);
+      font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--accent); border: 1px solid var(--accent-soft);
+      margin-bottom: 24px;
+    }
+    .tractor-hero__badge-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--accent);
+      animation: pulse-dot 2s ease infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .55; transform: scale(.7); }
+    }
+    .tractor-hero h1 {
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      margin-bottom: 18px; color: var(--brand-deep);
+    }
+    .tractor-hero h1 em { color: var(--brand); font-style: italic; }
+    .tractor-hero__sub {
+      max-width: 580px; margin: 0 auto 36px;
+      font-size: 1.06rem; color: var(--ink-soft); line-height: 1.65;
+    }
+    .tractor-hero__stats {
+      display: inline-flex; align-items: center; gap: 0;
+      background: var(--surface); border-radius: var(--r-lg);
+      box-shadow: var(--shadow-md); overflow: hidden;
+      border: 1px solid rgba(29,26,21,.06);
+    }
+    .tractor-hero__stat {
+      padding: 16px 28px; text-align: center;
+      border-right: 1px solid rgba(29,26,21,.07);
+    }
+    .tractor-hero__stat:last-child { border-right: none; }
+    .tractor-hero__stat-val {
+      font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 600;
+      color: var(--brand-deep); line-height: 1;
+    }
+    .tractor-hero__stat-label {
+      font-size: .7rem; font-weight: 500; color: var(--ink-faint);
+      text-transform: uppercase; letter-spacing: .06em; margin-top: 4px;
+    }
+
+    /* Section title block */
+    .tractor-section-head {
+      text-align: center; margin-bottom: 48px;
+    }
+    .tractor-section-head .tag {
+      display: inline-block; padding: 4px 14px; border-radius: 999px;
+      background: var(--brand-soft); color: var(--brand);
+      font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .tractor-section-head h2 { color: var(--brand-deep); margin-bottom: 12px; }
+    .tractor-section-head p { color: var(--ink-soft); max-width: 540px; margin: 0 auto; }
+
+    /* Section spacing fix — override base `section` rule */
+    section.tractor-section { padding: 80px 0; }
+    section.tractor-section--alt { padding: 80px 0; background: var(--bg-soft); }
+
+    /* ---- Tractor cards ---- */
+    .tractors__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    @media (max-width: 1080px) { .tractors__grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px)  { .tractors__grid { grid-template-columns: 1fr; } }
+
+    .tractor-card {
+      background: var(--surface);
+      border-radius: var(--r-lg);
+      border: 1px solid rgba(29,26,21,.07);
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      transition: transform .4s var(--ease), box-shadow .4s var(--ease);
+      position: relative;
+    }
+    .tractor-card:hover { transform: translateY(-7px); box-shadow: var(--shadow-lg); }
+
+    .tractor-card__media {
+      position: relative; height: 200px; overflow: hidden;
+      background: var(--bg-soft);
+    }
+    .tractor-card__media img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform .6s var(--ease);
+    }
+    .tractor-card:hover .tractor-card__media img { transform: scale(1.06); }
+
+    .tractor-card__avail {
+      position: absolute; top: 12px; right: 12px;
+      padding: 4px 11px; border-radius: 999px;
+      font-size: .66rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+      background: rgba(255,255,255,.94); backdrop-filter: blur(6px);
+      color: var(--brand-deep);
+    }
+    .tractor-card__avail--limited { color: var(--clay); }
+    .tractor-card__avail--booked  { color: #b91c1c; }
+
+    .tractor-card__body {
+      padding: 22px; display: flex; flex-direction: column; gap: 14px; flex: 1;
+    }
+    .tractor-card__head {
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;
+    }
+    .tractor-card__head h3 { font-size: 1.05rem; color: var(--ink); margin: 0; line-height: 1.25; }
+    .tractor-card__rating {
+      display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0;
+      padding: 3px 9px; border-radius: 999px;
+      background: var(--accent-soft); color: var(--accent);
+      font-size: .8rem; font-weight: 700;
+    }
+    .tractor-card__rating svg { width: 12px; height: 12px; fill: currentColor; }
+
+    .tractor-card__desc {
+      font-size: .875rem; color: var(--ink-soft); line-height: 1.55; margin: 0;
+    }
+
+    .tractor-card__specs {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px;
+      padding: 14px 0;
+      border-top: 1px dashed rgba(29,26,21,.1);
+      border-bottom: 1px dashed rgba(29,26,21,.1);
+    }
+    .tractor-spec { display: flex; flex-direction: column; gap: 2px; }
+    .tractor-spec__lbl { font-size: .66rem; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-faint); }
+    .tractor-spec__val { font-size: .84rem; font-weight: 600; color: var(--ink); }
+
+    .tractor-card__price {
+      display: flex; align-items: flex-end; justify-content: space-between; gap: 10px;
+    }
+    .tractor-card__price-item { display: flex; flex-direction: column; gap: 2px; }
+    .tractor-card__price-item span { font-size: .7rem; color: var(--ink-faint); }
+    .tractor-card__price-item strong {
+      font-family: 'Fraunces', serif; font-size: 1.15rem;
+      font-weight: 600; color: var(--brand-deep);
+    }
+
+    .tractor-card__cta {
+      margin-top: auto; width: 100%; justify-content: center;
+      background: var(--bg-soft); color: var(--ink-faint);
+      border: 1px dashed rgba(29,26,21,.15);
+      cursor: not-allowed; border-radius: var(--r-md);
+      padding: 12px 20px; font-size: .9rem; font-weight: 600;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    /* ---- Comparison table ---- */
+    .compare-table-wrap {
+      overflow-x: auto; border-radius: var(--r-lg);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(29,26,21,.07);
+    }
+    .compare-table {
+      width: 100%; border-collapse: collapse;
+      background: var(--surface); min-width: 700px;
+    }
+    .compare-table th, .compare-table td {
+      padding: 14px 18px; text-align: left;
+      font-size: .875rem; white-space: nowrap;
+    }
+    .compare-table thead th {
+      background: var(--brand-deep); color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: .7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .06em;
+    }
+    .compare-table thead th:first-child { border-radius: var(--r-md) 0 0 0; }
+    .compare-table thead th:last-child  { border-radius: 0 var(--r-md) 0 0; }
+    .compare-table tbody tr { border-bottom: 1px solid rgba(29,26,21,.05); }
+    .compare-table tbody tr:last-child { border-bottom: none; }
+    .compare-table tbody tr:nth-child(even) { background: var(--bg); }
+    .compare-table tbody tr:hover { background: var(--brand-soft); }
+    .compare-table td.tc-name { font-weight: 600; color: var(--brand-deep); }
+    .compare-table td strong { color: var(--ink); }
+
+    /* ---- Performance section ---- */
+    .perf-layout {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start;
+    }
+    @media (max-width: 840px) { .perf-layout { grid-template-columns: 1fr; gap: 32px; } }
+
+    .perf-info__icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      background: var(--accent-soft); color: var(--accent);
+      display: flex; align-items: center; justify-content: center; margin-bottom: 20px;
+    }
+    .perf-info__icon svg { width: 24px; height: 24px; }
+    .perf-info h3 { font-size: 1.4rem; color: var(--brand-deep); margin-bottom: 10px; }
+    .perf-info p { color: var(--ink-soft); font-size: .96rem; margin-bottom: 28px; }
+
+    .perf-maint {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px; border-radius: var(--r-md);
+      background: var(--brand-soft);
+      font-size: .92rem; font-weight: 600; color: var(--brand-deep);
+    }
+
+    .perf-bars { display: flex; flex-direction: column; gap: 22px; }
+    .perf-bar__label {
+      display: flex; justify-content: space-between;
+      font-size: .88rem; font-weight: 600; margin-bottom: 8px;
+      color: var(--ink);
+    }
+    .perf-bar__label span:last-child { color: var(--brand); font-family: 'Fraunces', serif; }
+    .perf-bar__track {
+      height: 10px; border-radius: 999px;
+      background: var(--bg-soft); overflow: hidden;
+    }
+    .perf-bar__fill {
+      height: 100%; border-radius: 999px;
+      background: linear-gradient(90deg, var(--brand) 0%, var(--accent) 100%);
+      width: 0%; transition: width 1.4s var(--ease);
+    }
+
+    /* ---- CTA / waitlist banner ---- */
+    .tractor-cta {
+      padding: 80px 0;
+      background: linear-gradient(130deg, var(--brand-deep) 0%, #1a4020 100%);
+      position: relative; overflow: hidden;
+    }
+    .tractor-cta::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 80% at 90% 50%, rgba(200,138,58,.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .tractor-cta__inner {
+      position: relative; z-index: 1;
+      text-align: center; max-width: 600px; margin: 0 auto; padding: 0 24px;
+    }
+    .tractor-cta h2 { color: #fff; margin-bottom: 14px; font-size: clamp(1.8rem, 3.5vw, 2.8rem); }
+    .tractor-cta p { color: rgba(255,255,255,.75); font-size: 1.05rem; margin-bottom: 36px; }
+    .tractor-cta__form {
+      display: flex; gap: 10px; max-width: 460px; margin: 0 auto;
+      flex-wrap: wrap; justify-content: center;
+    }
+    .tractor-cta__form input {
+      flex: 1; min-width: 200px;
+      padding: 14px 20px; border-radius: 999px;
+      border: none; outline: none;
+      background: rgba(255,255,255,.12);
+      color: #fff; font-size: .95rem; font-family: inherit;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,.2);
+      transition: background .3s;
+    }
+    .tractor-cta__form input::placeholder { color: rgba(255,255,255,.55); }
+    .tractor-cta__form input:focus { background: rgba(255,255,255,.18); outline: 2px solid rgba(255,255,255,.35); }
+    .tractor-cta__form .btn-notify {
+      padding: 14px 28px; border-radius: 999px;
+      background: var(--accent); color: #fff;
+      font-size: .95rem; font-weight: 700; font-family: inherit;
+      border: none; cursor: pointer; white-space: nowrap;
+      transition: background .3s, transform .3s;
+    }
+    .tractor-cta__form .btn-notify:hover { background: #b57830; transform: translateY(-2px); }
+    .tractor-cta__note { margin-top: 14px; font-size: .78rem; color: rgba(255,255,255,.45); }
+
+    /* ---- Footer (simple for tractor page) ---- */
+    .tractor-footer {
+      background: #15110c; color: rgba(255,255,255,.45);
+      padding: 40px 0;
+    }
+    .tractor-footer__inner {
+      display: flex; align-items: center; justify-content: space-between; gap: 20px;
+      flex-wrap: wrap;
+    }
+    .tractor-footer a { color: rgba(255,255,255,.55); transition: color .3s; }
+    .tractor-footer a:hover { color: var(--accent); }
+    .tractor-footer__links { display: flex; gap: 24px; font-size: .85rem; }
+    .tractor-footer__links { display: flex; gap: 24px; font-size: .85rem; }
+
+    /* ---- Nearby Tractor Discovery (map) ---- */
+    .map-filters {
+      display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+      margin-bottom: 20px; padding: 16px 20px;
+      background: var(--surface); border-radius: var(--r-lg);
+      box-shadow: var(--shadow-sm); border: 1px solid rgba(29,26,21,.06);
+    }
+    .map-filters select {
+      font-family: inherit; font-size: .85rem; font-weight: 600; color: var(--ink);
+      padding: 9px 14px; border-radius: 999px; border: 1px solid rgba(29,26,21,.12);
+      background: var(--bg-soft); cursor: pointer;
+    }
+    .map-filters .filter-distance {
+      display: flex; align-items: center; gap: 10px;
+      font-size: .85rem; font-weight: 600; color: var(--ink);
+      margin-left: auto;
+    }
+    .map-filters .filter-distance input[type="range"] { width: 140px; accent-color: var(--brand); }
+    .map-filters .filter-distance span { color: var(--brand); min-width: 52px; }
+
+    .map-status {
+      font-size: .85rem; font-weight: 600; color: var(--brand-deep);
+      margin-bottom: 14px; display: flex; align-items: center; gap: 6px;
+    }
+
+    #tractorMap {
+      height: 460px; width: 100%; border-radius: var(--r-lg);
+      box-shadow: var(--shadow-md); border: 1px solid rgba(29,26,21,.08);
+      z-index: 0;
+    }
+    .leaflet-popup-content-wrapper { border-radius: var(--r-md); }
+    .map-popup { font-family: 'Inter', sans-serif; min-width: 170px; }
+    .map-popup strong { font-size: .92rem; color: var(--brand-deep); }
+    .map-popup__row { font-size: .8rem; color: var(--ink-soft); margin-top: 4px; }
+    .map-popup__avail { font-weight: 700; color: var(--brand); }
+    .map-popup__btn {
+      margin-top: 10px; width: 100%; padding: 8px 10px; border-radius: var(--r-sm);
+      background: var(--bg-soft); color: var(--ink-faint); border: 1px dashed rgba(29,26,21,.15);
+      font-size: .78rem; font-weight: 600; cursor: not-allowed;
+    }
+
+    .tractor-marker__pin {
+      width: 30px; height: 30px; border-radius: 50% 50% 50% 0;
+      transform: rotate(45deg); font-size: 14px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,.35); border: 2px solid #fff;
+    }
+    .tractor-marker__pin > * { transform: rotate(-45deg); }
+
+    .user-marker__dot {
+      width: 14px; height: 14px; border-radius: 50%;
+      background: #2563eb; border: 2px solid #fff;
+      box-shadow: 0 0 0 2px rgba(37,99,235,.4);
+      position: relative; z-index: 2;
+    }
+    .user-marker__pulse {
+      position: absolute; top: -8px; left: -8px;
+      width: 30px; height: 30px; border-radius: 50%;
+      background: rgba(37,99,235,.25);
+      animation: user-pulse 1.8s ease-out infinite;
+    }
+    @keyframes user-pulse {
+      0% { transform: scale(.4); opacity: 1; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+
+    .nearby-list {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px; margin-top: 24px;
+    }
+    .nearby-item {
+      display: flex; gap: 14px; background: var(--surface);
+      border-radius: var(--r-lg); padding: 14px; cursor: pointer;
+      border: 1px solid rgba(29,26,21,.06);
+      transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+    }
+    .nearby-item:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+    .nearby-item img {
+      width: 84px; height: 84px; border-radius: var(--r-md); object-fit: cover; flex-shrink: 0;
+      background: var(--bg-soft);
+    }
+    .nearby-item__body { flex: 1; min-width: 0; }
+    .nearby-item__head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+    .nearby-item__head h4 { font-size: .92rem; margin: 0; color: var(--ink); }
+    .nearby-item__dist { font-size: .78rem; font-weight: 700; color: var(--brand); white-space: nowrap; }
+    .nearby-item__meta {
+      display: flex; gap: 10px; font-size: .74rem; color: var(--ink-faint);
+      margin: 6px 0 10px; flex-wrap: wrap;
+    }
+    .nearby-item__avail { font-weight: 700; }
+    .nearby-item__avail--available { color: var(--brand); }
+    .nearby-item__avail--limited { color: var(--clay); }
+    .nearby-item__avail--booked { color: #b91c1c; }
+    .nearby-item__foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .nearby-item__foot strong { font-family: 'Fraunces', serif; color: var(--brand-deep); font-size: .95rem; }
+    .nearby-item__btn {
+      font-size: .72rem; font-weight: 600; padding: 6px 10px; border-radius: 999px;
+      background: var(--bg-soft); color: var(--ink-faint); border: 1px dashed rgba(29,26,21,.15);
+      cursor: not-allowed; white-space: nowrap;
+    }
+    .nearby-empty {
+      grid-column: 1 / -1; text-align: center; padding: 32px;
+      color: var(--ink-faint); font-size: .9rem;
+    }
+
+    @media (max-width: 640px) {
+      .map-filters .filter-distance { margin-left: 0; width: 100%; }
+      #tractorMap { height: 340px; }
+    }
+    .map-status__link {
+      background: none; border: none; padding: 0; margin: 0 2px;
+      color: var(--brand); font-weight: 700; text-decoration: underline;
+      cursor: pointer; font: inherit;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============= NAV ============= -->
+  <nav class="nav" id="nav">
+    <div class="nav__wrap">
+      <a href="index.html" class="logo" aria-label="Mitti Mantra home">
+        <img src="assets/logo.png" alt="Mitti Mantra" class="logo__img">
+      </a>
+
+      <ul class="nav__links">
+        <li><a href="index.html#features">Features</a></li>
+        <li><a href="index.html#how">How it works</a></li>
+        <li><a href="farm-boundary.html">Draw farm</a></li>
+        <li><a href="book-a-tractor.html" class="nav__tractor-link">
+          Book a Tractor <span class="nav__upcoming-badge">Upcoming</span>
+        </a></li>
+      </ul>
+
+      <div class="nav__cta">
+        <a href="/docs" class="btn btn-ghost">API Docs</a>
+        <a href="dashboard.html" class="btn btn-primary">
+          Try it free
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+        <button class="nav__burger" id="burger" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile panel -->
+  <div class="mobile-backdrop" id="mBackdrop"></div>
+  <aside class="mobile-panel" id="mPanel">
+    <button class="mobile-panel__close" id="mClose" aria-label="Close">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <ul>
+      <li><a href="index.html#features">Features</a></li>
+      <li><a href="index.html#how">How it works</a></li>
+      <li><a href="farm-boundary.html">Draw farm</a></li>
+      <li><a href="book-a-tractor.html">Book a Tractor <span class="nav__upcoming-badge">Upcoming</span></a></li>
+      <li><a href="/docs">API Docs</a></li>
+    </ul>
+    <a href="dashboard.html" class="btn btn-primary">Try it free</a>
+  </aside>
+
+  <!-- ============= HERO ============= -->
+  <header class="tractor-hero">
+    <div class="container">
+      <div class="tractor-hero__inner">
+        <div class="tractor-hero__badge">
+          <span class="tractor-hero__badge-dot"></span>
+          Coming Soon
+        </div>
+        <h1>Rent the right tractor,<br><em>right to your farm.</em></h1>
+        <p class="tractor-hero__sub">Stop paying for more horsepower than you need. Browse, compare, and reserve the perfect machine for your plot size, crop, and soil — from verified partner farmers.</p>
+
+        <div class="tractor-hero__stats">
+          <div class="tractor-hero__stat">
+            <div class="tractor-hero__stat-val">6</div>
+            <div class="tractor-hero__stat-label">Tractor models</div>
+          </div>
+          <div class="tractor-hero__stat">
+            <div class="tractor-hero__stat-val">₹340</div>
+            <div class="tractor-hero__stat-label">Starting per hour</div>
+          </div>
+          <div class="tractor-hero__stat">
+            <div class="tractor-hero__stat-val">29</div>
+            <div class="tractor-hero__stat-label">Crops supported</div>
+          </div>
+          <div class="tractor-hero__stat">
+            <div class="tractor-hero__stat-val">35+</div>
+            <div class="tractor-hero__stat-label">Districts at launch</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+<!-- ============= NEARBY TRACTOR DISCOVERY (MAP) ============= -->
+<section class="tractor-section">
+  <div class="container">
+    <div class="tractor-section-head reveal">
+      <span class="tag">Near You</span>
+      <h2>Tractors close to your farm</h2>
+      <p>We use your location to show real distances — like a ride app, but for tractors.</p>
+    </div>
+
+    <div class="map-filters reveal">
+      <select id="filterHp">
+        <option value="any">Any horsepower</option>
+        <option value="le40">Up to 40 HP</option>
+        <option value="40-50">40–50 HP</option>
+        <option value="gt50">50+ HP</option>
+      </select>
+      <select id="filterPrice">
+        <option value="any">Any price</option>
+        <option value="le400">Up to ₹400/hr</option>
+        <option value="400-550">₹400–₹550/hr</option>
+        <option value="gt550">₹550+/hr</option>
+      </select>
+      <select id="filterAvailability">
+        <option value="any">Any availability</option>
+        <option value="Available">Available</option>
+        <option value="Limited">Limited</option>
+        <option value="Booked">Booked</option>
+      </select>
+      <select id="filterFuel">
+        <option value="any">Any fuel type</option>
+        <option value="Diesel">Diesel</option>
+        <option value="Diesel (CRDe)">Diesel (CRDe)</option>
+      </select>
+      <label class="filter-distance">
+        Within
+        <input type="range" id="filterDistance" min="1" max="50" value="50" step="1">
+        <span id="filterDistanceVal">50 km</span>
+      </label>
+    </div>
+
+    <div class="map-status reveal" id="mapStatus">📍 Finding your location…</div>
+
+    <div id="tractorMap" class="reveal"></div>
+
+    <div id="nearbyList" class="nearby-list reveal-stagger">
+      <!-- Rendered via map-tractors.js -->
+    </div>
+  </div>
+</section>
+
+  <!-- ============= TRACTOR GRID ============= -->
+  <section class="tractor-section">
+    <div class="container">
+      <div class="tractor-section-head reveal">
+        <span class="tag">Our Fleet</span>
+        <h2>Find your machine</h2>
+        <p>Every tractor is rated, spec-listed, and matched to your land size. No guesswork, no overpriced days.</p>
+      </div>
+      <div id="tractorGrid" class="tractors__grid reveal-stagger">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ============= COMPARISON TABLE ============= -->
+  <section class="tractor-section tractor-section--alt">
+    <div class="container">
+      <div class="tractor-section-head reveal">
+        <span class="tag">Side-by-Side</span>
+        <h2>Compare the fleet</h2>
+        <p>All specs in one place — so you pick the right tractor the first time.</p>
+      </div>
+      <div class="compare-table-wrap reveal">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Power</th>
+              <th>Fuel Eff.</th>
+              <th>Best Crop</th>
+              <th>Per Hour</th>
+              <th>Per Day</th>
+              <th>Land Size</th>
+              <th>Rating</th>
+            </tr>
+          </thead>
+          <tbody id="compareTableBody">
+            <!-- Rendered via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============= PERFORMANCE ============= -->
+  <section class="tractor-section">
+    <div class="container">
+      <div class="tractor-section-head reveal">
+        <span class="tag">Fleet Telemetry</span>
+        <h2>Performance you can trust</h2>
+        <p>We track real-world data from every partner tractor. Here's how our fleet averages out.</p>
+      </div>
+      <div class="perf-layout reveal">
+        <div class="perf-info">
+          <div class="perf-info__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <h3>Why it matters</h3>
+          <p>Underpowered tractors waste your time. Overpowered ones waste your money. Our telemetry matching puts the right machine on your field — every season.</p>
+          <div class="perf-maint">
+            <span>Fleet maintenance level</span>
+            <strong id="perfMaintVal">—</strong>
+          </div>
+        </div>
+
+        <div class="perf-bars" id="perfGrid">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============= WAITLIST CTA ============= -->
+  <div class="tractor-cta" id="waitlist">
+    <div class="tractor-cta__inner">
+      <h2>Be first in your district</h2>
+      <p>Leave your number and we'll call you the moment booking opens in your area — no spam, ever.</p>
+      <form class="tractor-cta__form" onsubmit="handleNotify(event)">
+        <input
+          type="tel" id="notifyPhone"
+          placeholder="Your mobile number"
+          pattern="[6-9][0-9]{9}"
+          title="Enter a valid 10-digit Indian mobile number"
+          autocomplete="tel"
+        >
+        <button type="submit" class="btn-notify">Notify me</button>
+      </form>
+      <p class="tractor-cta__note">We'll send one SMS. No calls, no data selling.</p>
+    </div>
+  </div>
+
+  <!-- ============= FOOTER ============= -->
+  <footer class="tractor-footer">
+    <div class="container">
+      <div class="tractor-footer__inner">
+        <div style="font-size:.85rem;">© 2025 Mitti Mantra · Growing the future. Built with ❤ for Bharat.</div>
+        <nav class="tractor-footer__links">
+          <a href="index.html">Home</a>
+          <a href="dashboard.html">Dashboard</a>
+          <a href="farm-boundary.html">Draw Farm</a>
+          <a href="/docs">API Docs</a>
+        </nav>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function handleNotify(e) {
+      e.preventDefault();
+      const input = document.getElementById('notifyPhone');
+      const val = input.value.trim();
+      if (!/^[6-9][0-9]{9}$/.test(val)) {
+        input.style.outline = '2px solid #e87070';
+        return;
+      }
+      input.style.outline = '';
+      const btn = e.target.querySelector('.btn-notify');
+      btn.textContent = '✓ You\'re on the list!';
+      btn.style.background = '#2f6b3a';
+      input.disabled = true;
+      btn.disabled = true;
+    }
+  </script>
+
+  <script defer src="mm-core.js"></script>
+  <script defer src="site-ui.js"></script>
+  <script defer src="Data/tractors.js"></script>
+  <script defer src="book-a-tractor.js"></script>
+
+<!-- Leaflet + Nearby Tractor Discovery map -->
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script defer src="map-tractors.js"></script>
+</body>
+</html>
