@@ -55,14 +55,33 @@
                    : /Tea|Coffee|Cardamom|Turmeric|Ginger|Spices|Saffron|Rubber/.test(crop.crop) ? 1200
                    : 1500;
     const yieldKgAcre = baseYield * (0.7 + 0.6 * score);
-    const revenuePerAcre = yieldKgAcre * crop.mandi;
+
+    // Unit conversion: state-data.js has mandi prices per-quintal (100kg) for field crops,
+    // and per-kg/per-piece for cash/horticulture crops.
+    const PER_QUINTAL_CROPS = new Set([
+      'Rice', 'Wheat', 'Maize', 'Cotton', 'Soybean', 'Groundnut', 'Bajra', 'Jute',
+      'Sugarcane', 'Ragi', 'Pulses', 'Oilseeds', 'Basmati', 'Mustard', 'Gram',
+      'Barley', 'Turmeric', 'Ginger', 'Millets'
+    ]);
+
+    const isPerQuintal = PER_QUINTAL_CROPS.has(crop.crop);
+    const pricePerKg = isPerQuintal ? (crop.mandi / 100) : crop.mandi;
+
+    let mandiDisplay = '';
+    if (crop.crop === 'Coconut' || crop.crop === 'Pineapple') {
+      mandiDisplay = `₹${crop.mandi}/pc`;
+    } else {
+      mandiDisplay = `₹${pricePerKg % 1 === 0 ? pricePerKg : pricePerKg.toFixed(2)}/kg`;
+    }
+
+    const revenuePerAcre = yieldKgAcre * pricePerKg;
     const costPerAcre = Math.max(budget, 5000) * (0.9 + (1 - score) * 0.3);
     const profitPerAcre = revenuePerAcre - costPerAcre;
     const profitTotal = profitPerAcre * area;
     const risk = Math.round((1 - score) * 70 + (seasonFit < 1 ? 15 : 0));
     return {
       crop: crop.crop,
-      mandi: crop.mandi,
+      mandiDisplay,
       score,
       yieldKgAcre: Math.round(yieldKgAcre),
       revenuePerAcre: Math.round(revenuePerAcre),
@@ -107,7 +126,7 @@
           <div><span>Expected profit</span><b>₹${r.profitTotal.toLocaleString('en-IN')}</b><em>over ${area} acres</em></div>
           <div><span>ROI</span><b>${r.roi}%</b></div>
           <div><span>Yield</span><b>${r.yieldKgAcre.toLocaleString('en-IN')} <small>kg/acre</small></b></div>
-          <div><span>Mandi</span><b>₹${r.mandi.toLocaleString('en-IN')}</b></div>
+           <div><span>Mandi</span><b>${r.mandiDisplay}</b></div>
         </div>
         <div class="livedemo__bars">
           <div class="livedemo__bar">
