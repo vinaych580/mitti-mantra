@@ -1,6 +1,6 @@
 /* =========================================================
    AgriSim — lightweight i18n
-   Supports English (en), Hindi (hi), Telugu (te).
+   Supports English (en), Hindi (hi), Telugu (te), Kannada (kn).
    Strategy:
      • Walk all visible text nodes + translatable attributes.
      • Translate via free MyMemory API (no API key required).
@@ -13,7 +13,8 @@
   const LANGS = [
     { code: 'en', label: 'EN',  name: 'English' },
     { code: 'hi', label: 'हिं', name: 'हिन्दी' },
-    { code: 'te', label: 'తె',  name: 'తెలుగు' }
+    { code: 'te', label: 'తె',  name: 'తెలుగు' },
+    { code: 'kn', label: 'ಕ',  name: 'ಕನ್ನಡ' }
   ];
 
   const LANG_KEY  = 'agrisim_lang';
