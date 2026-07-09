@@ -519,6 +519,12 @@
     </div>
 
     <div class="map-filters reveal">
+      <select id="filterState">
+        <option value="">Select State</option>
+      </select>
+      <select id="filterDistrict" disabled>
+        <option value="">Select District</option>
+      </select>
       <select id="filterHp">
         <option value="any">Any horsepower</option>
         <option value="le40">Up to 40 HP</option>
@@ -544,8 +550,8 @@
       </select>
       <label class="filter-distance">
         Within
-        <input type="range" id="filterDistance" min="1" max="50" value="50" step="1">
-        <span id="filterDistanceVal">50 km</span>
+        <input type="range" id="filterDistance" min="5" max="300" value="100" step="5">
+        <span id="filterDistanceVal">100 km</span>
       </label>
     </div>
 

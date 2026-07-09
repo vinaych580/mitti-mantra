@@ -1,0 +1,68 @@
+{
+  "crop_recommendation": {
+    "algorithm": "CatBoostClassifier",
+    "accuracy": 0.9384,
+    "f1_macro": 0.5836,
+    "correlations": {
+      "region_enc": 0.0212,
+      "season_enc": -0.6795,
+      "soil_ph": -0.0221,
+      "soil_n": 0.0114,
+      "soil_p": 0.0251,
+      "soil_k": 0.0227,
+      "soil_oc": 0.0097,
+      "rainfall": 0.0894,
+      "avg_temp": 0.0055,
+      "min_temp": 0.0009,
+      "max_temp": -0.0059,
+      "budget": 0.344,
+      "irrigation": 0.1193
+    },
+    "permutation_importances": {
+      "season_enc": 0.4597,
+      "budget": 0.2323,
+      "soil_ph": 0.1377,
+      "irrigation": 0.097,
+      "rainfall": 0.0924,
+      "soil_n": 0.0538,
+      "region_enc": 0.0382,
+      "soil_k": 0.0335,
+      "soil_oc": 0.029,
+      "soil_p": 0.0148,
+      "avg_temp": -0.0002,
+      "min_temp": -0.0005,
+      "max_temp": -0.0007
+    },
+    "robustness_noisy_weather_accuracy": 0.8299
+  },
+  "yield_prediction": {
+    "algorithm": "RandomForestRegressor",
+    "r2": 0.99,
+    "mae": 411.01,
+    "rmse": 947.81,
+    "mape_pct": 7.55,
+    "permutation_importances": {
+      "base_yield": 0.7897,
+      "npk_p": 0.3073,
+      "season_enc": 0.0019,
+      "region_enc": 0.0007,
+      "npk_n": 0.0006,
+      "npk_k": 0.0005,
+      "soil_oc": 0.0004,
+      "soil_k": 0.0003,
+      "max_temp": 0.0003,
+      "soil_p": 0.0002,
+      "rainfall": 0.0002,
+      "min_temp": 0.0002,
+      "water_req": 0.0001,
+      "soil_ph": 0.0001,
+      "soil_n": 0.0001,
+      "crop_enc": 0.0,
+      "temp_min": 0.0,
+      "temp_max": -0.0,
+      "avg_temp": -0.0,
+      "irrigation": -0.0
+    },
+    "robustness_drought_r2": 0.9896
+  }
+}

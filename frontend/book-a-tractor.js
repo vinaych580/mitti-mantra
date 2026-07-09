@@ -19,12 +19,15 @@
     return '';
   };
 
+  let visibleCount = 12;
+
   /* ─── 1. Tractor cards ─── */
   function renderCards() {
     const grid = document.getElementById('tractorGrid');
     if (!grid || !TRACTORS.length) return;
 
-    grid.innerHTML = TRACTORS.map((t) => `
+    const sliced = TRACTORS.slice(0, visibleCount);
+    let cardsHtml = sliced.map((t) => `
       <article class="tractor-card">
         <div class="tractor-card__media">
           <img src="${t.image}" alt="${t.name}" loading="lazy">
@@ -82,6 +85,26 @@
         </div>
       </article>
     `).join('');
+
+    if (TRACTORS.length > visibleCount) {
+      cardsHtml += `
+        <div class="gs-load-more-container" style="grid-column: 1 / -1; text-align: center; margin-top: 40px; width: 100%; display: flex; justify-content: center;">
+          <button id="btnLoadMoreTractors" class="btn btn-ghost" style="padding: 12px 36px; font-size: 0.9rem; font-weight: 600; border-radius: 999px; transition: all 0.3s ease;">
+            Show More Tractors (${TRACTORS.length - visibleCount} remaining)
+          </button>
+        </div>
+      `;
+    }
+
+    grid.innerHTML = cardsHtml;
+
+    const btnLoadMore = document.getElementById('btnLoadMoreTractors');
+    if (btnLoadMore) {
+      btnLoadMore.addEventListener('click', () => {
+        visibleCount += 12;
+        renderCards();
+      });
+    }
   }
 
   /* ─── 2. Comparison table ─── */
@@ -89,7 +112,10 @@
     const body = document.getElementById('compareTableBody');
     if (!body || !TRACTORS.length) return;
 
-    body.innerHTML = TRACTORS.map((t) => `
+    // Sort by rating desc, slice top 10
+    const topTractors = [...TRACTORS].sort((a, b) => b.rating - a.rating).slice(0, 10);
+
+    body.innerHTML = topTractors.map((t) => `
       <tr>
         <td class="tc-name">${t.name}</td>
         <td>${t.hp} HP</td>

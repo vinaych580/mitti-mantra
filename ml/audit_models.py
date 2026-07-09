@@ -1,0 +1,126 @@
+import os
+import json
+import logging
+from pathlib import Path
+import joblib
+import numpy as np
+import pandas as pd
+
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import accuracy_score, precision_recall_fscore_support, confusion_matrix, r2_score, mean_absolute_error, mean_squared_error
+from sklearn.inspection import permutation_importance
+
+logger = logging.getLogger("ModelAudit")
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+
+BASE_DIR = Path(__file__).resolve().parents[1]
+MODEL_DIR = BASE_DIR / "ml" / "models"
+
+# Reuse the data loaders from evaluate_models directly
+import sys
+sys.path.append(str(BASE_DIR))
+from ml.evaluate_models import _build_recommendation_dataset, _build_yield_dataset
+
+class ModelAuditor:
+    def run_audit(self):
+        logger.info("Initializing model audit on corrected schemas...")
+        
+        # Load models
+        rec_model = joblib.load(MODEL_DIR / "recommend_model.joblib")
+        yield_model = joblib.load(MODEL_DIR / "yield_model.joblib")
+        rec_encoders = joblib.load(MODEL_DIR / "recommend_encoders.joblib")
+        yield_encoders = joblib.load(MODEL_DIR / "yield_encoders.joblib")
+        
+        # 1. Auditing Crop Recommendation
+        X_rec, y_rec, crop_le_rec, region_le_rec, season_le_rec = _build_recommendation_dataset()
+        
+        # Calculate feature correlations (Pearson) with target
+        # For multi-class target, we compute average absolute correlation across unique labels
+        correlations = {}
+        feature_names_rec = [
+            "region_enc", "season_enc", "soil_ph", "soil_n", "soil_p", "soil_k", "soil_oc",
+            "rainfall", "avg_temp", "min_temp", "max_temp", "budget", "irrigation"
+        ]
+        for idx, col in enumerate(feature_names_rec):
+            corr = np.corrcoef(X_rec[:, idx], y_rec)[0, 1]
+            correlations[col] = round(float(corr) if not np.isnan(corr) else 0.0, 4)
+            
+        X_train_rec, X_test_rec, y_train_rec, y_test_rec = train_test_split(
+            X_rec, y_rec, test_size=0.2, random_state=42, stratify=y_rec
+        )
+        
+        pred_rec = rec_model.predict(X_test_rec)
+        acc_rec = accuracy_score(y_test_rec, pred_rec)
+        prec, rec, f1, _ = precision_recall_fscore_support(y_test_rec, pred_rec, average="macro")
+        
+        pi_rec = permutation_importance(rec_model, X_test_rec, y_test_rec, n_repeats=5, random_state=42)
+        pi_rec_importances = dict(zip(feature_names_rec, [round(float(w), 4) for w in pi_rec.importances_mean]))
+        pi_rec_importances = dict(sorted(pi_rec_importances.items(), key=lambda x: x[1], reverse=True))
+        
+        # 2. Auditing Yield Prediction
+        X_yield, y_yield, crop_le_y, region_le_y, season_le_y = _build_yield_dataset()
+        
+        X_train_y, X_test_y, y_train_y, y_test_y = train_test_split(
+            X_yield, y_yield, test_size=0.2, random_state=42
+        )
+        
+        pred_yield = yield_model.predict(X_test_y)
+        r2 = r2_score(y_test_y, pred_yield)
+        mae = mean_absolute_error(y_test_y, pred_yield)
+        rmse = np.sqrt(mean_squared_error(y_test_y, pred_yield))
+        mape = float(np.mean(np.abs((y_test_y - pred_yield) / y_test_y))) * 100
+        
+        feature_names_yield = [
+            "crop_enc", "region_enc", "season_enc", "base_yield", "water_req", "temp_min", "temp_max",
+            "npk_n", "npk_p", "npk_k", "soil_ph", "soil_n", "soil_p", "soil_k", "soil_oc",
+            "rainfall", "avg_temp", "min_temp", "max_temp", "irrigation"
+        ]
+        
+        pi_yield = permutation_importance(yield_model, X_test_y, y_test_y, n_repeats=5, random_state=42)
+        pi_yield_importances = dict(zip(feature_names_yield, [round(float(w), 4) for w in pi_yield.importances_mean]))
+        pi_yield_importances = dict(sorted(pi_yield_importances.items(), key=lambda x: x[1], reverse=True))
+        
+        # 3. Robustness test (sensor failure / missing weather)
+        X_test_noisy = X_test_rec.copy()
+        # Set rainfall (col 7) and temp indices (cols 8, 9, 10) to 0.0
+        X_test_noisy[:, [7, 8, 9, 10]] = 0.0
+        noisy_pred_rec = rec_model.predict(X_test_noisy)
+        noisy_acc_rec = accuracy_score(y_test_rec, noisy_pred_rec)
+        
+        # Robustness test for Yield Regressor (severe drought / zero rainfall)
+        X_test_drought = X_test_y.copy()
+        X_test_drought[:, 15] = 0.0  # Zero rainfall
+        drought_pred = yield_model.predict(X_test_drought)
+        drought_r2 = r2_score(y_test_y, drought_pred)
+        
+        # 4. Save audit metrics
+        audit_output = {
+            "crop_recommendation": {
+                "algorithm": type(rec_model).__name__,
+                "accuracy": round(float(acc_rec), 4),
+                "f1_macro": round(float(f1), 4),
+                "correlations": correlations,
+                "permutation_importances": pi_rec_importances,
+                "robustness_noisy_weather_accuracy": round(float(noisy_acc_rec), 4)
+            },
+            "yield_prediction": {
+                "algorithm": type(yield_model).__name__,
+                "r2": round(float(r2), 4),
+                "mae": round(float(mae), 2),
+                "rmse": round(float(rmse), 2),
+                "mape_pct": round(float(mape), 2),
+                "permutation_importances": pi_yield_importances,
+                "robustness_drought_r2": round(float(drought_r2), 4)
+            }
+        }
+        
+        output_path = MODEL_DIR / "audit_metrics.json"
+        with open(output_path, "w", encoding="utf-8") as f:
+            json.dump(audit_output, f, indent=2)
+            
+        logger.info(f"Audit completed successfully on clean models. Metrics saved to {output_path}")
+
+if __name__ == "__main__":
+    auditor = ModelAuditor()
+    auditor.run_audit()

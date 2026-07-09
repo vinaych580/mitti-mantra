@@ -8,6 +8,7 @@ from typing import Dict, Any, List, Optional
 from statistics import mean
 import sys
 import os
+import numpy as np
 
 # Add project root to path to import engine and utils
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -611,16 +612,25 @@ async def train_models():
 
 @app.get("/api/ml/status")
 async def model_status():
-    """Check which ML models are loaded and available."""
+    """Check which ML models are loaded and available, merging detailed audit benchmarks."""
     import ml.predict as pred
     pred._load_ml_models()
     model_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "ml", "models")
-    manifest_path = os.path.join(model_dir, "manifest.json")
+    manifest_path = os.path.join(model_dir, "evaluation_manifest.json")
+    audit_path = os.path.join(model_dir, "audit_metrics.json")
+    
     manifest = None
     if os.path.exists(manifest_path):
         import json
         with open(manifest_path, "r") as f:
             manifest = json.load(f)
+            
+    audit = None
+    if os.path.exists(audit_path):
+        import json
+        with open(audit_path, "r") as f:
+            audit = json.load(f)
+            
     return {
         "yield_model_loaded": pred._ml_yield_model is not None,
         "price_model_loaded": pred._ml_price_model is not None,
@@ -628,7 +638,324 @@ async def model_status():
         "model_dir": model_dir,
         "models_exist": os.path.exists(os.path.join(model_dir, "yield_model.joblib")),
         "training_report": manifest,
+        "audit_metrics": audit
     }
+
+# ---------------------------------------------------------------------------
+# Phase 6 Integration: Asynchronous, Validated, and Cached Endpoints
+# ---------------------------------------------------------------------------
+import time
+import logging
+
+logger = logging.getLogger("FastAPIIntegration")
+
+# Thread-safe in-memory cache with 30s TTL
+ROUTE_CACHE = {}
+
+def get_cached_response(key: str, ttl: int = 30):
+    now = time.time()
+    if key in ROUTE_CACHE:
+        entry, timestamp = ROUTE_CACHE[key]
+        if now - timestamp < ttl:
+            return entry
+    return None
+
+def set_cached_response(key: str, data: Any):
+    ROUTE_CACHE[key] = (data, time.time())
+
+# --- Validation Models ---
+class CropRecQuery(BaseModel):
+    region_id: str
+    season: str
+    budget_per_acre: float = Field(..., gt=0, description="Financial budget constraint per acre in INR")
+    area_acres: float = Field(..., gt=0, description="Total farm area size in acres")
+
+class YieldPredQuery(BaseModel):
+    crop_id: str
+    region_id: str
+    season: str
+    irrigation_level: Optional[float] = Field(0.5, ge=0.0, le=1.0, description="Irrigation level multiplier (0.0 to 1.0)")
+
+class ProfitEstRequest(BaseModel):
+    crop_id: str
+    predicted_yield_kg_per_acre: float = Field(..., ge=0, description="Predicted yield volume in kg per acre")
+    area_acres: float = Field(..., gt=0, description="Total farm area size in acres")
+    budget_per_acre: float = Field(..., gt=0, description="Allocated budget limit per acre in INR")
+    mandi_price_per_kg: Optional[float] = Field(None, ge=0, description="Current market price per kg in INR")
+
+class IrrigationQuery(BaseModel):
+    crop_id: str
+    sowing_date: Optional[str] = Field("2025-06-15", description="Estimated sowing date in YYYY-MM-DD format")
+    rainfall_mm: Optional[float] = Field(800, ge=0, description="Seasonal cumulative rainfall in mm")
+    irrigation_level: Optional[float] = Field(0.5, ge=0.0, le=1.0, description="Irrigation level multiplier (0.0 to 1.0)")
+
+class FertilizerQuery(BaseModel):
+    crop_id: str
+    n_kg_per_acre: float = Field(..., ge=0, description="Current soil Nitrogen content in kg per acre")
+    p_kg_per_acre: float = Field(..., ge=0, description="Current soil Phosphorus content in kg per acre")
+    k_kg_per_acre: float = Field(..., ge=0, description="Current soil Potassium content in kg per acre")
+
+# --- Async & Cached REST API Routes ---
+@app.get("/api/crop")
+async def get_crop_recommendations_api(region_id: str, season: str, budget_per_acre: float, area_acres: float):
+    """Retrieves ranked crop suggestions with expected profits, risk scores, and ML confidence."""
+    logger.info(f"Crop rec request received for: region={region_id}, season={season}, budget={budget_per_acre}, area={area_acres}")
+    if budget_per_acre <= 0 or area_acres <= 0:
+        raise HTTPException(status_code=400, detail="budget_per_acre and area_acres must be greater than 0")
+    
+    cache_key = f"crop_{region_id}_{season}_{budget_per_acre}_{area_acres}"
+    cached = get_cached_response(cache_key)
+    if cached:
+        return cached
+        
+    try:
+        res = recommend_crops(region_id, season, budget_per_acre, area_acres)
+        
+        # Integrate Agricultural Intelligence Layer (Phase 5 explainer)
+        from engine.intelligence_layer import explain_crop_recommendation
+        from ml.predict import _load_crop_parameters, _load_soil_by_region, _load_weather_by_region
+        crop_params = _load_crop_parameters()
+        soil_data = _load_soil_by_region()
+        weather_data = _load_weather_by_region()
+        
+        wkey = (region_id, season.lower())
+        weather = weather_data.get(wkey, {})
+        soil = soil_data.get(region_id, {})
+        
+        for rec in res:
+            cid = rec["crop_id"]
+            cp = crop_params.get(cid)
+            cp_dict = {
+                "temp_min_c": cp.temp_min_c if cp else 15.0,
+                "temp_max_c": cp.temp_max_c if cp else 35.0,
+                "water_requirement_mm": cp.water_requirement_mm if cp else 600.0,
+                "avg_input_cost_inr_per_acre": cp.avg_input_cost_inr_per_acre if cp else 15000.0
+            }
+            reasons = explain_crop_recommendation(cid, rec["crop_name"], soil, weather, budget_per_acre, cp_dict)
+            rec["reasons"] = reasons
+            
+        set_cached_response(cache_key, res)
+        return res
+    except Exception as e:
+        logger.error(f"Crop recommendation failure: {e}")
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.post("/api/crop")
+async def post_crop_recommendations_api(req: CropRecQuery):
+    """POST wrapper for crop recommendation API checks."""
+    return await get_crop_recommendations_api(req.region_id, req.season, req.budget_per_acre, req.area_acres)
+
+@app.get("/api/yield")
+async def get_yield_prediction_api(crop_id: str, region_id: str, season: str, irrigation_level: float = 0.5):
+    """Predicts yield output in kg/acre with 95% confidence intervals and agronomic drivers."""
+    logger.info(f"Yield prediction request: crop={crop_id}, region={region_id}, irrigation={irrigation_level}")
+    if not (0.0 <= irrigation_level <= 1.0):
+        raise HTTPException(status_code=400, detail="irrigation_level must be between 0.0 and 1.0")
+        
+    cache_key = f"yield_{crop_id}_{region_id}_{season}_{irrigation_level}"
+    cached = get_cached_response(cache_key)
+    if cached:
+        return cached
+        
+    try:
+        from ml.predict import predict_yield_kg_per_acre, _load_weather_by_region, _load_soil_by_region
+        weather_data = _load_weather_by_region()
+        soil_data = _load_soil_by_region()
+        
+        wkey = (region_id, season.lower())
+        weather = {
+            "rainfall_mm": float(weather_data.get(wkey, {}).get("rainfall_mm", 800)),
+            "avg_temp_c": float(weather_data.get(wkey, {}).get("avg_temp_c", 28)),
+            "min_temp_c": float(weather_data.get(wkey, {}).get("min_temp_c", 20)),
+            "max_temp_c": float(weather_data.get(wkey, {}).get("max_temp_c", 35))
+        }
+        soil = {
+            "ph": float(soil_data.get(region_id, {}).get("ph", 7.0)),
+            "n_kg_per_acre": float(soil_data.get(region_id, {}).get("n_kg_per_acre", 40)),
+            "p_kg_per_acre": float(soil_data.get(region_id, {}).get("p_kg_per_acre", 20)),
+            "k_kg_per_acre": float(soil_data.get(region_id, {}).get("k_kg_per_acre", 20)),
+            "organic_carbon_percent": float(soil_data.get(region_id, {}).get("organic_carbon_percent", 0.5))
+        }
+        yld = predict_yield_kg_per_acre(crop_id, region_id, season, weather, soil, irrigation_level)
+        
+        # 95% confidence interval using residual std error from audit report
+        lower_bound = max(0.0, yld - 1979)
+        upper_bound = yld + 1979
+        
+        from engine.intelligence_layer import explain_yield_prediction
+        explanation = explain_yield_prediction(crop_id, yld, round(lower_bound, 2), round(upper_bound, 2), soil, weather)
+        
+        res = {
+            "predicted_yield_kg_per_acre": round(yld, 2),
+            "confidence_interval": {
+                "lower_bound": round(lower_bound, 2),
+                "upper_bound": round(upper_bound, 2)
+            },
+            "algorithm": "RandomForestRegressor (Tuned)",
+            "intelligence_report": explanation
+        }
+        set_cached_response(cache_key, res)
+        return res
+    except Exception as e:
+        logger.error(f"Yield prediction failure: {e}")
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.post("/api/profit")
+async def post_profit_estimation_api(req: ProfitEstRequest):
+    """Evaluates expected profit returns, input expenses, and ROI."""
+    logger.info(f"Profit estimation request: crop={req.crop_id}, yield={req.predicted_yield_kg_per_acre}")
+    try:
+        from ml.predict import profit_estimator, _load_crop_parameters
+        res = profit_estimator(
+            crop_id=req.crop_id,
+            predicted_yield_kg_per_acre=req.predicted_yield_kg_per_acre,
+            area_acres=req.area_acres,
+            budget_per_acre=req.budget_per_acre,
+            mandi_price_per_kg=req.mandi_price_per_kg
+        )
+        
+        crop_params = _load_crop_parameters()
+        cp = crop_params.get(req.crop_id)
+        cost = cp.avg_input_cost_inr_per_acre if cp else req.budget_per_acre
+        
+        from engine.intelligence_layer import explain_profit_prediction
+        financials = explain_profit_prediction(req.crop_id, res, cost)
+        res["intelligence_report"] = financials
+        return res
+    except Exception as e:
+        logger.error(f"Profit estimation failure: {e}")
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.get("/api/irrigation")
+async def get_irrigation_api(crop_id: str, sowing_date: str = "2025-06-15", rainfall_mm: float = 800, irrigation_level: float = 0.5):
+    """Retrieves week-by-week scheduling parameters and supplemental reasoning."""
+    logger.info(f"Irrigation schedule query: crop={crop_id}, rain={rainfall_mm}")
+    if not (0.0 <= irrigation_level <= 1.0):
+        raise HTTPException(status_code=400, detail="irrigation_level must be between 0.0 and 1.0")
+    try:
+        schedule = irrigation_schedule(crop_id, sowing_date, rainfall_mm, irrigation_level)
+        
+        # Integrate Agricultural Intelligence Layer (Phase 5 explainer)
+        from engine.intelligence_layer import explain_irrigation
+        water_req = schedule.get("total_water_requirement_mm", 1200.0)
+        needed = schedule.get("total_irrigation_needed_mm", max(0.0, water_req - rainfall_mm))
+        reasons = explain_irrigation(crop_id, water_req, rainfall_mm, needed)
+        schedule["reasons"] = reasons
+        return schedule
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.get("/api/fertilizer")
+async def get_fertilizer_api(crop_id: str, n_kg_per_acre: float, p_kg_per_acre: float, k_kg_per_acre: float):
+    """Computes replenishment dosage based on soil NPK indicators and government guidelines."""
+    logger.info(f"Fertilizer requirements calculation: crop={crop_id}, n={n_kg_per_acre}")
+    if n_kg_per_acre < 0 or p_kg_per_acre < 0 or k_kg_per_acre < 0:
+        raise HTTPException(status_code=400, detail="Nutrient weights cannot be negative")
+    try:
+        rec = fertilizer_recommendation(crop_id, {"n_kg_per_acre": n_kg_per_acre, "p_kg_per_acre": p_kg_per_acre, "k_kg_per_acre": k_kg_per_acre})
+        
+        # Integrate Agricultural Intelligence Layer (Phase 5 explainer)
+        from engine.intelligence_layer import explain_fertilizer
+        reasons = explain_fertilizer(crop_id, {"n_kg_per_acre": n_kg_per_acre}, rec.get("deficit_npk", {}))
+        rec["reasons"] = reasons
+        return rec
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.get("/api/soil")
+async def get_soil_details_api(region_id: str):
+    """Retrieves soil attributes mapped to region coordinates."""
+    logger.info(f"Soil grids lookup: region={region_id}")
+    cache_key = f"soil_grid_{region_id}"
+    cached = get_cached_response(cache_key)
+    if cached:
+        return cached
+    try:
+        row = _csv_first("soil.csv", "region_id", region_id)
+        if not row:
+            raise HTTPException(status_code=404, detail="Soil details not found for region")
+        res = {
+            "region_id": region_id,
+            "soil_type": row["soil_type"],
+            "ph": float(row["ph"]),
+            "n_kg_per_acre": float(row["n_kg_per_acre"]),
+            "p_kg_per_acre": float(row["p_kg_per_acre"]),
+            "k_kg_per_acre": float(row["k_kg_per_acre"]),
+            "organic_carbon_percent": float(row["organic_carbon_percent"]),
+            "source": "SoilGrids Cache"
+        }
+        set_cached_response(cache_key, res)
+        return res
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.get("/api/weather")
+async def get_weather_details_api(region_id: str, season: str = "kharif"):
+    """Fetches meteorological averages and severe IMD weather alerts."""
+    logger.info(f"Weather info request: region={region_id}, season={season}")
+    cache_key = f"weather_alert_{region_id}_{season}"
+    cached = get_cached_response(cache_key)
+    if cached:
+        return cached
+    try:
+        results = _csv_index("weather.csv", "region_id").get(region_id, [])
+        if season:
+            results = [row for row in results if row["season"] == season]
+        if not results:
+            raise HTTPException(status_code=404, detail="Weather data not found for region")
+        latest_weather = results[-1]
+        
+        # Integrate severe warning simulation matching fetcher class
+        from data_ingestion.fetchers.imd import get_imd_alerts
+        parts = region_id.split("_")
+        state = parts[0].capitalize()
+        district = parts[1].capitalize() if len(parts) > 1 else ""
+        alert = get_imd_alerts(state, district)
+        
+        res = {
+            "region_id": region_id,
+            "season": season,
+            "rainfall_mm": float(latest_weather["rainfall_mm"]),
+            "avg_temp_c": float(latest_weather["avg_temp_c"]),
+            "min_temp_c": float(latest_weather["min_temp_c"]),
+            "max_temp_c": float(latest_weather["max_temp_c"]),
+            "imd_alert": alert.get("alert_level", "Green"),
+            "imd_warning_message": alert.get("description", "No warning issued")
+        }
+        set_cached_response(cache_key, res)
+        return res
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.get("/api/market")
+async def get_market_pricing_api(region_id: str, crop_id: str):
+    """Retrieves current commodity averages and price volatility risks."""
+    logger.info(f"Market pricing metrics: region={region_id}, crop={crop_id}")
+    cache_key = f"market_{region_id}_{crop_id}"
+    cached = get_cached_response(cache_key)
+    if cached:
+        return cached
+    try:
+        results = _csv_index("mandi_prices.csv", "region_id").get(region_id, [])
+        results = [row for row in results if row["crop_id"] == crop_id]
+        
+        latest_price = float(results[-1]["price_inr_per_kg"]) if results else 25.0
+        prices = [float(r["price_inr_per_kg"]) for r in results]
+        volatility = np.std(prices) if len(prices) > 1 else 0.0
+        
+        forecast_data = price_forecast(region_id, crop_id, months_ahead=6)
+        
+        res = {
+            "region_id": region_id,
+            "crop_id": crop_id,
+            "current_mandi_price_inr_per_kg": latest_price,
+            "volatility_std": round(float(volatility), 2),
+            "forecast": forecast_data
+        }
+        set_cached_response(cache_key, res)
+        return res
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 # ---------------------------------------------------------------------------
 # Chatbot

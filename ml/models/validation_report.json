@@ -1,0 +1,67 @@
+{
+  "test_cases": [
+    {
+      "test": "Punjab (Rabi - Wheat belt)",
+      "region_id": "punjab_ludhiana",
+      "season": "rabi",
+      "status": "PASS",
+      "top_crop": "Mustard (Sarson)",
+      "top_score": 78.43,
+      "top_yield_kg_ac": 872.65,
+      "top_profit_inr": 88270.68,
+      "latency_ms": 155,
+      "ml_used": true
+    },
+    {
+      "test": "Maharashtra (Kharif - Cotton zone)",
+      "region_id": "mh_nashik",
+      "season": "kharif",
+      "status": "PASS",
+      "top_crop": "Finger Millet (Ragi)",
+      "top_score": 86.01,
+      "top_yield_kg_ac": 1282.04,
+      "top_profit_inr": 117844.8,
+      "latency_ms": 269,
+      "ml_used": true
+    },
+    {
+      "test": "Tamil Nadu (Kharif - Rice bowl)",
+      "region_id": "tn_thanjavur",
+      "season": "kharif",
+      "status": "PASS",
+      "top_crop": "Black Gram (Urad)",
+      "top_score": 82.04,
+      "top_yield_kg_ac": 660.64,
+      "top_profit_inr": 67141.2,
+      "latency_ms": 263,
+      "ml_used": true
+    },
+    {
+      "test": "UP (Rabi - Wheat/Mustard)",
+      "region_id": "up_lucknow",
+      "season": "rabi",
+      "status": "PASS",
+      "top_crop": "Mustard (Sarson)",
+      "top_score": 80.69,
+      "top_yield_kg_ac": 896.94,
+      "top_profit_inr": 67308.14,
+      "latency_ms": 132,
+      "ml_used": true
+    },
+    {
+      "test": "Gujarat (Kharif - Groundnut)",
+      "region_id": "guj_anand",
+      "season": "kharif",
+      "status": "PASS",
+      "top_crop": "Finger Millet (Ragi)",
+      "top_score": 82.68,
+      "top_yield_kg_ac": 1296.97,
+      "top_profit_inr": 75757.6,
+      "latency_ms": 260,
+      "ml_used": true
+    }
+  ],
+  "all_pass": true,
+  "passed": 5,
+  "total": 5
+}

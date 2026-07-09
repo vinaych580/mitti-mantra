@@ -188,7 +188,25 @@
 
     districtSelect.disabled = false;
 
-    if (DISTRICT_COORDS[stateName]) {
+    // Dynamically retrieve all unique districts for this state from our massive CONSULTANTS pool!
+    const poolDistricts = [...new Set(CONSULTANTS.filter(c => c.state === stateName).map(c => c.district))].sort();
+    if (poolDistricts.length > 0) {
+      poolDistricts.forEach(dist => {
+        const opt = document.createElement("option");
+        opt.value = dist;
+        opt.textContent = dist;
+        districtSelect.appendChild(opt);
+      });
+      // Also cache coords dynamically
+      if (!DISTRICT_COORDS[stateName]) {
+        DISTRICT_COORDS[stateName] = {};
+      }
+      CONSULTANTS.filter(c => c.state === stateName).forEach(c => {
+        if (!DISTRICT_COORDS[stateName][c.district]) {
+          DISTRICT_COORDS[stateName][c.district] = { lat: c.latitude, lng: c.longitude };
+        }
+      });
+    } else if (DISTRICT_COORDS[stateName]) {
       Object.keys(DISTRICT_COORDS[stateName]).forEach(dist => {
         const opt = document.createElement("option");
         opt.value = dist;
@@ -239,23 +257,40 @@
     });
   }
 
-  // Find nearest district from any coordinates
+  // Find nearest district from any coordinates using all consultants in the pool
   function findNearestDistrict(lat, lng) {
     let minDistance = Infinity;
     let nearestState = "";
     let nearestDistrict = "";
     
-    Object.keys(DISTRICT_COORDS).forEach(sName => {
-      Object.keys(DISTRICT_COORDS[sName]).forEach(dName => {
-        const coords = DISTRICT_COORDS[sName][dName];
-        const dist = getDistanceKm(lat, lng, coords.lat, coords.lng);
-        if (dist < minDistance) {
-          minDistance = dist;
-          nearestState = sName;
-          nearestDistrict = dName;
+    // Search in the active CONSULTANTS pool first for maximum accuracy
+    if (CONSULTANTS.length > 0) {
+      CONSULTANTS.forEach(expert => {
+        if (expert.latitude && expert.longitude) {
+          const dist = getDistanceKm(lat, lng, expert.latitude, expert.longitude);
+          if (dist < minDistance) {
+            minDistance = dist;
+            nearestState = expert.state;
+            nearestDistrict = expert.district;
+          }
         }
       });
-    });
+    }
+    
+    // Fallback to DISTRICT_COORDS if pool was empty
+    if (!nearestState && Object.keys(DISTRICT_COORDS).length > 0) {
+      Object.keys(DISTRICT_COORDS).forEach(sName => {
+        Object.keys(DISTRICT_COORDS[sName]).forEach(dName => {
+          const coords = DISTRICT_COORDS[sName][dName];
+          const dist = getDistanceKm(lat, lng, coords.lat, coords.lng);
+          if (dist < minDistance) {
+            minDistance = dist;
+            nearestState = sName;
+            nearestDistrict = dName;
+          }
+        });
+      });
+    }
 
     return { state: nearestState, district: nearestDistrict };
   }

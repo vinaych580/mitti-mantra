@@ -209,7 +209,7 @@ def _ml_predict_yield(
             float(soil.get("n_kg_per_acre", 40)),
             float(soil.get("p_kg_per_acre", 20)),
             float(soil.get("k_kg_per_acre", 20)),
-            float(soil.get("organic_carbon_pct", 0.5)),
+            float(soil.get("organic_carbon_percent") if soil.get("organic_carbon_percent") is not None else soil.get("organic_carbon_pct", 0.5)),
             float(weather.get("rainfall_mm", 800)),
             float(weather.get("avg_temp_c", 28)),
             float(weather.get("min_temp_c", 20)),
@@ -506,11 +506,11 @@ def _ml_recommend_crop(
             float(soil.get("n_kg_per_acre", 40)),
             float(soil.get("p_kg_per_acre", 20)),
             float(soil.get("k_kg_per_acre", 20)),
-            float(soil.get("organic_carbon_pct", 0.5)),
+            float(soil.get("organic_carbon_percent") if soil.get("organic_carbon_percent") is not None else soil.get("organic_carbon_pct", 0.5)),
             float(weather.get("rainfall_mm", 800)),
             float(weather.get("avg_temp_c", 28)),
-            float(weather.get("avg_temp_c", 28)) - 8,
-            float(weather.get("avg_temp_c", 28)) + 7,
+            float(weather.get("min_temp_c", float(weather.get("avg_temp_c", 28)) - 8)),
+            float(weather.get("max_temp_c", float(weather.get("avg_temp_c", 28)) + 7)),
             budget,
             irrigation,
         ]], dtype=np.float32)
@@ -577,12 +577,15 @@ def recommend_crops(
     weather = {
         "rainfall_mm": float(weather_data[weather_key]["rainfall_mm"]),
         "avg_temp_c": float(weather_data[weather_key]["avg_temp_c"]),
+        "min_temp_c": float(weather_data[weather_key].get("min_temp_c", float(weather_data[weather_key]["avg_temp_c"]) - 8)),
+        "max_temp_c": float(weather_data[weather_key].get("max_temp_c", float(weather_data[weather_key]["avg_temp_c"]) + 7)),
     }
     soil = {
         "ph": float(soil_data[region_id]["ph"]),
         "n_kg_per_acre": float(soil_data[region_id]["n_kg_per_acre"]),
         "p_kg_per_acre": float(soil_data[region_id]["p_kg_per_acre"]),
         "k_kg_per_acre": float(soil_data[region_id]["k_kg_per_acre"]),
+        "organic_carbon_percent": float(soil_data[region_id].get("organic_carbon_percent", 0.5)),
     }
 
     region_crop_price: dict[str, float] = {}
