@@ -86,7 +86,7 @@ def _build_yield_dataset() -> tuple[np.ndarray, np.ndarray]:
 
     all_crops = sorted(crop_params.keys())
     all_regions = sorted(soil_data.keys())
-    all_seasons = ["kharif", "rabi", "annual"]
+    all_seasons = ["kharif", "rabi", "annual", "perennial", "perenn"]
 
     crop_le, region_le, season_le = _fit_label_encoders(all_crops, all_regions, all_seasons)
 
@@ -351,7 +351,7 @@ def _build_recommendation_dataset() -> tuple[np.ndarray, np.ndarray]:
 
     crop_le = LabelEncoder().fit(all_crops)
     region_le = LabelEncoder().fit(all_regions)
-    season_le = LabelEncoder().fit(all_seasons + ["annual"])
+    season_le = LabelEncoder().fit(all_seasons + ["annual", "perennial", "perenn"])
 
     rng = np.random.RandomState(42)
     X_all, y_all = [], []
@@ -383,7 +383,9 @@ def _build_recommendation_dataset() -> tuple[np.ndarray, np.ndarray]:
                                 best_score = -1e9
                                 for cid, cp in crop_params.items():
                                     crop_season = cp["season"].lower()
-                                    if season not in crop_season and "annual" not in crop_season:
+                                    if (season not in crop_season and 
+                                        "annual" not in crop_season and 
+                                        "perennial" not in crop_season):
                                         continue
 
                                     base_yield = float(cp["base_yield_kg_per_acre"])
@@ -509,7 +511,7 @@ def train_recommendation_model() -> dict[str, Any]:
     # Save encoders for recommendation
     all_crops = sorted({r["crop_id"] for r in _load_csv("crop_parameters.csv")})
     all_regions = sorted({r["region_id"] for r in _load_csv("soil.csv")})
-    all_seasons = ["kharif", "rabi", "annual"]
+    all_seasons = ["kharif", "rabi", "annual", "perennial", "perenn"]
     crop_le = LabelEncoder().fit(all_crops)
     region_le = LabelEncoder().fit(all_regions)
     season_le = LabelEncoder().fit(all_seasons)
