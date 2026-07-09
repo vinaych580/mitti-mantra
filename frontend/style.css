@@ -1207,8 +1207,8 @@ section { padding: clamp(72px, 10vw, 140px) 0; position: relative; }
 }
 .livedemo__form {
   display: grid;
-  grid-template-columns: 1.3fr 1.2fr 0.8fr 1fr auto;
-  gap: 12px;
+  grid-template-columns: 1.3fr 1.2fr 0.8fr 1fr;
+  gap: 16px;
   align-items: end;
   padding-bottom: 22px;
   border-bottom: 1px solid var(--border, rgba(0,0,0,0.06));
@@ -1224,7 +1224,7 @@ section { padding: clamp(72px, 10vw, 140px) 0; position: relative; }
   padding: 10px 12px; font-size: 0.95rem; font-family: inherit;
   background: var(--surface); color: var(--ink);
 }
-.livedemo__go { justify-self: end; height: 44px; }
+.livedemo__go { grid-column: 1 / -1; justify-self: center; height: 44px; margin-top: 8px; }
 
 .livedemo__result { padding: 22px 0 6px; min-height: 120px; }
 .livedemo__empty {
