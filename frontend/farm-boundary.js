@@ -208,6 +208,9 @@
       currentData.district = geo.district || '';
       currentData.village  = geo.village  || '';
       currentData.nearestState = geo.state || null;
+      if (geo.state) {
+        currentData.region_id = FarmState.getNearestRegionId(centroid, geo.state);
+      }
     }
 
     // Apply soil result

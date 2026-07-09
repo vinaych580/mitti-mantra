@@ -106,13 +106,29 @@
    * the supplied centroid [lon, lat] (GeoJSON order).
    * Always returns a string — never throws.
    */
-  function getNearestRegionId(centroid) {
+  function getNearestRegionId(centroid, stateName = null) {
     if (!centroid || centroid.length < 2) return 'telangana_medak'; // ultimate fallback
     const lon = centroid[0];
     const lat  = centroid[1];
-    let best = REGION_CENTROIDS[0];
+
+    let filtered = REGION_CENTROIDS;
+    if (stateName) {
+      const normState = stateName.trim().toLowerCase();
+      const sameStateRegions = REGION_CENTROIDS.filter(rc => {
+        const rcState = rc.state.toLowerCase();
+        if (normState.includes(rcState) || rcState.includes(normState)) return true;
+        if ((normState.includes('jammu') || normState.includes('kashmir')) && rc.region_id === 'jk_pulwama') return true;
+        if ((normState === 'uttarakhand' || normState === 'uk') && rc.region_id === 'uk_udhamsinghnagar') return true;
+        return false;
+      });
+      if (sameStateRegions.length > 0) {
+        filtered = sameStateRegions;
+      }
+    }
+
+    let best = filtered[0];
     let bestD = Infinity;
-    for (const rc of REGION_CENTROIDS) {
+    for (const rc of filtered) {
       const d = _dist2(lat, lon, rc.lat, rc.lon);
       if (d < bestD) { bestD = d; best = rc; }
     }
