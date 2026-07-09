@@ -153,7 +153,11 @@ def _load_mandi_prices() -> list[dict[str, str]]:
 
 
 def _season_match(input_season: str, crop_season: str) -> bool:
-    return input_season.lower() in crop_season
+    c_s = crop_season.lower()
+    i_s = input_season.lower()
+    if "annual" in c_s or "perennial" in c_s or "all" in c_s or "any" in c_s:
+        return True
+    return i_s in c_s
 
 
 def _historical_yield_average(crop_id: str, region_id: str, history_rows: list[dict[str, str]]) -> float | None:
@@ -241,8 +245,12 @@ def predict_yield_kg_per_acre(
     ml_pred = _ml_predict_yield(
         crop_id, region_id, season, crop_params, soil, weather, irrigation_level,
     )
+    from utils.calculations import calculate_climate_factor
+    climate_factor = calculate_climate_factor(weather, crop)
     if ml_pred is not None and ml_pred > 0:
-        return ml_pred
+        if climate_factor < 0.75:
+            ml_pred = ml_pred * (climate_factor / 0.75)
+        return round(ml_pred, 2)
 
     # Fallback: heuristic formula
     history_rows = _load_yield_history()
@@ -623,13 +631,14 @@ def recommend_crops(
         soil_health = clamp(((n_ratio + p_ratio + k_ratio) / 3.0) * 100.0, 0.0, 120.0)
 
         # Blend ML confidence into smart_score if available
-        ml_bonus = ml_conf_map.get(crop_id, 0.0) * 15  # Up to 15 points from ML
+        ml_score = ml_conf_map.get(crop_id, 0.0) * 100.0
+        ml_term = ml_score if _ml_recommend_model is not None else roi_normalized
         smart_score = clamp(
             0.35 * roi_normalized
             + 0.20 * risk["confidence_score"]
             + 0.15 * budget_fit
             + 0.15 * soil_health
-            + 0.15 * (ml_bonus if ml_bonus > 0 else roi_normalized * 0.15),
+            + 0.15 * ml_term,
             0.0,
             100.0,
         )

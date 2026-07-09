@@ -52,10 +52,11 @@ def calculate_climate_factor(weather: dict[str, float], crop: CropParameter) -> 
     rainfall_gap = abs(rainfall - optimal_rainfall) / max(optimal_rainfall, 1.0)
     temp_gap = abs(temp - optimal_temp) / max(optimal_temp, 1.0)
 
-    rainfall_score = clamp(1.0 - 0.7 * rainfall_gap, 0.55, 1.2)
-    temp_score = clamp(1.0 - 0.8 * temp_gap, 0.6, 1.15)
+    # Allow climate factor to drop to 0.1 for severe mismatches (e.g. pulses in 2200mm rainfall)
+    rainfall_score = clamp(1.0 - 0.9 * rainfall_gap, 0.1, 1.2)
+    temp_score = clamp(1.0 - 0.9 * temp_gap, 0.1, 1.15)
 
-    return clamp(rainfall_score * temp_score, 0.45, 1.25)
+    return clamp(rainfall_score * temp_score, 0.05, 1.25)
 
 
 def calculate_yield_kg_per_acre(
@@ -136,7 +137,9 @@ def calculate_risk_score_and_subscores(
         "price_volatility": round(price_vol, 2),
     }
 
-    # Unified weightage
-    risk_score = (0.35 * drought) + (0.25 * heat) + (0.20 * flood) + (0.20 * price_vol)
+    # Unified weightage: Agronomic bottleneck (weakest link) - max risk dominates total risk
+    max_climatic_risk = max(drought, heat, flood)
+    mean_climatic_risk = (drought + heat + flood) / 3.0
+    risk_score = (0.50 * max_climatic_risk) + (0.30 * mean_climatic_risk) + (0.20 * price_vol)
 
     return round(risk_score, 2), risk_subscores
