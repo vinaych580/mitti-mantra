@@ -86,15 +86,15 @@ def first_by(name: str, key: str, value: str) -> Optional[Dict[str, str]]:
 
 def dict_by(name: str, key: str) -> Dict[str, Dict[str, str]]:
     """Map key -> row (last-wins). Cached per (file, key)."""
+    rows = load(name)
     with _lock:
         buckets = _idx_cache.setdefault(name, {})
         idx = buckets.get(f"dict:{key}")
         if idx is not None:
             return idx
-    built = {r.get(key, ""): r for r in load(name)}
-    with _lock:
-        _idx_cache[name][f"dict:{key}"] = built
-    return built
+        built = {r.get(key, ""): r for r in rows}
+        buckets[f"dict:{key}"] = built
+        return built
 
 
 def clear() -> None:

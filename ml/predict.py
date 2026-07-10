@@ -68,7 +68,7 @@ def _load_ml_models():
 
 def _load_csv(file_name: str) -> list[dict[str, str]]:
     # Shared mtime-aware cache — avoids re-parsing CSVs on every ML call.
-    from utils.csv_cache import load as _cached_load
+    from utils.csv_cache import load as _cached_load, index_by as _cached_index_by
     return _cached_load(file_name)
 
 
@@ -592,10 +592,11 @@ def recommend_crops(
         "organic_carbon_percent": float(soil_data[region_id].get("organic_carbon_percent", 0.5)),
     }
 
+    from utils.csv_cache import index_by as _cached_index_by
+    region_rows = _cached_index_by("mandi_prices.csv", "region_id").get(region_id, [])
     region_crop_price: dict[str, float] = {}
-    for row in mandi_rows:
-        if row["region_id"] == region_id:
-            region_crop_price[row["crop_id"]] = float(row["price_inr_per_kg"])
+    for row in region_rows:
+        region_crop_price[row["crop_id"]] = float(row["price_inr_per_kg"])
 
     # Get ML confidence scores if available
     ml_conf = _ml_recommend_crop(region_id, season, soil, weather, budget_per_acre, 0.5)

@@ -25,13 +25,33 @@ class CropParameter:
     npk_k_kg_per_acre: float
 
 
+CROP_OPTIMAL_PH = {
+    "rice": (5.5, 7.0),
+    "wheat": (6.0, 7.5),
+    "maize": (5.8, 7.2),
+    "sugarcane": (6.0, 7.5),
+    "cotton": (6.0, 8.0),
+    "pulses": (6.0, 7.2),
+    "groundnut": (5.5, 6.5),
+    "soybean": (6.0, 7.0),
+}
+
+
 def calculate_soil_factor(soil: dict[str, float], crop: CropParameter) -> float:
     ph = soil.get("ph", 7.0)
     n = soil.get("n_kg_per_acre", 40.0)
     p = soil.get("p_kg_per_acre", 20.0)
     k = soil.get("k_kg_per_acre", 20.0)
 
-    ph_score = 1.0 - min(abs(ph - 7.0) * 0.08, 0.35)
+    ph_min, ph_max = CROP_OPTIMAL_PH.get(crop.crop_id.lower(), (6.0, 7.5))
+    if ph < ph_min:
+        ph_gap = ph_min - ph
+    elif ph > ph_max:
+        ph_gap = ph - ph_max
+    else:
+        ph_gap = 0.0
+
+    ph_score = 1.0 - min(ph_gap * 0.12, 0.35)
 
     # Use crop-specific NPK requirements instead of hardcoded divisors
     n_ratio = n / max(crop.npk_n_kg_per_acre, 1.0)
@@ -47,10 +67,15 @@ def calculate_climate_factor(weather: dict[str, float], crop: CropParameter) -> 
     temp = weather.get("avg_temp_c", (crop.temp_min_c + crop.temp_max_c) / 2.0)
 
     optimal_rainfall = crop.water_requirement_mm
-    optimal_temp = (crop.temp_min_c + crop.temp_max_c) / 2.0
+
+    if temp < crop.temp_min_c:
+        temp_gap = (crop.temp_min_c - temp) / max(crop.temp_min_c, 1.0)
+    elif temp > crop.temp_max_c:
+        temp_gap = (temp - crop.temp_max_c) / max(crop.temp_max_c, 1.0)
+    else:
+        temp_gap = 0.0
 
     rainfall_gap = abs(rainfall - optimal_rainfall) / max(optimal_rainfall, 1.0)
-    temp_gap = abs(temp - optimal_temp) / max(optimal_temp, 1.0)
 
     # Allow climate factor to drop to 0.1 for severe mismatches (e.g. pulses in 2200mm rainfall)
     rainfall_score = clamp(1.0 - 0.9 * rainfall_gap, 0.1, 1.2)
@@ -94,7 +119,8 @@ def calculate_yield_kg_per_acre(
             else:
                 ideal_months = set(range(1, 13))
             if ideal_months and month not in ideal_months:
-                gap = min(abs(month - m) for m in ideal_months)
+                # Circular month distance calculation
+                gap = min(min(abs(month - m), 12 - abs(month - m)) for m in ideal_months)
                 date_factor = clamp(1.0 - gap * 0.06, 0.75, 1.0)
         except (ValueError, IndexError):
             date_factor = 1.0

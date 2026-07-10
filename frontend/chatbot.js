@@ -247,7 +247,7 @@
   // Markdown subset: **bold**, _em_, `code`, ```blocks```, bullet lists, headings,
   // pipe-tables, [links](url).
   function renderMarkdown(md) {
-    const esc = (s) => s.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+    const esc = (s) => s.replace(/[&<>'"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#x27;", '"': "&quot;" }[c]));
     const lines = md.split("\n");
     let out = "";
     let inCode = false, codeBuf = [], inList = false;
@@ -434,25 +434,30 @@
   // --------------- voice input (Web Speech API) ---------------
   const micBtn = panel.querySelector("#mm-chat-mic");
   const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SpeechRec) {
-    micBtn.style.display = "none";
-  } else {
-    let rec = null, listening = false;
-    micBtn.addEventListener("click", () => {
-      if (listening) { try { rec.stop(); } catch(_){} return; }
-      rec = new SpeechRec();
-      rec.lang = (document.documentElement.lang || "en-IN");
-      rec.interimResults = false;
-      rec.maxAlternatives = 1;
-      rec.onresult = (e) => {
-        const txt = e.results[0][0].transcript;
-        input.value = txt;
-        send();
-      };
-      rec.onerror = () => { listening = false; micBtn.classList.remove("listening"); };
-      rec.onend  = () => { listening = false; micBtn.classList.remove("listening"); };
-      try { rec.start(); listening = true; micBtn.classList.add("listening"); }
-      catch(_) { listening = false; micBtn.classList.remove("listening"); }
-    });
+  if (micBtn) {
+    if (!SpeechRec) {
+      micBtn.style.display = "none";
+    } else {
+      let rec = null, listening = false;
+      micBtn.addEventListener("click", () => {
+        if (listening) { try { rec.stop(); } catch(_){} return; }
+        rec = new SpeechRec();
+        
+        const docLang = document.documentElement.getAttribute('lang') || 'en';
+        rec.lang = { en: 'en-IN', hi: 'hi-IN', te: 'te-IN', kn: 'kn-IN' }[docLang] || 'en-IN';
+        
+        rec.interimResults = false;
+        rec.maxAlternatives = 1;
+        rec.onresult = (e) => {
+          const txt = e.results[0][0].transcript;
+          input.value = txt;
+          send();
+        };
+        rec.onerror = () => { listening = false; micBtn.classList.remove("listening"); };
+        rec.onend  = () => { listening = false; micBtn.classList.remove("listening"); };
+        try { rec.start(); listening = true; micBtn.classList.add("listening"); }
+        catch(_) { listening = false; micBtn.classList.remove("listening"); }
+      });
+    }
   }
 })();

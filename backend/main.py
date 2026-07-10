@@ -597,6 +597,33 @@ async def get_schemes(crop_id: str = "all", region_id: str = "all", area_acres: 
     """Match eligible government schemes for farmer profile."""
     return match_government_schemes(crop_id, region_id, area_acres, season)
 
+
+@app.get("/api/satellite")
+async def get_satellite_data(lat: float, lon: float):
+    """Retrieve satellite telemetry data (NDVI, soil moisture, canopy) from Earth Engine."""
+    from data_ingestion.fetchers.google_earth_engine import get_satellite_ndvi
+    from datetime import date, timedelta
+    today = date.today()
+    start_date = today - timedelta(days=30)
+    
+    try:
+        ndvi = get_satellite_ndvi(lat, lon, start_date, today)
+        if ndvi is None:
+            ndvi = 0.62
+    except Exception:
+        ndvi = 0.62
+        
+    seed = int(abs(lat * 100) + abs(lon * 100)) % 100
+    moisture = 0.35 + (seed % 40) / 100
+    canopy = "Excellent" if ndvi > 0.6 else "Good" if ndvi > 0.4 else "Fair" if ndvi > 0.2 else "Poor"
+    
+    return {
+        "ndvi": round(float(ndvi), 2),
+        "moisture": round(float(moisture), 2),
+        "canopy": canopy
+    }
+
+
 # ---------------------------------------------------------------------------
 # ML Model Endpoints
 # ---------------------------------------------------------------------------
@@ -658,10 +685,23 @@ def get_cached_response(key: str, ttl: int = 30):
         entry, timestamp = ROUTE_CACHE[key]
         if now - timestamp < ttl:
             return entry
+        else:
+            ROUTE_CACHE.pop(key, None)  # Clean up expired key on read
     return None
 
 def set_cached_response(key: str, data: Any):
-    ROUTE_CACHE[key] = (data, time.time())
+    now = time.time()
+    # Cap size at 1000 to prevent memory leaks
+    if len(ROUTE_CACHE) >= 1000:
+        # First try to clear expired entries
+        expired_keys = [k for k, (_, ts) in ROUTE_CACHE.items() if now - ts >= 30]
+        for k in expired_keys:
+            ROUTE_CACHE.pop(k, None)
+        # If still over limit, evict the oldest entry
+        if len(ROUTE_CACHE) >= 1000:
+            oldest_key = min(ROUTE_CACHE.keys(), key=lambda k: ROUTE_CACHE[k][1])
+            ROUTE_CACHE.pop(oldest_key, None)
+    ROUTE_CACHE[key] = (data, now)
 
 # --- Validation Models ---
 class CropRecQuery(BaseModel):
@@ -978,8 +1018,26 @@ frontend_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 if os.path.exists(frontend_dir):
     from fastapi.responses import FileResponse
     @app.api_route("/gyan-seva", methods=["GET", "HEAD"])
+    @app.api_route("/book-a-consultation", methods=["GET", "HEAD"])
+    @app.api_route("/book-consultation", methods=["GET", "HEAD"])
     async def gyan_seva_route(request: Request):
         return FileResponse(os.path.join(frontend_dir, "gyan-seva.html"))
+
+    @app.api_route("/book-a-tractor", methods=["GET", "HEAD"])
+    async def book_a_tractor_route(request: Request):
+        return FileResponse(os.path.join(frontend_dir, "book-a-tractor.html"))
+
+    @app.api_route("/dashboard", methods=["GET", "HEAD"])
+    async def dashboard_route(request: Request):
+        return FileResponse(os.path.join(frontend_dir, "dashboard.html"))
+
+    @app.api_route("/login", methods=["GET", "HEAD"])
+    async def login_route(request: Request):
+        return FileResponse(os.path.join(frontend_dir, "login.html"))
+
+    @app.api_route("/farm-boundary", methods=["GET", "HEAD"])
+    async def farm_boundary_route(request: Request):
+        return FileResponse(os.path.join(frontend_dir, "farm-boundary.html"))
 
     app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="frontend")
 

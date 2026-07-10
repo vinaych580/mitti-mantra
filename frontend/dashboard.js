@@ -281,6 +281,7 @@
 
   // --- Dynamic Agri-Telemetry & Map Integrations (Phase 7) ---
   let telemetryMapObj = null;
+  let activeTelemetryRegionId = null;
 
   // FIX-4: Full 30-region coordinate table sourced from FarmState.REGION_CENTROIDS.
   // Avoids the previous bug where only 4 regions were in REGION_COORDS and everything
@@ -298,10 +299,67 @@
     return tbl;
   })();
 
+  function drawPestRiskOverlay(coords, w) {
+    if (!telemetryMapObj) return;
+
+    // Remove any previous pest risk layers
+    telemetryMapObj.eachLayer(layer => {
+      if (layer.options && layer.options.className === 'pest-risk-zone') {
+        telemetryMapObj.removeLayer(layer);
+      }
+    });
+
+    const temp = w.avg_temp_c || 25;
+    const rain = w.rainfall_mm || 500;
+
+    let riskLevel = "Low";
+    let color = "#10b981"; // green
+    let fillOpacity = 0.08;
+    let description = "Low risk of fungal/insect infestations.";
+
+    if (temp > 25 && rain > 600) {
+      riskLevel = "High";
+      color = "#ef4444"; // red
+      fillOpacity = 0.28;
+      description = "Critical Risk! High temp & rainfall favor Blast & Stem Borer outbreaks.";
+    } else if (temp > 22 && rain > 350) {
+      riskLevel = "Moderate";
+      color = "#f59e0b"; // orange
+      fillOpacity = 0.18;
+      description = "Moderate Risk. Watch for leafhoppers and mild rust infections.";
+    }
+
+    // Draw a circle indicating the risk zone around the farm/region centroid
+    const radiusInMeters = riskLevel === "High" ? 600 : riskLevel === "Moderate" ? 400 : 200;
+
+    const circle = L.circle(coords, {
+      color: color,
+      fillColor: color,
+      fillOpacity: fillOpacity,
+      weight: 1.5,
+      dashArray: riskLevel === "High" ? '4, 4' : null,
+      className: 'pest-risk-zone'
+    }).addTo(telemetryMapObj);
+
+    // Add a warning tooltip to the risk zone
+    circle.bindTooltip(`<b>${riskLevel} Pest Risk Zone</b><br>${description}`, {
+      permanent: true,
+      direction: 'top',
+      opacity: 0.9,
+      className: 'pest-tooltip'
+    });
+  }
+
   function updateRegionalTelemetry(regionId, regionName) {
+    activeTelemetryRegionId = regionId;
     const pnl = document.getElementById('regionalTelemetry');
     if (!pnl) return;
     pnl.style.display = 'block';
+
+    const farmActive = savedFarm && savedFarm.region_id === regionId;
+    const coords = farmActive && savedFarm.lat && savedFarm.lon
+      ? [savedFarm.lat, savedFarm.lon]
+      : (REGION_COORDS[regionId] || [20.5, 78.9]);
     
     const rName = document.getElementById('telemetryRegionName');
     if (rName) rName.innerText = regionName || regionId;
@@ -323,6 +381,7 @@
     // Fetch weather info asynchronously
     api(`/api/weather?region_id=${regionId}&season=kharif`)
       .then(w => {
+        if (activeTelemetryRegionId !== regionId) return;
         if (wBody) wBody.innerHTML = `
           <div style="font-size: 1.15rem; font-weight: 600; color: var(--brand-deep);">${w.avg_temp_c}°C</div>
           <div style="font-size: 0.8rem; color: var(--ink-soft);">Rainfall: ${w.rainfall_mm}mm</div>
@@ -346,6 +405,9 @@
         if (irrForm) {
           if (w.rainfall_mm != null) irrForm.rainfall_mm.value = Math.round(w.rainfall_mm);
         }
+
+        // Draw the pest risk overlay layer on the map
+        drawPestRiskOverlay(coords, w);
       })
       .catch(err => {
         if (wBody) wBody.innerHTML = `<div style="font-size: 0.78rem; color: var(--clay);">Failed: ${err.message || err}</div>`;
@@ -354,6 +416,7 @@
     // Fetch soil info asynchronously
     api(`/api/soil?region_id=${regionId}`)
       .then(s => {
+        if (activeTelemetryRegionId !== regionId) return;
         if (sBody) sBody.innerHTML = `
           <div style="font-size: 1.15rem; font-weight: 600; color: var(--brand-deep);">pH ${s.ph}</div>
           <div style="font-size: 0.8rem; color: var(--ink-soft);">N:${Math.round(s.n_kg_per_acre)} P:${Math.round(s.p_kg_per_acre)} K:${Math.round(s.k_kg_per_acre)}</div>
@@ -377,6 +440,7 @@
     // Fetch market price data asynchronously
     api(`/api/market?region_id=${regionId}&crop_id=rice`)
       .then(m => {
+        if (activeTelemetryRegionId !== regionId) return;
         if (mBody) mBody.innerHTML = `
           <div style="font-size: 1.15rem; font-weight: 600; color: var(--brand-deep);">₹${m.current_mandi_price_inr_per_kg}/kg</div>
           <div style="font-size: 0.8rem; color: var(--ink-soft);">Volatility: ${m.volatility_std}</div>
@@ -387,32 +451,31 @@
         if (mBody) mBody.innerHTML = `<div style="font-size: 0.78rem; color: var(--clay);">Failed to load mandi prices.</div>`;
       });
       
-    // Load satellite vegetation indexing
-    setTimeout(() => {
-      const seed = regionId.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
-      const ndvi = 0.45 + (seed % 30) / 100;
-      const moisture = 0.35 + (seed % 40) / 100;
-      if (satBody) {
-        satBody.innerHTML = `
-          <div style="font-size: 1.15rem; font-weight: 600; color: var(--brand-deep);">NDVI ${ndvi.toFixed(2)}</div>
-          <div style="font-size: 0.8rem; color: var(--ink-soft);">Moisture: ${moisture.toFixed(2)}</div>
-          <div style="font-size: 0.78rem; color: var(--sky); font-weight: 600;">Canopy: Good</div>
-        `;
-      }
-    }, 400);
+    // Fetch satellite vegetation telemetry from the backend API
+    api(`/api/satellite?lat=${coords[0]}&lon=${coords[1]}`)
+      .then(sat => {
+        if (activeTelemetryRegionId !== regionId) return;
+        if (satBody) {
+          satBody.innerHTML = `
+            <div style="font-size: 1.15rem; font-weight: 600; color: var(--brand-deep);">NDVI ${sat.ndvi.toFixed(2)}</div>
+            <div style="font-size: 0.8rem; color: var(--ink-soft);">Moisture: ${sat.moisture.toFixed(2)}</div>
+            <div style="font-size: 0.78rem; color: var(--sky); font-weight: 600;">Canopy: ${sat.canopy}</div>
+          `;
+        }
+      })
+      .catch(err => {
+        if (satBody) satBody.innerHTML = `<div style="font-size: 0.78rem; color: var(--clay);">Failed to load satellite telemetry.</div>`;
+      });
 
     // FIX-5 & FIX-6: Leaflet GIS mapping
     // Use the farm's actual centroid if this is the farm's region; fall back to
     // the REGION_COORDS table (now covering all 30 regions). Default is India centre.
-    const farmActive = savedFarm && savedFarm.region_id === regionId;
-    const coords = farmActive && savedFarm.lat && savedFarm.lon
-      ? [savedFarm.lat, savedFarm.lon]
-      : (REGION_COORDS[regionId] || [20.5, 78.9]);
 
     const mapDiv = document.getElementById('telemetryMap');
     if (mapDiv && typeof L !== 'undefined') {
       mapDiv.style.display = 'block';
       setTimeout(() => {
+        if (activeTelemetryRegionId !== regionId) return;
         if (!telemetryMapObj) {
           telemetryMapObj = L.map('telemetryMap', { zoomControl: false }).setView(coords, farmActive ? 15 : 12);
           L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
@@ -651,7 +714,20 @@
           machinery_cost_per_acre: +f.other_costs_per_acre * 0.2,
         }
       };
+      // Prepare bodies for Dry and Wet weather scenarios
+      const dryBody = JSON.parse(JSON.stringify(body));
+      dryBody.weather.rainfall_mm = Math.max(0, (body.weather.rainfall_mm || 600) * 0.5);
+      const wetBody = JSON.parse(JSON.stringify(body));
+      wetBody.weather.rainfall_mm = (body.weather.rainfall_mm || 600) * 1.5;
+
       const r = await api('/api/simulate', { method:'POST', body: JSON.stringify(body) });
+
+      // Run Dry/Wet simulations in parallel background
+      const [rDry, rWet] = await Promise.all([
+        api('/api/simulate', { method:'POST', body: JSON.stringify(dryBody) }).catch(() => null),
+        api('/api/simulate', { method:'POST', body: JSON.stringify(wetBody) }).catch(() => null)
+      ]);
+
       const area = body.area_acres;
       const yieldPerAc = r.yield_kg_per_acre || 0;
       const totalYield = r.total_yield_kg || yieldPerAc * area;
@@ -706,6 +782,11 @@
           </div>
         </div>
 
+        <div class="chart-box" style="margin-top: 14px;">
+          <div class="chart-box__title">Yield comparison under climate scenarios (kg/acre)</div>
+          <canvas data-chart="sim-climate-yield"></canvas>
+        </div>
+
         ${(nut.n_deficit !== undefined) ? `
         <div class="chart-box">
           <div class="chart-box__title">Nutrient balance · available vs required (kg/ac)</div>
@@ -751,6 +832,40 @@
           responsive: true, maintainAspectRatio: false,
           scales: { y: { beginAtZero: true, grid: { color: 'rgba(29,26,21,.06)' }, ticks: { callback: v => '₹' + (v/1000).toFixed(0) + 'K' } }, x: { grid: { display: false } } },
           plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => INR(c.parsed.y) } } }
+        }
+      });
+
+      makeChart($('[data-chart="sim-climate-yield"]'), {
+        type: 'bar',
+        data: {
+          labels: ['Dry Scenario (50% rain)', 'Normal Scenario (Actual)', 'Wet Scenario (+50% rain)'],
+          datasets: [{
+            label: 'Yield (kg/acre)',
+            data: [
+              Math.round((rDry && rDry.yield_kg_per_acre) || (yieldPerAc * 0.7)),
+              Math.round(yieldPerAc),
+              Math.round((rWet && rWet.yield_kg_per_acre) || (yieldPerAc * 1.15))
+            ],
+            backgroundColor: [CLAY, BRAND, SKY],
+            borderRadius: 8,
+            borderSkipped: false
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: { color: 'rgba(29,26,21,.06)' },
+              ticks: { callback: v => v + ' kg' }
+            },
+            x: { grid: { display: false } }
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: c => c.parsed.y + ' kg/acre' } }
+          }
         }
       });
 

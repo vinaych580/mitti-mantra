@@ -5,7 +5,7 @@ kkc,Kisan Credit Card,Short-term crop loans at 4% interest (with prompt repaymen
 soil_health,Soil Health Card Scheme,Free soil testing and nutrient-specific fertilizer recommendations for every farm,all,all,0,999,advisory,free_soil_test,all,https://soilhealth.dac.gov.in
 nmsa,NMSA (National Mission for Sustainable Agriculture),Promotes drip/sprinkler irrigation with 55-60% subsidy on micro-irrigation systems,all,all,0,999,subsidy,55pct_irrigation,all,https://nmsa.dac.gov.in
 pkvy,Paramparagat Krishi Vikas Yojana,Rs 50000/ha over 3 years for organic farming clusters of 20+ farmers,all,all,0,999,cash_transfer,50000_per_ha,all,https://pgsindia-ncof.gov.in
-nfsm_rice,NFSM (Rice),Subsidized seeds, INM/IPM demos, farm machinery for rice-growing districts,rice,all,0,999,subsidy,seed_subsidy,kharif,https://nfsm.gov.in
+nfsm_rice,NFSM (Rice),"Subsidized seeds, INM/IPM demos, farm machinery for rice-growing districts",rice,all,0,999,subsidy,seed_subsidy,kharif,https://nfsm.gov.in
 nfsm_wheat,NFSM (Wheat),Subsidized seeds and demonstrations for wheat productivity improvement,wheat,all,0,999,subsidy,seed_subsidy,rabi,https://nfsm.gov.in
 nfsm_pulses,NFSM (Pulses),Subsidized seeds + 50% cost support for IPM demos and sprinkler sets,pulses,all,0,999,subsidy,seed_and_equipment,all,https://nfsm.gov.in
 tmne,Technology Mission on Oilseeds,Support for soybean and groundnut via subsidized seeds and demonstrations,soybean;groundnut,all,0,999,subsidy,seed_subsidy,kharif,https://nfsm.gov.in

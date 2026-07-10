@@ -26,7 +26,14 @@ def _load_csv(file_name: str) -> list[dict[str, str]]:
     return _cached_load(file_name)
 
 
+_crop_params_cache: dict[str, CropParameter] | None = None
+
+
 def _load_crop_params() -> dict[str, CropParameter]:
+    global _crop_params_cache
+    if _crop_params_cache is not None:
+        return _crop_params_cache
+
     rows = _load_csv("crop_parameters.csv")
     data: dict[str, CropParameter] = {}
     for row in rows:
@@ -46,6 +53,7 @@ def _load_crop_params() -> dict[str, CropParameter]:
             npk_p_kg_per_acre=float(row["npk_p_kg_per_acre"]),
             npk_k_kg_per_acre=float(row["npk_k_kg_per_acre"]),
         )
+    _crop_params_cache = data
     return data
 
 
@@ -1072,8 +1080,32 @@ def region_benchmark(
 # 13. Input Cost Tracker
 # ===========================================================================
 
-# In-memory store (persists for server lifetime; in production, use DB)
-_cost_tracker_store: dict[str, list[dict[str, Any]]] = {}
+import json
+import os
+import threading
+
+_expense_file = DATASET_DIR / "expense_store.json"
+_store_lock = threading.Lock()
+
+
+def _load_expenses() -> dict[str, list[dict[str, Any]]]:
+    if not _expense_file.exists():
+        return {}
+    try:
+        with _expense_file.open("r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+
+def _save_expenses(store: dict[str, list[dict[str, Any]]]):
+    try:
+        temp_file = _expense_file.with_suffix(".tmp")
+        with temp_file.open("w", encoding="utf-8") as f:
+            json.dump(store, f, indent=2, ensure_ascii=False)
+        os.replace(temp_file, _expense_file)
+    except Exception:
+        pass
 
 
 def log_expense(
@@ -1084,20 +1116,27 @@ def log_expense(
     note: str = "",
 ) -> dict[str, Any]:
     """Log an actual expense against a farm/strategy."""
-    entry = {
-        "id": len(_cost_tracker_store.get(farm_id, [])) + 1,
-        "category": category,
-        "amount": round(amount, 2),
-        "date": date or datetime.now().strftime("%Y-%m-%d"),
-        "note": note,
-    }
-    _cost_tracker_store.setdefault(farm_id, []).append(entry)
-    return entry
+    with _store_lock:
+        store = _load_expenses()
+        entries = store.get(farm_id, [])
+        entry = {
+            "id": len(entries) + 1,
+            "category": category,
+            "amount": round(amount, 2),
+            "date": date or datetime.now().strftime("%Y-%m-%d"),
+            "note": note,
+        }
+        entries.append(entry)
+        store[farm_id] = entries
+        _save_expenses(store)
+        return entry
 
 
 def get_expense_summary(farm_id: str, planned_budget: float | None = None) -> dict[str, Any]:
     """Get all logged expenses and variance vs planned budget."""
-    entries = _cost_tracker_store.get(farm_id, [])
+    with _store_lock:
+        store = _load_expenses()
+        entries = store.get(farm_id, [])
     total_spent = sum(e["amount"] for e in entries)
 
     by_category: dict[str, float] = {}
@@ -1144,12 +1183,12 @@ def match_government_schemes(
     for s in schemes:
         # Crop match
         eligible_crops = s.get("eligible_crops", "all").lower()
-        if eligible_crops != "all" and crop_id.lower() not in eligible_crops:
+        if crop_id.lower() != "all" and eligible_crops != "all" and crop_id.lower() not in eligible_crops:
             continue
 
         # Region match
         eligible_regions = s.get("eligible_regions", "all").lower()
-        if eligible_regions != "all" and region_id.lower() not in eligible_regions:
+        if region_id.lower() != "all" and eligible_regions != "all" and region_id.lower() not in eligible_regions:
             continue
 
         # Area match
@@ -1160,7 +1199,7 @@ def match_government_schemes(
 
         # Season match
         scheme_season = s.get("season", "all").lower()
-        if scheme_season != "all" and season.lower() != "all" and season.lower() not in scheme_season:
+        if season.lower() != "all" and scheme_season != "all" and season.lower() not in scheme_season:
             continue
 
         eligible.append({

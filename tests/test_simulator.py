@@ -34,7 +34,7 @@ def _base_strategy(**overrides):
             "labour_cost_per_acre": 5000,
             "other_costs_per_acre": 2000,
         },
-        "soil": {"nitrogen": 220, "phosphorus": 30, "potassium": 180, "ph": 6.7},
+        "soil": {"n_kg_per_acre": 220, "p_kg_per_acre": 30, "k_kg_per_acre": 180, "ph": 6.7},
         "weather": {"rainfall_mm": 900, "avg_temp_c": 26.0},
     }
     strat.update(overrides)

@@ -24,10 +24,12 @@ def explain_crop_recommendation(
     water_req = float(cp.get("water_requirement_mm", 600.0))
     cost = float(cp.get("avg_input_cost_inr_per_acre", 15000.0))
     
-    if 6.0 <= ph <= 7.5:
-        reasons.append(f"✓ Soil pH ({ph}) is optimal for {crop_name} (prefers neutral 6.0--7.5).")
+    from utils.calculations import CROP_OPTIMAL_PH
+    ph_min, ph_max = CROP_OPTIMAL_PH.get(crop_id.lower(), (6.0, 7.5))
+    if ph_min <= ph <= ph_max:
+        reasons.append(f"✓ Soil pH ({ph}) is optimal for {crop_name} (prefers {ph_min}--{ph_max}).")
     else:
-        reasons.append(f"⚠ Soil pH ({ph}) is sub-optimal but manageable with field liming or gypsum treatment.")
+        reasons.append(f"⚠ Soil pH ({ph}) is sub-optimal but manageable with field liming or gypsum treatment (ideal range is {ph_min}--{ph_max}).")
         
     # 2. Temperature check
     avg_temp = float(weather.get("avg_temp_c", 28.0))
@@ -85,10 +87,12 @@ def explain_yield_prediction(
     elif n < 35.0:
         negative_drivers.append(f"Low soil Nitrogen ({n} kg/acre) restricts yield potential.")
         
-    if 6.2 <= ph <= 7.2:
+    from utils.calculations import CROP_OPTIMAL_PH
+    ph_min, ph_max = CROP_OPTIMAL_PH.get(crop_id.lower(), (6.0, 7.5))
+    if ph_min <= ph <= ph_max:
         positive_drivers.append(f"Optimal soil pH ({ph}) ensures high nutrient availability.")
     else:
-        negative_drivers.append(f"Sub-optimal soil pH ({ph}) limits fertilizer uptake efficiency.")
+        negative_drivers.append(f"Sub-optimal soil pH ({ph}) limits fertilizer uptake efficiency (ideal range is {ph_min}--{ph_max}).")
         
     if rain > 900.0:
         positive_drivers.append(f"High cumulative precipitation ({rain}mm) provides strong water supply.")

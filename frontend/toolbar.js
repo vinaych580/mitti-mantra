@@ -15,6 +15,15 @@
   const savedTheme = localStorage.getItem(THEME_KEY);
   if (savedTheme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
 
+  // Track the last focused input field so voice input can target it even after focus shifts to the toolbar.
+  let lastActiveInput = null;
+  document.addEventListener('focusin', (e) => {
+    const el = e.target;
+    if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')) {
+      lastActiveInput = el;
+    }
+  });
+
   /* ---------- UI styles ---------- */
   function injectStyles() {
     if (document.getElementById('qw-styles')) return;
@@ -695,7 +704,7 @@
     rec.interimResults = true;
     rec.continuous = false;
 
-    const active = document.activeElement;
+    const active = lastActiveInput || document.activeElement;
     const canFillInput = active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA');
 
     showModal('Listening…', `<p><span class="qw-pulse"></span>Speak now (${rec.lang}). Your words will appear here.</p><div id="qw-voice-out" style="font-weight:500;color:#1d1a15;margin-top:8px;">—</div>`, [
@@ -704,6 +713,7 @@
     const out = () => document.getElementById('qw-voice-out');
 
     let finalText = '';
+    let lastRecognized = '';
     rec.onresult = (ev) => {
       let interim = '';
       for (let i = ev.resultIndex; i < ev.results.length; i++) {
@@ -711,13 +721,14 @@
         if (ev.results[i].isFinal) finalText += t;
         else interim += t;
       }
-      if (out()) out().textContent = (finalText + interim) || '—';
+      lastRecognized = finalText + interim;
+      if (out()) out().textContent = lastRecognized || '—';
     };
     rec.onerror = (e) => {
       updateModalBody(`<p>Voice error: ${e.error}</p>`);
     };
     rec.onend = () => {
-      const txt = finalText.trim();
+      const txt = (finalText || lastRecognized).trim();
       if (!txt) { hideModal(); return; }
       if (canFillInput) {
         active.value = (active.value ? active.value + ' ' : '') + txt;

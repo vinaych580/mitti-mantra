@@ -200,7 +200,7 @@ def _yield_features(cid, rid, season, cp, soil, weather,
         safe(soil, "n_kg_per_acre", 40),
         safe(soil, "p_kg_per_acre", 20),
         safe(soil, "k_kg_per_acre", 20),
-        safe(soil, "organic_carbon_pct", 0.5),
+        safe(soil, "organic_carbon_percent", 0.5),
         safe(weather, "rainfall_mm", 800),
         safe(weather, "avg_temp_c", 28),
         safe(weather, "min_temp_c", 20),
@@ -379,6 +379,7 @@ def _build_recommendation_dataset() -> tuple[np.ndarray, np.ndarray]:
     """
     crop_params_list = _load_csv("crop_parameters.csv")
     crop_params = {r["crop_id"]: r for r in crop_params_list}
+    crop_params_objs = {r["crop_id"]: make_crop_param(r) for r in crop_params_list}
     soil_data = {r["region_id"]: r for r in _load_csv("soil.csv")}
     weather_rows = _load_csv("weather.csv")
     weather_data = {}
@@ -434,6 +435,7 @@ def _build_recommendation_dataset() -> tuple[np.ndarray, np.ndarray]:
                                         "perennial" not in crop_season):
                                         continue
 
+                                    cp_obj = crop_params_objs[cid]
                                     base_yield = float(cp["base_yield_kg_per_acre"])
                                     cost = float(cp["avg_input_cost_inr_per_acre"])
                                     price = mandi_latest.get(
@@ -445,7 +447,6 @@ def _build_recommendation_dataset() -> tuple[np.ndarray, np.ndarray]:
 
                                     # Use the official climate factor calculation
                                     weather_sim = {"rainfall_mm": rain, "avg_temp_c": temp}
-                                    cp_obj = make_crop_param(cp)
                                     climate_factor = calculate_climate_factor(weather_sim, cp_obj)
 
                                     # Use the official soil suitability factor
@@ -471,7 +472,7 @@ def _build_recommendation_dataset() -> tuple[np.ndarray, np.ndarray]:
                                     sf(base_soil, "n_kg_per_acre", 40),
                                     sf(base_soil, "p_kg_per_acre", 20),
                                     sf(base_soil, "k_kg_per_acre", 20),
-                                    sf(base_soil, "organic_carbon_pct", 0.5),
+                                    sf(base_soil, "organic_carbon_percent", 0.5),
                                     rain,
                                     temp,
                                     temp - 8,  # approx min_temp

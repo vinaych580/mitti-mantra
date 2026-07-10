@@ -361,18 +361,19 @@ def _intent_irrigation(crop: Dict[str, str]) -> Reply:
     except Exception as e:
         return f"Couldn't build schedule: {e}", []
     lines = [f"### Irrigation schedule — {crop['crop_name']}", "_Sown 15 Jun · 800 mm seasonal rainfall_\n"]
-    weeks = sch if isinstance(sch, list) else sch.get("schedule", []) if isinstance(sch, dict) else []
+    weeks = sch.get("weekly_schedule", []) if isinstance(sch, dict) else []
     if weeks:
-        lines.append("| Week | Stage | Water (mm) | Action |")
-        lines.append("|---:|---|---:|---|")
+        lines.append("| Week | Stage | Water Need (mm) | Rain (mm) | Irrigation (mm) |")
+        lines.append("|---:|---|---:|---:|---:|")
         for w in weeks[:16]:
             wk = w.get("week") or w.get("week_number", "?")
-            stage = w.get("stage", "—")
-            water = w.get("irrigation_mm") or w.get("water_mm") or w.get("required_mm", 0)
-            act = w.get("action") or w.get("note", "")
-            lines.append(f"| {wk} | {stage} | {water} | {act} |")
-        if isinstance(sch, dict) and sch.get("total_water_mm"):
-            lines.append(f"\n**Total seasonal water:** {sch['total_water_mm']} mm")
+            stage = w.get("growth_stage", "—")
+            water_need = w.get("water_need_mm") or 0.0
+            expected_rain = w.get("expected_rainfall_mm") or 0.0
+            irr_req = w.get("irrigation_required_mm") or 0.0
+            lines.append(f"| {wk} | {stage} | {water_need} | {expected_rain} | {irr_req} |")
+        if isinstance(sch, dict) and sch.get("total_irrigation_needed_mm") is not None:
+            lines.append(f"\n**Total seasonal irrigation needed:** {sch['total_irrigation_needed_mm']} mm")
     else:
         lines.append("_No schedule available._")
     return "\n".join(lines), [f"Pest alerts for {crop['crop_id']}", f"Crop calendar for {crop['crop_id']}"]
@@ -385,18 +386,14 @@ def _intent_calendar(crop: Dict[str, str]) -> Reply:
         return f"Couldn't fetch calendar: {e}", []
     lines = [f"### Crop calendar — {crop['crop_name']}\n"]
     if isinstance(cal, dict):
-        for key in ("season", "sowing_window", "sowing_date", "transplanting", "flowering",
-                    "harvest_window", "harvest_date", "duration_days", "growing_degree_days"):
-            if key in cal:
-                lines.append(f"- **{key.replace('_',' ').title()}:** {cal[key]}")
-        acts = cal.get("activities") or cal.get("milestones")
-        if isinstance(acts, list):
-            lines.append("\n**Key activities:**")
-            for a in acts[:10]:
-                if isinstance(a, dict):
-                    lines.append(f"- _{a.get('stage','—')}_ → {a.get('action') or a.get('date','')}")
-                else:
-                    lines.append(f"- {a}")
+        seasons = cal.get("seasons", {})
+        for season_name, cal_data in seasons.items():
+            lines.append(f"**Season: {season_name.title()}**")
+            for key in ("nursery", "land_prep", "sowing_transplant", "first_fertilizer", "second_fertilizer",
+                        "third_fertilizer", "critical_irrigation", "pest_watch", "harvest_window", "duration_days"):
+                if key in cal_data:
+                    lines.append(f"- **{key.replace('_',' ').title()}:** {cal_data[key]}")
+            lines.append("")
     else:
         lines.append(str(cal))
     return "\n".join(lines), [f"Irrigation schedule for {crop['crop_id']}", f"Pest alerts for {crop['crop_id']}"]
@@ -413,15 +410,15 @@ def _intent_schemes(crop: Optional[Dict[str, str]], region: Optional[str], nums:
         )
     except Exception as e:
         return f"Couldn't match schemes: {e}", []
-    items = schemes if isinstance(schemes, list) else schemes.get("matches", []) if isinstance(schemes, dict) else []
+    items = schemes.get("eligible_schemes", []) if isinstance(schemes, dict) else []
     if not items:
         return "No matching government schemes found for this profile.", []
     lines = [f"### Eligible schemes for {area:.1f} acre farm\n"]
     for s in items[:8]:
         name = s.get("scheme_name") or s.get("name") or "Scheme"
         desc = s.get("description", "")
-        benefit = s.get("benefit_inr") or s.get("benefit", "")
-        link = s.get("apply_url") or s.get("url")
+        benefit = s.get("benefit_value") or s.get("benefit", "")
+        link = s.get("url") or s.get("apply_url")
         lines.append(f"**📜 {name}**")
         if desc:
             lines.append(f"- {desc}")
@@ -448,14 +445,13 @@ def _intent_loan(nums: List[float]) -> Reply:
     if isinstance(res, dict):
         pretty = {
             "loan_amount": "Loan amount",
-            "emi_inr": "EMI / month",
-            "interest_rate_annual": "Interest rate (%)",
+            "emi": "EMI / month",
+            "interest_rate_annual_pct": "Interest rate (%)",
             "tenure_months": "Tenure (months)",
             "total_interest": "Total interest",
             "total_repayment": "Total repayment",
-            "feasibility": "Feasibility",
-            "dti_ratio": "Debt-to-income",
-            "recommendation": "Recommendation",
+            "expected_profit_after_loan": "Profit after loan",
+            "verdict": "Verdict",
         }
         for k, lbl in pretty.items():
             if k in res:
@@ -475,13 +471,22 @@ def _intent_msp_vs_market(crop: Dict[str, str], region: Optional[str]) -> Reply:
         return f"Couldn't compare: {e}", []
     lines = [f"### MSP vs Market — {crop['crop_name']} @ {region.replace('_',' · ').title()}\n"]
     if isinstance(res, dict):
-        for k in ("msp_inr_per_kg", "current_market_price", "avg_market_price",
-                  "difference_inr_per_kg", "difference_percent", "verdict", "recommendation"):
+        pretty = {
+            "msp_year": "MSP Year",
+            "msp_inr_per_kg": "MSP (INR/kg)",
+            "current_mandi_price": "Current Mandi Price",
+            "avg_mandi_6m": "Average Mandi Price (6m)",
+            "mandi_msp_gap_pct": "Difference (%)",
+            "recommendation": "Recommendation"
+        }
+        for k, lbl in pretty.items():
             if k in res:
                 v = res[k]
-                if isinstance(v, float):
+                if isinstance(v, float) and "pct" in k:
+                    v = f"{v:+.2f}%"
+                elif isinstance(v, float):
                     v = f"{v:,.2f}"
-                lines.append(f"- **{k.replace('_',' ').title()}:** {v}")
+                lines.append(f"- **{lbl}:** {v}")
     return "\n".join(lines), [f"Best time to sell {crop['crop_id']}", f"Price forecast for {crop['crop_id']}"]
 
 

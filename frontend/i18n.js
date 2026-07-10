@@ -80,6 +80,9 @@
     const key = target + '|' + trimmed;
     if (cache[key]) return text.replace(trimmed, cache[key]);
 
+    // Throttle / add delay to avoid MyMemory rate limits
+    await new Promise(r => setTimeout(r, 150));
+
     try {
       const url = 'https://api.mymemory.translated.net/get?q=' +
                   encodeURIComponent(trimmed) +
