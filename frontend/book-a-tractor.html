@@ -427,6 +427,191 @@
       color: var(--brand); font-weight: 700; text-decoration: underline;
       cursor: pointer; font: inherit;
     }
+
+    /* ---- Clickable Book Buttons (Hardening) ---- */
+    .tractor-card__cta {
+      margin-top: auto; width: 100%; justify-content: center;
+      background: var(--brand); color: #fff; border: 1px solid var(--brand);
+      cursor: pointer; border-radius: var(--r-md);
+      padding: 12px 20px; font-size: .9rem; font-weight: 600;
+      display: flex; align-items: center; gap: 8px;
+      transition: all 0.3s var(--ease);
+      font-family: inherit;
+    }
+    .tractor-card__cta:hover {
+      background: var(--brand-deep);
+      border-color: var(--brand-deep);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(47,107,58,0.2);
+    }
+    .tractor-card__cta svg {
+      stroke: currentColor;
+    }
+
+    .map-popup__btn {
+      margin-top: 10px; width: 100%; padding: 8px 10px; border-radius: var(--r-sm);
+      background: var(--brand); color: #fff; border: 1px solid var(--brand);
+      font-size: .78rem; font-weight: 600; cursor: pointer;
+      transition: all 0.2s var(--ease);
+    }
+    .map-popup__btn:hover {
+      background: var(--brand-deep);
+      border-color: var(--brand-deep);
+    }
+
+    .nearby-item__btn {
+      font-size: .72rem; font-weight: 600; padding: 6px 10px; border-radius: 999px;
+      background: var(--brand); color: #fff; border: 1px solid var(--brand);
+      cursor: pointer; white-space: nowrap;
+      transition: all 0.2s var(--ease);
+    }
+    .nearby-item__btn:hover {
+      background: var(--brand-deep);
+      border-color: var(--brand-deep);
+    }
+
+    /* ---- Tractor Booking Modal Styles ---- */
+    .mm-modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(18,16,13,0.55);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 10000; opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+      font-family: 'Inter', sans-serif;
+    }
+    .mm-modal-overlay.open {
+      opacity: 1; pointer-events: auto;
+    }
+    .mm-modal-card {
+      background: var(--surface);
+      border-radius: var(--r-lg);
+      border: 1px solid rgba(255,255,255,0.08);
+      width: 100%; max-width: 520px; max-height: 90vh;
+      overflow-y: auto; box-shadow: var(--shadow-xl);
+      transform: translateY(30px);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+    }
+    .mm-modal-overlay.open .mm-modal-card {
+      transform: translateY(0);
+    }
+    .mm-modal-close {
+      position: absolute; top: 18px; right: 18px;
+      background: var(--bg-soft); border: none;
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--ink-soft); cursor: pointer;
+      transition: all 0.2s var(--ease);
+    }
+    .mm-modal-close:hover {
+      background: rgba(29,26,21,0.08); color: var(--ink);
+    }
+    .mm-modal-header {
+      padding: 24px 28px 12px;
+      border-bottom: 1px solid rgba(29,26,21,0.06);
+    }
+    .mm-modal-header h3 {
+      font-family: 'Fraunces', serif; font-size: 1.4rem;
+      color: var(--brand-deep); margin: 0;
+    }
+    .mm-modal-header p {
+      font-size: 0.85rem; color: var(--ink-faint); margin: 4px 0 0;
+    }
+    .mm-modal-body {
+      padding: 20px 28px 28px;
+      display: flex; flex-direction: column; gap: 18px;
+    }
+    .mm-form-group {
+      display: flex; flex-direction: column; gap: 6px;
+      text-align: left;
+    }
+    .mm-form-group label {
+      font-size: 0.74rem; text-transform: uppercase;
+      letter-spacing: 0.05em; font-weight: 700; color: var(--ink-soft);
+    }
+    .mm-form-input {
+      padding: 11px 14px; border-radius: var(--r-md);
+      border: 1px solid rgba(29,26,21,0.15);
+      background: var(--bg-soft); color: var(--ink);
+      font-size: 0.92rem; font-family: inherit;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      width: 100%;
+    }
+    .mm-form-input:focus {
+      outline: none; border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(47,107,58,0.12);
+    }
+    .mm-form-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    }
+    .mm-calc-box {
+      background: var(--bg-soft); border-radius: var(--r-md);
+      padding: 16px; border: 1px solid rgba(29,26,21,0.05);
+      display: flex; flex-direction: column; gap: 8px;
+      text-align: left;
+    }
+    .mm-calc-row {
+      display: flex; justify-content: space-between; font-size: 0.85rem;
+      color: var(--ink-soft);
+    }
+    .mm-calc-row.total {
+      border-top: 1px dashed rgba(29,26,21,0.15);
+      padding-top: 8px; font-weight: 700; color: var(--brand-deep);
+      font-size: 1.05rem;
+    }
+    .mm-form-submit {
+      background: var(--brand); color: #fff; border: 1px solid var(--brand);
+      padding: 14px; font-size: 0.95rem; font-weight: 700;
+      border-radius: var(--r-md); cursor: pointer; width: 100%;
+      transition: background 0.3s ease, transform 0.2s ease;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      font-family: inherit;
+    }
+    .mm-form-submit:hover {
+      background: var(--brand-deep);
+    }
+    .mm-form-submit:active {
+      transform: scale(0.98);
+    }
+
+    /* Success Screen */
+    .mm-success-screen {
+      padding: 36px 28px; text-align: center;
+      display: flex; flex-direction: column; align-items: center; gap: 16px;
+      font-family: 'Inter', sans-serif;
+    }
+    .mm-success-icon {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: var(--brand-soft); color: var(--brand);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; font-weight: 700;
+      animation: popSuccess 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popSuccess {
+      0% { transform: scale(0.4); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .mm-success-screen h3 {
+      font-family: 'Fraunces', serif; font-size: 1.45rem;
+      color: var(--brand-deep); margin: 0;
+    }
+    .mm-success-screen p {
+      font-size: 0.9rem; color: var(--ink-soft); line-height: 1.55; margin: 0;
+    }
+    .mm-success-details {
+      background: var(--bg-soft); border-radius: var(--r-md);
+      padding: 16px; width: 100%; border: 1px solid rgba(29,26,21,0.06);
+      display: flex; flex-direction: column; gap: 10px; text-align: left;
+      font-size: 0.84rem;
+    }
+    .mm-success-details strong { font-weight: 700; }
+    .mm-success-row {
+      display: flex; justify-content: space-between;
+      color: var(--ink-soft);
+    }
+    .mm-success-row span:first-child { color: var(--ink-faint); }
+    .mm-success-row strong { color: var(--ink); }
   </style>
 </head>
 <body>
@@ -694,7 +879,12 @@
   <script defer src="Data/tractors.js"></script>
   <script defer src="book-a-tractor.js"></script>
 
-<!-- Leaflet + Nearby Tractor Discovery map -->
+  <!-- Dynamic Booking Modal Overlay -->
+  <div class="mm-modal-overlay" id="bookingModalOverlay">
+    <div class="mm-modal-card" id="bookingModalCard"></div>
+  </div>
+
+  <!-- Leaflet + Nearby Tractor Discovery map -->
   <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script defer src="map-tractors.js"></script>

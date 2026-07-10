@@ -65,7 +65,6 @@
     });
   }
 
-  /* ---------- Popup content ---------- */
   function popupHtml(t) {
     return `
       <div class="map-popup">
@@ -73,7 +72,7 @@
         <div class="map-popup__row">${t._distanceKm.toFixed(1)} km away</div>
         <div class="map-popup__row">Operator: ${t.operatorName || 'Partner'}</div>
         <div class="map-popup__row">₹${t.pricePerHour.toLocaleString("en-IN")}/hr · <span class="map-popup__avail">${t.availability}</span></div>
-        <button class="map-popup__btn" disabled>Book Now (Coming Soon)</button>
+        <button class="map-popup__btn" onclick="window.openBookingModal(${t.id})">Book Now</button>
       </div>
     `;
   }
@@ -154,7 +153,7 @@
           </div>
           <div class="nearby-item__foot">
             <strong>₹${t.pricePerHour.toLocaleString("en-IN")}/hr</strong>
-            <button class="nearby-item__btn" disabled>Book Now (Coming Soon)</button>
+            <button class="nearby-item__btn" onclick="event.stopPropagation(); window.openBookingModal(${t.id})">Book Now</button>
           </div>
         </div>
       </div>

@@ -28,10 +28,12 @@ def _base_strategy(**overrides):
         "area_acres": 4.0,
         "irrigation_level": 0.6,
         "mandi_price_per_kg": 45.0,
-        "seed_cost_per_acre": 2500,
-        "fertilizer_cost_per_acre": 4000,
-        "labour_cost_per_acre": 5000,
-        "other_costs_per_acre": 2000,
+        "input_plan": {
+            "seed_cost_per_acre": 2500,
+            "fertilizer_cost_per_acre": 4000,
+            "labour_cost_per_acre": 5000,
+            "other_costs_per_acre": 2000,
+        },
         "soil": {"nitrogen": 220, "phosphorus": 30, "potassium": 180, "ph": 6.7},
         "weather": {"rainfall_mm": 900, "avg_temp_c": 26.0},
     }
@@ -67,7 +69,7 @@ def test_higher_price_increases_profit():
 
 def test_risk_score_in_bounds():
     out = simulate(_base_strategy())
-    assert 0.0 <= out["risk_score"] <= 1.0
+    assert 0.0 <= out["risk_score"] <= 100.0
 
 
 def test_unknown_crop_raises():

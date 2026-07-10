@@ -78,10 +78,10 @@
             </div>
           </div>
 
-          <div class="tractor-card__cta">
+          <button class="tractor-card__cta" data-id="${t.id}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-            Booking opens soon
-          </div>
+            Book Tractor
+          </button>
         </div>
       </article>
     `).join('');
@@ -97,6 +97,14 @@
     }
 
     grid.innerHTML = cardsHtml;
+
+    grid.querySelectorAll('.tractor-card__cta').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const tid = Number(btn.dataset.id);
+        if (window.openBookingModal) window.openBookingModal(tid);
+      });
+    });
 
     const btnLoadMore = document.getElementById('btnLoadMoreTractors');
     if (btnLoadMore) {
@@ -178,4 +186,203 @@
   renderCards();
   renderCompareTable();
   renderPerformance();
+
+  /* ─── 4. Interactive Booking Modal (Hardening) ─── */
+  window.openBookingModal = function (tractorId) {
+    const t = TRACTORS.find(tr => tr.id === tractorId);
+    if (!t) return;
+
+    const overlay = document.getElementById('bookingModalOverlay');
+    const card = document.getElementById('bookingModalCard');
+    if (!overlay || !card) return;
+
+    // Retrieve drawn farm area if available
+    let savedArea = 4.0;
+    try {
+      const savedFarm = JSON.parse(localStorage.getItem('mittimantra_selectedFarm') || '{}');
+      if (savedFarm && savedFarm.acres) {
+        savedArea = savedFarm.acres;
+      }
+    } catch (_) {}
+
+    // Initial estimation values
+    let hours = 8;
+    let days = 1;
+    let rateType = 'hour'; // 'hour' or 'day'
+    let totalEstimate = t.pricePerHour * hours;
+
+    function renderModalContent(screen = 'form') {
+      if (screen === 'success') {
+        const bookingId = 'MM-TR-' + Math.floor(100000 + Math.random() * 900000);
+        const name = document.getElementById('bookingName').value.trim() || 'Valued Farmer';
+        const phone = document.getElementById('bookingPhone').value.trim();
+        const date = document.getElementById('bookingDate').value;
+        const durationStr = rateType === 'hour' ? `${hours} hours` : `${days} days`;
+
+        // Save booking records to localStorage
+        try {
+          const bookings = JSON.parse(localStorage.getItem('mittimantra_bookings') || '[]');
+          bookings.push({
+            bookingId,
+            tractorId: t.id,
+            tractorName: t.name,
+            name,
+            phone,
+            date,
+            duration: durationStr,
+            rateType,
+            cost: totalEstimate,
+            createdAt: new Date().toISOString()
+          });
+          localStorage.setItem('mittimantra_bookings', JSON.stringify(bookings));
+        } catch (_) {}
+
+        card.innerHTML = `
+          <div class="mm-success-screen">
+            <div class="mm-success-icon">✓</div>
+            <h3>Booking Request Placed!</h3>
+            <p>Namaste <strong>${name}</strong>, your request for renting the <strong>${t.name}</strong> has been successfully registered.</p>
+            
+            <div class="mm-success-details">
+              <div class="mm-success-row"><span>Booking ID</span><strong>${bookingId}</strong></div>
+              <div class="mm-success-row"><span>Tractor</span><strong>${t.name}</strong></div>
+              <div class="mm-success-row"><span>Duration</span><strong>${durationStr}</strong></div>
+              <div class="mm-success-row"><span>Estimated Cost</span><strong>₹${totalEstimate.toLocaleString('en-IN')}</strong></div>
+              <div class="mm-success-row"><span>Date</span><strong>${date}</strong></div>
+              <div class="mm-success-row"><span>Operator</span><strong>${t.operatorName || 'Partner Farmer'}</strong></div>
+              <div class="mm-success-row"><span>Operator Phone</span><strong>+91 ${t.operatorPhone || '98765 43210'}</strong></div>
+            </div>
+            
+            <button class="mm-form-submit" id="btnCloseSuccess" style="margin-top: 10px;">Close Window</button>
+          </div>
+        `;
+
+        document.getElementById('btnCloseSuccess').addEventListener('click', () => {
+          overlay.classList.remove('open');
+        });
+        return;
+      }
+
+      // Default Form screen
+      card.innerHTML = `
+        <button class="mm-modal-close" id="btnModalClose" aria-label="Close">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <div class="mm-modal-header">
+          <h3>Request Renting</h3>
+          <p>${t.name} · ${t.hp} HP · ${t.availability} Status</p>
+        </div>
+        <form class="mm-modal-body" id="modalBookingForm">
+          <div class="mm-form-row">
+            <div class="mm-form-group">
+              <label for="bookingName">Your Full Name</label>
+              <input type="text" id="bookingName" class="mm-form-input" placeholder="e.g. Ramesh Patel" required>
+            </div>
+            <div class="mm-form-group">
+              <label for="bookingPhone">Mobile Number</label>
+              <input type="tel" id="bookingPhone" class="mm-form-input" placeholder="10-digit mobile" pattern="[6-9][0-9]{9}" required>
+            </div>
+          </div>
+
+          <div class="mm-form-row">
+            <div class="mm-form-group">
+              <label for="bookingDate">Expected Date</label>
+              <input type="date" id="bookingDate" class="mm-form-input" required>
+            </div>
+            <div class="mm-form-group">
+              <label for="bookingArea">Farm Area (Acres)</label>
+              <input type="number" id="bookingArea" class="mm-form-input" min="0.1" step="0.1" value="${savedArea.toFixed(1)}" required>
+            </div>
+          </div>
+
+          <div class="mm-form-row" style="align-items: flex-end;">
+            <div class="mm-form-group">
+              <label for="rateTypeSelect">Rate Type</label>
+              <select id="rateTypeSelect" class="mm-form-input" style="padding: 10px 14px;">
+                <option value="hour" ${rateType === 'hour' ? 'selected' : ''}>Per Hour (₹${t.pricePerHour}/hr)</option>
+                <option value="day" ${rateType === 'day' ? 'selected' : ''}>Per Day (₹${t.pricePerDay}/day)</option>
+              </select>
+            </div>
+            <div class="mm-form-group">
+              <label for="durationInput" id="durationLabel">Duration (${rateType === 'hour' ? 'Hours' : 'Days'})</label>
+              <input type="number" id="durationInput" class="mm-form-input" min="1" max="${rateType === 'hour' ? 24 : 30}" value="${rateType === 'hour' ? hours : days}" required>
+            </div>
+          </div>
+
+          <div class="mm-calc-box">
+            <div class="mm-calc-row">
+              <span>Rental Rate (${rateType === 'hour' ? 'Hourly' : 'Daily'})</span>
+              <span>₹${(rateType === 'hour' ? t.pricePerHour : t.pricePerDay).toLocaleString('en-IN')}</span>
+            </div>
+            <div class="mm-calc-row">
+              <span>Duration</span>
+              <span id="calcDurationVal">${rateType === 'hour' ? hours + ' hrs' : days + ' days'}</span>
+            </div>
+            <div class="mm-calc-row total">
+              <span>Total Estimated Cost</span>
+              <span id="calcTotalVal">₹${totalEstimate.toLocaleString('en-IN')}</span>
+            </div>
+          </div>
+
+          <button type="submit" class="mm-form-submit">Confirm Booking Request</button>
+        </form>
+      `;
+
+      // Set default date to tomorrow
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      document.getElementById('bookingDate').value = tomorrow.toISOString().split('T')[0];
+
+      // Form bindings
+      document.getElementById('btnModalClose').addEventListener('click', () => {
+        overlay.classList.remove('open');
+      });
+
+      const rateTypeSelect = document.getElementById('rateTypeSelect');
+      const durationInput = document.getElementById('durationInput');
+      const durationLabel = document.getElementById('durationLabel');
+      const calcDurationVal = document.getElementById('calcDurationVal');
+      const calcTotalVal = document.getElementById('calcTotalVal');
+
+      function updateCalculation() {
+        rateType = rateTypeSelect.value;
+        const val = Math.max(1, Number(durationInput.value) || 1);
+        if (rateType === 'hour') {
+          hours = val;
+          totalEstimate = t.pricePerHour * hours;
+          durationLabel.textContent = 'Duration (Hours)';
+          calcDurationVal.textContent = `${hours} hrs`;
+        } else {
+          days = val;
+          totalEstimate = t.pricePerDay * days;
+          durationLabel.textContent = 'Duration (Days)';
+          calcDurationVal.textContent = `${days} days`;
+        }
+        calcTotalVal.textContent = `₹${totalEstimate.toLocaleString('en-IN')}`;
+      }
+
+      rateTypeSelect.addEventListener('change', () => {
+        if (rateTypeSelect.value === 'hour') {
+          durationInput.max = 24;
+          durationInput.value = 8;
+        } else {
+          durationInput.max = 30;
+          durationInput.value = 1;
+        }
+        updateCalculation();
+      });
+
+      durationInput.addEventListener('input', updateCalculation);
+      durationInput.addEventListener('change', updateCalculation);
+
+      const form = document.getElementById('modalBookingForm');
+      form.addEventListener('submit', (ev) => {
+        ev.preventDefault();
+        renderModalContent('success');
+      });
+    }
+
+    renderModalContent('form');
+    overlay.classList.add('open');
+  };
 })();
