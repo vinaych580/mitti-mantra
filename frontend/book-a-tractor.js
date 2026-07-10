@@ -30,7 +30,7 @@
     let cardsHtml = sliced.map((t) => `
       <article class="tractor-card">
         <div class="tractor-card__media">
-          <img src="${t.image}" alt="${t.name}" loading="lazy">
+          <img src="${t.image}" alt="${t.name}" loading="lazy" referrerpolicy="no-referrer">
           <span class="tractor-card__avail ${availClass(t.availability)}">${t.availability}</span>
         </div>
         <div class="tractor-card__body">

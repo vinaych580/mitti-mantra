@@ -140,7 +140,7 @@
       .map(
         (t) => `
       <div class="nearby-item" data-id="${t.id}">
-        <img src="${t.image}" alt="${t.name}" loading="lazy">
+        <img src="${t.image}" alt="${t.name}" loading="lazy" referrerpolicy="no-referrer">
         <div class="nearby-item__body">
           <div class="nearby-item__head">
             <h4>${t.name}</h4>

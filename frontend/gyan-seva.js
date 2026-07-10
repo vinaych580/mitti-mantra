@@ -571,7 +571,7 @@
       return `
         <article class="gs-card">
           <div class="gs-card__photo-container">
-            <img src="${expert.photo}" alt="${expert.name}" class="gs-card__photo" loading="lazy">
+            <img src="${expert.photo}" alt="${expert.name}" class="gs-card__photo" loading="lazy" referrerpolicy="no-referrer">
             <span class="gs-card__badge-status ${getAvailabilityClass(expert.availability)}">
               ${expert.availability}
             </span>
