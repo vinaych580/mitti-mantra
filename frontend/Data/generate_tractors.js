@@ -200,7 +200,7 @@ const DISTRICT_DATA = {
 const TRACTOR_MODELS = [
   {
     name: "Mahindra 575 DI XP Plus",
-    image: "https://5.imimg.com/data5/SELLER/Default/2022/8/TQ/XF/LR/5803614/mahindra-tractor-575-di-xp-plus.jpg",
+    image: "https://www.mahindratractor.com/sites/default/files/2024-07/575-DI-XP-PLUS-Desktop_1_1.webp",
     hp: 47, baseHourly: 450, baseDaily: 2800,
     suitableLand: "2–15 acres", bestFor: "Ploughing, tilling & general-purpose work",
     fuelType: "Diesel", fuelEfficiency: "3.8 L/hr", transmission: "8F + 2R, Sliding Mesh",
@@ -210,7 +210,7 @@ const TRACTOR_MODELS = [
   },
   {
     name: "Swaraj 744 FE",
-    image: "https://5.imimg.com/data5/SELLER/Default/2023/1/RM/UU/MH/26571/swaraj-744-fe-tractor-500x500.jpg",
+    image: "https://www.swarajtractors.com/sites/default/files/images/swaraj_744FE_615x473px_191023.png",
     hp: 48, baseHourly: 470, baseDaily: 2950,
     suitableLand: "3–18 acres", bestFor: "Rotavator work & haulage",
     fuelType: "Diesel", fuelEfficiency: "3.6 L/hr", transmission: "8F + 2R, Constant Mesh",
@@ -220,7 +220,7 @@ const TRACTOR_MODELS = [
   },
   {
     name: "John Deere 5050D",
-    image: "https://5.imimg.com/data5/SELLER/Default/2022/12/OV/LT/QV/3175027/john-deere-5050d-tractor-500x500.jpg",
+    image: "https://www.deere.co.in/assets/images/region-1/products/tractors/d-series-tractors/john_deere_tractor_5050D_large_a7341c4a17e854d5b4a1c9aeae3b3ab8c367b9ef.png",
     hp: 50, baseHourly: 590, baseDaily: 3600,
     suitableLand: "5–25 acres", bestFor: "Heavy tillage & implements",
     fuelType: "Diesel (CRDe)", fuelEfficiency: "4.1 L/hr", transmission: "8F + 2R, Collar Shift",
@@ -230,7 +230,7 @@ const TRACTOR_MODELS = [
   },
   {
     name: "Sonalika DI 745 III",
-    image: "https://5.imimg.com/data5/SELLER/Default/2022/1/ZW/CA/TU/3175027/sonalika-di-745-iii-tractor.jpg",
+    image: "https://www.sonalika.com/media/product-thumbnail/di-745-iii-ff-1-1682749407.webp",
     hp: 50, baseHourly: 460, baseDaily: 2900,
     suitableLand: "3–20 acres", bestFor: "Ploughing & threshing",
     fuelType: "Diesel", fuelEfficiency: "3.9 L/hr", transmission: "8F + 2R, Sliding Mesh",
@@ -240,7 +240,7 @@ const TRACTOR_MODELS = [
   },
   {
     name: "New Holland 3630 TX Plus",
-    image: "https://5.imimg.com/data5/SELLER/Default/2022/9/YF/FQ/DS/120248271/new-holland-3630-tx-plus-500x500.jpg",
+    image: "https://assets.tractorjunction.com/tractor-junction/assets/images/tractor-images/tractor-image-0-1731586332.webp?width=538&height=320",
     hp: 55, baseHourly: 610, baseDaily: 3750,
     suitableLand: "6–30 acres", bestFor: "Heavy-duty haulage & implements",
     fuelType: "Diesel", fuelEfficiency: "4.3 L/hr", transmission: "8F + 2R, Sliding Mesh",
@@ -250,54 +250,14 @@ const TRACTOR_MODELS = [
   },
   {
     name: "Eicher 380",
-    image: "https://5.imimg.com/data5/SELLER/Default/2022/10/RJ/ZZ/MU/3175027/eicher-380-tractor.jpg",
+    image: "https://assets.tractorjunction.com/tractor-junction/assets/images/tractor-images/tractor-image-0-1731731139.webp?width=538&height=320",
     hp: 39, baseHourly: 340, baseDaily: 2100,
     suitableLand: "1–8 acres", bestFor: "Light tillage & small plots",
     fuelType: "Diesel", fuelEfficiency: "3.1 L/hr", transmission: "8F + 2R, Sliding Mesh",
     performance: { power: 74, fuelEfficiency: 85, loadCapacity: 70, comfort: 70 },
     maintenanceCost: "Low",
     description: "Compact, nimble and cheap to run — ideal for small landholders and tight field corners."
-  },
-  {
-    name: "TAFE 45 DI",
-    image: "https://5.imimg.com/data5/SELLER/Default/2022/3/BC/AO/FR/66574/tafe-45-di-tractor-500x500.jpg",
-    hp: 45, baseHourly: 420, baseDaily: 2650,
-    suitableLand: "2–12 acres", bestFor: "Cultivation & transport",
-    fuelType: "Diesel", fuelEfficiency: "3.5 L/hr", transmission: "8F + 2R, Sliding Mesh",
-    performance: { power: 82, fuelEfficiency: 81, loadCapacity: 80, comfort: 75 },
-    maintenanceCost: "Low",
-    description: "Popular south Indian workhorse — well-suited for paddy, sugarcane and vegetable cultivation."
-  },
-  {
-    name: "Powertrac Euro 50",
-    image: "https://5.imimg.com/data5/SELLER/Default/2022/7/CM/XP/LA/3175027/powertrac-euro-50-tractor.jpg",
-    hp: 50, baseHourly: 480, baseDaily: 3000,
-    suitableLand: "4–22 acres", bestFor: "Paddy transplanting & field prep",
-    fuelType: "Diesel", fuelEfficiency: "3.8 L/hr", transmission: "8F + 2R, Synchromesh",
-    performance: { power: 87, fuelEfficiency: 79, loadCapacity: 84, comfort: 80 },
-    maintenanceCost: "Low",
-    description: "Euro-norm engine with CRDI technology — cleaner, quieter performance on large holdings."
-  },
-  {
-    name: "Massey Ferguson 1035 DI",
-    image: "https://5.imimg.com/data5/SELLER/Default/2023/1/ZH/DX/LV/3175027/massey-ferguson-1035-di.jpg",
-    hp: 36, baseHourly: 320, baseDaily: 2000,
-    suitableLand: "1–6 acres", bestFor: "Vegetable & small-farm operations",
-    fuelType: "Diesel", fuelEfficiency: "2.9 L/hr", transmission: "6F + 2R, Sliding Mesh",
-    performance: { power: 70, fuelEfficiency: 87, loadCapacity: 65, comfort: 68 },
-    maintenanceCost: "Low",
-    description: "India's most affordable rental tractor — perfect for marginal farmers with less than 5 acres."
-  },
-  {
-    name: "Kubota MU5501",
-    image: "https://5.imimg.com/data5/SELLER/Default/2023/2/LV/IP/YU/3175027/kubota-mu5501-tractor.jpg",
-    hp: 55, baseHourly: 640, baseDaily: 3900,
-    suitableLand: "8–35 acres", bestFor: "Precision agriculture & horticulture",
-    fuelType: "Diesel (E-CDIS)", fuelEfficiency: "4.0 L/hr", transmission: "12F + 4R, Power Shuttle",
-    performance: { power: 93, fuelEfficiency: 84, loadCapacity: 89, comfort: 92 },
-    maintenanceCost: "High",
-    description: "Japanese engineering meets Indian fields — best-in-class comfort and precision for large farms."
-  },
+  }
 ];
 
 const OPERATOR_NAMES = [
