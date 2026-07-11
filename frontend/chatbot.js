@@ -336,9 +336,22 @@
     const wrap = document.createElement("div");
     wrap.className = "mm-actions";
     for (const a of list) {
+      // FIX (5.1): Validate href to prevent javascript: XSS injection
+      let safeHref = "#";
+      try {
+        const url = new URL(a.href, location.origin);
+        if (url.protocol === "http:" || url.protocol === "https:" || url.protocol === location.protocol) {
+          safeHref = url.href;
+        }
+      } catch (_) {
+        // If it's a relative path starting with /, treat as safe
+        if (typeof a.href === "string" && a.href.startsWith("/")) safeHref = a.href;
+      }
       const btn = document.createElement("a");
-      btn.href = a.href;
+      btn.href = safeHref;
       btn.textContent = a.label;
+      btn.rel = "noopener noreferrer";
+      btn.target = "_blank";
       wrap.appendChild(btn);
     }
     body.appendChild(wrap);
@@ -354,10 +367,21 @@
   }
 
   // --------------- session memory ---------------
+  // FIX: Validate context object from localStorage to prevent injection
+  function validateContext(ctx) {
+    if (typeof ctx !== 'object' || ctx === null || Array.isArray(ctx)) return {};
+    const allowed = ['region_id', 'crop_id', 'season'];
+    const safe = {};
+    for (const k of allowed) {
+      if (typeof ctx[k] === 'string' && ctx[k].length < 50) safe[k] = ctx[k];
+    }
+    return safe;
+  }
+
   let sessionCtx = {};
   try {
     const stored = localStorage.getItem("mm_chat_ctx");
-    if (stored) sessionCtx = JSON.parse(stored) || {};
+    if (stored) sessionCtx = validateContext(JSON.parse(stored));
   } catch (_) {}
   try {
     // Bootstrap region from unified Farm Profile, if present.
@@ -369,9 +393,19 @@
   const persistCtx = () => { try { localStorage.setItem("mm_chat_ctx", JSON.stringify(sessionCtx)); } catch (_) {} };
 
   // --------------- API ---------------
+  // FIX (5.2): Mutex guard to prevent concurrent send() calls
+  let _sending = false;
   async function send() {
     const msg = input.value.trim();
-    if (!msg) return;
+    if (!msg || _sending) return;
+    
+    // FIX: Enforce 2000 character limit on messages
+    if (msg.length > 2000) {
+        addMsg("bot", "Please keep your message under 2000 characters.");
+        return;
+    }
+
+    _sending = true;
     input.value = "";
     addMsg("user", msg);
     setSuggestions([]);
@@ -426,6 +460,9 @@
       addMsg("bot",
         "I couldn't reach the chat API. Serve the app through the backend (e.g. run `uvicorn` and open `http://127.0.0.1:8000`) — " +
         "opening `index.html` as a file won't work for `/api/chat`.");
+    } finally {
+      // FIX (5.2): Always release the send mutex
+      _sending = false;
     }
   }
 
@@ -453,7 +490,13 @@
           input.value = txt;
           send();
         };
-        rec.onerror = () => { listening = false; micBtn.classList.remove("listening"); };
+        // FIX (5.3): Surface speech recognition errors to the user
+        rec.onerror = (ev) => {
+          listening = false; micBtn.classList.remove("listening");
+          const errMap = { "no-speech": "No speech detected.", "audio-capture": "Microphone not found.", "not-allowed": "Microphone access denied." };
+          const errMsg = errMap[ev.error] || ("Voice input error: " + (ev.error || "unknown"));
+          addMsg("bot", errMsg);
+        };
         rec.onend  = () => { listening = false; micBtn.classList.remove("listening"); };
         try { rec.start(); listening = true; micBtn.classList.add("listening"); }
         catch(_) { listening = false; micBtn.classList.remove("listening"); }

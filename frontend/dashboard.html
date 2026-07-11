@@ -112,6 +112,10 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="4"/></svg>
             Pest alerts
           </button>
+          <button class="sidebar__btn" data-tool="disease">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            Disease scan
+          </button>
         </div>
 
         <div class="sidebar__group">
@@ -476,6 +480,96 @@
           <div class="output" data-out="pest"></div>
         </section>
 
+        <!-- 11b. DISEASE -->
+        <section class="tool" data-tool="disease">
+          <div class="tool__head">
+            <div class="tool__ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            </div>
+            <div>
+              <h2>Intelligent Crop Disease Scan</h2>
+              <p>Snap or upload a leaf photo to diagnose diseases instantly and offline. Zero latency, client-side inference.</p>
+            </div>
+          </div>
+          
+          <div class="disease-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 20px;">
+            <!-- Left panel: upload / camera -->
+            <div class="disease-uploader-box" style="background: var(--bg); padding: 20px; border-radius: var(--r-md); border: 2px dashed #c8b9a6; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 280px; position: relative;">
+              <input type="file" id="diseaseImageInput" accept="image/*" capture="environment" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; cursor: pointer; z-index: 10;">
+              
+              <div id="uploadPrompt" style="text-align: center; pointer-events: none; z-index: 1;">
+                <svg style="width: 48px; height: 48px; color: var(--brand); margin-bottom: 12px; display: inline-block;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                <h4 style="font-weight: 600; color: var(--ink); margin-bottom: 6px;">Click or Drag Leaf Photo Here</h4>
+                <p style="font-size: 0.85rem; color: var(--ink-soft);">Supports JPEG, PNG. Resized to 224x224 client-side.</p>
+              </div>
+
+              <!-- Camera viewfinder viewport -->
+              <div id="cameraViewport" style="display: none; width: 100%; text-align: center; z-index: 11; position: relative;">
+                <video id="diseaseCameraVideo" style="width: 100%; max-height: 220px; background: #000; border-radius: var(--r-sm); object-fit: cover;" autoplay playsinline></video>
+                <div style="margin-top: 10px; display: flex; gap: 10px; justify-content: center;">
+                  <button id="cameraShutterBtn" class="btn btn-primary" style="font-size: 0.85rem; padding: 6px 12px; z-index: 20; position: relative;">📸 Snap Photo</button>
+                  <button id="cancelCameraBtn" class="btn btn-ghost" style="font-size: 0.85rem; padding: 6px 12px; z-index: 20; position: relative;">Cancel</button>
+                </div>
+              </div>
+              
+              <div id="imagePreviewContainer" style="display: none; width: 100%; text-align: center; z-index: 1;">
+                <img id="diseaseImagePreview" style="max-height: 200px; max-width: 100%; border-radius: var(--r-sm); margin-bottom: 12px; border: 1px solid var(--bg-soft); object-fit: contain;" alt="Leaf preview">
+                <div>
+                  <button id="reuploadBtn" class="btn btn-ghost" style="font-size: 0.85rem; padding: 6px 12px; z-index: 20; position: relative;">Choose another photo</button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Right panel: context & scan button -->
+            <div class="disease-meta-box" style="background: #fff; padding: 20px; border-radius: var(--r-md); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: space-between; border: 1px solid rgba(29,26,21,.08);">
+              <div>
+                <button id="toggleCameraBtn" class="btn btn-ghost" style="width: 100%; margin-bottom: 16px; font-size: 0.85rem; padding: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                  <svg style="width:16px; height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                  Use Live Camera
+                </button>
+
+                <div class="field" style="margin-bottom: 12px;">
+                  <label style="font-size: 0.85rem; font-weight: 600; color: var(--ink-soft); display: block; margin-bottom: 4px;">Crop Context (Narrow candidates)</label>
+                  <select id="diseaseCropSelect" class="select" style="width: 100%;">
+                    <option value="">Auto-detect from image</option>
+                    <option value="maize">Maize (Makka)</option>
+                    <option value="potato">Potato (Aloo)</option>
+                    <option value="soybean">Soybean</option>
+                    <option value="tomato">Tomato (Tamatar)</option>
+                  </select>
+                </div>
+                
+                <div class="field" style="margin-bottom: 16px;">
+                  <label style="font-size: 0.85rem; font-weight: 600; color: var(--ink-soft); display: block; margin-bottom: 4px;">Region (For local subsidies & experts)</label>
+                  <select id="diseaseRegionSelect" class="select" data-regions style="width: 100%;"></select>
+                </div>
+                
+                <p id="modelLoadStatus" style="font-size: 0.85rem; color: var(--brand); font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 6px;">
+                  <span class="spinner" style="border: 2px solid rgba(0,0,0,0.1); border-left-color: var(--brand); border-radius: 50%; width: 14px; height: 14px; animation: spin 1s linear infinite; display: inline-block;"></span>
+                  Loading TF.js disease model offline...
+                </p>
+              </div>
+              
+              <div>
+                <button id="runDiseaseScanBtn" class="btn btn-primary" style="width: 100%;" disabled>Run Disease Diagnosis</button>
+              </div>
+            </div>
+          </div>
+          
+          <canvas id="diseaseResizeCanvas" width="224" height="224" style="display: none;"></canvas>
+          
+          <div id="diseaseResultsBox" style="display: none; margin-top: 24px;"></div>
+
+          <!-- History Section -->
+          <div id="diseaseHistoryBox" style="display: none; margin-top: 24px; border-top: 1px solid rgba(29,26,21,.08); padding-top: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <h3 style="font-size: 1.1rem; color: var(--ink-soft); font-family: 'Fraunces', serif; margin: 0;">📜 Recent Diagnostic History</h3>
+              <button id="clearDiseaseHistoryBtn" style="font-size: 0.75rem; color: var(--clay); font-weight: 600; text-decoration: underline; background: none; border: none; cursor: pointer;">Clear History</button>
+            </div>
+            <div id="diseaseHistoryList" style="display: flex; flex-direction: column; gap: 10px;"></div>
+          </div>
+        </section>
+
         <!-- 12. LOAN -->
         <section class="tool" data-tool="loan">
           <div class="tool__head">
@@ -549,6 +643,7 @@
   <script defer src="site-ui.js"></script>
   <script defer src="offline-simulator.js"></script>
   <script defer src="farm-state.js"></script>
+  <script defer src="disease-scan.js"></script>
   <script defer src="dashboard.js"></script>
   <script defer src="mm-enhance.js"></script>
   <script defer src="i18n.js"></script>

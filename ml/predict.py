@@ -1,6 +1,9 @@
 from __future__ import annotations
 
-import csv
+# FIX (4.4): Removed unused `csv` import
+import logging
+import math
+import threading
 from pathlib import Path
 from statistics import mean
 from typing import Any
@@ -13,6 +16,9 @@ from utils.calculations import (
     calculate_yield_kg_per_acre,
     clamp,
 )
+
+# FIX (4.1): Added structured logging for ML fallback diagnostics
+logger = logging.getLogger(__name__)
 
 DATASET_DIR = Path(__file__).resolve().parents[1] / "dataset"
 MODEL_DIR = Path(__file__).resolve().parent / "models"
@@ -33,6 +39,10 @@ _ml_price_encoders = None
 _ml_recommend_encoders = None
 _ml_models_loaded = False
 
+# FIX (2.1): Thread-safe locks for model loading and cache writes
+_ml_load_lock = threading.Lock()
+_cache_lock = threading.Lock()
+
 
 def _load_ml_models():
     """Load trained ML models from disk. Silent no-op if models don't exist."""
@@ -41,34 +51,64 @@ def _load_ml_models():
     global _ml_models_loaded
     if _ml_models_loaded:
         return
-    _ml_models_loaded = True
-    try:
-        import joblib
-        ym = MODEL_DIR / "yield_model.joblib"
-        if ym.exists():
-            _ml_yield_model = joblib.load(ym)
-        le = MODEL_DIR / "label_encoders.joblib"
-        if le.exists():
-            _ml_label_encoders = joblib.load(le)
-        pm = MODEL_DIR / "price_model.joblib"
-        if pm.exists():
-            _ml_price_model = joblib.load(pm)
-        pe = MODEL_DIR / "price_encoders.joblib"
-        if pe.exists():
-            _ml_price_encoders = joblib.load(pe)
-        rm = MODEL_DIR / "recommend_model.joblib"
-        if rm.exists():
-            _ml_recommend_model = joblib.load(rm)
-        re_ = MODEL_DIR / "recommend_encoders.joblib"
-        if re_.exists():
-            _ml_recommend_encoders = joblib.load(re_)
-    except Exception:
-        pass  # Fallback to heuristics
+    # FIX (2.1): Double-checked locking for thread safety
+    with _ml_load_lock:
+        if _ml_models_loaded:
+            return
+        try:
+            import joblib
+            ym = MODEL_DIR / "yield_model.joblib"
+            if ym.exists():
+                _ml_yield_model = joblib.load(ym)
+            le = MODEL_DIR / "label_encoders.joblib"
+            if le.exists():
+                _ml_label_encoders = joblib.load(le)
+            pm = MODEL_DIR / "price_model.joblib"
+            if pm.exists():
+                _ml_price_model = joblib.load(pm)
+            pe = MODEL_DIR / "price_encoders.joblib"
+            if pe.exists():
+                _ml_price_encoders = joblib.load(pe)
+            rm = MODEL_DIR / "recommend_model.joblib"
+            if rm.exists():
+                _ml_recommend_model = joblib.load(rm)
+            re_ = MODEL_DIR / "recommend_encoders.joblib"
+            if re_.exists():
+                _ml_recommend_encoders = joblib.load(re_)
+        except Exception as e:
+            # FIX (4.1): Log the actual error instead of silently swallowing
+            logger.warning("Failed to load ML models, falling back to heuristics: %s", e)
+        _ml_models_loaded = True
+
+
+# FIX (2.2): Cache invalidation function for use after model retraining
+def invalidate_caches():
+    """Reset all module-level caches. Call after retraining models or updating CSVs."""
+    global _cache_crop_params, _cache_yield_history, _cache_weather
+    global _cache_soil, _cache_mandi
+    global _ml_yield_model, _ml_price_model, _ml_recommend_model
+    global _ml_label_encoders, _ml_price_encoders, _ml_recommend_encoders
+    global _ml_models_loaded
+    with _cache_lock:
+        _cache_crop_params = None
+        _cache_yield_history = None
+        _cache_weather = None
+        _cache_soil = None
+        _cache_mandi = None
+    with _ml_load_lock:
+        _ml_yield_model = None
+        _ml_price_model = None
+        _ml_recommend_model = None
+        _ml_label_encoders = None
+        _ml_price_encoders = None
+        _ml_recommend_encoders = None
+        _ml_models_loaded = False
+    logger.info("All predict module caches invalidated.")
 
 
 def _load_csv(file_name: str) -> list[dict[str, str]]:
-    # Shared mtime-aware cache — avoids re-parsing CSVs on every ML call.
-    from utils.csv_cache import load as _cached_load, index_by as _cached_index_by
+    # FIX (3.5): Delegate exclusively to csv_cache — removed redundant import
+    from utils.csv_cache import load as _cached_load
     return _cached_load(file_name)
 
 
@@ -76,34 +116,26 @@ def _load_crop_parameters() -> dict[str, CropParameter]:
     global _cache_crop_params
     if _cache_crop_params is not None:
         return _cache_crop_params
-    rows = _load_csv("crop_parameters.csv")
-    data: dict[str, CropParameter] = {}
-    for row in rows:
-        crop_id = row["crop_id"]
-        data[crop_id] = CropParameter(
-            crop_id=crop_id,
-            crop_name=row["crop_name"],
-            season=row["season"].lower(),
-            base_yield_kg_per_acre=float(row["base_yield_kg_per_acre"]),
-            water_requirement_mm=float(row["water_requirement_mm"]),
-            temp_min_c=float(row["temp_min_c"]),
-            temp_max_c=float(row["temp_max_c"]),
-            avg_input_cost_inr_per_acre=float(row["avg_input_cost_inr_per_acre"]),
-            mandi_price_min_inr_per_kg=float(row["mandi_price_min_inr_per_kg"]),
-            mandi_price_max_inr_per_kg=float(row["mandi_price_max_inr_per_kg"]),
-            npk_n_kg_per_acre=float(row["npk_n_kg_per_acre"]),
-            npk_p_kg_per_acre=float(row["npk_p_kg_per_acre"]),
-            npk_k_kg_per_acre=float(row["npk_k_kg_per_acre"]),
-        )
-    _cache_crop_params = data
-    return data
+    # FIX (2.1): Thread-safe cache population via double-checked locking
+    with _cache_lock:
+        if _cache_crop_params is not None:
+            return _cache_crop_params
+        rows = _load_csv("crop_parameters.csv")
+        # FIX: Centralized CropParameter loading from data_loaders
+        from utils.data_loaders import load_crop_parameters
+        _cache_crop_params = load_crop_parameters(rows)
+    return _cache_crop_params
 
 
 def _load_yield_history() -> list[dict[str, str]]:
     global _cache_yield_history
     if _cache_yield_history is not None:
         return _cache_yield_history
-    _cache_yield_history = _load_csv("yield_history.csv")
+    # FIX (2.1): Thread-safe cache population
+    with _cache_lock:
+        if _cache_yield_history is not None:
+            return _cache_yield_history
+        _cache_yield_history = _load_csv("yield_history.csv")
     return _cache_yield_history
 
 
@@ -112,14 +144,18 @@ def _load_weather_by_region() -> dict[tuple[str, str], dict[str, str]]:
     global _cache_weather
     if _cache_weather is not None:
         return _cache_weather
-    rows = _load_csv("weather.csv")
-    data: dict[tuple[str, str], dict[str, str]] = {}
-    for row in rows:
-        key = (row["region_id"], row["season"])
-        existing = data.get(key)
-        if existing is None or int(row.get("year", 0)) >= int(existing.get("year", 0)):
-            data[key] = row
-    _cache_weather = data
+    # FIX (2.1): Thread-safe cache population
+    with _cache_lock:
+        if _cache_weather is not None:
+            return _cache_weather
+        rows = _load_csv("weather.csv")
+        data: dict[tuple[str, str], dict[str, str]] = {}
+        for row in rows:
+            key = (row["region_id"], row["season"])
+            existing = data.get(key)
+            if existing is None or int(row.get("year", 0)) >= int(existing.get("year", 0)):
+                data[key] = row
+        _cache_weather = data
     return data
 
 
@@ -128,19 +164,23 @@ def _load_soil_by_region() -> dict[str, dict[str, float | str]]:
     global _cache_soil
     if _cache_soil is not None:
         return _cache_soil
-    rows = _load_csv("soil.csv")
-    grouped: dict[str, list[dict[str, str]]] = {}
-    for row in rows:
-        grouped.setdefault(row["region_id"], []).append(row)
-    numeric_keys = ["ph", "n_kg_per_acre", "p_kg_per_acre", "k_kg_per_acre", "organic_carbon_percent"]
-    data: dict[str, dict[str, float | str]] = {}
-    for region_id, group in grouped.items():
-        merged: dict[str, float | str] = {"region_id": region_id, "soil_type": group[0]["soil_type"]}
-        for k in numeric_keys:
-            vals = [float(r[k]) for r in group if k in r]
-            merged[k] = round(mean(vals), 2) if vals else 0.0
-        data[region_id] = merged
-    _cache_soil = data
+    # FIX (2.1): Thread-safe cache population
+    with _cache_lock:
+        if _cache_soil is not None:
+            return _cache_soil
+        rows = _load_csv("soil.csv")
+        grouped: dict[str, list[dict[str, str]]] = {}
+        for row in rows:
+            grouped.setdefault(row["region_id"], []).append(row)
+        numeric_keys = ["ph", "n_kg_per_acre", "p_kg_per_acre", "k_kg_per_acre", "organic_carbon_percent"]
+        data: dict[str, dict[str, float | str]] = {}
+        for region_id, group in grouped.items():
+            merged: dict[str, float | str] = {"region_id": region_id, "soil_type": group[0]["soil_type"]}
+            for k in numeric_keys:
+                vals = [float(r[k]) for r in group if k in r]
+                merged[k] = round(mean(vals), 2) if vals else 0.0
+            data[region_id] = merged
+        _cache_soil = data
     return data
 
 
@@ -148,8 +188,32 @@ def _load_mandi_prices() -> list[dict[str, str]]:
     global _cache_mandi
     if _cache_mandi is not None:
         return _cache_mandi
-    _cache_mandi = _load_csv("mandi_prices.csv")
+    # FIX (2.1): Thread-safe cache population
+    with _cache_lock:
+        if _cache_mandi is not None:
+            return _cache_mandi
+        _cache_mandi = _load_csv("mandi_prices.csv")
     return _cache_mandi
+
+
+# FIX (5.4): Input validation helpers for numeric parameters
+def _validate_non_negative(value: float, name: str) -> float:
+    """Validate that a numeric input is a finite non-negative number."""
+    if not isinstance(value, (int, float)):
+        raise TypeError(f"{name} must be a number, got {type(value).__name__}")
+    if math.isnan(value) or math.isinf(value):
+        raise ValueError(f"{name} must be a finite number, got {value}")
+    if value < 0:
+        raise ValueError(f"{name} must be non-negative, got {value}")
+    return float(value)
+
+
+def _validate_unit_range(value: float, name: str) -> float:
+    """Validate that a value is in [0.0, 1.0] range."""
+    value = _validate_non_negative(value, name)
+    if value > 1.0:
+        raise ValueError(f"{name} must be between 0.0 and 1.0, got {value}")
+    return value
 
 
 def _season_match(input_season: str, crop_season: str) -> bool:
@@ -222,7 +286,9 @@ def _ml_predict_yield(
         ]], dtype=np.float32)
         pred = _ml_yield_model.predict(features)[0]
         return round(float(pred), 2)
-    except Exception:
+    except Exception as e:
+        # FIX (4.2): Log error instead of silently returning None
+        logger.debug("ML yield prediction failed for %s/%s: %s", crop_id, region_id, e)
         return None
 
 
@@ -237,6 +303,9 @@ def predict_yield_kg_per_acre(
     sowing_date: str | None = None,
 ) -> float:
     crop_params = _load_crop_parameters()
+    # FIX (1.3): Raise clear ValueError instead of unhandled KeyError
+    if crop_id not in crop_params:
+        raise ValueError(f"Unsupported crop_id: {crop_id}")
     crop = crop_params[crop_id]
     if not _season_match(season, crop.season):
         return 0.0
@@ -276,7 +345,15 @@ def smart_risk_score(
     budget_per_acre: float,
     irrigation_level: float = 0.5,
 ) -> dict[str, float]:
-    crop = _load_crop_parameters()[crop_id]
+    # FIX (5.4): Validate numeric inputs
+    budget_per_acre = _validate_non_negative(budget_per_acre, "budget_per_acre")
+    irrigation_level = _validate_unit_range(irrigation_level, "irrigation_level")
+
+    crop_params = _load_crop_parameters()
+    # FIX (1.3): Consistent error handling for unknown crop_id
+    if crop_id not in crop_params:
+        raise ValueError(f"Unsupported crop_id: {crop_id}")
+    crop = crop_params[crop_id]
     
     risk_score, risk_subscores = calculate_risk_score_and_subscores(
         crop=crop,
@@ -312,7 +389,16 @@ def profit_estimator(
     budget_per_acre: float,
     mandi_price_per_kg: float | None = None,
 ) -> dict[str, float]:
-    crop = _load_crop_parameters()[crop_id]
+    # FIX (5.4): Validate numeric inputs
+    predicted_yield_kg_per_acre = _validate_non_negative(predicted_yield_kg_per_acre, "predicted_yield_kg_per_acre")
+    area_acres = _validate_non_negative(area_acres, "area_acres")
+    budget_per_acre = _validate_non_negative(budget_per_acre, "budget_per_acre")
+
+    crop_params = _load_crop_parameters()
+    # FIX (1.3): Consistent error handling for unknown crop_id
+    if crop_id not in crop_params:
+        raise ValueError(f"Unsupported crop_id: {crop_id}")
+    crop = crop_params[crop_id]
     price = mandi_price_per_kg or ((crop.mandi_price_min_inr_per_kg + crop.mandi_price_max_inr_per_kg) / 2.0)
     total_yield = predicted_yield_kg_per_acre * area_acres
     total_cost = budget_per_acre * area_acres
@@ -414,6 +500,10 @@ def rotation_planner(
     area_acres: float,
 ) -> dict[str, Any]:
     """Plan a kharif→rabi annual rotation maximizing combined profit & minimizing risk."""
+    # FIX (5.4): Validate inputs
+    budget_per_acre = _validate_non_negative(budget_per_acre, "budget_per_acre")
+    area_acres = _validate_non_negative(area_acres, "area_acres")
+
     kharif_recs = recommend_crops(region_id, "kharif", budget_per_acre, area_acres, top_k=5)
     rabi_recs = recommend_crops(region_id, "rabi", budget_per_acre, area_acres, top_k=5)
 
@@ -526,7 +616,9 @@ def _ml_recommend_crop(
             result.append({"crop_id": crop_name, "ml_confidence": round(float(prob), 4)})
         result.sort(key=lambda x: x["ml_confidence"], reverse=True)
         return result
-    except Exception:
+    except Exception as e:
+        # FIX (4.2): Log error instead of silently returning None
+        logger.debug("ML crop recommendation failed for %s/%s: %s", region_id, season, e)
         return None
 
 
@@ -558,8 +650,113 @@ def _ml_predict_price(
         ]], dtype=np.float32)
         pred = _ml_price_model.predict(features)[0]
         return round(float(max(pred, 0.5)), 2)
-    except Exception:
+    except Exception as e:
+        # FIX (4.2): Log error instead of silently returning None
+        logger.debug("ML price prediction failed for %s/%s: %s", crop_id, region_id, e)
         return None
+
+
+# FIX (3.2): Extracted region data preparation into its own function
+def _prepare_region_data(
+    region_id: str, season: str,
+) -> tuple[dict[str, float], dict[str, float]]:
+    """Load and prepare weather and soil data for a region/season pair.
+
+    Returns (weather_dict, soil_dict) with float values ready for ML features.
+    Raises ValueError if region or season is unsupported.
+    """
+    weather_data = _load_weather_by_region()
+    soil_data = _load_soil_by_region()
+
+    weather_key = (region_id, season)
+    if weather_key not in weather_data or region_id not in soil_data:
+        raise ValueError(f"Unsupported region_id: {region_id} or season: {season}")
+
+    raw_weather = weather_data[weather_key]
+    raw_soil = soil_data[region_id]
+
+    weather = {
+        "rainfall_mm": float(raw_weather["rainfall_mm"]),
+        "avg_temp_c": float(raw_weather["avg_temp_c"]),
+        "min_temp_c": float(raw_weather.get("min_temp_c", float(raw_weather["avg_temp_c"]) - 8)),
+        "max_temp_c": float(raw_weather.get("max_temp_c", float(raw_weather["avg_temp_c"]) + 7)),
+    }
+    soil = {
+        "ph": float(raw_soil["ph"]),
+        "n_kg_per_acre": float(raw_soil["n_kg_per_acre"]),
+        "p_kg_per_acre": float(raw_soil["p_kg_per_acre"]),
+        "k_kg_per_acre": float(raw_soil["k_kg_per_acre"]),
+        "organic_carbon_percent": float(raw_soil.get("organic_carbon_percent", 0.5)),
+    }
+    return weather, soil
+
+
+# FIX (3.2): Extracted per-crop scoring into its own function
+def _score_single_crop(
+    crop_id: str,
+    crop: CropParameter,
+    weather: dict[str, float],
+    soil: dict[str, float],
+    region_id: str,
+    season: str,
+    budget_per_acre: float,
+    area_acres: float,
+    region_crop_price: dict[str, float],
+    ml_conf_map: dict[str, float],
+) -> dict[str, Any]:
+    """Score a single crop candidate for the recommendation engine.
+
+    Returns a dict containing yield, profit, risk, smart_score, and metadata.
+    """
+    predicted_yield = predict_yield_kg_per_acre(crop_id, region_id, season, weather, soil)
+    risk = smart_risk_score(crop_id, weather, soil, budget_per_acre)
+    price = region_crop_price.get(
+        crop_id, (crop.mandi_price_min_inr_per_kg + crop.mandi_price_max_inr_per_kg) / 2.0
+    )
+    profit = profit_estimator(
+        crop_id=crop_id,
+        predicted_yield_kg_per_acre=predicted_yield,
+        area_acres=area_acres,
+        budget_per_acre=budget_per_acre,
+        mandi_price_per_kg=price,
+    )
+
+    budget_fit = clamp(
+        (budget_per_acre / max(crop.avg_input_cost_inr_per_acre, 1.0)) * 100.0, 0.0, 120.0
+    )
+    roi_normalized = clamp(profit["roi_percent"] / 3.0, 0.0, 100.0)
+    n_ratio = soil.get("n_kg_per_acre", 40.0) / max(crop.npk_n_kg_per_acre, 1.0)
+    p_ratio = soil.get("p_kg_per_acre", 20.0) / max(crop.npk_p_kg_per_acre, 1.0)
+    k_ratio = soil.get("k_kg_per_acre", 20.0) / max(crop.npk_k_kg_per_acre, 1.0)
+    soil_health = clamp(((n_ratio + p_ratio + k_ratio) / 3.0) * 100.0, 0.0, 120.0)
+
+    # Blend ML confidence into smart_score if available
+    ml_score = ml_conf_map.get(crop_id, 0.0) * 100.0
+    ml_term = ml_score if _ml_recommend_model is not None else roi_normalized
+    smart_score = clamp(
+        0.35 * roi_normalized
+        + 0.20 * risk["confidence_score"]
+        + 0.15 * budget_fit
+        + 0.15 * soil_health
+        + 0.15 * ml_term,
+        0.0,
+        100.0,
+    )
+
+    rec_entry = {
+        "crop_id": crop_id,
+        "crop_name": crop.crop_name,
+        "predicted_yield_kg_per_acre": predicted_yield,
+        "expected_profit": profit["expected_profit"],
+        "roi_percent": profit["roi_percent"],
+        "risk_score": risk["risk_score"],
+        "smart_score": round(smart_score, 2),
+        "prediction_source": "ml_model" if _ml_yield_model is not None else "heuristic",
+        "reason": "Ranked using ML models + location, soil, season fit, budget fit, profit, and risk confidence.",
+    }
+    if crop_id in ml_conf_map:
+        rec_entry["ml_confidence"] = ml_conf_map[crop_id]
+    return rec_entry
 
 
 def recommend_crops(
@@ -569,28 +766,19 @@ def recommend_crops(
     area_acres: float,
     top_k: int = 3,
 ) -> list[dict[str, Any]]:
+    """Recommend top-k crops for a region/season, ranked by composite smart_score.
+
+    FIX (3.2): Decomposed into _prepare_region_data() and _score_single_crop()
+    for testability and single-responsibility adherence.
+    """
+    # FIX (5.4): Validate inputs
+    budget_per_acre = _validate_non_negative(budget_per_acre, "budget_per_acre")
+    area_acres = _validate_non_negative(area_acres, "area_acres")
+
     crop_params = _load_crop_parameters()
-    weather_data = _load_weather_by_region()
-    soil_data = _load_soil_by_region()
-    mandi_rows = _load_mandi_prices()
 
-    weather_key = (region_id, season)
-    if weather_key not in weather_data or region_id not in soil_data:
-        raise ValueError(f"Unsupported region_id: {region_id} or season: {season}")
-
-    weather = {
-        "rainfall_mm": float(weather_data[weather_key]["rainfall_mm"]),
-        "avg_temp_c": float(weather_data[weather_key]["avg_temp_c"]),
-        "min_temp_c": float(weather_data[weather_key].get("min_temp_c", float(weather_data[weather_key]["avg_temp_c"]) - 8)),
-        "max_temp_c": float(weather_data[weather_key].get("max_temp_c", float(weather_data[weather_key]["avg_temp_c"]) + 7)),
-    }
-    soil = {
-        "ph": float(soil_data[region_id]["ph"]),
-        "n_kg_per_acre": float(soil_data[region_id]["n_kg_per_acre"]),
-        "p_kg_per_acre": float(soil_data[region_id]["p_kg_per_acre"]),
-        "k_kg_per_acre": float(soil_data[region_id]["k_kg_per_acre"]),
-        "organic_carbon_percent": float(soil_data[region_id].get("organic_carbon_percent", 0.5)),
-    }
+    # FIX (3.2): Extracted data preparation into reusable function
+    weather, soil = _prepare_region_data(region_id, season)
 
     from utils.csv_cache import index_by as _cached_index_by
     region_rows = _cached_index_by("mandi_prices.csv", "region_id").get(region_id, [])
@@ -609,50 +797,13 @@ def recommend_crops(
         if not _season_match(season, crop.season):
             continue
 
-        predicted_yield = predict_yield_kg_per_acre(crop_id, region_id, season, weather, soil)
-        risk = smart_risk_score(crop_id, weather, soil, budget_per_acre)
-        price = region_crop_price.get(crop_id, (crop.mandi_price_min_inr_per_kg + crop.mandi_price_max_inr_per_kg) / 2.0)
-        profit = profit_estimator(
-            crop_id=crop_id,
-            predicted_yield_kg_per_acre=predicted_yield,
-            area_acres=area_acres,
-            budget_per_acre=budget_per_acre,
-            mandi_price_per_kg=price,
+        # FIX (3.2): Extracted per-crop scoring into reusable function
+        rec_entry = _score_single_crop(
+            crop_id, crop, weather, soil,
+            region_id, season,
+            budget_per_acre, area_acres,
+            region_crop_price, ml_conf_map,
         )
-
-        budget_fit = clamp((budget_per_acre / max(crop.avg_input_cost_inr_per_acre, 1.0)) * 100.0, 0.0, 120.0)
-        roi_normalized = clamp(profit["roi_percent"] / 3.0, 0.0, 100.0)
-        n_ratio = soil.get("n_kg_per_acre", 40.0) / max(crop.npk_n_kg_per_acre, 1.0)
-        p_ratio = soil.get("p_kg_per_acre", 20.0) / max(crop.npk_p_kg_per_acre, 1.0)
-        k_ratio = soil.get("k_kg_per_acre", 20.0) / max(crop.npk_k_kg_per_acre, 1.0)
-        soil_health = clamp(((n_ratio + p_ratio + k_ratio) / 3.0) * 100.0, 0.0, 120.0)
-
-        # Blend ML confidence into smart_score if available
-        ml_score = ml_conf_map.get(crop_id, 0.0) * 100.0
-        ml_term = ml_score if _ml_recommend_model is not None else roi_normalized
-        smart_score = clamp(
-            0.35 * roi_normalized
-            + 0.20 * risk["confidence_score"]
-            + 0.15 * budget_fit
-            + 0.15 * soil_health
-            + 0.15 * ml_term,
-            0.0,
-            100.0,
-        )
-
-        rec_entry = {
-            "crop_id": crop_id,
-            "crop_name": crop.crop_name,
-            "predicted_yield_kg_per_acre": predicted_yield,
-            "expected_profit": profit["expected_profit"],
-            "roi_percent": profit["roi_percent"],
-            "risk_score": risk["risk_score"],
-            "smart_score": round(smart_score, 2),
-            "prediction_source": "ml_model" if _ml_yield_model is not None else "heuristic",
-            "reason": "Ranked using ML models + location, soil, season fit, budget fit, profit, and risk confidence.",
-        }
-        if crop_id in ml_conf_map:
-            rec_entry["ml_confidence"] = ml_conf_map[crop_id]
         recommendations.append(rec_entry)
 
     ranked = sorted(recommendations, key=lambda x: x["smart_score"], reverse=True)

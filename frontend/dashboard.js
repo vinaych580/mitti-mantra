@@ -2161,4 +2161,603 @@
     return mapBoundarySoilToSimulator(savedFarm.soil);
   };
 
+  /* ==========================================================
+     TOOL 11b: Crop Disease Detection Flagship Feature
+     ========================================================== */
+  const DISEASE_CLASSES = [
+    "maize_common_rust", "maize_gray_leaf_spot", "maize_northern_leaf_blight", "maize_healthy",
+    "potato_early_blight", "potato_late_blight", "potato_healthy",
+    "soybean_healthy",
+    "tomato_bacterial_spot", "tomato_early_blight", "tomato_late_blight", "tomato_leaf_mold",
+    "tomato_septoria_leaf_spot", "tomato_spider_mites", "tomato_target_spot",
+    "tomato_yellow_leaf_curl_virus", "tomato_mosaic_virus", "tomato_healthy"
+  ];
+
+  const DISEASE_METADATA = {
+    "maize_common_rust": {
+      "name": "Maize Common Rust",
+      "organic": [
+        "Destroy infected crop debris after harvest to prevent winter survival.",
+        "Plant resistant maize hybrids.",
+        "Apply organic copper-based fungicides if caught in very early stages."
+      ],
+      "chemical": [
+        "Spray Mancozeb 75 WP at 2g/L or Propiconazole 25 EC at 1ml/L of water."
+      ],
+      "schemes": ["pmfby", "kkc"]
+    },
+    "maize_gray_leaf_spot": {
+      "name": "Maize Gray Leaf Spot",
+      "organic": [
+        "Rotate crops for 2 or more years with non-host crops (e.g. pulses, soybean).",
+        "Deep tillage to bury infected plant residues in the soil."
+      ],
+      "chemical": [
+        "Spray Pyraclostrobin or Azoxystrobin based fungicides at recommended intervals."
+      ],
+      "schemes": ["pmfby", "kkc"]
+    },
+    "maize_northern_leaf_blight": {
+      "name": "Maize Northern Leaf Blight",
+      "organic": [
+        "Select resistant cultivars.",
+        "Bury crop residues with deep tillage after harvest."
+      ],
+      "chemical": [
+        "Apply foliar spray of Mancozeb or Zineb when lesions are first observed."
+      ],
+      "schemes": ["pmfby"]
+    },
+    "maize_healthy": {
+      "name": "Maize Healthy Leaf",
+      "organic": [
+        "Continue standard crop rotation.",
+        "Ensure balanced fertilization according to soil tests."
+      ],
+      "chemical": [
+        "No chemical inputs are required."
+      ],
+      "schemes": []
+    },
+    "potato_early_blight": {
+      "name": "Potato Early Blight",
+      "organic": [
+        "Prune lower infected leaves.",
+        "Avoid overhead irrigation to keep leaves dry.",
+        "Apply neem oil spray (0.5%) as a biological preventative."
+      ],
+      "chemical": [
+        "Spray Chlorothalonil or Mancozeb (2g/L) at 10-14 day intervals."
+      ],
+      "schemes": ["pmfby", "kkc"]
+    },
+    "potato_late_blight": {
+      "name": "Potato Late Blight",
+      "organic": [
+        "Plant certified disease-free seed tubers.",
+        "Destroy all cull piles and volunteers immediately.",
+        "Apply Trichoderma-based bio-fungicides."
+      ],
+      "chemical": [
+        "Foliar application of Metalaxyl-M (8%) + Mancozeb (64%) WP (Ridomil Gold) at 2.5g/L."
+      ],
+      "schemes": ["pmfby", "kkc"]
+    },
+    "potato_healthy": {
+      "name": "Potato Healthy Leaf",
+      "organic": [
+        "Monitor weather patterns (humidity) and spray preventive bio-agents."
+      ],
+      "chemical": [
+        "No chemical fungicide is required."
+      ],
+      "schemes": []
+    },
+    "soybean_healthy": {
+      "name": "Soybean Healthy Leaf",
+      "organic": [
+        "Practice crop rotation.",
+        "Ensure proper drainage in fields."
+      ],
+      "chemical": [
+        "No chemical fungicide is required."
+      ],
+      "schemes": []
+    },
+    "tomato_bacterial_spot": {
+      "name": "Tomato Bacterial Spot",
+      "organic": [
+        "Use certified pathogen-free seeds.",
+        "Avoid working in fields when foliage is wet.",
+        "Apply copper hydroxide bio-blends."
+      ],
+      "chemical": [
+        "Apply Copper Hydroxide (2g/L) mixed with Streptocycline (0.1g/L) at weekly intervals."
+      ],
+      "schemes": ["pmfby"]
+    },
+    "tomato_early_blight": {
+      "name": "Tomato Early Blight",
+      "organic": [
+        "Prune lower branches to improve airflow and reduce soil splash.",
+        "Apply organic straw mulch to create a barrier over soil.",
+        "Foliar spray of Bacillus subtilis biological agent."
+      ],
+      "chemical": [
+        "Foliar spray of Azoxystrobin 23% SC (1ml/L) or Mancozeb 75 WP (2g/L)."
+      ],
+      "schemes": ["pmfby", "kkc"]
+    },
+    "tomato_late_blight": {
+      "name": "Tomato Late Blight",
+      "organic": [
+        "Remove and burn infected plants immediately.",
+        "Avoid overhead irrigation.",
+        "Spray copper-based organic fungicides at first sign of rain/fog."
+      ],
+      "chemical": [
+        "Apply Cymoxanil + Mancozeb (Curzate) or Metalaxyl + Mancozeb (Ridomil Gold) immediately."
+      ],
+      "schemes": ["pmfby", "kkc"]
+    },
+    "tomato_leaf_mold": {
+      "name": "Tomato Leaf Mold",
+      "organic": [
+        "Increase spacing and ventilation.",
+        "Avoid overhead watering and keep humidity below 85%."
+      ],
+      "chemical": [
+        "Spray Chlorothalonil or Difenoconazole if infection becomes severe."
+      ],
+      "schemes": []
+    },
+    "tomato_septoria_leaf_spot": {
+      "name": "Tomato Septoria Leaf Spot",
+      "organic": [
+        "Remove and destroy lower infected leaves.",
+        "Mulch the soil base and water at ground level."
+      ],
+      "chemical": [
+        "Apply Chlorothalonil or Mancozeb sprays at first sign of leaf spots."
+      ],
+      "schemes": []
+    },
+    "tomato_spider_mites": {
+      "name": "Tomato Spider Mite Infestation",
+      "organic": [
+        "Spray neem oil (1-2%) or insecticidal soaps.",
+        "Release phytoseiid predatory mites.",
+        "Keep plants well irrigated (dry dust promotes mite breeding)."
+      ],
+      "chemical": [
+        "Apply Abamectin or Spiromesifen acaricides."
+      ],
+      "schemes": []
+    },
+    "tomato_target_spot": {
+      "name": "Tomato Target Spot",
+      "organic": [
+        "Improve air circulation through staking and pruning.",
+        "Bury or burn crop residues."
+      ],
+      "chemical": [
+        "Spray Azoxystrobin or Chlorothalonil."
+      ],
+      "schemes": []
+    },
+    "tomato_yellow_leaf_curl_virus": {
+      "name": "Tomato Yellow Leaf Curl Virus (TYLCV)",
+      "organic": [
+        "Place yellow sticky traps to catch whitefly vectors.",
+        "Use insect netting on nursery beds.",
+        "Spray neem seed kernel extract (NSKE) to deter pests."
+      ],
+      "chemical": [
+        "Spray systemic insecticides like Imidacloprid (0.5ml/L) or Thiamethoxam to control whiteflies."
+      ],
+      "schemes": ["pmfby"]
+    },
+    "tomato_mosaic_virus": {
+      "name": "Tomato Mosaic Virus (ToMV)",
+      "organic": [
+        "Drench tools and hands in 10% trisodium phosphate.",
+        "Promptly pull out and destroy infected plants."
+      ],
+      "chemical": [
+        "No chemical cure is available for viral infections. Manage vector insects chemically if needed."
+      ],
+      "schemes": []
+    },
+    "tomato_healthy": {
+      "name": "Tomato Healthy Leaf",
+      "organic": [
+        "Maintain clean hygiene and baseline soil care and clean field hygiene."
+      ],
+      "chemical": [
+        "No chemical inputs are required."
+      ],
+      "schemes": []
+    }
+  };
+
+  // --- Disease Scan Integration with window.MittiDiseaseScan ---
+  let isCameraActive = false;
+  const statusEl = $('#modelLoadStatus');
+  const toggleCameraBtn = $('#toggleCameraBtn');
+  const cameraViewport = $('#cameraViewport');
+  const cameraVideo = $('#diseaseCameraVideo');
+  const cameraShutterBtn = $('#cameraShutterBtn');
+  const cancelCameraBtn = $('#cancelCameraBtn');
+  const imgInput = $('#diseaseImageInput');
+  const imgPreview = $('#diseaseImagePreview');
+  const previewContainer = $('#imagePreviewContainer');
+  const uploadPrompt = $('#uploadPrompt');
+  const resizeCanvas = $('#diseaseResizeCanvas');
+  const runScanBtn = $('#runDiseaseScanBtn');
+  const resultsBox = $('#diseaseResultsBox');
+  const historyBox = $('#diseaseHistoryBox');
+  const historyList = $('#diseaseHistoryList');
+  const clearHistoryBtn = $('#clearDiseaseHistoryBtn');
+
+  // Load diagnostic history on startup / tab activation
+  async function loadHistoryList() {
+    if (!window.MittiDiseaseScan) return;
+    try {
+      const list = await window.MittiDiseaseScan.getHistory();
+      if (list && list.length > 0) {
+        historyBox.style.display = 'block';
+        historyList.innerHTML = list.map(item => {
+          const formattedDate = new Date(item.timestamp).toLocaleString('en-IN', {
+            month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+          });
+          const confPct = PCT(item.confidence * 100);
+          const sevClass = item.severity === 'early' ? 'good' : item.severity === 'moderate' ? 'warn' : 'red';
+          
+          return `
+            <div class="kpi" style="padding: 12px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid var(--brand); margin-bottom: 8px; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <strong style="font-size: 0.92rem; color: var(--ink);">${item.diseaseName}</strong>
+                <div style="font-size: 0.76rem; color: var(--ink-faint); margin-top: 2px;">
+                  Crop: ${item.crop.toUpperCase()} · ${formattedDate}
+                </div>
+              </div>
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <span style="font-size: 0.78rem; font-weight: 600; padding: 3px 8px; border-radius: 99px; background: rgba(0,0,0,0.04);">${confPct} match</span>
+                <span class="kpi__sub" style="font-size: 0.75rem; font-weight: 700; color: var(--ink); padding: 3px 8px; border-radius: 99px; background: var(--${sevClass === 'red' ? 'red' : sevClass === 'warn' ? 'warn' : 'good'}-soft);">${item.severity.toUpperCase()}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } else {
+        historyBox.style.display = 'none';
+      }
+    } catch (err) {
+      console.warn('Failed to load scan history:', err);
+    }
+  }
+
+  // Lazy load TFJS & the quantized MobileNetV2
+  async function initDiseaseModel() {
+    if (!window.MittiDiseaseScan) return;
+    try {
+      await window.MittiDiseaseScan.loadModel(statusText => {
+        statusEl.innerHTML = `<span class="spinner" style="border: 2px solid rgba(0,0,0,0.1); border-left-color: var(--brand); border-radius: 50%; width: 14px; height: 14px; animation: spin 1s linear infinite; display: inline-block;"></span> ${statusText}`;
+      });
+      statusEl.innerHTML = `✓ TF.js Disease Model loaded and active offline`;
+      statusEl.style.color = 'var(--brand)';
+      runScanBtn.disabled = false;
+    } catch (err) {
+      console.error("Offline TF.js Model load failed:", err);
+      statusEl.innerHTML = `⚠ Model offline. Running in Cloud Fallback API mode`;
+      statusEl.style.color = '#c88a3a';
+      runScanBtn.disabled = false;
+    }
+  }
+
+  // Bind to disease scan tab click
+  const diseaseBtn = $('.sidebar__btn[data-tool="disease"]');
+  if (diseaseBtn) {
+    diseaseBtn.addEventListener('click', () => {
+      initDiseaseModel();
+      loadHistoryList();
+      
+      // Sync farm contexts
+      if (savedFarm && savedFarm.region_id) {
+        $('#diseaseRegionSelect').value = savedFarm.region_id;
+      }
+      const knownCrop = savedFarm?.crop_id || localStorage.getItem('mittimantra_selectedCrop') || '';
+      if (knownCrop && ["maize", "potato", "soybean", "tomato"].includes(knownCrop)) {
+        $('#diseaseCropSelect').value = knownCrop;
+      }
+    });
+  }
+
+  // Webcam activation / toggle
+  if (toggleCameraBtn) {
+    toggleCameraBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!window.MittiDiseaseScan) return;
+
+      try {
+        statusEl.innerHTML = "Initializing camera feed...";
+        const success = await window.MittiDiseaseScan.startCamera(cameraVideo);
+        if (success) {
+          isCameraActive = true;
+          uploadPrompt.style.display = 'none';
+          previewContainer.style.display = 'none';
+          cameraViewport.style.display = 'block';
+          statusEl.innerHTML = "Camera viewfinder active";
+        }
+      } catch (err) {
+        console.error(err);
+        statusEl.innerHTML = `⚠ ${err.message || 'Camera access failed.'}`;
+        statusEl.style.color = '#c88a3a';
+      }
+    });
+  }
+
+  // Stop camera feed
+  if (cancelCameraBtn) {
+    cancelCameraBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (window.MittiDiseaseScan) {
+        window.MittiDiseaseScan.stopCamera();
+      }
+      isCameraActive = false;
+      cameraViewport.style.display = 'none';
+      uploadPrompt.style.display = 'block';
+      statusEl.innerHTML = "Webcam closed";
+    });
+  }
+
+  // Shutter action (Snapshot)
+  if (cameraShutterBtn) {
+    cameraShutterBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!window.MittiDiseaseScan) return;
+
+      const photoDataUrl = window.MittiDiseaseScan.capturePhoto(cameraVideo, resizeCanvas);
+      window.MittiDiseaseScan.stopCamera();
+      isCameraActive = false;
+
+      imgPreview.src = photoDataUrl;
+      cameraViewport.style.display = 'none';
+      previewContainer.style.display = 'block';
+      runScanBtn.disabled = false;
+      statusEl.innerHTML = "Captured snapshot successfully";
+    });
+  }
+
+  // File Upload listener
+  if (imgInput) {
+    imgInput.addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      // Make sure active camera streams are shut down if user switches to upload
+      if (window.MittiDiseaseScan) {
+        window.MittiDiseaseScan.stopCamera();
+      }
+      isCameraActive = false;
+      cameraViewport.style.display = 'none';
+
+      const reader = new FileReader();
+      reader.onload = evt => {
+        imgPreview.src = evt.target.result;
+        uploadPrompt.style.display = 'none';
+        previewContainer.style.display = 'block';
+        
+        imgPreview.onload = () => {
+          // Draw to canvas and scale to 224x224
+          const resizeCtx = resizeCanvas.getContext('2d');
+          resizeCtx.drawImage(imgPreview, 0, 0, 224, 224);
+          runScanBtn.disabled = false;
+        };
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // Choose another photo / reset
+  const reuploadBtn = $('#reuploadBtn');
+  if (reuploadBtn) {
+    reuploadBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      e.preventDefault();
+      imgInput.value = '';
+      imgPreview.src = '';
+      previewContainer.style.display = 'none';
+      uploadPrompt.style.display = 'block';
+      runScanBtn.disabled = true;
+      resultsBox.style.display = 'none';
+    });
+  }
+
+  // Clear Diagnostic History Action
+  if (clearHistoryBtn) {
+    clearHistoryBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      if (!window.MittiDiseaseScan) return;
+      if (confirm("Are you sure you want to clear your local disease scan history?")) {
+        await window.MittiDiseaseScan.clearHistory();
+        loadHistoryList();
+      }
+    });
+  }
+
+  // Execute inference on click
+  if (runScanBtn) {
+    runScanBtn.addEventListener('click', async () => {
+      showLoading(resultsBox, 'Analyzing leaf pixels and executing neural network...');
+      resultsBox.style.display = 'block';
+
+      const cropCtx = $('#diseaseCropSelect').value;
+      const regionId = $('#diseaseRegionSelect').value;
+
+      try {
+        if (!window.MittiDiseaseScan) {
+          throw new Error("Disease scan library is not available.");
+        }
+
+        // 1. Analyze leaf severity locally via color thresholding
+        const sev = window.MittiDiseaseScan.analyzeSeverity(resizeCanvas);
+
+        // 2. Perform TF.js model prediction
+        let diseaseName = "";
+        let confidence = 0.0;
+        let matchedCrop = cropCtx || "tomato";
+        let treatments = [];
+        let subsidySchemes = [];
+        let finalClass = "";
+
+        // Verify if TF.js loaded successfully. If not, fallback to Cloud API
+        const useFallback = !window.tf || !window.MittiDiseaseScan;
+
+        if (useFallback) {
+          const b64Data = resizeCanvas.toDataURL('image/jpeg');
+          const payload = {
+            image_b64: b64Data,
+            crop_id: cropCtx || null,
+            region_id: regionId || null
+          };
+          const r = await api('/api/disease/predict', {
+            method: 'POST',
+            body: JSON.stringify(payload)
+          });
+          
+          diseaseName = r.disease;
+          confidence = r.confidence;
+          matchedCrop = r.crop_matched;
+          treatments = r.treatment;
+          subsidySchemes = r.subsidy_eligible_schemes;
+        } else {
+          // Client-Side Offline Inference
+          const result = await window.MittiDiseaseScan.runInference(resizeCanvas, cropCtx);
+          finalClass = result.classId;
+          confidence = result.confidence;
+
+          // Lookup local metadata offline
+          const meta = window.MittiDiseaseScan.DISEASE_METADATA[finalClass] || window.MittiDiseaseScan.DISEASE_METADATA["tomato_healthy"];
+          diseaseName = meta.name;
+          matchedCrop = finalClass.split('_')[0];
+          
+          meta.organic.forEach(o => treatments.push("Organic: " + o));
+          meta.chemical.forEach(c => treatments.push("Chemical Escalation: " + c));
+
+          // Fetch local government schemes for subsidy matching (if online)
+          if (navigator.onLine && regionId) {
+            try {
+              const sRes = await api(`/api/government-schemes?crop_id=${matchedCrop}&region_id=${regionId}`);
+              const eligible = sRes.eligible_schemes || [];
+              eligible.forEach(s => {
+                if (meta.schemes.includes(s.scheme_id) || (s.scheme_id === 'pkvy' && meta.organic.length)) {
+                  subsidySchemes.push(`${s.scheme_name} (${s.description}) — URL: ${s.url}`);
+                }
+              });
+            } catch (_) {}
+          }
+          
+          // Offline schemes fallback
+          if (!subsidySchemes.length) {
+            meta.schemes.forEach(sid => {
+              if (sid === 'pmfby') subsidySchemes.push("PMFBY (Crop Insurance) — URL: https://pmfby.gov.in");
+              if (sid === 'kkc') subsidySchemes.push("Kisan Credit Card — URL: https://www.nabard.org");
+              if (sid === 'pkvy') subsidySchemes.push("PKVY (Organic Cluster Subsidy) — URL: https://pgsindia-ncof.gov.in");
+            });
+          }
+        }
+
+        // 3. Save Scan Result to IndexedDB Local History
+        await window.MittiDiseaseScan.saveScan({
+          classId: finalClass,
+          diseaseName: diseaseName,
+          confidence: confidence,
+          severity: sev.severity,
+          lesionPct: sev.lesionPct,
+          crop: matchedCrop,
+          region_id: regionId
+        });
+
+        // Refresh History Timeline
+        loadHistoryList();
+
+        // 4. Render Results View
+        const sevClass = sev.severity === 'early' ? 'good' : sev.severity === 'moderate' ? 'warn' : 'red';
+        const sevLabel = sev.severity.charAt(0).toUpperCase() + sev.severity.slice(1);
+        const formattedConf = PCT(confidence * 100);
+
+        const organicTreatments = treatments.filter(t => t.startsWith('Organic:'));
+        const chemicalTreatments = treatments.filter(t => t.startsWith('Chemical'));
+
+        resultsBox.innerHTML = `
+          <div class="kpi-grid">
+            <div class="kpi kpi--info">
+              <div class="kpi__lbl">Diagnosis</div>
+              <div class="kpi__val" style="font-size: 1.15rem; font-weight: 600;">${diseaseName}</div>
+              <div class="kpi__sub">Class matched: ${matchedCrop}</div>
+            </div>
+            <div class="kpi kpi--info">
+              <div class="kpi__lbl">Inference Confidence</div>
+              <div class="kpi__val">${formattedConf}</div>
+              <div class="kpi__sub">${useFallback ? 'Cloud Fallback API' : 'TF.js Offline In-Browser'}</div>
+            </div>
+            <div class="kpi kpi--${sevClass === 'red' ? 'red' : sevClass === 'warn' ? 'warn' : 'good'}">
+              <div class="kpi__lbl">Severity (Lesion Area)</div>
+              <div class="kpi__val">${sevLabel} (${FIX(sev.lesionPct, 1)}%)</div>
+              <div class="kpi__sub">Computed client-side</div>
+            </div>
+          </div>
+
+          <div class="chart-grid" style="margin-top: 20px;">
+            <div class="chart-box">
+              <div class="chart-box__title">🍃 Organic & Low-Cost Treatments</div>
+              <ul style="padding: 10px 0 0 20px; font-size: 0.85rem; color: var(--ink-soft); line-height: 1.5;">
+                ${organicTreatments.map(t => `<li style="margin-bottom: 8px;">${t.replace('Organic: ', '')}</li>`).join('')}
+              </ul>
+            </div>
+            <div class="chart-box">
+              <div class="chart-box__title">🧪 Chemical Escalation (Apply if needed)</div>
+              <ul style="padding: 10px 0 0 20px; font-size: 0.85rem; color: var(--ink-soft); line-height: 1.5;">
+                ${chemicalTreatments.map(t => `<li style="margin-bottom: 8px;">${t.replace('Chemical Escalation: ', '')}</li>`).join('')}
+              </ul>
+            </div>
+          </div>
+
+          ${subsidySchemes.length ? `
+          <div class="alert alert--green" style="margin-top: 20px; border-left: 4px solid var(--brand); background: var(--brand-soft);">
+            <div class="alert__body" style="color: var(--brand-deep);">
+              <strong>Eligible Subsidy Schemes:</strong>
+              <ul style="margin: 8px 0 0 16px; padding: 0; font-size: 0.85rem; line-height: 1.4;">
+                ${subsidySchemes.map(s => `<li style="margin-bottom: 4px;">💰 ${s}</li>`).join('')}
+              </ul>
+            </div>
+          </div>` : ''}
+
+          <!-- Gyan Seva Redirection Trigger -->
+          ${(confidence < 0.70 || sev.severity === 'severe') ? `
+          <div class="alert alert--red" style="margin-top: 20px;">
+            <svg class="alert__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01"/></svg>
+            <div class="alert__body">
+              <strong>High-risk diagnosis flagged</strong>
+              <p>Because the severity is severe or confidence is low, we highly recommend consulting an agriculture expert.</p>
+              <p style="margin-top: 8px;">
+                <a href="gyan-seva.html?region=${regionId || ''}&specialty=pathologist" class="btn btn-primary" style="font-size: 0.82rem; padding: 6px 12px; display: inline-block;">Connect with Regional Expert on Gyan Seva</a>
+              </p>
+            </div>
+          </div>` : ''}
+
+          <div style="margin-top: 16px; font-size: 0.78rem; color: var(--ink-faint); text-align: center; font-style: italic;">
+            * Field accuracy differs from lab conditions. Always confirm severe cases with an agricultural expert.
+          </div>
+        `;
+      } catch (err) {
+        showError(resultsBox, err);
+      }
+    });
+  }
+
 })();
+

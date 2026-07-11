@@ -61,15 +61,34 @@ def _load_crop_params() -> dict[str, CropParameter]:
 # 1. Fertilizer Recommendation Engine
 # ===========================================================================
 
-# Common Indian fertilizers with their NPK content (kg nutrient per 50 kg bag)
-FERTILIZER_DB = [
-    {"name": "Urea", "grade": "46-0-0", "n_pct": 46, "p_pct": 0, "k_pct": 0, "cost_per_kg": 5.36},
-    {"name": "DAP", "grade": "18-46-0", "n_pct": 18, "p_pct": 46, "k_pct": 0, "cost_per_kg": 27.0},
-    {"name": "MOP (Muriate of Potash)", "grade": "0-0-60", "n_pct": 0, "p_pct": 0, "k_pct": 60, "cost_per_kg": 17.0},
-    {"name": "NPK Complex 10-26-26", "grade": "10-26-26", "n_pct": 10, "p_pct": 26, "k_pct": 26, "cost_per_kg": 24.0},
-    {"name": "SSP (Single Super Phosphate)", "grade": "0-16-0", "n_pct": 0, "p_pct": 16, "k_pct": 0, "cost_per_kg": 8.0},
-    {"name": "Ammonium Sulphate", "grade": "20.6-0-0", "n_pct": 20.6, "p_pct": 0, "k_pct": 0, "cost_per_kg": 10.0},
-]
+import json
+from pathlib import Path
+from data_ingestion.fetchers.agronomy_llm import (
+    fetch_fertilizer_db,
+    fetch_irrigation_constants,
+    fetch_nutrient_impact,
+    fetch_strategy_templates
+)
+
+DYNAMIC_CACHE_DIR = DATASET_DIR / "dynamic"
+
+def _get_dynamic_cache(cache_name: str, fetch_func, *args, **kwargs) -> Any:
+    DYNAMIC_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    cache_file = DYNAMIC_CACHE_DIR / f"{cache_name}.json"
+    if cache_file.exists():
+        try:
+            with open(cache_file, "r") as f:
+                return json.load(f)
+        except json.JSONDecodeError:
+            pass
+    print(f"Fetching dynamic {cache_name} via Gemini API...")
+    data = fetch_func(*args, **kwargs)
+    with open(cache_file, "w") as f:
+        json.dump(data, f, indent=4)
+    return data
+
+def get_fertilizer_db() -> list[dict]:
+    return _get_dynamic_cache("fertilizers", fetch_fertilizer_db)
 
 
 def fertilizer_recommendation(
@@ -93,17 +112,34 @@ def fertilizer_recommendation(
     recommendations = []
     total_cost = 0.0
 
+    fert_db = get_fertilizer_db()
+    def get_fert(name: str):
+        for f in fert_db:
+            if name.lower() in f["name"].lower():
+                return f
+        # Fallbacks in case LLM misses it
+        if "urea" in name.lower(): return {"name": "Urea", "grade": "46-0-0", "n_pct": 46, "p_pct": 0, "k_pct": 0, "cost_per_kg": 5.36}
+        if "dap" in name.lower(): return {"name": "DAP", "grade": "18-46-0", "n_pct": 18, "p_pct": 46, "k_pct": 0, "cost_per_kg": 27.0}
+        if "mop" in name.lower(): return {"name": "MOP", "grade": "0-0-60", "n_pct": 0, "p_pct": 0, "k_pct": 60, "cost_per_kg": 17.0}
+        return {"name": name, "grade": "", "n_pct": 0, "p_pct": 0, "k_pct": 0, "cost_per_kg": 20.0}
+
+    dap_info = get_fert("DAP")
+    urea_info = get_fert("Urea")
+    mop_info = get_fert("MOP")
+
     # P first via DAP (also supplies some N)
     n_remaining = n_deficit
     if p_deficit > 0:
-        dap_kg = p_deficit / 0.46  # 46% P2O5
-        dap_n_supplied = dap_kg * 0.18
+        dap_p_frac = dap_info["p_pct"] / 100.0 or 0.46
+        dap_n_frac = dap_info["n_pct"] / 100.0 or 0.18
+        dap_kg = p_deficit / dap_p_frac
+        dap_n_supplied = dap_kg * dap_n_frac
         n_remaining = max(n_remaining - dap_n_supplied, 0)
-        cost = round(dap_kg * 27.0, 2)
+        cost = round(dap_kg * float(dap_info["cost_per_kg"]), 2)
         total_cost += cost
         recommendations.append({
-            "fertilizer": "DAP (Di-Ammonium Phosphate)",
-            "grade": "18-46-0",
+            "fertilizer": dap_info["name"],
+            "grade": dap_info["grade"],
             "quantity_kg_per_acre": round(dap_kg, 2),
             "nutrient_supplied": f"N={round(dap_n_supplied, 1)}kg, P={round(p_deficit, 1)}kg",
             "cost_inr": cost,
@@ -112,15 +148,16 @@ def fertilizer_recommendation(
 
     # N via Urea
     if n_remaining > 0:
-        urea_kg = n_remaining / 0.46
-        cost = round(urea_kg * 5.36, 2)
+        urea_n_frac = urea_info["n_pct"] / 100.0 or 0.46
+        urea_kg = n_remaining / urea_n_frac
+        cost = round(urea_kg * float(urea_info["cost_per_kg"]), 2)
         total_cost += cost
         split_1 = round(urea_kg * 0.5, 2)
         split_2 = round(urea_kg * 0.3, 2)
         split_3 = round(urea_kg * 0.2, 2)
         recommendations.append({
-            "fertilizer": "Urea",
-            "grade": "46-0-0",
+            "fertilizer": urea_info["name"],
+            "grade": urea_info["grade"],
             "quantity_kg_per_acre": round(urea_kg, 2),
             "nutrient_supplied": f"N={round(n_remaining, 1)}kg",
             "cost_inr": cost,
@@ -129,12 +166,13 @@ def fertilizer_recommendation(
 
     # K via MOP
     if k_deficit > 0:
-        mop_kg = k_deficit / 0.60
-        cost = round(mop_kg * 17.0, 2)
+        mop_k_frac = mop_info["k_pct"] / 100.0 or 0.60
+        mop_kg = k_deficit / mop_k_frac
+        cost = round(mop_kg * float(mop_info["cost_per_kg"]), 2)
         total_cost += cost
         recommendations.append({
-            "fertilizer": "MOP (Muriate of Potash)",
-            "grade": "0-0-60",
+            "fertilizer": mop_info["name"],
+            "grade": mop_info["grade"],
             "quantity_kg_per_acre": round(mop_kg, 2),
             "nutrient_supplied": f"K={round(k_deficit, 1)}kg",
             "cost_inr": cost,
@@ -296,23 +334,8 @@ def best_time_to_sell(region_id: str, crop_id: str) -> dict[str, Any]:
 # 4. Irrigation Scheduler
 # ===========================================================================
 
-# Growing duration in days (approximate) per crop
-CROP_DURATION_DAYS = {
-    "rice": 120, "wheat": 130, "maize": 100, "sugarcane": 300,
-    "cotton": 180, "pulses": 110, "groundnut": 110, "soybean": 100,
-}
-
-# Critical water demand stages (fraction of season, relative water need multiplier)
-CROP_WATER_STAGES = {
-    "rice": [(0.0, 0.2, 1.0, "Nursery/Transplanting"), (0.2, 0.5, 1.3, "Tillering"), (0.5, 0.75, 1.5, "Flowering/Grain fill"), (0.75, 1.0, 0.7, "Maturity")],
-    "wheat": [(0.0, 0.15, 0.8, "Crown Root Initiation"), (0.15, 0.35, 1.0, "Tillering"), (0.35, 0.6, 1.4, "Heading/Flowering"), (0.6, 0.85, 1.2, "Grain Fill"), (0.85, 1.0, 0.5, "Maturity")],
-    "maize": [(0.0, 0.2, 0.7, "Seedling"), (0.2, 0.45, 1.0, "Knee-high"), (0.45, 0.7, 1.5, "Tasseling/Silking"), (0.7, 1.0, 0.8, "Grain Fill")],
-    "sugarcane": [(0.0, 0.1, 0.6, "Germination"), (0.1, 0.3, 1.0, "Tillering"), (0.3, 0.7, 1.4, "Grand Growth"), (0.7, 1.0, 0.7, "Maturity")],
-    "cotton": [(0.0, 0.15, 0.6, "Seedling"), (0.15, 0.4, 1.0, "Vegetative"), (0.4, 0.7, 1.4, "Flowering/Boll"), (0.7, 1.0, 0.8, "Boll Opening")],
-    "pulses": [(0.0, 0.2, 0.7, "Seedling"), (0.2, 0.5, 1.0, "Vegetative"), (0.5, 0.8, 1.3, "Flowering/Podding"), (0.8, 1.0, 0.6, "Maturity")],
-    "groundnut": [(0.0, 0.2, 0.7, "Seedling"), (0.2, 0.45, 1.0, "Vegetative"), (0.45, 0.7, 1.4, "Pegging/Pod Fill"), (0.7, 1.0, 0.7, "Maturity")],
-    "soybean": [(0.0, 0.2, 0.7, "Seedling"), (0.2, 0.5, 1.0, "Vegetative"), (0.5, 0.75, 1.4, "Flowering/Pod Fill"), (0.75, 1.0, 0.6, "Maturity")],
-}
+def get_irrigation_constants(crop_id: str) -> dict:
+    return _get_dynamic_cache(f"irrigation_{crop_id}", fetch_irrigation_constants, crop_id)
 
 
 def irrigation_schedule(
@@ -326,8 +349,10 @@ def irrigation_schedule(
     if crop_id not in crop_params:
         raise ValueError(f"Unknown crop_id: {crop_id}")
     crop = crop_params[crop_id]
-    duration = CROP_DURATION_DAYS.get(crop_id, 120)
-    stages = CROP_WATER_STAGES.get(crop_id, [(0.0, 1.0, 1.0, "Full Season")])
+    
+    irr_consts = get_irrigation_constants(crop_id)
+    duration = irr_consts.get("duration_days", 120)
+    stages = irr_consts.get("water_stages", [(0.0, 1.0, 1.0, "Full Season")])
 
     try:
         sow_dt = datetime.strptime(sowing_date, "%Y-%m-%d")
@@ -391,150 +416,56 @@ def irrigation_schedule(
 
 # ===========================================================================
 # 5. Crop Calendar API
-# ===========================================================================
+# =====================================================================import json
+from pathlib import Path
+from data_ingestion.fetchers.crop_calendar_llm import fetch_dynamic_crop_calendar
 
-CROP_CALENDAR = {
-    "rice": {
-        "kharif": {
-            "nursery": "May 15 - Jun 10",
-            "sowing_transplant": "Jun 15 - Jul 15",
-            "first_fertilizer": "15-20 DAS (basal N+P+K)",
-            "second_fertilizer": "30-35 DAS (top-dress N)",
-            "third_fertilizer": "55-60 DAS (top-dress N at panicle initiation)",
-            "critical_irrigation": "Transplanting to grain fill (maintain 5cm standing water)",
-            "pest_watch": "30-60 DAS (BPH, Blast)",
-            "harvest_window": "Oct 15 - Nov 15",
-            "duration_days": 120,
-        },
-    },
-    "wheat": {
-        "rabi": {
-            "land_prep": "Oct 15 - Nov 01",
-            "sowing_transplant": "Nov 01 - Nov 25",
-            "first_fertilizer": "At sowing (basal N+P+K)",
-            "second_fertilizer": "21 DAS (first irrigation + top-dress N)",
-            "third_fertilizer": "45 DAS (second top-dress N at heading)",
-            "critical_irrigation": "CRI (21 DAS), Flowering (60 DAS), Grain fill (85 DAS)",
-            "pest_watch": "Jan-Feb (Yellow rust in cool wet spells)",
-            "harvest_window": "Mar 25 - Apr 20",
-            "duration_days": 130,
-        },
-    },
-    "maize": {
-        "kharif": {
-            "land_prep": "Jun 01 - Jun 15",
-            "sowing_transplant": "Jun 15 - Jul 10",
-            "first_fertilizer": "At sowing (basal N+P+K)",
-            "second_fertilizer": "25-30 DAS (knee-high stage N top-dress)",
-            "third_fertilizer": "45-50 DAS (pre-tasseling N top-dress)",
-            "critical_irrigation": "Tasseling/Silking (45-65 DAS) — most sensitive",
-            "pest_watch": "20-40 DAS (Fall Armyworm in whorl)",
-            "harvest_window": "Sep 20 - Oct 20",
-            "duration_days": 100,
-        },
-        "rabi": {
-            "land_prep": "Oct 15 - Nov 01",
-            "sowing_transplant": "Nov 01 - Nov 20",
-            "first_fertilizer": "At sowing (basal)",
-            "second_fertilizer": "25-30 DAS",
-            "third_fertilizer": "45-50 DAS",
-            "critical_irrigation": "Every 15-20 days",
-            "pest_watch": "Stem borer throughout",
-            "harvest_window": "Feb 15 - Mar 15",
-            "duration_days": 110,
-        },
-    },
-    "sugarcane": {
-        "annual": {
-            "land_prep": "Jan 15 - Feb 15",
-            "sowing_transplant": "Feb 15 - Mar 15 (spring planting)",
-            "first_fertilizer": "At planting (basal N+P+K)",
-            "second_fertilizer": "45 DAS (first top-dress N)",
-            "third_fertilizer": "90 DAS (second top-dress N)",
-            "critical_irrigation": "Every 7-10 days during grand growth (Apr-Aug)",
-            "pest_watch": "Mar-May (Early shoot borer), Aug-Oct (Red rot if wet)",
-            "harvest_window": "Dec - Mar (12-14 months after planting)",
-            "duration_days": 300,
-        },
-    },
-    "cotton": {
-        "kharif": {
-            "land_prep": "May 15 - Jun 01",
-            "sowing_transplant": "Jun 01 - Jun 30 (after pre-monsoon showers)",
-            "first_fertilizer": "At sowing (basal N+P+K)",
-            "second_fertilizer": "30-35 DAS (square formation N top-dress)",
-            "third_fertilizer": "60 DAS (flowering N+K top-dress)",
-            "critical_irrigation": "Flowering and boll development (60-120 DAS)",
-            "pest_watch": "Bollworm (60-90 DAS), Whitefly (throughout in dry spells)",
-            "harvest_window": "Oct - Dec (multiple pickings)",
-            "duration_days": 180,
-        },
-    },
-    "pulses": {
-        "rabi": {
-            "land_prep": "Sep 25 - Oct 10",
-            "sowing_transplant": "Oct 10 - Nov 05",
-            "first_fertilizer": "At sowing (low N, full P+K + Rhizobium seed treatment)",
-            "second_fertilizer": "Not usually needed (legume N-fixation)",
-            "third_fertilizer": "Foliar spray at flowering if needed",
-            "critical_irrigation": "Pre-flowering (35-40 DAS), Pod fill (60-70 DAS)",
-            "pest_watch": "Flowering stage pod borer (55-70 DAS)",
-            "harvest_window": "Jan 20 - Feb 20",
-            "duration_days": 110,
-        },
-        "kharif": {
-            "land_prep": "Jun 01 - Jun 15",
-            "sowing_transplant": "Jun 15 - Jul 05",
-            "first_fertilizer": "At sowing (Rhizobium + P+K)",
-            "second_fertilizer": "Not usually needed",
-            "third_fertilizer": "Foliar spray if yellowing",
-            "critical_irrigation": "Rainfed mostly; supplemental at flowering",
-            "pest_watch": "Pod borer at flowering",
-            "harvest_window": "Sep 20 - Oct 20",
-            "duration_days": 100,
-        },
-    },
-    "groundnut": {
-        "kharif": {
-            "land_prep": "Jun 01 - Jun 15",
-            "sowing_transplant": "Jun 15 - Jul 05",
-            "first_fertilizer": "At sowing (basal N+P+K + Gypsum 200kg/acre)",
-            "second_fertilizer": "Gypsum at pegging (45 DAS)",
-            "third_fertilizer": "Not usually needed",
-            "critical_irrigation": "Pegging and pod fill (45-80 DAS)",
-            "pest_watch": "Tikka leaf spot (30-60 DAS), White grub in sandy soils",
-            "harvest_window": "Oct 01 - Nov 01",
-            "duration_days": 110,
-        },
-    },
-    "soybean": {
-        "kharif": {
-            "land_prep": "Jun 01 - Jun 15",
-            "sowing_transplant": "Jun 15 - Jul 05",
-            "first_fertilizer": "At sowing (low N + full P+K + Rhizobium/PSB)",
-            "second_fertilizer": "Not usually needed (N-fixing legume)",
-            "third_fertilizer": "Foliar spray at R1 stage if needed",
-            "critical_irrigation": "Flowering (R1-R2) and pod fill (R5-R6)",
-            "pest_watch": "Girdle beetle (20-30 DAS), Yellow mosaic (throughout)",
-            "harvest_window": "Oct 01 - Oct 25",
-            "duration_days": 100,
-        },
-    },
-}
-
+CALENDAR_CACHE_DIR = Path(__file__).resolve().parents[1] / "dataset" / "crop_calendars"
 
 def get_crop_calendar(crop_id: str, season: str | None = None) -> dict[str, Any]:
-    """Return crop calendar with all key dates and activities."""
-    if crop_id not in CROP_CALENDAR:
-        raise ValueError(f"No calendar data for crop: {crop_id}")
-    calendars = CROP_CALENDAR[crop_id]
+    """
+    Return crop calendar with all key dates and activities dynamically via Gemini LLM API.
+    Responses are cached to disk to minimize API calls and latency.
+    """
+    CALENDAR_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    cache_file = CALENDAR_CACHE_DIR / f"{crop_id}.json"
+    
+    calendars = {}
+    
+    # 1. Load from cache if exists
+    if cache_file.exists():
+        try:
+            with open(cache_file, "r") as f:
+                calendars = json.load(f)
+        except json.JSONDecodeError:
+            pass
+            
+    # 2. If not in cache (or season is missing from cache), fetch from LLM
+    s = season.lower() if season else None
+    
+    # Check if we need to fetch
+    needs_fetch = False
+    if not calendars:
+        needs_fetch = True
+    elif s and not any(s in cal_season for cal_season in calendars.keys()):
+        needs_fetch = True
+        
+    if needs_fetch:
+        print(f"Fetching dynamic calendar for {crop_id} (season: {season}) via Gemini API...")
+        new_cal = fetch_dynamic_crop_calendar(crop_id, season)
+        calendars.update(new_cal)
+        
+        # Save updated cache
+        with open(cache_file, "w") as f:
+            json.dump(calendars, f, indent=4)
+            
+    # 3. Return the requested season or all
     if season:
-        s = season.lower()
         for cal_season, cal_data in calendars.items():
             if s in cal_season or cal_season in s:
                 return {"crop_id": crop_id, "season": cal_season, "calendar": cal_data}
         raise ValueError(f"No calendar for {crop_id} in season {season}")
-    # Return all seasons
+        
     return {"crop_id": crop_id, "seasons": calendars}
 
 
@@ -655,17 +586,8 @@ def loan_calculator(
 # 8. Multi-Year Soil Health Projection
 # ===========================================================================
 
-# Nutrient depletion/fixation per crop per acre per season (approximate kg)
-NUTRIENT_IMPACT = {
-    "rice": {"n": -25, "p": -10, "k": -12},       # Heavy N feeder
-    "wheat": {"n": -20, "p": -8, "k": -10},
-    "maize": {"n": -28, "p": -12, "k": -15},       # Very heavy feeder
-    "sugarcane": {"n": -40, "p": -15, "k": -20},    # Heaviest
-    "cotton": {"n": -30, "p": -12, "k": -18},
-    "pulses": {"n": +15, "p": -5, "k": -5},         # Legume N-fixation
-    "groundnut": {"n": +10, "p": -6, "k": -6},      # Legume
-    "soybean": {"n": +12, "p": -6, "k": -6},        # Legume
-}
+def get_nutrient_impact(crop_id: str) -> dict:
+    return _get_dynamic_cache(f"nutrient_{crop_id}", fetch_nutrient_impact, crop_id)
 
 # Fertilizer application partially restores (assumed 60% efficiency)
 FERTILIZER_RESTORE_EFFICIENCY = 0.60
@@ -690,7 +612,14 @@ def soil_health_projection(
     for year in range(1, years + 1):
         for step in rotation_cycle:
             cid = step["crop_id"]
-            impact = NUTRIENT_IMPACT.get(cid, {"n": -15, "p": -5, "k": -5})
+            
+            # Fetch dynamic nutrient impact from LLM cache
+            impact_data = get_nutrient_impact(cid)
+            impact = {
+                "n": impact_data.get("n", -15),
+                "p": impact_data.get("p", -5),
+                "k": impact_data.get("k", -5)
+            }
 
             # Crop depletes/fixes
             n += impact["n"]
@@ -737,7 +666,7 @@ def soil_health_projection(
         "timeline": timeline,
         "tip": (
             "Include legumes (pulses/soybean/groundnut) in rotation to fix nitrogen and improve soil health."
-            if all(NUTRIENT_IMPACT.get(s["crop_id"], {}).get("n", -1) < 0 for s in rotation_cycle)
+            if all(get_nutrient_impact(s["crop_id"]).get("n", -1) < 0 for s in rotation_cycle)
             else "Good rotation — legume crops are helping maintain nitrogen levels."
         ),
     }
@@ -903,104 +832,15 @@ def cross_mandi_arbitrage(crop_id: str) -> dict[str, Any]:
 # 11. Strategy Templates
 # ===========================================================================
 
-STRATEGY_TEMPLATES = [
-    {
-        "template_id": "small_kharif_rice",
-        "name": "Small Holder - Kharif Rice",
-        "description": "Typical 2-acre farmer growing paddy in monsoon season with partial irrigation",
-        "profile": "Small/marginal farmer, kharif season",
-        "config": {
-            "crop_id": "rice", "area_acres": 2, "season": "kharif",
-            "irrigation_level": 0.5, "seed_variety": "standard",
-            "budget_per_acre": 15000, "sowing_date": "2025-06-20",
-        },
-    },
-    {
-        "template_id": "medium_cotton",
-        "name": "Medium Farmer - Cotton",
-        "description": "5-acre cotton farmer with drip irrigation and hybrid seeds",
-        "profile": "Medium farmer, kharif season, semi-arid region",
-        "config": {
-            "crop_id": "cotton", "area_acres": 5, "season": "kharif",
-            "irrigation_level": 0.7, "seed_variety": "hybrid",
-            "budget_per_acre": 25000, "sowing_date": "2025-06-10",
-        },
-    },
-    {
-        "template_id": "large_sugarcane",
-        "name": "Large Farmer - Sugarcane",
-        "description": "10-acre sugarcane with full canal irrigation, high investment",
-        "profile": "Large farmer, annual crop, irrigated",
-        "config": {
-            "crop_id": "sugarcane", "area_acres": 10, "season": "annual",
-            "irrigation_level": 0.9, "seed_variety": "hybrid",
-            "budget_per_acre": 40000, "sowing_date": "2025-02-20",
-        },
-    },
-    {
-        "template_id": "rabi_wheat_punjab",
-        "name": "Punjab Wheat - Rabi",
-        "description": "Standard 4-acre wheat in rabi with tube-well irrigation",
-        "profile": "Medium farmer, rabi season, Punjab belt",
-        "config": {
-            "crop_id": "wheat", "area_acres": 4, "season": "rabi",
-            "irrigation_level": 0.8, "seed_variety": "hybrid",
-            "budget_per_acre": 18000, "sowing_date": "2025-11-10",
-        },
-    },
-    {
-        "template_id": "organic_pulses",
-        "name": "Organic Pulses (Low Input)",
-        "description": "3-acre rainfed pulses with minimal chemical inputs, suitable for PKVY scheme",
-        "profile": "Small farmer, organic/natural farming",
-        "config": {
-            "crop_id": "pulses", "area_acres": 3, "season": "rabi",
-            "irrigation_level": 0.2, "seed_variety": "local",
-            "budget_per_acre": 10000, "sowing_date": "2025-10-15",
-        },
-    },
-    {
-        "template_id": "soybean_mp",
-        "name": "MP Soybean - Kharif",
-        "description": "Standard 5-acre soybean in Madhya Pradesh kharif with moderate inputs",
-        "profile": "Medium farmer, kharif, Malwa region",
-        "config": {
-            "crop_id": "soybean", "area_acres": 5, "season": "kharif",
-            "irrigation_level": 0.3, "seed_variety": "standard",
-            "budget_per_acre": 14000, "sowing_date": "2025-06-25",
-        },
-    },
-    {
-        "template_id": "groundnut_rainfed",
-        "name": "Rainfed Groundnut",
-        "description": "4-acre groundnut in kharif with minimal irrigation, sandy loam soil",
-        "profile": "Small-medium farmer, kharif, semi-arid",
-        "config": {
-            "crop_id": "groundnut", "area_acres": 4, "season": "kharif",
-            "irrigation_level": 0.3, "seed_variety": "standard",
-            "budget_per_acre": 16000, "sowing_date": "2025-06-20",
-        },
-    },
-    {
-        "template_id": "diversified_small",
-        "name": "Diversified Small Farm",
-        "description": "2-acre mixed crop: 1 acre rice kharif + 1 acre wheat rabi for food security",
-        "profile": "Marginal farmer, food security focus",
-        "config": {
-            "crop_id": "rice", "area_acres": 1, "season": "kharif",
-            "irrigation_level": 0.4, "seed_variety": "standard",
-            "budget_per_acre": 12000, "sowing_date": "2025-06-20",
-            "rotation_note": "Follow with wheat on same acre in rabi season",
-        },
-    },
-]
-
+def get_all_strategy_templates() -> list[dict]:
+    return _get_dynamic_cache("strategy_templates", fetch_strategy_templates)
 
 def get_strategy_templates(profile_filter: str | None = None) -> list[dict[str, Any]]:
+    templates = get_all_strategy_templates()
     if profile_filter:
         pf = profile_filter.lower()
-        return [t for t in STRATEGY_TEMPLATES if pf in t["profile"].lower() or pf in t["name"].lower() or pf in t.get("description", "").lower()]
-    return STRATEGY_TEMPLATES
+        return [t for t in templates if pf in t["profile"].lower() or pf in t["name"].lower() or pf in t.get("description", "").lower()]
+    return templates
 
 
 # ===========================================================================

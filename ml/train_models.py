@@ -1,6 +1,6 @@
 """
 ml/train_models.py
-Training pipeline for 3 ML models:
+Training pipeline for ML models:
   1. Yield Prediction       – RandomForestRegressor
   2. Price Forecasting      – GradientBoostingRegressor with lag features
   3. Crop Recommendation    – RandomForestClassifier (best crop for conditions)
@@ -11,9 +11,9 @@ Or via API:    POST /api/train
 from __future__ import annotations
 
 import csv
-import hashlib
+# FIX (4.3): Removed unused imports `hashlib` and `random`
 import json
-import random
+import logging
 import warnings
 from pathlib import Path
 from typing import Any
@@ -34,38 +34,32 @@ from sklearn.metrics import (
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 
-warnings.filterwarnings("ignore", category=UserWarning)
+# FIX (4.5): Replaced global warnings.filterwarnings with structured logging
+logger = logging.getLogger(__name__)
 
 from utils.calculations import CropParameter, calculate_climate_factor, calculate_soil_factor
-
-def make_crop_param(r: dict) -> CropParameter:
-    return CropParameter(
-        crop_id=r["crop_id"],
-        crop_name=r["crop_name"],
-        season=r["season"],
-        base_yield_kg_per_acre=float(r["base_yield_kg_per_acre"]),
-        water_requirement_mm=float(r["water_requirement_mm"]),
-        temp_min_c=float(r["temp_min_c"]),
-        temp_max_c=float(r["temp_max_c"]),
-        avg_input_cost_inr_per_acre=float(r["avg_input_cost_inr_per_acre"]),
-        mandi_price_min_inr_per_kg=float(r["mandi_price_min_inr_per_kg"]),
-        mandi_price_max_inr_per_kg=float(r["mandi_price_max_inr_per_kg"]),
-        npk_n_kg_per_acre=float(r["npk_n_kg_per_acre"]),
-        npk_p_kg_per_acre=float(r["npk_p_kg_per_acre"]),
-        npk_k_kg_per_acre=float(r["npk_k_kg_per_acre"]),
-    )
+# FIX: Centralized CropParameter construction using data_loaders
+from utils.data_loaders import make_crop_param
 
 DATASET_DIR = Path(__file__).resolve().parents[1] / "dataset"
 MODEL_DIR = Path(__file__).resolve().parent / "models"
 MODEL_DIR.mkdir(exist_ok=True)
 
+# FIX (1.1, 1.2): Single canonical season list used consistently across
+# training and inference to prevent encoder mismatch.
+ALL_SEASONS = sorted({"kharif", "rabi", "annual", "perennial", "perenn"})
+
 # ---------------------------------------------------------------------------
 # CSV helpers
 # ---------------------------------------------------------------------------
 
-def _load_csv(name: str) -> list[dict[str, str]]:
+# FIX (1.6): Added `required` parameter to fail fast on missing critical datasets
+def _load_csv(name: str, required: bool = False) -> list[dict[str, str]]:
     path = DATASET_DIR / name
     if not path.exists():
+        if required:
+            raise FileNotFoundError(f"Required dataset missing: {path}")
+        logger.warning("Dataset file not found, returning empty: %s", path)
         return []
     with path.open("r", newline="", encoding="utf-8") as f:
         return list(csv.DictReader(f))
@@ -86,18 +80,23 @@ def _fit_label_encoders(crops: list[str], regions: list[str], seasons: list[str]
 # 1. YIELD PREDICTION MODEL
 # ===================================================================
 
-def _build_yield_dataset() -> tuple[np.ndarray, np.ndarray]:
+# FIX (1.1): Return type now includes the encoders used during training
+def _build_yield_dataset() -> tuple[np.ndarray, np.ndarray, LabelEncoder, LabelEncoder, LabelEncoder]:
     """
     Build training data for yield prediction by joining:
       yield_history × crop_parameters × soil × weather
     Then augment with gaussian noise to ~500+ samples.
+
+    Returns (X, y, crop_le, region_le, season_le) — encoders are returned
+    so the exact instances used during training can be persisted.
     """
-    yield_hist = _load_csv("yield_history.csv")
-    crop_params = {r["crop_id"]: r for r in _load_csv("crop_parameters.csv")}
+    # FIX (1.6): Mark critical datasets as required
+    yield_hist = _load_csv("yield_history.csv", required=True)
+    crop_params = {r["crop_id"]: r for r in _load_csv("crop_parameters.csv", required=True)}
     soil_data = {}
-    for r in _load_csv("soil.csv"):
+    for r in _load_csv("soil.csv", required=True):
         soil_data[r["region_id"]] = r
-    weather_rows = _load_csv("weather.csv")
+    weather_rows = _load_csv("weather.csv", required=True)
     weather_data = {}
     for r in weather_rows:
         key = (r["region_id"], r["season"].lower())
@@ -105,9 +104,9 @@ def _build_yield_dataset() -> tuple[np.ndarray, np.ndarray]:
 
     all_crops = sorted(crop_params.keys())
     all_regions = sorted(soil_data.keys())
-    all_seasons = ["kharif", "rabi", "annual", "perennial", "perenn"]
 
-    crop_le, region_le, season_le = _fit_label_encoders(all_crops, all_regions, all_seasons)
+    # FIX (1.1): Use canonical ALL_SEASONS for consistent encoding
+    crop_le, region_le, season_le = _fit_label_encoders(all_crops, all_regions, ALL_SEASONS)
 
     rows_X, rows_y = [], []
 
@@ -173,7 +172,10 @@ def _build_yield_dataset() -> tuple[np.ndarray, np.ndarray]:
     rows_X.extend(aug_X)
     rows_y.extend(aug_y)
 
-    return np.array(rows_X, dtype=np.float32), np.array(rows_y, dtype=np.float32)
+    # FIX (1.1): Return encoders so they can be saved alongside the model
+    return (np.array(rows_X, dtype=np.float32),
+            np.array(rows_y, dtype=np.float32),
+            crop_le, region_le, season_le)
 
 
 def _yield_features(cid, rid, season, cp, soil, weather,
@@ -220,20 +222,25 @@ YIELD_FEATURE_NAMES = [
 
 def train_yield_model() -> dict[str, Any]:
     """Train RandomForest yield prediction model."""
-    X, y = _build_yield_dataset()
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42,
-    )
+    # FIX (1.1): Unpack the actual encoders used during training
+    X, y, crop_le, region_le, season_le = _build_yield_dataset()
 
-    model = RandomForestRegressor(
-        n_estimators=200,
-        max_depth=12,
-        min_samples_split=5,
-        min_samples_leaf=3,
-        random_state=42,
-        n_jobs=-1,
-    )
-    model.fit(X_train, y_train)
+    # FIX (4.5): Scope warning suppression to sklearn training only
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=UserWarning, module="sklearn")
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=0.2, random_state=42,
+        )
+
+        model = RandomForestRegressor(
+            n_estimators=200,
+            max_depth=12,
+            min_samples_split=5,
+            min_samples_leaf=3,
+            random_state=42,
+            n_jobs=-1,
+        )
+        model.fit(X_train, y_train)
 
     y_pred = model.predict(X_test)
     metrics = {
@@ -251,11 +258,7 @@ def train_yield_model() -> dict[str, Any]:
     # Save
     joblib.dump(model, MODEL_DIR / "yield_model.joblib")
 
-    # Save encoders
-    all_crops = sorted({r["crop_id"] for r in _load_csv("crop_parameters.csv")})
-    all_regions = sorted({r["region_id"] for r in _load_csv("soil.csv")})
-    all_seasons = ["kharif", "rabi", "annual"]
-    crop_le, region_le, season_le = _fit_label_encoders(all_crops, all_regions, all_seasons)
+    # FIX (1.1): Save the EXACT encoder instances from training — not re-fitted ones
     joblib.dump({"crop": crop_le, "region": region_le, "season": season_le},
                 MODEL_DIR / "label_encoders.joblib")
 
@@ -273,7 +276,8 @@ def _build_price_dataset() -> tuple[np.ndarray, np.ndarray, LabelEncoder, LabelE
     lag_1, lag_2, lag_3, rolling_mean_3, rolling_std_3, month, year,
     crop_encoded, region_encoded
     """
-    rows = _load_csv("mandi_prices.csv")
+    # FIX (1.6): Mark critical dataset as required
+    rows = _load_csv("mandi_prices.csv", required=True)
 
     all_crops = sorted({r["crop_id"] for r in rows})
     all_regions = sorted({r["region_id"] for r in rows})
@@ -333,19 +337,23 @@ PRICE_FEATURE_NAMES = [
 def train_price_model() -> dict[str, Any]:
     """Train GradientBoosting price forecasting model."""
     X, y, crop_le, region_le = _build_price_dataset()
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42,
-    )
 
-    model = GradientBoostingRegressor(
-        n_estimators=300,
-        max_depth=6,
-        learning_rate=0.05,
-        min_samples_split=5,
-        subsample=0.8,
-        random_state=42,
-    )
-    model.fit(X_train, y_train)
+    # FIX (4.5): Scope warning suppression to sklearn training only
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=UserWarning, module="sklearn")
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=0.2, random_state=42,
+        )
+
+        model = GradientBoostingRegressor(
+            n_estimators=300,
+            max_depth=6,
+            learning_rate=0.05,
+            min_samples_split=5,
+            subsample=0.8,
+            random_state=42,
+        )
+        model.fit(X_train, y_train)
 
     y_pred = model.predict(X_test)
     metrics = {
@@ -360,6 +368,7 @@ def train_price_model() -> dict[str, Any]:
                            [round(float(x), 4) for x in model.feature_importances_]))
 
     joblib.dump(model, MODEL_DIR / "price_model.joblib")
+    # Price model already saves the exact training encoders — no change needed
     joblib.dump({"crop": crop_le, "region": region_le},
                 MODEL_DIR / "price_encoders.joblib")
 
@@ -371,21 +380,30 @@ def train_price_model() -> dict[str, Any]:
 # 3. CROP RECOMMENDATION MODEL
 # ===================================================================
 
-def _build_recommendation_dataset() -> tuple[np.ndarray, np.ndarray]:
+# FIX (3.3): Number of random samples per (region, season) pair instead of
+# exhaustive 5-deep nested loop (was R × 6250, now R × 500 per combo).
+_RECOMMEND_SAMPLES_PER_REGION_SEASON = 500
+
+# FIX (1.2): Return type now includes the encoders used during training
+def _build_recommendation_dataset() -> tuple[np.ndarray, np.ndarray, LabelEncoder, LabelEncoder, LabelEncoder]:
     """
     Build crop recommendation training data:
     For each (region, season), simulate all crops and label the best one
     by estimated profit. Augment with varied budgets and irrigation levels.
+
+    Returns (X, y, crop_le, region_le, season_le) so the exact encoder
+    instances can be saved alongside the model.
     """
-    crop_params_list = _load_csv("crop_parameters.csv")
+    # FIX (1.6): Mark critical datasets as required
+    crop_params_list = _load_csv("crop_parameters.csv", required=True)
     crop_params = {r["crop_id"]: r for r in crop_params_list}
     crop_params_objs = {r["crop_id"]: make_crop_param(r) for r in crop_params_list}
-    soil_data = {r["region_id"]: r for r in _load_csv("soil.csv")}
-    weather_rows = _load_csv("weather.csv")
+    soil_data = {r["region_id"]: r for r in _load_csv("soil.csv", required=True)}
+    weather_rows = _load_csv("weather.csv", required=True)
     weather_data = {}
     for r in weather_rows:
         weather_data[(r["region_id"], r["season"].lower())] = r
-    mandi_rows = _load_csv("mandi_prices.csv")
+    mandi_rows = _load_csv("mandi_prices.csv", required=True)
 
     # Latest mandi price per (region, crop)
     mandi_latest: dict[tuple[str, str], float] = {}
@@ -398,7 +416,8 @@ def _build_recommendation_dataset() -> tuple[np.ndarray, np.ndarray]:
 
     crop_le = LabelEncoder().fit(all_crops)
     region_le = LabelEncoder().fit(all_regions)
-    season_le = LabelEncoder().fit(all_seasons + ["annual", "perennial", "perenn"])
+    # FIX (1.2): Use canonical ALL_SEASONS for consistent encoding
+    season_le = LabelEncoder().fit(ALL_SEASONS)
 
     rng = np.random.RandomState(42)
     X_all, y_all = [], []
@@ -409,10 +428,9 @@ def _build_recommendation_dataset() -> tuple[np.ndarray, np.ndarray]:
         except (ValueError, TypeError):
             return default
 
-    # Wider parameter sweeps + synthetic soil/weather combos for diversity
-    ph_variants = [5.0, 6.0, 6.8, 7.5, 8.2]
-    rain_variants = [300, 600, 1000, 1500, 2200]
-    temp_variants = [18, 24, 28, 32, 37]
+    # FIX (3.3): Replaced 5-deep nested loop with stratified random sampling
+    # to avoid combinatorial explosion while still covering the parameter space.
+    budget_choices = [8000, 12000, 18000, 25000, 35000]
 
     for rid in all_regions:
         base_soil = soil_data[rid]
@@ -420,68 +438,70 @@ def _build_recommendation_dataset() -> tuple[np.ndarray, np.ndarray]:
             wkey = (rid, season)
             base_weather = weather_data.get(wkey, {})
 
-            for budget in [8000, 12000, 18000, 25000, 35000]:
-                for irr in [0.1, 0.3, 0.5, 0.7, 0.9]:
-                    for ph in ph_variants:
-                        for rain in rain_variants:
-                            for temp in temp_variants:
-                                # Score each crop with realistic factors
-                                best_crop = None
-                                best_score = -1e9
-                                for cid, cp in crop_params.items():
-                                    crop_season = cp["season"].lower()
-                                    if (season not in crop_season and 
-                                        "annual" not in crop_season and 
-                                        "perennial" not in crop_season):
-                                        continue
+            for _ in range(_RECOMMEND_SAMPLES_PER_REGION_SEASON):
+                budget = rng.choice(budget_choices)
+                irr = float(rng.uniform(0.05, 0.95))
+                ph = float(rng.uniform(5.0, 8.5))
+                rain = float(rng.uniform(200, 2500))
+                temp = float(rng.uniform(15, 40))
 
-                                    cp_obj = crop_params_objs[cid]
-                                    base_yield = float(cp["base_yield_kg_per_acre"])
-                                    cost = float(cp["avg_input_cost_inr_per_acre"])
-                                    price = mandi_latest.get(
-                                        (rid, cid),
-                                        (float(cp["mandi_price_min_inr_per_kg"]) +
-                                         float(cp["mandi_price_max_inr_per_kg"])) / 2)
-                                    # Budget penalty: if cost > budget, heavy penalty
-                                    budget_fit = 1.0 if budget >= cost else budget / cost * 0.5
+                # Score each crop with realistic factors
+                best_crop = None
+                best_score = -1e9
+                for cid, cp in crop_params.items():
+                    crop_season = cp["season"].lower()
+                    if (season not in crop_season and 
+                        "annual" not in crop_season and 
+                        "perennial" not in crop_season):
+                        continue
 
-                                    # Use the official climate factor calculation
-                                    weather_sim = {"rainfall_mm": rain, "avg_temp_c": temp}
-                                    climate_factor = calculate_climate_factor(weather_sim, cp_obj)
+                    cp_obj = crop_params_objs[cid]
+                    base_yield = float(cp["base_yield_kg_per_acre"])
+                    cost = float(cp["avg_input_cost_inr_per_acre"])
+                    price = mandi_latest.get(
+                        (rid, cid),
+                        (float(cp["mandi_price_min_inr_per_kg"]) +
+                         float(cp["mandi_price_max_inr_per_kg"])) / 2)
+                    # Budget penalty: if cost > budget, heavy penalty
+                    budget_fit = 1.0 if budget >= cost else budget / cost * 0.5
 
-                                    # Use the official soil suitability factor
-                                    soil_sim = {"ph": ph, "n_kg_per_acre": sf(base_soil, "n_kg_per_acre", 40)}
-                                    soil_factor = calculate_soil_factor(soil_sim, cp_obj)
+                    # Use the official climate factor calculation
+                    weather_sim = {"rainfall_mm": rain, "avg_temp_c": temp}
+                    climate_factor = calculate_climate_factor(weather_sim, cp_obj)
 
-                                    yield_est = base_yield * climate_factor * soil_factor * (0.6 + 0.5 * irr)
-                                    revenue = yield_est * price
-                                    profit = (revenue - cost) * budget_fit
-                                    score = profit
+                    # Use the official soil suitability factor
+                    soil_sim = {"ph": ph, "n_kg_per_acre": sf(base_soil, "n_kg_per_acre", 40)}
+                    soil_factor = calculate_soil_factor(soil_sim, cp_obj)
 
-                                    if score > best_score:
-                                        best_score = score
-                                        best_crop = cid
+                    yield_est = base_yield * climate_factor * soil_factor * (0.6 + 0.5 * irr)
+                    revenue = yield_est * price
+                    profit = (revenue - cost) * budget_fit
+                    score = profit
 
-                                if best_crop is None:
-                                    continue
+                    if score > best_score:
+                        best_score = score
+                        best_crop = cid
 
-                                features = [
-                                    region_le.transform([rid])[0],
-                                    season_le.transform([season])[0],
-                                    ph,
-                                    sf(base_soil, "n_kg_per_acre", 40),
-                                    sf(base_soil, "p_kg_per_acre", 20),
-                                    sf(base_soil, "k_kg_per_acre", 20),
-                                    sf(base_soil, "organic_carbon_percent", 0.5),
-                                    rain,
-                                    temp,
-                                    temp - 8,  # approx min_temp
-                                    temp + 7,  # approx max_temp
-                                    budget,
-                                    irr,
-                                ]
-                                X_all.append(features)
-                                y_all.append(crop_le.transform([best_crop])[0])
+                if best_crop is None:
+                    continue
+
+                features = [
+                    region_le.transform([rid])[0],
+                    season_le.transform([season])[0],
+                    ph,
+                    sf(base_soil, "n_kg_per_acre", 40),
+                    sf(base_soil, "p_kg_per_acre", 20),
+                    sf(base_soil, "k_kg_per_acre", 20),
+                    sf(base_soil, "organic_carbon_percent", 0.5),
+                    rain,
+                    temp,
+                    temp - 8,  # approx min_temp
+                    temp + 7,  # approx max_temp
+                    budget,
+                    irr,
+                ]
+                X_all.append(features)
+                y_all.append(crop_le.transform([best_crop])[0])
 
     # Light augmentation
     base_len = len(X_all)
@@ -493,7 +513,10 @@ def _build_recommendation_dataset() -> tuple[np.ndarray, np.ndarray]:
         X_all.append(noised.tolist())
         y_all.append(y_all[i])
 
-    return np.array(X_all, dtype=np.float32), np.array(y_all, dtype=np.int32)
+    # FIX (1.2): Return encoders alongside dataset
+    return (np.array(X_all, dtype=np.float32),
+            np.array(y_all, dtype=np.int32),
+            crop_le, region_le, season_le)
 
 RECOMMEND_FEATURE_NAMES = [
     "region_enc", "season_enc",
@@ -505,19 +528,24 @@ RECOMMEND_FEATURE_NAMES = [
 
 def train_recommendation_model() -> dict[str, Any]:
     """Train RandomForest crop recommendation classifier."""
-    X, y = _build_recommendation_dataset()
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42, stratify=y,
-    )
+    # FIX (1.2): Unpack the actual encoders used during training
+    X, y, crop_le, region_le, season_le = _build_recommendation_dataset()
 
-    model = RandomForestClassifier(
-        n_estimators=200,
-        max_depth=10,
-        min_samples_split=4,
-        random_state=42,
-        n_jobs=-1,
-    )
-    model.fit(X_train, y_train)
+    # FIX (4.5): Scope warning suppression to sklearn training only
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=UserWarning, module="sklearn")
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=0.2, random_state=42, stratify=y,
+        )
+
+        model = RandomForestClassifier(
+            n_estimators=200,
+            max_depth=10,
+            min_samples_split=4,
+            random_state=42,
+            n_jobs=-1,
+        )
+        model.fit(X_train, y_train)
 
     y_pred = model.predict(X_test)
     accuracy = round(float(accuracy_score(y_test, y_pred)), 4)
@@ -535,13 +563,7 @@ def train_recommendation_model() -> dict[str, Any]:
 
     joblib.dump(model, MODEL_DIR / "recommend_model.joblib")
 
-    # Save encoders for recommendation
-    all_crops = sorted({r["crop_id"] for r in _load_csv("crop_parameters.csv")})
-    all_regions = sorted({r["region_id"] for r in _load_csv("soil.csv")})
-    all_seasons = ["kharif", "rabi", "annual", "perennial", "perenn"]
-    crop_le = LabelEncoder().fit(all_crops)
-    region_le = LabelEncoder().fit(all_regions)
-    season_le = LabelEncoder().fit(all_seasons)
+    # FIX (1.2): Save the EXACT encoder instances from training — not re-fitted ones
     joblib.dump({"crop": crop_le, "region": region_le, "season": season_le},
                 MODEL_DIR / "recommend_encoders.joblib")
 
@@ -553,8 +575,9 @@ def train_recommendation_model() -> dict[str, Any]:
 # Master training function
 # ===================================================================
 
+# FIX (1.5): Corrected docstring — 3 core + 1 optional disease model
 def train_all() -> dict[str, Any]:
-    """Train all 3 models and return combined report."""
+    """Train all ML models (3 core + 1 optional disease detection) and return combined report."""
     print("=" * 60)
     print("Training Yield Prediction Model...")
     yield_report = train_yield_model()
@@ -568,13 +591,30 @@ def train_all() -> dict[str, Any]:
     rec_report = train_recommendation_model()
     print(f"  Accuracy = {rec_report['metrics']['accuracy']}")
 
+    print("Training Crop Disease Detection Model...")
+    try:
+        from ml.training.disease_model import train_disease_model
+        disease_report = train_disease_model()
+        print(f"  Accuracy = {disease_report['metrics']['accuracy']}")
+    except Exception as e:
+        # FIX (1.4): Report real failure status instead of hardcoded fake metrics
+        logger.warning("Disease model training failed: %s", e)
+        print(f"  Failed to train disease model: {e}")
+        disease_report = {
+            "model": "crop_disease",
+            "algorithm": "MobileNetV2 (Transfer Learning)",
+            "status": "TRAINING_FAILED",
+            "error": str(e),
+            "metrics": None,
+        }
+
     print("=" * 60)
     print("All models saved to:", MODEL_DIR)
 
     # Save a manifest
     manifest = {
-        "models": [yield_report, price_report, rec_report],
-        "model_dir": str(MODEL_DIR),
+        "models": [yield_report, price_report, rec_report, disease_report],
+        "model_dir": "ml/models",
     }
     with open(MODEL_DIR / "manifest.json", "w") as f:
         json.dump(manifest, f, indent=2)
