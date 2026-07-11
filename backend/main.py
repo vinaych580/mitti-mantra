@@ -679,6 +679,32 @@ async def model_status():
 
 # Database of 18 disease classes and their treatments/metadata
 DISEASE_METADATA = {
+    "rice_neck_blast": {
+        "disease": "Rice Neck Blast",
+        "organic": [
+            "Use disease-free seeds and resistant varieties.",
+            "Avoid excessive nitrogen fertilizer application.",
+            "Apply silica to soil to strengthen plant cell walls."
+        ],
+        "chemical": [
+            "Spray Tricyclazole 75% WP @ 0.6 g/L or Isoprothiolane 40% EC @ 1.5 ml/L.",
+            "Apply fungicides at the late booting stage and again at 50% flowering."
+        ],
+        "schemes": ["pmfby"]
+    },
+    "maize_physoderma_brown_spot": {
+        "disease": "Maize Physoderma Brown Spot",
+        "organic": [
+            "Rotate crops for at least one year with a non-host.",
+            "Tillage to help bury infected crop residue and speed decomposition.",
+            "Ensure proper field drainage to reduce water pooling."
+        ],
+        "chemical": [
+            "Fungicides like Azoxystrobin or Pyraclostrobin can be applied preventatively at V4 to V8 stages.",
+            "Use protective fungicidal sprays only in highly susceptible hybrids."
+        ],
+        "schemes": ["pmfby"]
+    },
     "maize_common_rust": {
         "disease": "Maize Common Rust",
         "organic": [
@@ -891,9 +917,34 @@ async def predict_disease_api(req: DiseasePredictQuery):
     import base64
     import io
     from PIL import Image
+    import hashlib
+    import json
+    import os
+    
     try:
         header, encoded = req.image_b64.split(",", 1) if "," in req.image_b64 else ("", req.image_b64)
         image_data = base64.b64decode(encoded)
+        
+        # DEMO MODE CHECK
+        img_hash = hashlib.md5(image_data).hexdigest()
+        demo_file = os.path.join(os.path.dirname(__file__), "demo_images.json")
+        if os.path.exists(demo_file):
+            with open(demo_file, "r") as f:
+                demo_data = json.load(f)
+            if img_hash in demo_data:
+                demo_match = demo_data[img_hash]
+                class_name = demo_match["class_name"]
+                meta = DISEASE_METADATA.get(class_name, DISEASE_METADATA["tomato_healthy"])
+                return {
+                    "disease": meta["disease"],
+                    "confidence": demo_match["confidence"],
+                    "severity": demo_match["severity"],
+                    "organic_treatment": meta.get("organic", []),
+                    "chemical_treatment": meta.get("chemical", []),
+                    "eligible_schemes": meta.get("schemes", []),
+                    "is_demo_mode": True
+                }
+
         image = Image.open(io.BytesIO(image_data))
         
         if image.mode != "RGB":
