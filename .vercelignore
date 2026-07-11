@@ -45,7 +45,6 @@ catboost_info/
 tests/
 docs/
 scripts/
-data_ingestion/
 
 # ML bulk and models
 ml/training/

@@ -5,7 +5,16 @@
       "src": "api/index.py",
       "use": "@vercel/python",
       "config": {
-        "includeFiles": ["dataset/*.csv", "backend/*.json", "ml/models/*.joblib"]
+        "includeFiles": [
+          "dataset/*.csv",
+          "backend/**/*.py",
+          "backend/*.json",
+          "engine/**/*.py",
+          "utils/**/*.py",
+          "ml/**/*.py",
+          "ml/models/*.joblib",
+          "data_ingestion/**/*.py"
+        ]
       }
     },
     {
