@@ -31,7 +31,12 @@ _memory: dict[str, tuple[float, Any]] = {}
 
 def _cache_dir() -> str:
     d = os.environ.get("AGRISIM_CACHE_DIR", _DEFAULT_DIR)
-    os.makedirs(d, exist_ok=True)
+    if os.environ.get("VERCEL"):
+        d = "/tmp/.cache"
+    try:
+        os.makedirs(d, exist_ok=True)
+    except OSError:
+        d = "/tmp"
     return d
 
 

@@ -28,7 +28,6 @@ from utils.csv_cache import load as _csv_load, index_by as _csv_index, first_by 
 from engine.simulator import simulate
 from backend.chatbot import answer as chatbot_answer
 from ml.predict import recommend_crops, location_based_insights, mandi_price_analytics, rotation_planner
-from ml.train_models import train_all as ml_train_all
 from engine.features import (
     fertilizer_recommendation,
     get_msp_data,
@@ -637,6 +636,7 @@ async def get_satellite_data(lat: float, lon: float):
 async def train_models():
     """Train all 3 ML models (yield, price, crop recommendation)."""
     try:
+        from ml.train_models import train_all as ml_train_all
         report = ml_train_all()
         return {"status": "success", "report": report}
     except Exception as e:
@@ -1399,8 +1399,12 @@ if os.path.exists(frontend_dir):
     
     # Mount disease model static files
     disease_model_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ml", "models", "disease")
-    os.makedirs(disease_model_dir, exist_ok=True)
-    app.mount("/models/disease", StaticFiles(directory=disease_model_dir), name="disease_model_static")
+    try:
+        os.makedirs(disease_model_dir, exist_ok=True)
+    except OSError:
+        pass
+    if os.path.exists(disease_model_dir):
+        app.mount("/models/disease", StaticFiles(directory=disease_model_dir), name="disease_model_static")
 
     @app.api_route("/gyan-seva", methods=["GET", "HEAD"])
     @app.api_route("/book-a-consultation", methods=["GET", "HEAD"])
