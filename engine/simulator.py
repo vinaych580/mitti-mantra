@@ -26,10 +26,26 @@ def _load_crop_parameters() -> dict[str, CropParameter]:
     with file_path.open("r", newline="", encoding="utf-8") as handle:
         rows = list(csv.DictReader(handle))
 
-    # FIX: Centralized CropParameter loading from data_loaders
-    from utils.data_loaders import load_crop_parameters
-    _crop_params_cache = load_crop_parameters(rows)
-    return _crop_params_cache
+    data: dict[str, CropParameter] = {}
+    for row in rows:
+        crop_id = row["crop_id"]
+        data[crop_id] = CropParameter(
+            crop_id=crop_id,
+            crop_name=row["crop_name"],
+            season=row["season"].lower(),
+            base_yield_kg_per_acre=float(row["base_yield_kg_per_acre"]),
+            water_requirement_mm=float(row["water_requirement_mm"]),
+            temp_min_c=float(row["temp_min_c"]),
+            temp_max_c=float(row["temp_max_c"]),
+            avg_input_cost_inr_per_acre=float(row["avg_input_cost_inr_per_acre"]),
+            mandi_price_min_inr_per_kg=float(row["mandi_price_min_inr_per_kg"]),
+            mandi_price_max_inr_per_kg=float(row["mandi_price_max_inr_per_kg"]),
+            npk_n_kg_per_acre=float(row["npk_n_kg_per_acre"]),
+            npk_p_kg_per_acre=float(row["npk_p_kg_per_acre"]),
+            npk_k_kg_per_acre=float(row["npk_k_kg_per_acre"]),
+        )
+    _crop_params_cache = data
+    return data
 
 
 def estimate_yield_kg_per_acre(strategy: dict[str, Any]) -> float:
@@ -54,8 +70,6 @@ def calculate_cost_per_acre(strategy: dict[str, Any]) -> dict[str, float]:
         "irrigation": float(plan.get("irrigation_cost_per_acre", 0.0)),
         "pesticide": float(plan.get("pesticide_cost_per_acre", 0.0)),
         "machinery": float(plan.get("machinery_cost_per_acre", 0.0)),
-        # FIX: Include other_costs_per_acre to accurately calculate total cost
-        "other": float(plan.get("other_costs_per_acre", 0.0)),
     }
 
 

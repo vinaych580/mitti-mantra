@@ -121,10 +121,26 @@ def _load_crop_parameters() -> dict[str, CropParameter]:
         if _cache_crop_params is not None:
             return _cache_crop_params
         rows = _load_csv("crop_parameters.csv")
-        # FIX: Centralized CropParameter loading from data_loaders
-        from utils.data_loaders import load_crop_parameters
-        _cache_crop_params = load_crop_parameters(rows)
-    return _cache_crop_params
+        data: dict[str, CropParameter] = {}
+        for row in rows:
+            crop_id = row["crop_id"]
+            data[crop_id] = CropParameter(
+                crop_id=crop_id,
+                crop_name=row["crop_name"],
+                season=row["season"].lower(),
+                base_yield_kg_per_acre=float(row["base_yield_kg_per_acre"]),
+                water_requirement_mm=float(row["water_requirement_mm"]),
+                temp_min_c=float(row["temp_min_c"]),
+                temp_max_c=float(row["temp_max_c"]),
+                avg_input_cost_inr_per_acre=float(row["avg_input_cost_inr_per_acre"]),
+                mandi_price_min_inr_per_kg=float(row["mandi_price_min_inr_per_kg"]),
+                mandi_price_max_inr_per_kg=float(row["mandi_price_max_inr_per_kg"]),
+                npk_n_kg_per_acre=float(row["npk_n_kg_per_acre"]),
+                npk_p_kg_per_acre=float(row["npk_p_kg_per_acre"]),
+                npk_k_kg_per_acre=float(row["npk_k_kg_per_acre"]),
+            )
+        _cache_crop_params = data
+    return data
 
 
 def _load_yield_history() -> list[dict[str, str]]:

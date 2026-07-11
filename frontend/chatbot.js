@@ -178,13 +178,13 @@
         const p = JSON.parse(raw);
         if (typeof p.x === "number" && typeof p.y === "number") return p;
       }
-    } catch (_) {}
+    } catch (_) { }
     // default: bottom-right, above the toolbar/hamburger area
     return { x: window.innerWidth - FAB_SIZE - 22, y: window.innerHeight - FAB_SIZE - 110 };
   }
 
   function savePos(p) {
-    try { localStorage.setItem(POS_KEY, JSON.stringify(p)); } catch (_) {}
+    try { localStorage.setItem(POS_KEY, JSON.stringify(p)); } catch (_) { }
   }
 
   let current = applyFabPos(loadPos().x, loadPos().y);
@@ -223,7 +223,7 @@
     if (!dragState) return;
     const wasDrag = dragState.moved;
     fab.classList.remove("dragging");
-    try { fab.releasePointerCapture && fab.releasePointerCapture(e.pointerId); } catch (_) {}
+    try { fab.releasePointerCapture && fab.releasePointerCapture(e.pointerId); } catch (_) { }
     dragState = null;
     if (wasDrag) {
       savePos(current);
@@ -266,7 +266,7 @@
       if (inCode) { codeBuf.push(raw); i++; continue; }
 
       // Table detection: header | --- | rows
-      if (/^\s*\|.+\|\s*$/.test(raw) && i + 1 < lines.length && /^\s*\|[-\s|:]+\|\s*$/.test(lines[i+1])) {
+      if (/^\s*\|.+\|\s*$/.test(raw) && i + 1 < lines.length && /^\s*\|[-\s|:]+\|\s*$/.test(lines[i + 1])) {
         flushList();
         const header = raw.trim().replace(/^\||\|$/g, "").split("|").map(s => s.trim());
         const rows = [];
@@ -367,30 +367,19 @@
   }
 
   // --------------- session memory ---------------
-  // FIX: Validate context object from localStorage to prevent injection
-  function validateContext(ctx) {
-    if (typeof ctx !== 'object' || ctx === null || Array.isArray(ctx)) return {};
-    const allowed = ['region_id', 'crop_id', 'season'];
-    const safe = {};
-    for (const k of allowed) {
-      if (typeof ctx[k] === 'string' && ctx[k].length < 50) safe[k] = ctx[k];
-    }
-    return safe;
-  }
-
   let sessionCtx = {};
   try {
     const stored = localStorage.getItem("mm_chat_ctx");
-    if (stored) sessionCtx = validateContext(JSON.parse(stored));
-  } catch (_) {}
+    if (stored) sessionCtx = JSON.parse(stored) || {};
+  } catch (_) { }
   try {
     // Bootstrap region from unified Farm Profile, if present.
     const mp = window.MM && MM.profile && MM.profile.get();
     if (mp && mp.region_id && !sessionCtx.region_id) sessionCtx.region_id = mp.region_id;
     const r = localStorage.getItem("mm_region_id");
     if (r && !sessionCtx.region_id) sessionCtx.region_id = r;
-  } catch (_) {}
-  const persistCtx = () => { try { localStorage.setItem("mm_chat_ctx", JSON.stringify(sessionCtx)); } catch (_) {} };
+  } catch (_) { }
+  const persistCtx = () => { try { localStorage.setItem("mm_chat_ctx", JSON.stringify(sessionCtx)); } catch (_) { } };
 
   // --------------- API ---------------
   // FIX (5.2): Mutex guard to prevent concurrent send() calls
@@ -398,13 +387,6 @@
   async function send() {
     const msg = input.value.trim();
     if (!msg || _sending) return;
-    
-    // FIX: Enforce 2000 character limit on messages
-    if (msg.length > 2000) {
-        addMsg("bot", "Please keep your message under 2000 characters.");
-        return;
-    }
-
     _sending = true;
     input.value = "";
     addMsg("user", msg);
@@ -477,12 +459,12 @@
     } else {
       let rec = null, listening = false;
       micBtn.addEventListener("click", () => {
-        if (listening) { try { rec.stop(); } catch(_){} return; }
+        if (listening) { try { rec.stop(); } catch (_) { } return; }
         rec = new SpeechRec();
-        
+
         const docLang = document.documentElement.getAttribute('lang') || 'en';
         rec.lang = { en: 'en-IN', hi: 'hi-IN', te: 'te-IN', kn: 'kn-IN' }[docLang] || 'en-IN';
-        
+
         rec.interimResults = false;
         rec.maxAlternatives = 1;
         rec.onresult = (e) => {
@@ -497,9 +479,9 @@
           const errMsg = errMap[ev.error] || ("Voice input error: " + (ev.error || "unknown"));
           addMsg("bot", errMsg);
         };
-        rec.onend  = () => { listening = false; micBtn.classList.remove("listening"); };
+        rec.onend = () => { listening = false; micBtn.classList.remove("listening"); };
         try { rec.start(); listening = true; micBtn.classList.add("listening"); }
-        catch(_) { listening = false; micBtn.classList.remove("listening"); }
+        catch (_) { listening = false; micBtn.classList.remove("listening"); }
       });
     }
   }

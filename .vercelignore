@@ -1,30 +1,65 @@
 # Vercel ignore — keep the deployment bundle lean
 .git
+.gitignore
+.vercel
+.idea
+.vscode
+venv
+venv/
+.venv
+.venv/
 __pycache__
 *.pyc
 *.pyo
 *.pyd
 *.so
 *.dll
-.pytest_cache
-venv/
-.venv/
-.idea/
-.vscode/
 *.log
 *.err
-docs/
-tests/
-bin/
+.DS_Store
+.pytest_cache
+
+# Root files not needed
+frontend.zip
+PROJECT_OVERVIEW.txt
+README.md
+phase breakdown.txt
+
+# Virtual environment / root installs
 certifi/
-certifi-2026.2.25.dist-info/
 charset_normalizer/
-charset_normalizer-3.4.7.dist-info/
 dotenv/
 idna/
-idna-3.11.dist-info/
-python_dotenv-1.2.2.dist-info/
 requests/
-requests-2.33.1.dist-info/
 urllib3/
-urllib3-2.6.3.dist-info/
+bin/
+certifi-*.dist-info/
+charset_normalizer-*.dist-info/
+idna-*.dist-info/
+python_dotenv-*.dist-info/
+requests-*.dist-info/
+urllib3-*.dist-info/
+catboost_info/
+
+# Unneeded project directories
+tests/
+docs/
+scripts/
+data_ingestion/
+
+# ML bulk and models
+ml/training/
+ml/models/disease/
+ml/evaluate_models.py
+ml/train_models.py
+ml/audit_models.py
+*.pt
+ml/models/*.json
+ml/models/*.bin
+
+# Dataset bulk (only keep the root CSVs)
+dataset/plantvillage/
+dataset/training/
+dataset/raw/
+dataset/processed/
+dataset/dynamic/

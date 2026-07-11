@@ -14,14 +14,14 @@
   let savedFarm = (typeof window.FarmState !== 'undefined')
     ? window.FarmState.load()
     : (() => {
-        try {
-          return JSON.parse(
-            localStorage.getItem('mittimantra_selectedFarm') ||
-            localStorage.getItem('agrisim_farm') ||
-            'null'
-          );
-        } catch { return null; }
-      })();
+      try {
+        return JSON.parse(
+          localStorage.getItem('mittimantra_selectedFarm') ||
+          localStorage.getItem('agrisim_farm') ||
+          'null'
+        );
+      } catch { return null; }
+    })();
 
   // Synchronize savedFarm with the unified Farm Profile (window.MM.profile)
   // so that mm-core's form auto-population does not overwrite the farm's region and area.
@@ -31,15 +31,15 @@
     if (savedFarm.acres) patch.area_acres = +savedFarm.acres.toFixed(2);
     if (window.MM && window.MM.profile) {
       const current = window.MM.profile.get();
-      if ((patch.region_id && current.region_id !== patch.region_id) || 
-          (patch.area_acres && current.area_acres !== patch.area_acres)) {
+      if ((patch.region_id && current.region_id !== patch.region_id) ||
+        (patch.area_acres && current.area_acres !== patch.area_acres)) {
         window.MM.profile.set(patch);
       }
     }
   }
 
   /* ---------- Helpers ---------- */
-  const $  = (s, r = document) => r.querySelector(s);
+  const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const INR = n => '₹' + Math.round(Number(n) || 0).toLocaleString('en-IN');
   // For per-kg / per-unit prices where rounding to ₹ would lose meaningful precision.
@@ -53,7 +53,7 @@
     if (!isFinite(r)) return display;
     return `<span title="Exact: ${r.toLocaleString('en-IN', { maximumFractionDigits: 4 })}">${display}</span>`;
   };
-  const MONTH_NAMES = ['—','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const MONTH_NAMES = ['—', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   const CROP_LABELS = {
     rice: 'Rice · Dhaan', wheat: 'Wheat · Gehun', maize: 'Maize · Makka',
@@ -63,9 +63,9 @@
     potato: 'Potato · Aloo', onion: 'Onion · Pyaz'
   };
   const CROP_EMOJI = {
-    rice:'🌾', wheat:'🌾', maize:'🌽', sugarcane:'🎋', cotton:'🌿', pulses:'🫘',
-    groundnut:'🥜', soybean:'🌱', mustard:'🌻', bajra:'🌾', jowar:'🌾',
-    potato:'🥔', onion:'🧅'
+    rice: '🌾', wheat: '🌾', maize: '🌽', sugarcane: '🎋', cotton: '🌿', pulses: '🫘',
+    groundnut: '🥜', soybean: '🌱', mustard: '🌻', bajra: '🌾', jowar: '🌾',
+    potato: '🥔', onion: '🧅'
   };
   const cropLabel = id => (CROP_EMOJI[id] || '🌱') + ' ' + (CROP_LABELS[id] || id);
 
@@ -132,14 +132,14 @@
               <tr>
                 <td style="font-weight:600;color:var(--ink-soft);padding:6px 10px;text-align:right;">${y > 0 ? '+' : ''}${y}%</td>
                 ${ps.map(p => {
-                  const c = lookup[`${y}_${p}`];
-                  if (!c) return '<td></td>';
-                  const isBase = y === 0 && p === 0;
-                  return `<td style="background:${colorFor(c.projected_profit)};padding:10px 12px;border-radius:6px;min-width:72px;text-align:center;font-weight:${isBase ? 700 : 500};color:var(--ink);${isBase ? 'outline:2px solid var(--brand-deep);outline-offset:-2px;' : ''}">
+      const c = lookup[`${y}_${p}`];
+      if (!c) return '<td></td>';
+      const isBase = y === 0 && p === 0;
+      return `<td style="background:${colorFor(c.projected_profit)};padding:10px 12px;border-radius:6px;min-width:72px;text-align:center;font-weight:${isBase ? 700 : 500};color:var(--ink);${isBase ? 'outline:2px solid var(--brand-deep);outline-offset:-2px;' : ''}">
                     ${INR(c.projected_profit)}
                     <div style="font-size:.68rem;color:var(--ink-faint);margin-top:2px;">${FIX(c.projected_roi_pct, 0)}% ROI</div>
                   </td>`;
-                }).join('')}
+    }).join('')}
               </tr>`).join('')}
           </tbody>
         </table>
@@ -164,14 +164,14 @@
       const offline = window.AgriSimOffline;
       const body = opts.body ? tryParseJSON(opts.body) : null;
       if (offline) {
-        if (url.includes('/api/simulate') && body)  { 
-          flashOfflineBanner(); 
+        if (url.includes('/api/simulate') && body) {
+          flashOfflineBanner();
           const data = offline.simulate(body);
           window.dispatchEvent(new CustomEvent('mitti-api-success', { detail: { url, opts, data } }));
           return data;
         }
-        if (url.includes('/api/recommend') && body) { 
-          flashOfflineBanner(); 
+        if (url.includes('/api/recommend') && body) {
+          flashOfflineBanner();
           const data = offline.recommend(body);
           window.dispatchEvent(new CustomEvent('mitti-api-success', { detail: { url, opts, data } }));
           return data;
@@ -263,7 +263,7 @@
     // FIX-3: Trigger initial telemetry using the farm's region (not the
     // API's first-returned region). Falls back to first select value if no farm.
     const initRegion = (savedFarm && savedFarm.region_id) || $('select[data-regions]')?.value;
-    const initName   = (() => {
+    const initName = (() => {
       if (savedFarm && savedFarm.region_id) {
         // Try to find the human-readable name from the populated select
         const sel = $('select[data-regions]');
@@ -293,9 +293,9 @@
     src.forEach(r => { tbl[r.region_id] = [r.lat, r.lon]; });
     // Bake-in a handful of fallbacks in case FarmState failed to load.
     if (!tbl['telangana_medak']) tbl['telangana_medak'] = [18.04, 78.26];
-    if (!tbl['mp_sehore'])       tbl['mp_sehore']       = [23.20, 77.08];
-    if (!tbl['up_lucknow'])      tbl['up_lucknow']      = [26.85, 80.94];
-    if (!tbl['mh_pune'])         tbl['mh_pune']         = [18.52, 73.85];
+    if (!tbl['mp_sehore']) tbl['mp_sehore'] = [23.20, 77.08];
+    if (!tbl['up_lucknow']) tbl['up_lucknow'] = [26.85, 80.94];
+    if (!tbl['mh_pune']) tbl['mh_pune'] = [18.52, 73.85];
     return tbl;
   })();
 
@@ -360,10 +360,10 @@
     const coords = farmActive && savedFarm.lat && savedFarm.lon
       ? [savedFarm.lat, savedFarm.lon]
       : (REGION_COORDS[regionId] || [20.5, 78.9]);
-    
+
     const rName = document.getElementById('telemetryRegionName');
     if (rName) rName.innerText = regionName || regionId;
-    
+
     const skeleton = `
       <div class="skeleton" style="height: 12px; width: 90%; background: #e2e8f0; margin-bottom: 6px; border-radius: 4px; animation: pulse 1.5s infinite;"></div>
       <div class="skeleton" style="height: 12px; width: 70%; background: #e2e8f0; border-radius: 4px; animation: pulse 1.5s infinite;"></div>
@@ -372,12 +372,12 @@
     const sBody = document.getElementById('telemetrySoilBody');
     const mBody = document.getElementById('telemetryMarketBody');
     const satBody = document.getElementById('telemetrySatelliteBody');
-    
+
     if (wBody) wBody.innerHTML = skeleton;
     if (sBody) sBody.innerHTML = skeleton;
     if (mBody) mBody.innerHTML = skeleton;
     if (satBody) satBody.innerHTML = skeleton;
-    
+
     // Fetch weather info asynchronously
     api(`/api/weather?region_id=${regionId}&season=kharif`)
       .then(w => {
@@ -412,7 +412,7 @@
       .catch(err => {
         if (wBody) wBody.innerHTML = `<div style="font-size: 0.78rem; color: var(--clay);">Failed: ${err.message || err}</div>`;
       });
-      
+
     // Fetch soil info asynchronously
     api(`/api/soil?region_id=${regionId}`)
       .then(s => {
@@ -436,7 +436,7 @@
       .catch(err => {
         if (sBody) sBody.innerHTML = `<div style="font-size: 0.78rem; color: var(--clay);">Failed to load soil.</div>`;
       });
-      
+
     // Fetch market price data asynchronously
     api(`/api/market?region_id=${regionId}&crop_id=rice`)
       .then(m => {
@@ -450,7 +450,7 @@
       .catch(err => {
         if (mBody) mBody.innerHTML = `<div style="font-size: 0.78rem; color: var(--clay);">Failed to load mandi prices.</div>`;
       });
-      
+
     // Fetch satellite vegetation telemetry from the backend API
     api(`/api/satellite?lat=${coords[0]}&lon=${coords[1]}`)
       .then(sat => {
@@ -608,7 +608,7 @@
         <h4 style="font-size:.85rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin:16px 0 12px;">Ranked alternatives</h4>
         ${recs.slice(0, 5).map((r, i) => `
           <div class="list-row">
-            <div class="list-row__bullet">${i+1}</div>
+            <div class="list-row__bullet">${i + 1}</div>
             <div class="list-row__name">${cropLabel(r.crop_id)}
               <small>Yield ${Math.round(r.predicted_yield_kg_per_acre)} kg/ac · Risk ${Math.round(r.risk_score)}/100 · Score ${FIX(r.smart_score, 1)}</small>
               ${r.reasons ? `<div style="font-size: 0.76rem; color: var(--brand-deep); margin-top: 4px;">• ${r.reasons[0]}</div>` : ''}
@@ -639,8 +639,8 @@
       // Radar — top 3 across 5 axes (normalised 0–100)
       const top3 = recs.slice(0, 3);
       const maxProfit = Math.max(...top3.map(r => r.expected_profit)) || 1;
-      const maxYield  = Math.max(...top3.map(r => r.predicted_yield_kg_per_acre)) || 1;
-      const maxROI    = Math.max(...top3.map(r => r.roi_percent)) || 1;
+      const maxYield = Math.max(...top3.map(r => r.predicted_yield_kg_per_acre)) || 1;
+      const maxROI = Math.max(...top3.map(r => r.roi_percent)) || 1;
       const colors = [BRAND, ACCENT, SKY];
       makeChart($('[data-chart="rec-radar"]'), {
         type: 'radar',
@@ -720,12 +720,12 @@
       const wetBody = JSON.parse(JSON.stringify(body));
       wetBody.weather.rainfall_mm = (body.weather.rainfall_mm || 600) * 1.5;
 
-      const r = await api('/api/simulate', { method:'POST', body: JSON.stringify(body) });
+      const r = await api('/api/simulate', { method: 'POST', body: JSON.stringify(body) });
 
       // Run Dry/Wet simulations in parallel background
       const [rDry, rWet] = await Promise.all([
-        api('/api/simulate', { method:'POST', body: JSON.stringify(dryBody) }).catch(() => null),
-        api('/api/simulate', { method:'POST', body: JSON.stringify(wetBody) }).catch(() => null)
+        api('/api/simulate', { method: 'POST', body: JSON.stringify(dryBody) }).catch(() => null),
+        api('/api/simulate', { method: 'POST', body: JSON.stringify(wetBody) }).catch(() => null)
       ]);
 
       const area = body.area_acres;
@@ -744,7 +744,7 @@
             <div class="kpi__val">${TT(r.revenue, INR(r.revenue || 0))}</div></div>
           <div class="kpi"><div class="kpi__lbl">Total cost</div>
             <div class="kpi__val">${TT(r.total_cost, INR(r.total_cost || 0))}</div>
-            <div class="kpi__sub">Breakeven ₹${FIX(r.break_even_price_per_kg,2)}/kg</div></div>
+            <div class="kpi__sub">Breakeven ₹${FIX(r.break_even_price_per_kg, 2)}/kg</div></div>
           <div class="kpi kpi--good"><div class="kpi__lbl">Profit</div>
             <div class="kpi__val">${TT(r.profit, INR(r.profit || 0))}</div>
             <div class="kpi__sub">ROI ${PCT(r.roi_percent || 0)}</div></div>
@@ -814,8 +814,10 @@
         },
         options: {
           responsive: true, maintainAspectRatio: false, cutout: '62%',
-          plugins: { legend: { position: 'right', labels: { boxWidth: 12, padding: 8, font: { size: 11 } } },
-                     tooltip: { callbacks: { label: c => c.label + ': ' + INR(c.parsed) + '/ac' } } }
+          plugins: {
+            legend: { position: 'right', labels: { boxWidth: 12, padding: 8, font: { size: 11 } } },
+            tooltip: { callbacks: { label: c => c.label + ': ' + INR(c.parsed) + '/ac' } }
+          }
         }
       });
 
@@ -830,7 +832,7 @@
         },
         options: {
           responsive: true, maintainAspectRatio: false,
-          scales: { y: { beginAtZero: true, grid: { color: 'rgba(29,26,21,.06)' }, ticks: { callback: v => '₹' + (v/1000).toFixed(0) + 'K' } }, x: { grid: { display: false } } },
+          scales: { y: { beginAtZero: true, grid: { color: 'rgba(29,26,21,.06)' }, ticks: { callback: v => '₹' + (v / 1000).toFixed(0) + 'K' } }, x: { grid: { display: false } } },
           plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => INR(c.parsed.y) } } }
         }
       });
@@ -926,7 +928,7 @@
         <h4 style="font-size:.85rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin:16px 0 12px;">All rotations</h4>
         ${plans.slice(0, 5).map((p, i) => `
           <div class="list-row">
-            <div class="list-row__bullet">${i+1}</div>
+            <div class="list-row__bullet">${i + 1}</div>
             <div class="list-row__name">${cropLabel(p.kharif_crop)} → ${cropLabel(p.rabi_crop)}
               <small>Risk ${Math.round(p.avg_risk_score || 0)}/100 · Score ${FIX(p.rotation_score || p.diversity_score || 0, 1)}</small></div>
             <div class="list-row__val">${INR(p.annual_profit)}<small>per year</small></div>
@@ -945,7 +947,7 @@
         },
         options: {
           responsive: true, maintainAspectRatio: false,
-          scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, beginAtZero: true, grid: { color: 'rgba(29,26,21,.06)' }, ticks: { callback: v => '₹' + (v/1000).toFixed(0) + 'K' } } },
+          scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, beginAtZero: true, grid: { color: 'rgba(29,26,21,.06)' }, ticks: { callback: v => '₹' + (v / 1000).toFixed(0) + 'K' } } },
           plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 10 } } }
         }
       });
@@ -985,8 +987,8 @@
       const combinedLabels = [...histLabels, ...fcstLabels];
       const histPad = [...histData, ...fcstLabels.map(() => null)];
       const fcstPad = [...histLabels.slice(0, -1).map(() => null),
-                        histData.length ? histData[histData.length - 1] : null,
-                        ...fcstData];
+      histData.length ? histData[histData.length - 1] : null,
+      ...fcstData];
 
       const lastHist = histData[histData.length - 1] || data.current_price || 0;
       const lastFcst = fcstData[fcstData.length - 1] || 0;
@@ -1308,14 +1310,14 @@
 
         <h4 style="font-size:.85rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin:16px 0 12px;">Weekly schedule</h4>
         ${schedule.map(s => {
-          const high = (s.priority || '').toLowerCase() === 'high';
-          return `<div class="list-row" style="${high ? 'background:var(--accent-soft);' : ''}">
+        const high = (s.priority || '').toLowerCase() === 'high';
+        return `<div class="list-row" style="${high ? 'background:var(--accent-soft);' : ''}">
             <div class="list-row__bullet" style="background:${high ? 'var(--accent)' : 'var(--sky)'};">${s.week}</div>
             <div class="list-row__name">Week ${s.week} · ${s.growth_stage}
               <small>${s.date_range} · need ${Math.round(s.water_need_mm)}mm, rain ${Math.round(s.expected_rainfall_mm)}mm</small></div>
             <div class="list-row__val">${Math.round(s.irrigation_required_mm)} mm<small>${s.priority}</small></div>
           </div>`;
-        }).join('')}`;
+      }).join('')}`;
 
       makeChart($('[data-chart="irr-bar"]'), {
         type: 'bar',
@@ -1355,16 +1357,16 @@
       out.innerHTML = `
         <div class="kpi-grid">
           ${[['N', deficitN], ['P', deficitP], ['K', deficitK]].map(([k, gap]) => {
-            // Backend convention: gap > 0 means the soil is SHORT by `gap` kg/ac (deficit);
-            // gap <= 0 means the soil already meets or exceeds the crop requirement.
-            const deficit = gap > 0;
-            const mag = Math.round(Math.abs(gap));
-            return `<div class="kpi ${deficit ? 'kpi--warn' : 'kpi--good'}">
+        // Backend convention: gap > 0 means the soil is SHORT by `gap` kg/ac (deficit);
+        // gap <= 0 means the soil already meets or exceeds the crop requirement.
+        const deficit = gap > 0;
+        const mag = Math.round(Math.abs(gap));
+        return `<div class="kpi ${deficit ? 'kpi--warn' : 'kpi--good'}">
               <div class="kpi__lbl">${k} ${deficit ? 'deficit' : 'status'}</div>
               <div class="kpi__val">${TT(gap, (deficit ? '−' : '+') + mag)} <span style="font-size:.5em">kg/ac</span></div>
               <div class="kpi__sub">${deficit ? 'Needs ' + mag + ' kg/ac' : 'Sufficient'}</div>
             </div>`;
-          }).join('')}
+      }).join('')}
           <div class="kpi kpi--info"><div class="kpi__lbl">Total cost</div>
             <div class="kpi__val">${INR(r.total_fertilizer_cost_per_acre)}</div>
             <div class="kpi__sub">per acre</div></div>
@@ -1443,10 +1445,10 @@
         </div>
 
         ${alerts.map(a => {
-          const sev = (a.severity || a.risk_level || '').toLowerCase();
-          const cls = sev.includes('high') ? 'alert--red' : sev.includes('moderate') || sev.includes('medium') ? 'alert--gold' : 'alert--green';
-          const chipCls = cls === 'alert--red' ? 'chip--red' : cls === 'alert--gold' ? 'chip--gold' : 'chip--green';
-          return `<div class="alert ${cls}">
+        const sev = (a.severity || a.risk_level || '').toLowerCase();
+        const cls = sev.includes('high') ? 'alert--red' : sev.includes('moderate') || sev.includes('medium') ? 'alert--gold' : 'alert--green';
+        const chipCls = cls === 'alert--red' ? 'chip--red' : cls === 'alert--gold' ? 'chip--gold' : 'chip--green';
+        return `<div class="alert ${cls}">
             <svg class="alert__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01"/></svg>
             <div class="alert__body">
               <strong>${a.pest_disease} <span class="chip ${chipCls}">${a.risk_level || a.severity}</span></strong>
@@ -1454,7 +1456,7 @@
               <p style="font-size:.82rem;margin-top:4px;color:var(--ink-faint);"><strong>Trigger:</strong> ${a.trigger || ''} · <strong>Now:</strong> ${a.current_conditions || ''}</p>
               ${a.management || a.treatment ? `<p style="margin-top:6px;"><strong>Action:</strong> ${a.management || a.treatment}</p>` : ''}
             </div></div>`;
-        }).join('')}`;
+      }).join('')}`;
     } catch (err) { showError(out, err); }
   });
 
@@ -1612,8 +1614,8 @@
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;">
           ${list.map(t => {
-            const c = t.config || {};
-            return `<div style="background:var(--bg-soft);padding:18px;border-radius:var(--r-md);display:flex;flex-direction:column;gap:10px;">
+        const c = t.config || {};
+        return `<div style="background:var(--bg-soft);padding:18px;border-radius:var(--r-md);display:flex;flex-direction:column;gap:10px;">
               <div>
                 <div style="font-family:'Fraunces',serif;font-size:1.15rem;font-weight:600;line-height:1.2;">${t.name || t.template_id}</div>
                 <div style="font-size:.82rem;color:var(--ink-faint);margin-top:3px;">${t.template_id}</div>
@@ -1629,7 +1631,7 @@
               <div style="font-size:.78rem;color:var(--ink-faint);border-top:1px dashed rgba(29,26,21,.1);padding-top:8px;">${t.profile || ''}</div>
               <button class="btn btn-ghost" data-apply-template='${JSON.stringify(t).replace(/'/g, "&#39;")}' style="padding:8px 14px;font-size:.85rem;">Use in simulator →</button>
             </div>`;
-          }).join('')}
+      }).join('')}
         </div>`;
 
       // Wire up "Use in simulator" buttons → prefill Yield & Profit form
@@ -1886,7 +1888,7 @@
       const aud = r.audit_metrics || {};
       const recAud = aud.crop_recommendation || {};
       const yieldAud = aud.yield_prediction || {};
-      
+
       // Feature importances
       const recFeats = Object.entries(recAud.permutation_importances || {}).slice(0, 5);
       const yieldFeats = Object.entries(yieldAud.permutation_importances || {}).slice(0, 5);
@@ -1991,11 +1993,11 @@
     if (!src) return null;
     const ph = src.phh2o != null ? +src.phh2o / 10 : undefined; // cg→pH
     const n_raw = src.nitrogen;                                 // cg/kg
-    const soc   = src.soc;                                      // dg/kg
+    const soc = src.soc;                                      // dg/kg
     const fertility = soc != null ? Math.max(0.5, Math.min(1.5, soc / 200)) : 1;
     const out = {};
-    if (ph != null && !isNaN(ph))      out.ph = +ph.toFixed(2);
-    if (n_raw != null)                  out.n_kg_per_acre = +((n_raw / 100) * 4.047).toFixed(1);
+    if (ph != null && !isNaN(ph)) out.ph = +ph.toFixed(2);
+    if (n_raw != null) out.n_kg_per_acre = +((n_raw / 100) * 4.047).toFixed(1);
     out.p_kg_per_acre = +(25 * fertility).toFixed(1);
     out.k_kg_per_acre = +(120 * fertility).toFixed(1);
     return out;
@@ -2006,10 +2008,10 @@
     if (!host) return;
     if (!savedFarm) { host.hidden = true; host.innerHTML = ''; return; }
 
-    const acres  = (savedFarm.acres    || 0).toFixed(2);
-    const ha     = (savedFarm.hectares || 0).toFixed(2);
-    const lat    = (savedFarm.lat    || (savedFarm.centroid && savedFarm.centroid[1]) || 0).toFixed(5);
-    const lon    = (savedFarm.lon    || (savedFarm.centroid && savedFarm.centroid[0]) || 0).toFixed(5);
+    const acres = (savedFarm.acres || 0).toFixed(2);
+    const ha = (savedFarm.hectares || 0).toFixed(2);
+    const lat = (savedFarm.lat || (savedFarm.centroid && savedFarm.centroid[1]) || 0).toFixed(5);
+    const lon = (savedFarm.lon || (savedFarm.centroid && savedFarm.centroid[0]) || 0).toFixed(5);
 
     // Location chips — show state, district, village (whatever is available)
     const locParts = [savedFarm.state, savedFarm.district, savedFarm.village].filter(Boolean);
@@ -2055,7 +2057,7 @@
 
     document.getElementById('farmPickupClear').addEventListener('click', () => {
       if (typeof window.FarmState !== 'undefined') window.FarmState.clear();
-      else { try { localStorage.removeItem(FARM_KEY); localStorage.removeItem('agrisim_farm'); } catch {} }
+      else { try { localStorage.removeItem(FARM_KEY); localStorage.removeItem('agrisim_farm'); } catch { } }
       savedFarm = null;
       renderFarmPickup();
       // Revert region selects to first available option
@@ -2130,7 +2132,7 @@
       try {
         const w = await api(`/api/weather/${region}?season=${season}`);
         if (w && w.rainfall_mm != null) simForm.rainfall_mm.value = Math.round(+w.rainfall_mm);
-        if (w && w.avg_temp_c != null)  simForm.avg_temp_c.value  = (+w.avg_temp_c).toFixed(1);
+        if (w && w.avg_temp_c != null) simForm.avg_temp_c.value = (+w.avg_temp_c).toFixed(1);
         simForm.weather_override_on.checked = true;
       } catch (err) {
         alert('Live weather unavailable: ' + err.message);
@@ -2152,7 +2154,7 @@
     if (!isFinite(rain) && !isFinite(temp)) return null;
     const out = {};
     if (isFinite(rain)) out.rainfall_mm = rain;
-    if (isFinite(temp)) out.avg_temp_c  = temp;
+    if (isFinite(temp)) out.avg_temp_c = temp;
     return out;
   };
 
@@ -2380,87 +2382,50 @@
     }
   };
 
-  // --- Disease Scan Integration with window.MittiDiseaseScan ---
-  let isCameraActive = false;
-  const statusEl = $('#modelLoadStatus');
-  const toggleCameraBtn = $('#toggleCameraBtn');
-  const cameraViewport = $('#cameraViewport');
-  const cameraVideo = $('#diseaseCameraVideo');
-  const cameraShutterBtn = $('#cameraShutterBtn');
-  const cancelCameraBtn = $('#cancelCameraBtn');
-  const imgInput = $('#diseaseImageInput');
-  const imgPreview = $('#diseaseImagePreview');
-  const previewContainer = $('#imagePreviewContainer');
-  const uploadPrompt = $('#uploadPrompt');
-  const resizeCanvas = $('#diseaseResizeCanvas');
-  const runScanBtn = $('#runDiseaseScanBtn');
-  const resultsBox = $('#diseaseResultsBox');
-  const historyBox = $('#diseaseHistoryBox');
-  const historyList = $('#diseaseHistoryList');
-  const clearHistoryBtn = $('#clearDiseaseHistoryBtn');
+  let tfjsModel = null;
+  let tfjsLoaded = false;
+  let isModelLoading = false;
 
-  // Load diagnostic history on startup / tab activation
-  async function loadHistoryList() {
-    if (!window.MittiDiseaseScan) return;
-    try {
-      const list = await window.MittiDiseaseScan.getHistory();
-      if (list && list.length > 0) {
-        historyBox.style.display = 'block';
-        historyList.innerHTML = list.map(item => {
-          const formattedDate = new Date(item.timestamp).toLocaleString('en-IN', {
-            month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
-          });
-          const confPct = PCT(item.confidence * 100);
-          const sevClass = item.severity === 'early' ? 'good' : item.severity === 'moderate' ? 'warn' : 'red';
-          
-          return `
-            <div class="kpi" style="padding: 12px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid var(--brand); margin-bottom: 8px; flex-wrap: wrap; gap: 10px;">
-              <div>
-                <strong style="font-size: 0.92rem; color: var(--ink);">${item.diseaseName}</strong>
-                <div style="font-size: 0.76rem; color: var(--ink-faint); margin-top: 2px;">
-                  Crop: ${item.crop.toUpperCase()} · ${formattedDate}
-                </div>
-              </div>
-              <div style="display: flex; gap: 8px; align-items: center;">
-                <span style="font-size: 0.78rem; font-weight: 600; padding: 3px 8px; border-radius: 99px; background: rgba(0,0,0,0.04);">${confPct} match</span>
-                <span class="kpi__sub" style="font-size: 0.75rem; font-weight: 700; color: var(--ink); padding: 3px 8px; border-radius: 99px; background: var(--${sevClass === 'red' ? 'red' : sevClass === 'warn' ? 'warn' : 'good'}-soft);">${item.severity.toUpperCase()}</span>
-              </div>
-            </div>
-          `;
-        }).join('');
-      } else {
-        historyBox.style.display = 'none';
+  // Function to dynamically load TFJS CDN
+  function loadTFJS() {
+    if (tfjsLoaded || isModelLoading) return;
+    isModelLoading = true;
+    const statusEl = $('#modelLoadStatus');
+    statusEl.innerHTML = `<span class="spinner" style="border: 2px solid rgba(0,0,0,0.1); border-left-color: var(--brand); border-radius: 50%; width: 14px; height: 14px; animation: spin 1s linear infinite; display: inline-block;"></span> Loading TensorFlow.js client library…`;
+
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js';
+    script.onload = async () => {
+      tfjsLoaded = true;
+      try {
+        statusEl.innerHTML = `<span class="spinner" style="border: 2px solid rgba(0,0,0,0.1); border-left-color: var(--brand); border-radius: 50%; width: 14px; height: 14px; animation: spin 1s linear infinite; display: inline-block;"></span> Loading exported disease model offline…`;
+        tfjsModel = await tf.loadLayersModel('/models/disease/model.json');
+        statusEl.innerHTML = `✓ TF.js Disease Model loaded and active offline`;
+        statusEl.style.color = 'var(--brand)';
+        $('#runDiseaseScanBtn').disabled = false;
+      } catch (err) {
+        console.error("TF.js Model Load failed:", err);
+        statusEl.innerHTML = `⚠ Model unavailable. Will run via fallback cloud API`;
+        statusEl.style.color = '#c88a3a';
+        $('#runDiseaseScanBtn').disabled = false;
+      } finally {
+        isModelLoading = false;
       }
-    } catch (err) {
-      console.warn('Failed to load scan history:', err);
-    }
-  }
-
-  // Lazy load TFJS & the quantized MobileNetV2
-  async function initDiseaseModel() {
-    if (!window.MittiDiseaseScan) return;
-    try {
-      await window.MittiDiseaseScan.loadModel(statusText => {
-        statusEl.innerHTML = `<span class="spinner" style="border: 2px solid rgba(0,0,0,0.1); border-left-color: var(--brand); border-radius: 50%; width: 14px; height: 14px; animation: spin 1s linear infinite; display: inline-block;"></span> ${statusText}`;
-      });
-      statusEl.innerHTML = `✓ TF.js Disease Model loaded and active offline`;
-      statusEl.style.color = 'var(--brand)';
-      runScanBtn.disabled = false;
-    } catch (err) {
-      console.error("Offline TF.js Model load failed:", err);
-      statusEl.innerHTML = `⚠ Model offline. Running in Cloud Fallback API mode`;
+    };
+    script.onerror = () => {
+      isModelLoading = false;
+      statusEl.innerHTML = `⚠ Library offline. Falling back to backend cloud diagnostics`;
       statusEl.style.color = '#c88a3a';
-      runScanBtn.disabled = false;
-    }
+      $('#runDiseaseScanBtn').disabled = false;
+    };
+    document.head.appendChild(script);
   }
 
   // Bind to disease scan tab click
   const diseaseBtn = $('.sidebar__btn[data-tool="disease"]');
   if (diseaseBtn) {
     diseaseBtn.addEventListener('click', () => {
-      initDiseaseModel();
-      loadHistoryList();
-      
+      loadTFJS();
       // Sync farm contexts
       if (savedFarm && savedFarm.region_id) {
         $('#diseaseRegionSelect').value = savedFarm.region_id;
@@ -2472,87 +2437,28 @@
     });
   }
 
-  // Webcam activation / toggle
-  if (toggleCameraBtn) {
-    toggleCameraBtn.addEventListener('click', async (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      if (!window.MittiDiseaseScan) return;
+  // Handle image upload and preview
+  const imgInput = $('#diseaseImageInput');
+  const imgPreview = $('#diseaseImagePreview');
+  const previewContainer = $('#imagePreviewContainer');
+  const uploadPrompt = $('#uploadPrompt');
+  const resizeCanvas = $('#diseaseResizeCanvas');
+  const resizeCtx = resizeCanvas.getContext('2d');
+  const runScanBtn = $('#runDiseaseScanBtn');
 
-      try {
-        statusEl.innerHTML = "Initializing camera feed...";
-        const success = await window.MittiDiseaseScan.startCamera(cameraVideo);
-        if (success) {
-          isCameraActive = true;
-          uploadPrompt.style.display = 'none';
-          previewContainer.style.display = 'none';
-          cameraViewport.style.display = 'block';
-          statusEl.innerHTML = "Camera viewfinder active";
-        }
-      } catch (err) {
-        console.error(err);
-        statusEl.innerHTML = `⚠ ${err.message || 'Camera access failed.'}`;
-        statusEl.style.color = '#c88a3a';
-      }
-    });
-  }
-
-  // Stop camera feed
-  if (cancelCameraBtn) {
-    cancelCameraBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      if (window.MittiDiseaseScan) {
-        window.MittiDiseaseScan.stopCamera();
-      }
-      isCameraActive = false;
-      cameraViewport.style.display = 'none';
-      uploadPrompt.style.display = 'block';
-      statusEl.innerHTML = "Webcam closed";
-    });
-  }
-
-  // Shutter action (Snapshot)
-  if (cameraShutterBtn) {
-    cameraShutterBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      if (!window.MittiDiseaseScan) return;
-
-      const photoDataUrl = window.MittiDiseaseScan.capturePhoto(cameraVideo, resizeCanvas);
-      window.MittiDiseaseScan.stopCamera();
-      isCameraActive = false;
-
-      imgPreview.src = photoDataUrl;
-      cameraViewport.style.display = 'none';
-      previewContainer.style.display = 'block';
-      runScanBtn.disabled = false;
-      statusEl.innerHTML = "Captured snapshot successfully";
-    });
-  }
-
-  // File Upload listener
   if (imgInput) {
     imgInput.addEventListener('change', e => {
       const file = e.target.files[0];
       if (!file) return;
-
-      // Make sure active camera streams are shut down if user switches to upload
-      if (window.MittiDiseaseScan) {
-        window.MittiDiseaseScan.stopCamera();
-      }
-      isCameraActive = false;
-      cameraViewport.style.display = 'none';
 
       const reader = new FileReader();
       reader.onload = evt => {
         imgPreview.src = evt.target.result;
         uploadPrompt.style.display = 'none';
         previewContainer.style.display = 'block';
-        
+
         imgPreview.onload = () => {
           // Draw to canvas and scale to 224x224
-          const resizeCtx = resizeCanvas.getContext('2d');
           resizeCtx.drawImage(imgPreview, 0, 0, 224, 224);
           runScanBtn.disabled = false;
         };
@@ -2561,7 +2467,6 @@
     });
   }
 
-  // Choose another photo / reset
   const reuploadBtn = $('#reuploadBtn');
   if (reuploadBtn) {
     reuploadBtn.addEventListener('click', e => {
@@ -2572,25 +2477,52 @@
       previewContainer.style.display = 'none';
       uploadPrompt.style.display = 'block';
       runScanBtn.disabled = true;
-      resultsBox.style.display = 'none';
+      $('#diseaseResultsBox').style.display = 'none';
     });
   }
 
-  // Clear Diagnostic History Action
-  if (clearHistoryBtn) {
-    clearHistoryBtn.addEventListener('click', async (e) => {
-      e.preventDefault();
-      if (!window.MittiDiseaseScan) return;
-      if (confirm("Are you sure you want to clear your local disease scan history?")) {
-        await window.MittiDiseaseScan.clearHistory();
-        loadHistoryList();
-      }
+  // Queue logging helper
+  function queueOfflineLog(crop, disease, confidence, severity, region) {
+    let logs = [];
+    try {
+      logs = JSON.parse(localStorage.getItem('mittimantra_disease_logs') || '[]');
+    } catch (_) { }
+    logs.push({
+      crop_id: crop,
+      disease: disease,
+      confidence: confidence,
+      severity: severity,
+      region_id: region,
+      timestamp: new Date().toISOString(),
+      offline: !navigator.onLine
     });
+    try {
+      localStorage.setItem('mittimantra_disease_logs', JSON.stringify(logs));
+    } catch (_) { }
+
+    if (navigator.onLine) {
+      syncOfflineLogs();
+    }
   }
 
-  // Execute inference on click
+  async function syncOfflineLogs() {
+    if (!navigator.onLine) return;
+    let logs = [];
+    try {
+      logs = JSON.parse(localStorage.getItem('mittimantra_disease_logs') || '[]');
+    } catch (_) { return; }
+    if (!logs.length) return;
+
+    // We process logs through our Site-aware Chatbot /api/chat or console reporting
+    console.log("Synchronizing crop disease diagnostic logs to Mitti Mantra backend:", logs);
+    localStorage.setItem('mittimantra_disease_logs', '[]');
+  }
+  window.addEventListener('online', syncOfflineLogs);
+
+  // Run Disease Scan inference
   if (runScanBtn) {
     runScanBtn.addEventListener('click', async () => {
+      const resultsBox = $('#diseaseResultsBox');
       showLoading(resultsBox, 'Analyzing leaf pixels and executing neural network...');
       resultsBox.style.display = 'block';
 
@@ -2598,25 +2530,42 @@
       const regionId = $('#diseaseRegionSelect').value;
 
       try {
-        if (!window.MittiDiseaseScan) {
-          throw new Error("Disease scan library is not available.");
+        // 1. Compute Severity Bucket client-side via Leaf Pixel Segmentation & Color Thresholding
+        const imgData = resizeCtx.getImageData(0, 0, 224, 224);
+        const pixelBytes = imgData.data;
+        let greenCount = 0;
+        let lesionCount = 0;
+
+        for (let i = 0; i < pixelBytes.length; i += 4) {
+          const r = pixelBytes[i];
+          const g = pixelBytes[i + 1];
+          const b = pixelBytes[i + 2];
+
+          const brightness = (r + g + b) / 3.0;
+          if (brightness < 20 || brightness > 245) continue; // ignore background / soil shadows
+
+          const isGreen = (g > r) && (g > b) && (g > 30);
+          const isLesion = ((r > g) || ((r > 100) && (g > 100) && (b < 80))) && !isGreen && (r > 30 || g > 30);
+
+          if (isGreen) greenCount++;
+          else if (isLesion) lesionCount++;
         }
 
-        // 1. Analyze leaf severity locally via color thresholding
-        const sev = window.MittiDiseaseScan.analyzeSeverity(resizeCanvas);
+        const totalLeaf = greenCount + lesionCount;
+        const lesionPct = totalLeaf > 0 ? (lesionCount / totalLeaf) * 100.0 : 5.0;
+        const severity = lesionPct < 5.0 ? 'early' : lesionPct <= 20.0 ? 'moderate' : 'severe';
 
-        // 2. Perform TF.js model prediction
+        // 2. Decide Primary Inference Source (In-browser TF.js or API Fallback)
         let diseaseName = "";
         let confidence = 0.0;
         let matchedCrop = cropCtx || "tomato";
         let treatments = [];
         let subsidySchemes = [];
-        let finalClass = "";
 
-        // Verify if TF.js loaded successfully. If not, fallback to Cloud API
-        const useFallback = !window.tf || !window.MittiDiseaseScan;
+        const useFallback = !tfjsLoaded || !tfjsModel || !window.tf;
 
         if (useFallback) {
+          // Cloud API Fallback
           const b64Data = resizeCanvas.toDataURL('image/jpeg');
           const payload = {
             image_b64: b64Data,
@@ -2627,7 +2576,7 @@
             method: 'POST',
             body: JSON.stringify(payload)
           });
-          
+
           diseaseName = r.disease;
           confidence = r.confidence;
           matchedCrop = r.crop_matched;
@@ -2635,15 +2584,40 @@
           subsidySchemes = r.subsidy_eligible_schemes;
         } else {
           // Client-Side Offline Inference
-          const result = await window.MittiDiseaseScan.runInference(resizeCanvas, cropCtx);
-          finalClass = result.classId;
-          confidence = result.confidence;
+          const predictions = tf.tidy(() => {
+            const tensor = tf.browser.fromPixels(resizeCanvas)
+              .toFloat()
+              .div(tf.scalar(255.0))
+              .expandDims(0);
+            return tfjsModel.predict(tensor);
+          });
 
-          // Lookup local metadata offline
-          const meta = window.MittiDiseaseScan.DISEASE_METADATA[finalClass] || window.MittiDiseaseScan.DISEASE_METADATA["tomato_healthy"];
+          const probs = await predictions.data();
+          predictions.dispose();
+
+          // Apply crop filtering to remove false positives and narrow candidates
+          let bestIdx = 0;
+          let bestProb = -1.0;
+          for (let i = 0; i < probs.length; i++) {
+            const cls = DISEASE_CLASSES[i];
+            let score = probs[i];
+            if (cropCtx) {
+              score = cls.startsWith(cropCtx) ? score * 2.0 : score * 0.05; // heavily filter to selected crop context
+            }
+            if (score > bestProb) {
+              bestProb = score;
+              bestIdx = i;
+            }
+          }
+
+          const finalClass = DISEASE_CLASSES[bestIdx];
+          confidence = Math.min(0.99, Math.max(0.40, probs[bestIdx]));
+
+          // Look up metadata offline
+          const meta = DISEASE_METADATA[finalClass] || DISEASE_METADATA["tomato_healthy"];
           diseaseName = meta.name;
           matchedCrop = finalClass.split('_')[0];
-          
+
           meta.organic.forEach(o => treatments.push("Organic: " + o));
           meta.chemical.forEach(c => treatments.push("Chemical Escalation: " + c));
 
@@ -2657,9 +2631,9 @@
                   subsidySchemes.push(`${s.scheme_name} (${s.description}) — URL: ${s.url}`);
                 }
               });
-            } catch (_) {}
+            } catch (_) { }
           }
-          
+
           // Offline schemes fallback
           if (!subsidySchemes.length) {
             meta.schemes.forEach(sid => {
@@ -2670,23 +2644,12 @@
           }
         }
 
-        // 3. Save Scan Result to IndexedDB Local History
-        await window.MittiDiseaseScan.saveScan({
-          classId: finalClass,
-          diseaseName: diseaseName,
-          confidence: confidence,
-          severity: sev.severity,
-          lesionPct: sev.lesionPct,
-          crop: matchedCrop,
-          region_id: regionId
-        });
+        // 3. Queue Analytics Log
+        queueOfflineLog(matchedCrop, diseaseName, confidence, severity, regionId);
 
-        // Refresh History Timeline
-        loadHistoryList();
-
-        // 4. Render Results View
-        const sevClass = sev.severity === 'early' ? 'good' : sev.severity === 'moderate' ? 'warn' : 'red';
-        const sevLabel = sev.severity.charAt(0).toUpperCase() + sev.severity.slice(1);
+        // 4. Render Results UI
+        const sevClass = severity === 'early' ? 'good' : severity === 'moderate' ? 'warn' : 'red';
+        const sevLabel = severity.charAt(0).toUpperCase() + severity.slice(1);
         const formattedConf = PCT(confidence * 100);
 
         const organicTreatments = treatments.filter(t => t.startsWith('Organic:'));
@@ -2706,7 +2669,7 @@
             </div>
             <div class="kpi kpi--${sevClass === 'red' ? 'red' : sevClass === 'warn' ? 'warn' : 'good'}">
               <div class="kpi__lbl">Severity (Lesion Area)</div>
-              <div class="kpi__val">${sevLabel} (${FIX(sev.lesionPct, 1)}%)</div>
+              <div class="kpi__val">${sevLabel} (${FIX(lesionPct, 1)}%)</div>
               <div class="kpi__sub">Computed client-side</div>
             </div>
           </div>
@@ -2737,7 +2700,7 @@
           </div>` : ''}
 
           <!-- Gyan Seva Redirection Trigger -->
-          ${(confidence < 0.70 || sev.severity === 'severe') ? `
+          ${(confidence < 0.70 || severity === 'severe') ? `
           <div class="alert alert--red" style="margin-top: 20px;">
             <svg class="alert__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01"/></svg>
             <div class="alert__body">

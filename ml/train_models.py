@@ -38,8 +38,23 @@ from sklearn.preprocessing import LabelEncoder
 logger = logging.getLogger(__name__)
 
 from utils.calculations import CropParameter, calculate_climate_factor, calculate_soil_factor
-# FIX: Centralized CropParameter construction using data_loaders
-from utils.data_loaders import make_crop_param
+
+def make_crop_param(r: dict) -> CropParameter:
+    return CropParameter(
+        crop_id=r["crop_id"],
+        crop_name=r["crop_name"],
+        season=r["season"],
+        base_yield_kg_per_acre=float(r["base_yield_kg_per_acre"]),
+        water_requirement_mm=float(r["water_requirement_mm"]),
+        temp_min_c=float(r["temp_min_c"]),
+        temp_max_c=float(r["temp_max_c"]),
+        avg_input_cost_inr_per_acre=float(r["avg_input_cost_inr_per_acre"]),
+        mandi_price_min_inr_per_kg=float(r["mandi_price_min_inr_per_kg"]),
+        mandi_price_max_inr_per_kg=float(r["mandi_price_max_inr_per_kg"]),
+        npk_n_kg_per_acre=float(r["npk_n_kg_per_acre"]),
+        npk_p_kg_per_acre=float(r["npk_p_kg_per_acre"]),
+        npk_k_kg_per_acre=float(r["npk_k_kg_per_acre"]),
+    )
 
 DATASET_DIR = Path(__file__).resolve().parents[1] / "dataset"
 MODEL_DIR = Path(__file__).resolve().parent / "models"

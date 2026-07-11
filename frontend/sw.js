@@ -6,7 +6,7 @@
      • Network-only for API calls to the backend.
 */
 
-const VERSION = 'mittimantra-v23';
+const VERSION = 'mittimantra-v22';
 const CORE = [
   './',
   './index.html',
@@ -23,7 +23,6 @@ const CORE = [
   './state-data.js',
   './india-globe.js',
   './demo-recommender.js',
-  './disease-scan.js',
   './dashboard.js',
   './offline-simulator.js',
   './farm-boundary.js',
