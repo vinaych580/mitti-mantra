@@ -46,14 +46,12 @@ tests/
 docs/
 scripts/
 
-# ML bulk and models
+# ML bulk — training scripts & large artefacts not needed at runtime
 ml/training/
-ml/models/disease/
 ml/evaluate_models.py
 ml/train_models.py
 ml/audit_models.py
 *.pt
-ml/models/*.json
 ml/models/*.bin
 
 # Dataset bulk (only keep the root CSVs)

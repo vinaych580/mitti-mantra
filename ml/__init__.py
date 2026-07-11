@@ -9,7 +9,16 @@ from .predict import (
     _ml_predict_price,
     _ml_recommend_crop,
 )
-from .train_models import train_all
+
+# Lazy import: train_models.py is excluded by .vercelignore to keep the
+# deployment bundle small.  Importing it eagerly would crash the app on
+# Vercel with ModuleNotFoundError.  The train endpoint already does its
+# own lazy import, so this only matters if someone does `from ml import train_all`.
+def __getattr__(name):
+    if name == "train_all":
+        from .train_models import train_all
+        return train_all
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 __all__ = [
     "predict_yield_kg_per_acre",
