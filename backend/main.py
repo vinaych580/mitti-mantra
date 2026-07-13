@@ -170,6 +170,13 @@ class CropMixRequest(BaseModel):
     soil: Dict[str, Any]
     weather: Dict[str, Any]
 
+    @field_validator("total_area_acres", "total_budget")
+    @classmethod
+    def must_be_positive_mix(cls, v: float) -> float:
+        if v <= 0:
+            raise ValueError("Value must be greater than 0")
+        return v
+
 class LoanRequest(BaseModel):
     total_cost: float
     expected_profit: float
@@ -389,7 +396,7 @@ async def batch_simulate(req: BatchSimRequest):
 async def optimal_crop_mix(req: CropMixRequest):
     """Find optimal multi-crop allocation for given land and budget."""
     try:
-        all_crops = recommend_crops(req.region_id, req.season, req.total_budget / max(req.total_area_acres, 1), req.total_area_acres, top_k=50)
+        all_crops = recommend_crops(req.region_id, req.season, req.total_budget / req.total_area_acres, req.total_area_acres, top_k=50)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -416,7 +423,7 @@ async def optimal_crop_mix(req: CropMixRequest):
             "crop_name": crop["crop_name"],
             "allocated_acres": area,
             "allocated_budget": budget_for_crop,
-            "expected_profit": round(crop["expected_profit"] * (area / max(req.total_area_acres, 1)), 2),
+            "expected_profit": round(crop["expected_profit"] * (area / req.total_area_acres), 2),
             "roi_percent": crop["roi_percent"],
             "risk_score": crop["risk_score"],
             "smart_score": crop["smart_score"],

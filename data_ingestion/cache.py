@@ -82,7 +82,7 @@ def cached(
 
         @wraps(fn)
         def inner(*args: Any, **kwargs: Any) -> Any:
-            tag = f"{bucket}:{_hash_args(args, kwargs)}"
+            tag = f"{bucket}__{_hash_args(args, kwargs)}"
             now = time.time()
 
             # Memory first
@@ -109,7 +109,22 @@ def cached(
                 _write_disk(os.path.join(_cache_dir(), tag + ".json"), value)
             return value
 
-        inner.cache_clear = lambda: _memory.pop(bucket, None)  # type: ignore[attr-defined]
+        def clear_bucket() -> None:
+            for k in list(_memory.keys()):
+                if k == bucket or k.startswith(f"{bucket}__"):
+                    _memory.pop(k, None)
+            if serializable:
+                d = _cache_dir()
+                try:
+                    for name in os.listdir(d):
+                        if name.startswith(bucket + "__") and name.endswith(".json"):
+                            try:
+                                os.remove(os.path.join(d, name))
+                            except OSError:
+                                pass
+                except OSError:
+                    pass
+        inner.cache_clear = clear_bucket  # type: ignore[attr-defined]
         return inner
 
     return wrap

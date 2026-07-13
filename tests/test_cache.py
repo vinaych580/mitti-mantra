@@ -51,3 +51,24 @@ def test_cache_ttl_expiry():
     time.sleep(1.2)
     f(1)
     assert calls["n"] == 2
+
+
+def test_cache_clear_clears_keys():
+    from data_ingestion.cache import cached, _memory, _cache_dir
+    import os
+
+    calls = {"n": 0}
+
+    @cached(ttl_seconds=60, key="unit_test_clear")
+    def g(x):
+        calls["n"] += 1
+        return x
+
+    assert g(1) == 1
+    assert g(1) == 1
+    assert calls["n"] == 1
+
+    g.cache_clear()
+
+    assert g(1) == 1
+    assert calls["n"] == 2
