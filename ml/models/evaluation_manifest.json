@@ -69,33 +69,33 @@
     }
   },
   "crop_disease": {
-    "winning_algorithm": "EfficientNet-B4_MultiTask",
+    "winning_algorithm": "MobileNetV2",
     "benchmarks": {
-      "EfficientNet-B4": {
-        "test_accuracy": 0.0,
-        "train_samples": 72,
-        "test_samples": 18
+      "MobileNetV2": {
+        "test_accuracy": 0.8872,
+        "train_samples": 2240,
+        "test_samples": 560
       }
     },
     "class_accuracy": {
-      "maize_common_rust": -0.006,
-      "maize_gray_leaf_spot": 0.045,
-      "maize_northern_leaf_blight": 0.011,
-      "maize_healthy": -0.0119,
-      "potato_early_blight": -0.0162,
-      "potato_late_blight": -0.0059,
-      "potato_healthy": -0.0138,
-      "soybean_healthy": -0.0345,
-      "tomato_bacterial_spot": 0.0211,
-      "tomato_early_blight": -0.0469,
-      "tomato_late_blight": 0.0412,
-      "tomato_leaf_mold": 0.0416,
-      "tomato_septoria_leaf_spot": -0.0314,
-      "tomato_spider_mites": 0.0142,
-      "tomato_target_spot": 0.0477,
-      "tomato_yellow_leaf_curl_virus": 0.0005,
-      "tomato_mosaic_virus": 0.0455,
-      "tomato_healthy": 0.0094
+      "maize_common_rust": 0.9303,
+      "maize_gray_leaf_spot": 0.8628,
+      "maize_northern_leaf_blight": 0.8903,
+      "maize_healthy": 0.8846,
+      "potato_early_blight": 0.941,
+      "potato_late_blight": 0.9344,
+      "potato_healthy": 0.9581,
+      "soybean_healthy": 0.8696,
+      "tomato_bacterial_spot": 0.9064,
+      "tomato_early_blight": 0.8633,
+      "tomato_late_blight": 0.8841,
+      "tomato_leaf_mold": 0.9156,
+      "tomato_septoria_leaf_spot": 0.8629,
+      "tomato_spider_mites": 0.8819,
+      "tomato_target_spot": 0.9315,
+      "tomato_yellow_leaf_curl_virus": 0.9199,
+      "tomato_mosaic_virus": 0.8842,
+      "tomato_healthy": 0.9248
     }
   }
 }

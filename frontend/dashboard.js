@@ -2562,7 +2562,9 @@
         let treatments = [];
         let subsidySchemes = [];
 
-        const useFallback = !tfjsLoaded || !tfjsModel || !window.tf;
+        // Always use backend API: the TF.js model.json is a placeholder with
+        // random weights and cannot produce meaningful predictions.
+        const useFallback = true;
 
         if (useFallback) {
           // Cloud API Fallback

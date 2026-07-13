@@ -9,7 +9,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1,
     name: "Mr. Thyagarajan Varma",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Thyagarajan%20Varma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 7,
     specialization: "Soil testing",
@@ -26,7 +26,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2,
     name: "Mr. Durai Viswanathan",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Durai%20Viswanathan&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 19,
     specialization: "Pest attack",
@@ -43,7 +43,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 3,
     name: "Mr. Venkatesan Reddy",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Venkatesan%20Reddy&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 12,
     specialization: "Fertilizer recommendation",
@@ -60,7 +60,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 4,
     name: "Dr. Kalyan Pattnaik",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalyan%20Pattnaik&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 14,
     specialization: "Leaf diseases",
@@ -77,7 +77,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 5,
     name: "Mr. Arjun Menon",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arjun%20Menon&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 7,
     specialization: "Irrigation planning",
@@ -94,7 +94,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 6,
     name: "Mr. Saranya Ranganathan",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Saranya%20Ranganathan&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 19,
     specialization: "Government schemes",
@@ -111,7 +111,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 7,
     name: "Mr. Bhavani Raghunathan",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhavani%20Raghunathan&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 20,
     specialization: "Organic farming",
@@ -128,7 +128,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 8,
     name: "Dr. Karthik Swain",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Karthik%20Swain&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 14,
     specialization: "Weather-related issues",
@@ -145,7 +145,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 9,
     name: "Dr. Priya Menon",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Menon&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 7,
     specialization: "Post-harvest storage",
@@ -162,7 +162,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 10,
     name: "Dr. Saranya Naidu",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Saranya%20Naidu&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 4,
     specialization: "Crop selection",
@@ -179,7 +179,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 11,
     name: "Dr. Venkat Krishnamurthy",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Venkat%20Krishnamurthy&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 15,
     specialization: "Machinery guidance",
@@ -196,7 +196,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 12,
     name: "Dr. Sudha Shetty",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudha%20Shetty&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 9,
     specialization: "Low crop yield",
@@ -213,7 +213,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 13,
     name: "Dr. Anand Iyengar",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anand%20Iyengar&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 13,
     specialization: "Market price guidance",
@@ -230,7 +230,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 14,
     name: "Dr. Meenakshi Hegde",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meenakshi%20Hegde&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 7,
     specialization: "Soil testing",
@@ -247,7 +247,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 15,
     name: "Mr. Balaji Rao",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Balaji%20Rao&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 18,
     specialization: "Pest attack",
@@ -264,7 +264,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 16,
     name: "Mr. Padmanabhan Parida",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Padmanabhan%20Parida&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 20,
     specialization: "Soil does not retain water",
@@ -281,7 +281,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 17,
     name: "Mr. Arulmozhi Iyer",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arulmozhi%20Iyer&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 13,
     specialization: "Leaf diseases",
@@ -298,7 +298,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 18,
     name: "Dr. Srinivas Gowda",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Srinivas%20Gowda&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 7,
     specialization: "Irrigation planning",
@@ -315,7 +315,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 19,
     name: "Mr. Venkat Krishnamurthy",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Venkat%20Krishnamurthy&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 16,
     specialization: "Fertilizer recommendation",
@@ -332,7 +332,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 20,
     name: "Mr. Sudha Shetty",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudha%20Shetty&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 10,
     specialization: "Organic farming",
@@ -349,7 +349,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 21,
     name: "Mr. Ramesh Sharma",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 4,
     specialization: "Weather-related issues",
@@ -366,7 +366,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 22,
     name: "Dr. Saranya Ranganathan",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Saranya%20Ranganathan&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 21,
     specialization: "Government schemes",
@@ -383,7 +383,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 23,
     name: "Dr. Balu Mohapatra",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Balu%20Mohapatra&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 14,
     specialization: "Crop selection",
@@ -400,7 +400,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 24,
     name: "Dr. Sudha Iyer",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudha%20Iyer&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 8,
     specialization: "Machinery guidance",
@@ -417,7 +417,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 25,
     name: "Ms. Priya Nair",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Nair&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 10,
     specialization: "Post-harvest storage",
@@ -434,7 +434,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 26,
     name: "Ms. Suresh Natarajan",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Natarajan&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 21,
     specialization: "Market price guidance",
@@ -451,7 +451,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 27,
     name: "Dr. Ganesan Mohapatra",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ganesan%20Mohapatra&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 15,
     specialization: "Soil testing",
@@ -468,7 +468,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 28,
     name: "Dr. Durai Bhat",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Durai%20Bhat&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 16,
     specialization: "Low crop yield",
@@ -485,7 +485,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 29,
     name: "Mr. Venkatesan Pillai",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Venkatesan%20Pillai&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 10,
     specialization: "Soil does not retain water",
@@ -502,7 +502,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 30,
     name: "Mr. Senthil Srinivasan",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Senthil%20Srinivasan&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 21,
     specialization: "Leaf diseases",
@@ -519,7 +519,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 31,
     name: "Mr. Arjun Venkataraman",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arjun%20Venkataraman&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 5,
     specialization: "Pest attack",
@@ -536,7 +536,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 32,
     name: "Dr. Saranya Bhat",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Saranya%20Bhat&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 16,
     specialization: "Fertilizer recommendation",
@@ -553,7 +553,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 33,
     name: "Dr. Venkat Pillai",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Venkat%20Pillai&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 10,
     specialization: "Organic farming",
@@ -570,7 +570,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 34,
     name: "Mr. Karthik Naidu",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Karthik%20Naidu&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 11,
     specialization: "Irrigation planning",
@@ -587,7 +587,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 35,
     name: "Mr. Priya Subramaniam",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Subramaniam&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 5,
     specialization: "Government schemes",
@@ -604,7 +604,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 36,
     name: "Mr. Balaji Kamath",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Balaji%20Kamath&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 16,
     specialization: "Crop selection",
@@ -621,7 +621,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 37,
     name: "Mr. Kumaran Krishnamurthy",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kumaran%20Krishnamurthy&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 21,
     specialization: "Weather-related issues",
@@ -638,7 +638,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 38,
     name: "Ms. Padmanabhan Shetty",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Padmanabhan%20Shetty&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 14,
     specialization: "Post-harvest storage",
@@ -655,7 +655,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 39,
     name: "Ms. Arulmozhi Rao",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arulmozhi%20Rao&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 8,
     specialization: "Market price guidance",
@@ -672,7 +672,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 40,
     name: "Dr. Selvam Parida",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Selvam%20Parida&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 9,
     specialization: "Machinery guidance",
@@ -689,7 +689,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 41,
     name: "Er. Mohan Iyengar",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mohan%20Iyengar&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 21,
     specialization: "Low crop yield",
@@ -706,7 +706,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 42,
     name: "Mr. Siva Hegde",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Siva%20Hegde&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 15,
     specialization: "Soil does not retain water",
@@ -723,7 +723,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 43,
     name: "Mr. Priya Subramaniam",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Subramaniam&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 6,
     specialization: "Soil testing",
@@ -740,7 +740,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 44,
     name: "Dr. Balaji Kamath",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Balaji%20Kamath&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 18,
     specialization: "Pest attack",
@@ -757,7 +757,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 45,
     name: "Dr. Ganesan Sharma",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ganesan%20Sharma&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 11,
     specialization: "Fertilizer recommendation",
@@ -774,7 +774,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 46,
     name: "Mr. Durai Reddy",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Durai%20Reddy&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 13,
     specialization: "Leaf diseases",
@@ -791,7 +791,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 47,
     name: "Mr. Srinivas Krishnamurthy",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Srinivas%20Krishnamurthy&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 6,
     specialization: "Irrigation planning",
@@ -808,7 +808,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 48,
     name: "Mr. Senthil Shetty",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Senthil%20Shetty&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 18,
     specialization: "Government schemes",
@@ -825,7 +825,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 49,
     name: "Dr. Arjun Viswanathan",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arjun%20Viswanathan&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 19,
     specialization: "Organic farming",
@@ -842,7 +842,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 50,
     name: "Dr. Padma Parida",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Padma%20Parida&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 13,
     specialization: "Weather-related issues",
@@ -859,7 +859,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 51,
     name: "Er. Venkat Iyengar",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Venkat%20Iyengar&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 6,
     specialization: "Post-harvest storage",
@@ -876,7 +876,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 52,
     name: "Dr. Thenmozhi Mohapatra",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Thenmozhi%20Mohapatra&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 11,
     specialization: "Crop selection",
@@ -893,7 +893,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 53,
     name: "Er. Anand Iyer",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anand%20Iyer&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 4,
     specialization: "Machinery guidance",
@@ -910,7 +910,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 54,
     name: "Ms. Meenakshi Gowda",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meenakshi%20Gowda&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 16,
     specialization: "Low crop yield",
@@ -927,7 +927,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 55,
     name: "Ms. Kumaran Natarajan",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kumaran%20Natarajan&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 17,
     specialization: "Market price guidance",
@@ -944,7 +944,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 56,
     name: "Dr. Padmanabhan Pattnaik",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Padmanabhan%20Pattnaik&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 11,
     specialization: "Soil testing",
@@ -961,7 +961,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 57,
     name: "Dr. Arulmozhi Varma",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arulmozhi%20Varma&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 4,
     specialization: "Pest attack",
@@ -978,7 +978,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 58,
     name: "Er. Selvam Pillai",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Selvam%20Pillai&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 6,
     specialization: "Soil does not retain water",
@@ -995,7 +995,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 59,
     name: "Mr. Mohan Srinivasan",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mohan%20Srinivasan&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 17,
     specialization: "Leaf diseases",
@@ -1012,7 +1012,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 60,
     name: "Mr. Siva Pattnaik",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Siva%20Pattnaik&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 11,
     specialization: "Irrigation planning",
@@ -1029,7 +1029,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 61,
     name: "Mr. Praveen Hegde",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Praveen%20Hegde&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 8,
     specialization: "Fertilizer recommendation",
@@ -1046,7 +1046,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 62,
     name: "Mr. Kalyan Naidu",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalyan%20Naidu&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 19,
     specialization: "Organic farming",
@@ -1063,7 +1063,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 63,
     name: "Mr. Arjun Subramaniam",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arjun%20Subramaniam&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 13,
     specialization: "Weather-related issues",
@@ -1080,7 +1080,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 64,
     name: "Dr. Priya Sharma",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Sharma&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 4,
     specialization: "Government schemes",
@@ -1097,7 +1097,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 65,
     name: "Er. Suresh Balasubramaniam",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Balasubramaniam&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 16,
     specialization: "Crop selection",
@@ -1114,7 +1114,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 66,
     name: "Er. Kannan Naik",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kannan%20Naik&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 9,
     specialization: "Machinery guidance",
@@ -1131,7 +1131,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 67,
     name: "Ms. Durai Hegde",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Durai%20Hegde&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 11,
     specialization: "Post-harvest storage",
@@ -1148,7 +1148,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 68,
     name: "Dr. Venkatesan Rao",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Venkatesan%20Rao&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 4,
     specialization: "Market price guidance",
@@ -1165,7 +1165,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 69,
     name: "Dr. Murugan Venkataraman",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Murugan%20Venkataraman&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 16,
     specialization: "Soil testing",
@@ -1182,7 +1182,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 70,
     name: "Dr. Kannan Menon",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kannan%20Menon&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 12,
     specialization: "Low crop yield",
@@ -1199,7 +1199,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 71,
     name: "Dr. Rajasekhar Ranganathan",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajasekhar%20Ranganathan&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 6,
     specialization: "Soil does not retain water",
@@ -1216,7 +1216,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 72,
     name: "Dr. Selvam Parida",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Selvam%20Parida&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 17,
     specialization: "Leaf diseases",
@@ -1233,7 +1233,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 73,
     name: "Dr. Madhuri Das",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Madhuri%20Das&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 4,
     specialization: "Pest attack",
@@ -1250,7 +1250,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 74,
     name: "Dr. Debabrata Pattnaik",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Debabrata%20Pattnaik&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 15,
     specialization: "Fertilizer recommendation",
@@ -1267,7 +1267,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 75,
     name: "Er. Nilotpal Deka",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilotpal%20Deka&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 9,
     specialization: "Organic farming",
@@ -1284,7 +1284,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 76,
     name: "Mr. Shyamali Sahoo",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyamali%20Sahoo&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 18,
     specialization: "Irrigation planning",
@@ -1301,7 +1301,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 77,
     name: "Mr. Bimal Sharma",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bimal%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 12,
     specialization: "Government schemes",
@@ -1318,7 +1318,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 78,
     name: "Dr. Mita Banerjee",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mita%20Banerjee&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 5,
     specialization: "Crop selection",
@@ -1335,7 +1335,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 79,
     name: "Mr. Partha Gogoi",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Partha%20Gogoi&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 15,
     specialization: "Weather-related issues",
@@ -1352,7 +1352,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 80,
     name: "Mr. Arun Mukherjee",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arun%20Mukherjee&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 8,
     specialization: "Post-harvest storage",
@@ -1369,7 +1369,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 81,
     name: "Ms. Sudeshna Nayak",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudeshna%20Nayak&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 20,
     specialization: "Market price guidance",
@@ -1386,7 +1386,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 82,
     name: "Dr. Preeti Pradhan",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Preeti%20Pradhan&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 21,
     specialization: "Machinery guidance",
@@ -1403,7 +1403,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 83,
     name: "Dr. Soumya Hazarika",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Soumya%20Hazarika&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 15,
     specialization: "Low crop yield",
@@ -1420,7 +1420,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 84,
     name: "Dr. Sumita Mukherjee",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sumita%20Mukherjee&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 8,
     specialization: "Soil does not retain water",
@@ -1437,7 +1437,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 85,
     name: "Ms. Subhash Baruah",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Subhash%20Baruah&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 8,
     specialization: "Soil testing",
@@ -1454,7 +1454,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 86,
     name: "Mr. Sudeshna Das",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudeshna%20Das&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 19,
     specialization: "Pest attack",
@@ -1471,7 +1471,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 87,
     name: "Dr. Soumya Mohapatra",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Soumya%20Mohapatra&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 13,
     specialization: "Fertilizer recommendation",
@@ -1488,7 +1488,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 88,
     name: "Dr. Puja Roy",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Puja%20Roy&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 4,
     specialization: "Leaf diseases",
@@ -1505,7 +1505,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 89,
     name: "Er. Sajal Pradhan",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sajal%20Pradhan&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 16,
     specialization: "Irrigation planning",
@@ -1522,7 +1522,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 90,
     name: "Mr. Rituraj Hazarika",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rituraj%20Hazarika&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 9,
     specialization: "Government schemes",
@@ -1539,7 +1539,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 91,
     name: "Mr. Nilotpal Deka",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilotpal%20Deka&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 11,
     specialization: "Organic farming",
@@ -1556,7 +1556,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 92,
     name: "Dr. Kalyan Dey",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalyan%20Dey&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 4,
     specialization: "Weather-related issues",
@@ -1573,7 +1573,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 93,
     name: "Dr. Pradip Sahoo",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pradip%20Sahoo&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 16,
     specialization: "Post-harvest storage",
@@ -1590,7 +1590,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 94,
     name: "Mr. Soumya Swain",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Soumya%20Swain&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 18,
     specialization: "Crop selection",
@@ -1607,7 +1607,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 95,
     name: "Mr. Shyamali Baruah",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyamali%20Baruah&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 11,
     specialization: "Machinery guidance",
@@ -1624,7 +1624,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 96,
     name: "Ms. Gautam Dey",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gautam%20Dey&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 5,
     specialization: "Low crop yield",
@@ -1641,7 +1641,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 97,
     name: "Ms. Suparna Hazarika",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suparna%20Hazarika&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 19,
     specialization: "Market price guidance",
@@ -1658,7 +1658,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 98,
     name: "Ms. Rinku Mukherjee",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rinku%20Mukherjee&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 13,
     specialization: "Soil testing",
@@ -1675,7 +1675,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 99,
     name: "Ms. Bimal Nayak",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bimal%20Nayak&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 6,
     specialization: "Pest attack",
@@ -1692,7 +1692,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 100,
     name: "Dr. Gautam Pradhan",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gautam%20Pradhan&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 8,
     specialization: "Soil does not retain water",
@@ -1709,7 +1709,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 101,
     name: "Er. Rani Hazarika",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rani%20Hazarika&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 19,
     specialization: "Leaf diseases",
@@ -1726,7 +1726,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 102,
     name: "Mr. Sajal Mukherjee",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sajal%20Mukherjee&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 13,
     specialization: "Irrigation planning",
@@ -1743,7 +1743,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 103,
     name: "Mr. Debabrata Dey",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Debabrata%20Dey&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 14,
     specialization: "Fertilizer recommendation",
@@ -1760,7 +1760,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 104,
     name: "Dr. Rituraj Sahoo",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rituraj%20Sahoo&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 8,
     specialization: "Organic farming",
@@ -1777,7 +1777,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 105,
     name: "Dr. Sudipta Sharma",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudipta%20Sharma&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 19,
     specialization: "Weather-related issues",
@@ -1794,7 +1794,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 106,
     name: "Er. Kalyan Baruah",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalyan%20Baruah&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 21,
     specialization: "Government schemes",
@@ -1811,7 +1811,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 107,
     name: "Mr. Suparna Dey",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suparna%20Dey&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 14,
     specialization: "Crop selection",
@@ -1828,7 +1828,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 108,
     name: "Mr. Shyamali Mohapatra",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyamali%20Mohapatra&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 8,
     specialization: "Machinery guidance",
@@ -1845,7 +1845,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 109,
     name: "Dr. Sumita Mitra",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sumita%20Mitra&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 10,
     specialization: "Post-harvest storage",
@@ -1862,7 +1862,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 110,
     name: "Dr. Anup Bora",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anup%20Bora&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 21,
     specialization: "Market price guidance",
@@ -1879,7 +1879,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 111,
     name: "Dr. Rani Das",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rani%20Das&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 15,
     specialization: "Soil testing",
@@ -1896,7 +1896,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 112,
     name: "Ms. Sudipta Deka",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudipta%20Deka&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 6,
     specialization: "Low crop yield",
@@ -1913,7 +1913,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 113,
     name: "Ms. Subhash Dey",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Subhash%20Dey&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 18,
     specialization: "Soil does not retain water",
@@ -1930,7 +1930,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 114,
     name: "Dr. Preeti Sahoo",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Preeti%20Sahoo&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 11,
     specialization: "Leaf diseases",
@@ -1947,7 +1947,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 115,
     name: "Dr. Anup Chakraborty",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anup%20Chakraborty&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 21,
     specialization: "Pest attack",
@@ -1964,7 +1964,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 116,
     name: "Er. Puja Mishra",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Puja%20Mishra&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 14,
     specialization: "Fertilizer recommendation",
@@ -1981,7 +1981,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 117,
     name: "Mr. Debabrata Gogoi",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Debabrata%20Gogoi&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 8,
     specialization: "Organic farming",
@@ -1998,7 +1998,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 118,
     name: "Mr. Binay Pradhan",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Binay%20Pradhan&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 12,
     specialization: "Irrigation planning",
@@ -2015,7 +2015,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 119,
     name: "Mr. Partha Hazarika",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Partha%20Hazarika&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 6,
     specialization: "Government schemes",
@@ -2032,7 +2032,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 120,
     name: "Mr. Arun Banerjee",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arun%20Banerjee&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 17,
     specialization: "Crop selection",
@@ -2049,7 +2049,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 121,
     name: "Dr. Subhash Dey",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Subhash%20Dey&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 19,
     specialization: "Weather-related issues",
@@ -2066,7 +2066,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 122,
     name: "Dr. Preeti Sahoo",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Preeti%20Sahoo&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 12,
     specialization: "Post-harvest storage",
@@ -2083,7 +2083,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 123,
     name: "Er. Tapas Sharma",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Tapas%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 6,
     specialization: "Market price guidance",
@@ -2100,7 +2100,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 124,
     name: "Dr. Arun Barik",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arun%20Barik&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 20,
     specialization: "Machinery guidance",
@@ -2117,7 +2117,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 125,
     name: "Er. Sudeshna Choudhury",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudeshna%20Choudhury&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 14,
     specialization: "Low crop yield",
@@ -2134,7 +2134,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 126,
     name: "Ms. Soumya Mitra",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Soumya%20Mitra&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 7,
     specialization: "Soil does not retain water",
@@ -2151,7 +2151,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 127,
     name: "Ms. Tapas Mukherjee",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Tapas%20Mukherjee&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 9,
     specialization: "Soil testing",
@@ -2168,7 +2168,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 128,
     name: "Dr. Rekha Nayak",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Nayak&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 20,
     specialization: "Pest attack",
@@ -2185,7 +2185,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 129,
     name: "Dr. Anup Choudhury",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anup%20Choudhury&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 14,
     specialization: "Fertilizer recommendation",
@@ -2202,7 +2202,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 130,
     name: "Dr. Soumya Deka",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Soumya%20Deka&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 10,
     specialization: "Leaf diseases",
@@ -2219,7 +2219,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 131,
     name: "Dr. Sumita Dey",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sumita%20Dey&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 4,
     specialization: "Irrigation planning",
@@ -2236,7 +2236,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 132,
     name: "Dr. Gautam Sahoo",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gautam%20Sahoo&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 16,
     specialization: "Government schemes",
@@ -2253,7 +2253,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 133,
     name: "Mr. Mrinal Swain",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mrinal%20Swain&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 17,
     specialization: "Organic farming",
@@ -2270,7 +2270,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 134,
     name: "Mr. Puja Baruah",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Puja%20Baruah&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 11,
     specialization: "Weather-related issues",
@@ -2287,7 +2287,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 135,
     name: "Mr. Debabrata Dey",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Debabrata%20Dey&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 4,
     specialization: "Post-harvest storage",
@@ -2304,7 +2304,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 136,
     name: "Dr. Partha Choudhury",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Partha%20Choudhury&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 6,
     specialization: "Crop selection",
@@ -2321,7 +2321,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 137,
     name: "Dr. Arun Mitra",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arun%20Mitra&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 17,
     specialization: "Machinery guidance",
@@ -2338,7 +2338,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 138,
     name: "Ms. Sudeshna Bora",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudeshna%20Bora&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 11,
     specialization: "Low crop yield",
@@ -2355,7 +2355,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 139,
     name: "Ms. Gautam Pattnaik",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gautam%20Pattnaik&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 20,
     specialization: "Market price guidance",
@@ -2372,7 +2372,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 140,
     name: "Ms. Rani Deka",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rani%20Deka&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 14,
     specialization: "Soil testing",
@@ -2389,7 +2389,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 141,
     name: "Dr. Biplab Roy",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Biplab%20Roy&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 7,
     specialization: "Pest attack",
@@ -2406,7 +2406,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 142,
     name: "Ms. Sajal Talukdar",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sajal%20Talukdar&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 9,
     specialization: "Soil does not retain water",
@@ -2423,7 +2423,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 143,
     name: "Mr. Rituraj Swain",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rituraj%20Swain&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 20,
     specialization: "Leaf diseases",
@@ -2440,7 +2440,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 144,
     name: "Mr. Sudipta Baruah",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudipta%20Baruah&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 14,
     specialization: "Irrigation planning",
@@ -2457,7 +2457,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 145,
     name: "Dr. Rituraj Pradhan",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rituraj%20Pradhan&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 21,
     specialization: "Fertilizer recommendation",
@@ -2474,7 +2474,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 146,
     name: "Dr. Sudipta Hazarika",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudipta%20Hazarika&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 15,
     specialization: "Organic farming",
@@ -2491,7 +2491,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 147,
     name: "Mr. Subhash Mukherjee",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Subhash%20Mukherjee&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 8,
     specialization: "Weather-related issues",
@@ -2508,7 +2508,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 148,
     name: "Dr. Rituraj Das",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rituraj%20Das&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 21,
     specialization: "Government schemes",
@@ -2525,7 +2525,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 149,
     name: "Dr. Sudipta Bose",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudipta%20Bose&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 15,
     specialization: "Crop selection",
@@ -2542,7 +2542,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 150,
     name: "Dr. Subhash Behera",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Subhash%20Behera&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 8,
     specialization: "Machinery guidance",
@@ -2559,7 +2559,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 151,
     name: "Dr. Preeti Das",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Preeti%20Das&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 8,
     specialization: "Post-harvest storage",
@@ -2576,7 +2576,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 152,
     name: "Mr. Tapas Bose",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Tapas%20Bose&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 20,
     specialization: "Market price guidance",
@@ -2593,7 +2593,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 153,
     name: "Mr. Sumita Barik",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sumita%20Barik&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 13,
     specialization: "Soil testing",
@@ -2610,7 +2610,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 154,
     name: "Mr. Rekha Mishra",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Mishra&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 15,
     specialization: "Low crop yield",
@@ -2627,7 +2627,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 155,
     name: "Dr. Mrinal Gogoi",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mrinal%20Gogoi&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 9,
     specialization: "Soil does not retain water",
@@ -2644,7 +2644,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 156,
     name: "Dr. Madhuri Sen",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Madhuri%20Sen&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 20,
     specialization: "Leaf diseases",
@@ -2661,7 +2661,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 157,
     name: "Ms. Binay Chakraborty",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Binay%20Chakraborty&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 4,
     specialization: "Pest attack",
@@ -2678,7 +2678,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 158,
     name: "Ms. Biswajit Mishra",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Biswajit%20Mishra&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 15,
     specialization: "Fertilizer recommendation",
@@ -2695,7 +2695,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 159,
     name: "Mr. Arun Hazarika",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arun%20Hazarika&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 9,
     specialization: "Organic farming",
@@ -2712,7 +2712,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 160,
     name: "Dr. Subhash Deka",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Subhash%20Deka&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 10,
     specialization: "Irrigation planning",
@@ -2729,7 +2729,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 161,
     name: "Dr. Preeti Roy",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Preeti%20Roy&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 4,
     specialization: "Government schemes",
@@ -2746,7 +2746,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 162,
     name: "Er. Tapas Pradhan",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Tapas%20Pradhan&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 15,
     specialization: "Crop selection",
@@ -2763,7 +2763,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 163,
     name: "Dr. Subhash Bose",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Subhash%20Bose&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 12,
     specialization: "Weather-related issues",
@@ -2780,7 +2780,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 164,
     name: "Er. Sudeshna Barik",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudeshna%20Barik&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 5,
     specialization: "Post-harvest storage",
@@ -2797,7 +2797,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 165,
     name: "Mr. Soumya Talukdar",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Soumya%20Talukdar&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 17,
     specialization: "Market price guidance",
@@ -2814,7 +2814,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 166,
     name: "Mr. Tapas Gogoi",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Tapas%20Gogoi&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 18,
     specialization: "Machinery guidance",
@@ -2831,7 +2831,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 167,
     name: "Dr. Rekha Sen",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Sen&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 12,
     specialization: "Low crop yield",
@@ -2848,7 +2848,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 168,
     name: "Dr. Anup Barik",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anup%20Barik&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 5,
     specialization: "Soil does not retain water",
@@ -2865,7 +2865,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 169,
     name: "Er. Biplab Mishra",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Biplab%20Mishra&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 7,
     specialization: "Soil testing",
@@ -2882,7 +2882,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 170,
     name: "Ms. Madhuri Hazarika",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Madhuri%20Hazarika&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 19,
     specialization: "Pest attack",
@@ -2899,7 +2899,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 171,
     name: "Ms. Partha Mukherjee",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Partha%20Mukherjee&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 12,
     specialization: "Fertilizer recommendation",
@@ -2916,7 +2916,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 172,
     name: "Ms. Mrinal Ghosh",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mrinal%20Ghosh&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 9,
     specialization: "Leaf diseases",
@@ -2933,7 +2933,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 173,
     name: "Ms. Puja Pattnaik",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Puja%20Pattnaik&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 20,
     specialization: "Irrigation planning",
@@ -2950,7 +2950,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 174,
     name: "Mr. Debabrata Deka",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Debabrata%20Deka&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 14,
     specialization: "Government schemes",
@@ -2967,7 +2967,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 175,
     name: "Dr. Partha Barik",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Partha%20Barik&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 15,
     specialization: "Organic farming",
@@ -2984,7 +2984,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 176,
     name: "Dr. Arun Talukdar",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arun%20Talukdar&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 9,
     specialization: "Weather-related issues",
@@ -3001,7 +3001,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 177,
     name: "Mr. Sudeshna Swain",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudeshna%20Swain&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 20,
     specialization: "Post-harvest storage",
@@ -3018,7 +3018,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 178,
     name: "Mr. Preeti Sen",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Preeti%20Sen&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 4,
     specialization: "Crop selection",
@@ -3035,7 +3035,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 179,
     name: "Mr. Soumya Barik",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Soumya%20Barik&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 15,
     specialization: "Machinery guidance",
@@ -3052,7 +3052,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 180,
     name: "Dr. Sumita Choudhury",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sumita%20Choudhury&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 9,
     specialization: "Low crop yield",
@@ -3069,7 +3069,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 181,
     name: "Er. Rekha Hazarika",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Hazarika&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 10,
     specialization: "Market price guidance",
@@ -3086,7 +3086,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 182,
     name: "Mr. Mrinal Mukherjee",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mrinal%20Mukherjee&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 4,
     specialization: "Soil testing",
@@ -3103,7 +3103,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 183,
     name: "Ms. Madhuri Nayak",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Madhuri%20Nayak&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 15,
     specialization: "Pest attack",
@@ -3120,7 +3120,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 184,
     name: "Dr. Binay Pradhan",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Binay%20Pradhan&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 17,
     specialization: "Soil does not retain water",
@@ -3137,7 +3137,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 185,
     name: "Dr. Biswajit Hazarika",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Biswajit%20Hazarika&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 11,
     specialization: "Leaf diseases",
@@ -3154,7 +3154,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 186,
     name: "Dr. Arun Banerjee",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arun%20Banerjee&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 4,
     specialization: "Irrigation planning",
@@ -3171,7 +3171,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 187,
     name: "Dr. Sudipta Kalita",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudipta%20Kalita&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 8,
     specialization: "Fertilizer recommendation",
@@ -3188,7 +3188,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 188,
     name: "Dr. Pradip Chakraborty",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pradip%20Chakraborty&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 20,
     specialization: "Organic farming",
@@ -3205,7 +3205,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 189,
     name: "Er. Rinku Mishra",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rinku%20Mishra&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 14,
     specialization: "Weather-related issues",
@@ -3222,7 +3222,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 190,
     name: "Mr. Shyamali Mohapatra",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyamali%20Mohapatra&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 15,
     specialization: "Government schemes",
@@ -3239,7 +3239,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 191,
     name: "Mr. Bimal Deka",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bimal%20Deka&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 9,
     specialization: "Crop selection",
@@ -3256,7 +3256,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 192,
     name: "Dr. Mita Roy",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mita%20Roy&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 20,
     specialization: "Machinery guidance",
@@ -3273,7 +3273,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 193,
     name: "Mr. Rinku Das",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rinku%20Das&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 17,
     specialization: "Post-harvest storage",
@@ -3290,7 +3290,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 194,
     name: "Dr. Bimal Bose",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bimal%20Bose&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 10,
     specialization: "Market price guidance",
@@ -3307,7 +3307,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 195,
     name: "Dr. Rekha Behera",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Behera&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 4,
     specialization: "Soil testing",
@@ -3324,7 +3324,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 196,
     name: "Er. Mita Sahu",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mita%20Sahu&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 5,
     specialization: "Low crop yield",
@@ -3341,7 +3341,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 197,
     name: "Ms. Biplab Gogoi",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Biplab%20Gogoi&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 17,
     specialization: "Soil does not retain water",
@@ -3358,7 +3358,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 198,
     name: "Ms. Binay Sen",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Binay%20Sen&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 10,
     specialization: "Leaf diseases",
@@ -3375,7 +3375,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 199,
     name: "Dr. Sudeshna Choudhury",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudeshna%20Choudhury&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 20,
     specialization: "Pest attack",
@@ -3392,7 +3392,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 200,
     name: "Dr. Soumya Mitra",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Soumya%20Mitra&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 13,
     specialization: "Fertilizer recommendation",
@@ -3409,7 +3409,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 201,
     name: "Er. Sumita Bora",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sumita%20Bora&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 7,
     specialization: "Organic farming",
@@ -3426,7 +3426,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 202,
     name: "Dr. Kalyan Pradhan",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalyan%20Pradhan&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 21,
     specialization: "Irrigation planning",
@@ -3443,7 +3443,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 203,
     name: "Dr. Suparna Sharma",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suparna%20Sharma&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 15,
     specialization: "Government schemes",
@@ -3460,7 +3460,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 204,
     name: "Er. Shyamali Banerjee",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyamali%20Banerjee&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 8,
     specialization: "Crop selection",
@@ -3477,7 +3477,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 205,
     name: "Mr. Sumita Dey",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sumita%20Dey&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 10,
     specialization: "Weather-related issues",
@@ -3494,7 +3494,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 206,
     name: "Dr. Anup Sahoo",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anup%20Sahoo&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 4,
     specialization: "Post-harvest storage",
@@ -3511,7 +3511,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 207,
     name: "Dr. Rani Sharma",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rani%20Sharma&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 15,
     specialization: "Market price guidance",
@@ -3528,7 +3528,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 208,
     name: "Mr. Puja Bora",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Puja%20Bora&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 17,
     specialization: "Machinery guidance",
@@ -3545,7 +3545,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 209,
     name: "Mr. Debabrata Das",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Debabrata%20Das&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 10,
     specialization: "Low crop yield",
@@ -3562,7 +3562,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 210,
     name: "Mr. Nilotpal Mohapatra",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilotpal%20Mohapatra&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 4,
     specialization: "Soil does not retain water",
@@ -3579,7 +3579,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 211,
     name: "Dr. Arun Mitra",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arun%20Mitra&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 5,
     specialization: "Soil testing",
@@ -3596,7 +3596,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 212,
     name: "Dr. Sudeshna Bora",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudeshna%20Bora&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 17,
     specialization: "Pest attack",
@@ -3613,7 +3613,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 213,
     name: "Dr. Suparna Ghosh",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suparna%20Ghosh&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 10,
     specialization: "Fertilizer recommendation",
@@ -3630,7 +3630,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 214,
     name: "Ms. Soumya Das",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Soumya%20Das&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 12,
     specialization: "Leaf diseases",
@@ -3647,7 +3647,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 215,
     name: "Ms. Sumita Bose",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sumita%20Bose&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 5,
     specialization: "Irrigation planning",
@@ -3664,7 +3664,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 216,
     name: "Mr. Anup Behera",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anup%20Behera&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 17,
     specialization: "Government schemes",
@@ -3681,7 +3681,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 217,
     name: "Mr. Soumya Sahoo",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Soumya%20Sahoo&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 13,
     specialization: "Organic farming",
@@ -3698,7 +3698,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 218,
     name: "Mr. Shyamali Sharma",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyamali%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 7,
     specialization: "Weather-related issues",
@@ -3715,7 +3715,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 219,
     name: "Dr. Gautam Chakraborty",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gautam%20Chakraborty&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 18,
     specialization: "Post-harvest storage",
@@ -3732,7 +3732,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 220,
     name: "Mr. Suparna Choudhury",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suparna%20Choudhury&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 15,
     specialization: "Crop selection",
@@ -3749,7 +3749,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 221,
     name: "Dr. Rinku Mitra",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rinku%20Mitra&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 8,
     specialization: "Machinery guidance",
@@ -3766,7 +3766,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 222,
     name: "Dr. Bimal Bora",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bimal%20Bora&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 20,
     specialization: "Low crop yield",
@@ -3783,7 +3783,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 223,
     name: "Er. Gautam Nayak",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gautam%20Nayak&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 4,
     specialization: "Market price guidance",
@@ -3800,7 +3800,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 224,
     name: "Mr. Rani Das",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rani%20Das&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 15,
     specialization: "Soil testing",
@@ -3817,7 +3817,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 225,
     name: "Ms. Sajal Bose",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sajal%20Bose&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 9,
     specialization: "Pest attack",
@@ -3834,7 +3834,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 226,
     name: "Ms. Bimal Dey",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bimal%20Dey&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 5,
     specialization: "Soil does not retain water",
@@ -3851,7 +3851,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 227,
     name: "Ms. Mita Sahoo",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mita%20Sahoo&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 17,
     specialization: "Leaf diseases",
@@ -3868,7 +3868,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 228,
     name: "Ms. Biplab Sharma",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Biplab%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 10,
     specialization: "Irrigation planning",
@@ -3885,7 +3885,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 229,
     name: "Dr. Sajal Baruah",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sajal%20Baruah&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 12,
     specialization: "Fertilizer recommendation",
@@ -3902,7 +3902,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 230,
     name: "Dr. Rituraj Das",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rituraj%20Das&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 5,
     specialization: "Organic farming",
@@ -3919,7 +3919,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 231,
     name: "Er. Biswajit Mohapatra",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Biswajit%20Mohapatra&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 17,
     specialization: "Weather-related issues",
@@ -3936,7 +3936,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 232,
     name: "Er. Rinku Sharma",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rinku%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 11,
     specialization: "Government schemes",
@@ -3953,7 +3953,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 233,
     name: "Mr. Tapas Banerjee",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Tapas%20Banerjee&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 5,
     specialization: "Crop selection",
@@ -3970,7 +3970,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 234,
     name: "Mr. Rekha Sahu",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Sahu&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 16,
     specialization: "Machinery guidance",
@@ -3987,7 +3987,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 235,
     name: "Dr. Mita Sahoo",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mita%20Sahoo&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 18,
     specialization: "Post-harvest storage",
@@ -4004,7 +4004,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 236,
     name: "Dr. Biplab Kalita",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Biplab%20Kalita&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 11,
     specialization: "Market price guidance",
@@ -4021,7 +4021,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 237,
     name: "Dr. Madhuri Chakraborty",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Madhuri%20Chakraborty&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 5,
     specialization: "Soil testing",
@@ -4038,7 +4038,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 238,
     name: "Mr. Rituraj Das",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rituraj%20Das&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 6,
     specialization: "Low crop yield",
@@ -4055,7 +4055,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 239,
     name: "Mr. Biswajit Mohapatra",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Biswajit%20Mohapatra&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 18,
     specialization: "Soil does not retain water",
@@ -4072,7 +4072,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 240,
     name: "Ms. Subhash Kalita",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Subhash%20Kalita&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 11,
     specialization: "Leaf diseases",
@@ -4089,7 +4089,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 241,
     name: "Ms. Binay Nayak",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Binay%20Nayak&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 8,
     specialization: "Pest attack",
@@ -4106,7 +4106,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 242,
     name: "Ms. Partha Das",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Partha%20Das&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 19,
     specialization: "Fertilizer recommendation",
@@ -4123,7 +4123,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 243,
     name: "Dr. Arun Bose",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arun%20Bose&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 13,
     specialization: "Organic farming",
@@ -4140,7 +4140,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 244,
     name: "Ms. Madhuri Dey",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Madhuri%20Dey&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 10,
     specialization: "Irrigation planning",
@@ -4157,7 +4157,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 245,
     name: "Dr. Partha Sahoo",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Partha%20Sahoo&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 21,
     specialization: "Government schemes",
@@ -4174,7 +4174,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 246,
     name: "Dr. Nilotpal Sharma",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilotpal%20Sharma&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 15,
     specialization: "Crop selection",
@@ -4191,7 +4191,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 247,
     name: "Er. Shyamali Pradhan",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyamali%20Pradhan&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 6,
     specialization: "Weather-related issues",
@@ -4208,7 +4208,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 248,
     name: "Mr. Bimal Hazarika",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bimal%20Hazarika&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 18,
     specialization: "Post-harvest storage",
@@ -4225,7 +4225,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 249,
     name: "Mr. Mita Mukherjee",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mita%20Mukherjee&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 11,
     specialization: "Market price guidance",
@@ -4242,7 +4242,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 250,
     name: "Dr. Sudeshna Banerjee",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudeshna%20Banerjee&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 10,
     specialization: "Machinery guidance",
@@ -4259,7 +4259,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 251,
     name: "Dr. Soumya Sahu",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Soumya%20Sahu&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 4,
     specialization: "Low crop yield",
@@ -4276,7 +4276,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 252,
     name: "Er. Shyamali Das",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyamali%20Das&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 15,
     specialization: "Soil does not retain water",
@@ -4293,7 +4293,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 253,
     name: "Mr. Rekha Sharma",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 17,
     specialization: "Soil testing",
@@ -4310,7 +4310,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 254,
     name: "Mr. Anup Chakraborty",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anup%20Chakraborty&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 11,
     specialization: "Pest attack",
@@ -4327,7 +4327,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 255,
     name: "Dr. Puja Mishra",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Puja%20Mishra&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 4,
     specialization: "Fertilizer recommendation",
@@ -4344,7 +4344,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 256,
     name: "Ms. Shyam Negi",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyam%20Negi&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 14,
     specialization: "Leaf diseases",
@@ -4361,7 +4361,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 257,
     name: "Ms. Anuj Singh",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anuj%20Singh&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 7,
     specialization: "Irrigation planning",
@@ -4378,7 +4378,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 258,
     name: "Dr. Devendra Jain",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Devendra%20Jain&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 19,
     specialization: "Government schemes",
@@ -4395,7 +4395,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 259,
     name: "Dr. Chandrashekhar Chaurasia",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Chandrashekhar%20Chaurasia&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 20,
     specialization: "Organic farming",
@@ -4412,7 +4412,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 260,
     name: "Er. Asha Rawat",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Rawat&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 14,
     specialization: "Weather-related issues",
@@ -4429,7 +4429,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 261,
     name: "Mr. Usha Singh",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Usha%20Singh&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 8,
     specialization: "Post-harvest storage",
@@ -4446,7 +4446,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 262,
     name: "Mr. Rekha Khanna",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Khanna&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 9,
     specialization: "Crop selection",
@@ -4463,7 +4463,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 263,
     name: "Dr. Vikram Dubey",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Dubey&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 21,
     specialization: "Machinery guidance",
@@ -4480,7 +4480,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 264,
     name: "Dr. Manoj Rawat",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manoj%20Rawat&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 14,
     specialization: "Low crop yield",
@@ -4497,7 +4497,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 265,
     name: "Dr. Usha Kumar",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Usha%20Kumar&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 11,
     specialization: "Market price guidance",
@@ -4514,7 +4514,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 266,
     name: "Dr. Mahendra Upadhyay",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mahendra%20Upadhyay&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 4,
     specialization: "Soil testing",
@@ -4531,7 +4531,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 267,
     name: "Dr. Anil Verma",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anil%20Verma&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 16,
     specialization: "Pest attack",
@@ -4548,7 +4548,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 268,
     name: "Mr. Manoj Singh",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manoj%20Singh&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 17,
     specialization: "Soil does not retain water",
@@ -4565,7 +4565,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 269,
     name: "Mr. Rajesh Jain",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajesh%20Jain&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 11,
     specialization: "Leaf diseases",
@@ -4582,7 +4582,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 270,
     name: "Ms. Anuj Joshi",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anuj%20Joshi&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 4,
     specialization: "Irrigation planning",
@@ -4599,7 +4599,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 271,
     name: "Dr. Vijay Rawat",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Rawat&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 6,
     specialization: "Fertilizer recommendation",
@@ -4616,7 +4616,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 272,
     name: "Er. Devendra Singh",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Devendra%20Singh&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 17,
     specialization: "Organic farming",
@@ -4633,7 +4633,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 273,
     name: "Ms. Kavita Agarwal",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavita%20Agarwal&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 11,
     specialization: "Weather-related issues",
@@ -4650,7 +4650,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 274,
     name: "Ms. Asha Dubey",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Dubey&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 12,
     specialization: "Government schemes",
@@ -4667,7 +4667,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 275,
     name: "Dr. Usha Rawat",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Usha%20Rawat&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 6,
     specialization: "Crop selection",
@@ -4684,7 +4684,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 276,
     name: "Dr. Amit Gupta",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amit%20Gupta&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 18,
     specialization: "Machinery guidance",
@@ -4701,7 +4701,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 277,
     name: "Er. Vikram Malhotra",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Malhotra&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 19,
     specialization: "Post-harvest storage",
@@ -4718,7 +4718,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 278,
     name: "Mr. Dinesh Srivastava",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dinesh%20Srivastava&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 13,
     specialization: "Market price guidance",
@@ -4735,7 +4735,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 279,
     name: "Mr. Shyam Thakur",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyam%20Thakur&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 6,
     specialization: "Soil testing",
@@ -4752,7 +4752,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 280,
     name: "Dr. Neeta Chaurasia",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neeta%20Chaurasia&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 16,
     specialization: "Low crop yield",
@@ -4769,7 +4769,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 281,
     name: "Dr. Vinod Rawat",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vinod%20Rawat&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 9,
     specialization: "Soil does not retain water",
@@ -4786,7 +4786,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 282,
     name: "Er. Ritu Singh",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ritu%20Singh&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 21,
     specialization: "Leaf diseases",
@@ -4803,7 +4803,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 283,
     name: "Dr. Sangeeta Tripathi",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sangeeta%20Tripathi&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 17,
     specialization: "Pest attack",
@@ -4820,7 +4820,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 284,
     name: "Dr. Ashok Verma",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ashok%20Verma&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 11,
     specialization: "Fertilizer recommendation",
@@ -4837,7 +4837,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 285,
     name: "Er. Priya Chauhan",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Chauhan&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 4,
     specialization: "Organic farming",
@@ -4854,7 +4854,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 286,
     name: "Ms. Dinesh Srivastava",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dinesh%20Srivastava&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 14,
     specialization: "Irrigation planning",
@@ -4871,7 +4871,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 287,
     name: "Dr. Shyam Rana",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyam%20Rana&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 7,
     specialization: "Government schemes",
@@ -4888,7 +4888,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 288,
     name: "Dr. Anuj Sharma",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anuj%20Sharma&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 19,
     specialization: "Crop selection",
@@ -4905,7 +4905,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 289,
     name: "Er. Ajay Shukla",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ajay%20Shukla&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 20,
     specialization: "Weather-related issues",
@@ -4922,7 +4922,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 290,
     name: "Mr. Chandrashekhar Pandey",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Chandrashekhar%20Pandey&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 14,
     specialization: "Post-harvest storage",
@@ -4939,7 +4939,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 291,
     name: "Mr. Kavita Rana",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavita%20Rana&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 7,
     specialization: "Market price guidance",
@@ -4956,7 +4956,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 292,
     name: "Mr. Ashok Verma",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ashok%20Verma&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 12,
     specialization: "Machinery guidance",
@@ -4973,7 +4973,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 293,
     name: "Mr. Priya Chauhan",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Chauhan&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 5,
     specialization: "Low crop yield",
@@ -4990,7 +4990,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 294,
     name: "Mr. Geeta Malhotra",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Geeta%20Malhotra&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 17,
     specialization: "Soil does not retain water",
@@ -5007,7 +5007,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 295,
     name: "Dr. Savita Upadhyay",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Savita%20Upadhyay&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 18,
     specialization: "Soil testing",
@@ -5024,7 +5024,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 296,
     name: "Dr. Ramesh Mishra",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Mishra&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 12,
     specialization: "Pest attack",
@@ -5041,7 +5041,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 297,
     name: "Er. Rakesh Shah",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rakesh%20Shah&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 6,
     specialization: "Fertilizer recommendation",
@@ -5058,7 +5058,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 298,
     name: "Dr. Geeta Chaurasia",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Geeta%20Chaurasia&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 20,
     specialization: "Leaf diseases",
@@ -5075,7 +5075,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 299,
     name: "Er. Vikram Rawat",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Rawat&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 14,
     specialization: "Irrigation planning",
@@ -5092,7 +5092,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 300,
     name: "Ms. Manoj Singh",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manoj%20Singh&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 7,
     specialization: "Government schemes",
@@ -5109,7 +5109,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 301,
     name: "Dr. Rakesh Khanna",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rakesh%20Khanna&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 9,
     specialization: "Organic farming",
@@ -5126,7 +5126,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 302,
     name: "Dr. Pramod Dubey",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pramod%20Dubey&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 20,
     specialization: "Weather-related issues",
@@ -5143,7 +5143,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 303,
     name: "Dr. Vijay Rawat",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Rawat&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 14,
     specialization: "Post-harvest storage",
@@ -5160,7 +5160,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 304,
     name: "Mr. Ravi Shah",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Shah&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 15,
     specialization: "Crop selection",
@@ -5177,7 +5177,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 305,
     name: "Mr. Bhupesh Malhotra",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhupesh%20Malhotra&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 9,
     specialization: "Machinery guidance",
@@ -5194,7 +5194,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 306,
     name: "Mr. Asha Srivastava",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Srivastava&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 20,
     specialization: "Low crop yield",
@@ -5211,7 +5211,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 307,
     name: "Dr. Ritu Mishra",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ritu%20Mishra&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 4,
     specialization: "Market price guidance",
@@ -5228,7 +5228,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 308,
     name: "Dr. Geeta Shah",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Geeta%20Shah&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 15,
     specialization: "Soil testing",
@@ -5245,7 +5245,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 309,
     name: "Mr. Ramesh Shukla",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Shukla&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 9,
     specialization: "Pest attack",
@@ -5262,7 +5262,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 310,
     name: "Dr. Priya Rawat",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Rawat&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 5,
     specialization: "Soil does not retain water",
@@ -5279,7 +5279,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 311,
     name: "Mr. Rekha Singh",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Singh&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 17,
     specialization: "Leaf diseases",
@@ -5296,7 +5296,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 312,
     name: "Ms. Amit Agarwal",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amit%20Agarwal&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 11,
     specialization: "Irrigation planning",
@@ -5313,7 +5313,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 313,
     name: "Er. Asha Verma",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Verma&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 7,
     specialization: "Fertilizer recommendation",
@@ -5330,7 +5330,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 314,
     name: "Ms. Usha Chauhan",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Usha%20Chauhan&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 19,
     specialization: "Organic farming",
@@ -5347,7 +5347,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 315,
     name: "Ms. Mahendra Malhotra",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mahendra%20Malhotra&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 12,
     specialization: "Weather-related issues",
@@ -5364,7 +5364,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 316,
     name: "Dr. Vikram Upadhyay",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Upadhyay&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 14,
     specialization: "Government schemes",
@@ -5381,7 +5381,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 317,
     name: "Dr. Manoj Mishra",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manoj%20Mishra&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 7,
     specialization: "Crop selection",
@@ -5398,7 +5398,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 318,
     name: "Dr. Rajesh Shah",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajesh%20Shah&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 19,
     specialization: "Machinery guidance",
@@ -5415,7 +5415,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 319,
     name: "Mr. Pramod Jain",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pramod%20Jain&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 20,
     specialization: "Post-harvest storage",
@@ -5432,7 +5432,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 320,
     name: "Mr. Vijay Joshi",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Joshi&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 14,
     specialization: "Market price guidance",
@@ -5449,7 +5449,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 321,
     name: "Mr. Devendra Mishra",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Devendra%20Mishra&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 7,
     specialization: "Soil testing",
@@ -5466,7 +5466,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 322,
     name: "Dr. Bhupesh Singh",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhupesh%20Singh&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 9,
     specialization: "Low crop yield",
@@ -5483,7 +5483,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 323,
     name: "Dr. Asha Agarwal",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Agarwal&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 20,
     specialization: "Soil does not retain water",
@@ -5500,7 +5500,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 324,
     name: "Er. Usha Joshi",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Usha%20Joshi&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 14,
     specialization: "Leaf diseases",
@@ -5517,7 +5517,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 325,
     name: "Dr. Chandrashekhar Chauhan",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Chandrashekhar%20Chauhan&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 10,
     specialization: "Pest attack",
@@ -5534,7 +5534,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 326,
     name: "Er. Kavita Malhotra",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavita%20Malhotra&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 4,
     specialization: "Fertilizer recommendation",
@@ -5551,7 +5551,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 327,
     name: "Ms. Meena Dubey",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meena%20Dubey&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 15,
     specialization: "Organic farming",
@@ -5568,7 +5568,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 328,
     name: "Ms. Rekha Mishra",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Mishra&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 17,
     specialization: "Irrigation planning",
@@ -5585,7 +5585,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 329,
     name: "Dr. Amit Shah",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amit%20Shah&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 11,
     specialization: "Government schemes",
@@ -5602,7 +5602,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 330,
     name: "Dr. Anil Shukla",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anil%20Shukla&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 4,
     specialization: "Crop selection",
@@ -5619,7 +5619,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 331,
     name: "Ms. Kamlesh Rana",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kamlesh%20Rana&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 14,
     specialization: "Weather-related issues",
@@ -5636,7 +5636,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 332,
     name: "Mr. Sangeeta Khanna",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sangeeta%20Khanna&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 7,
     specialization: "Post-harvest storage",
@@ -5653,7 +5653,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 333,
     name: "Mr. Ashok Dubey",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ashok%20Dubey&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 19,
     specialization: "Market price guidance",
@@ -5670,7 +5670,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 334,
     name: "Dr. Vinod Verma",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vinod%20Verma&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 20,
     specialization: "Machinery guidance",
@@ -5687,7 +5687,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 335,
     name: "Dr. Deepak Chauhan",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepak%20Chauhan&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 14,
     specialization: "Low crop yield",
@@ -5704,7 +5704,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 336,
     name: "Mr. Savita Malhotra",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Savita%20Malhotra&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 7,
     specialization: "Soil does not retain water",
@@ -5721,7 +5721,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 337,
     name: "Mr. Pramod Rana",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pramod%20Rana&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 17,
     specialization: "Soil testing",
@@ -5738,7 +5738,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 338,
     name: "Mr. Vijay Sharma",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 10,
     specialization: "Pest attack",
@@ -5755,7 +5755,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 339,
     name: "Dr. Chandrashekhar Chaurasia",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Chandrashekhar%20Chaurasia&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 4,
     specialization: "Fertilizer recommendation",
@@ -5772,7 +5772,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 340,
     name: "Mr. Shyam Tiwari",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyam%20Tiwari&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 18,
     specialization: "Leaf diseases",
@@ -5789,7 +5789,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 341,
     name: "Dr. Anuj Patel",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anuj%20Patel&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 12,
     specialization: "Irrigation planning",
@@ -5806,7 +5806,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 342,
     name: "Dr. Hemant Tripathi",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hemant%20Tripathi&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 5,
     specialization: "Government schemes",
@@ -5823,7 +5823,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 343,
     name: "Ms. Chandrashekhar Bisht",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Chandrashekhar%20Bisht&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 7,
     specialization: "Organic farming",
@@ -5840,7 +5840,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 344,
     name: "Ms. Kavita Tiwari",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavita%20Tiwari&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 18,
     specialization: "Weather-related issues",
@@ -5857,7 +5857,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 345,
     name: "Ms. Meena Kumar",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meena%20Kumar&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 12,
     specialization: "Post-harvest storage",
@@ -5874,7 +5874,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 346,
     name: "Dr. Rekha Saxena",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Saxena&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 13,
     specialization: "Crop selection",
@@ -5891,7 +5891,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 347,
     name: "Dr. Amit Negi",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amit%20Negi&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 7,
     specialization: "Machinery guidance",
@@ -5908,7 +5908,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 348,
     name: "Er. Manoj Yadav",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manoj%20Yadav&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 19,
     specialization: "Low crop yield",
@@ -5925,7 +5925,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 349,
     name: "Mr. Dinesh Sharma",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dinesh%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 20,
     specialization: "Market price guidance",
@@ -5942,7 +5942,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 350,
     name: "Mr. Shyam Chaurasia",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyam%20Chaurasia&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 14,
     specialization: "Soil testing",
@@ -5959,7 +5959,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 351,
     name: "Dr. Vijay Negi",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Negi&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 7,
     specialization: "Pest attack",
@@ -5976,7 +5976,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 352,
     name: "Dr. Ajay Rana",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ajay%20Rana&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 9,
     specialization: "Soil does not retain water",
@@ -5993,7 +5993,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 353,
     name: "Er. Chandrashekhar Khanna",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Chandrashekhar%20Khanna&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 20,
     specialization: "Leaf diseases",
@@ -6010,7 +6010,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 354,
     name: "Mr. Asha Chaurasia",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Chaurasia&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 14,
     specialization: "Irrigation planning",
@@ -6027,7 +6027,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 355,
     name: "Mr. Priya Verma",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Verma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 15,
     specialization: "Fertilizer recommendation",
@@ -6044,7 +6044,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 356,
     name: "Dr. Rekha Chauhan",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Chauhan&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 9,
     specialization: "Organic farming",
@@ -6061,7 +6061,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 357,
     name: "Dr. Vikram Malhotra",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Malhotra&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 20,
     specialization: "Weather-related issues",
@@ -6078,7 +6078,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 358,
     name: "Ms. Ramesh Upadhyay",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Upadhyay&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 4,
     specialization: "Government schemes",
@@ -6095,7 +6095,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 359,
     name: "Ms. Dinesh Verma",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dinesh%20Verma&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 15,
     specialization: "Crop selection",
@@ -6112,7 +6112,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 360,
     name: "Mr. Pramod Shah",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pramod%20Shah&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 9,
     specialization: "Machinery guidance",
@@ -6129,7 +6129,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 361,
     name: "Dr. Naresh Jain",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Naresh%20Jain&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 11,
     specialization: "Post-harvest storage",
@@ -6146,7 +6146,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 362,
     name: "Dr. Ajay Upadhyay",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ajay%20Upadhyay&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 4,
     specialization: "Market price guidance",
@@ -6163,7 +6163,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 363,
     name: "Er. Bhupesh Mishra",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhupesh%20Mishra&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 16,
     specialization: "Soil testing",
@@ -6180,7 +6180,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 364,
     name: "Dr. Neeta Bisht",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neeta%20Bisht&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 20,
     specialization: "Low crop yield",
@@ -6197,7 +6197,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 365,
     name: "Mr. Vinod Tiwari",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vinod%20Tiwari&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 14,
     specialization: "Soil does not retain water",
@@ -6214,7 +6214,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 366,
     name: "Mr. Ritu Kumar",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ritu%20Kumar&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 7,
     specialization: "Leaf diseases",
@@ -6231,7 +6231,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 367,
     name: "Mr. Sangeeta Srivastava",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sangeeta%20Srivastava&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 4,
     specialization: "Pest attack",
@@ -6248,7 +6248,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 368,
     name: "Mr. Ashok Thakur",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ashok%20Thakur&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 15,
     specialization: "Fertilizer recommendation",
@@ -6265,7 +6265,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 369,
     name: "Ms. Priya Sharma",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 9,
     specialization: "Organic farming",
@@ -6282,7 +6282,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 370,
     name: "Dr. Deepak Mishra",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepak%20Mishra&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 11,
     specialization: "Irrigation planning",
@@ -6299,7 +6299,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 371,
     name: "Dr. Govind Kumar",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Govind%20Kumar&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 5,
     specialization: "Government schemes",
@@ -6316,7 +6316,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 372,
     name: "Dr. Vikram Hembram",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Hembram&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 16,
     specialization: "Crop selection",
@@ -6333,7 +6333,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 373,
     name: "Ms. Suresh Oraon",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Oraon&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 18,
     specialization: "Weather-related issues",
@@ -6350,7 +6350,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 374,
     name: "Ms. Vijay Tiwari",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Tiwari&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 11,
     specialization: "Post-harvest storage",
@@ -6367,7 +6367,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 375,
     name: "Ms. Hemla Jain",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hemla%20Jain&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 5,
     specialization: "Market price guidance",
@@ -6384,7 +6384,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 376,
     name: "Dr. Dura Saxena",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dura%20Saxena&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 6,
     specialization: "Machinery guidance",
@@ -6401,7 +6401,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 377,
     name: "Dr. Kavita Oraon",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavita%20Oraon&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 18,
     specialization: "Low crop yield",
@@ -6418,7 +6418,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 378,
     name: "Mr. Budhram Tiwari",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Budhram%20Tiwari&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 11,
     specialization: "Soil does not retain water",
@@ -6435,7 +6435,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 379,
     name: "Mr. Birsa Gupta",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Birsa%20Gupta&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 13,
     specialization: "Soil testing",
@@ -6452,7 +6452,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 380,
     name: "Mr. Deepak Chaurasia",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepak%20Chaurasia&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 7,
     specialization: "Pest attack",
@@ -6469,7 +6469,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 381,
     name: "Dr. Govind Gond",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Govind%20Gond&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 18,
     specialization: "Fertilizer recommendation",
@@ -6486,7 +6486,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 382,
     name: "Er. Sanjay Yadav",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanjay%20Yadav&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 20,
     specialization: "Leaf diseases",
@@ -6503,7 +6503,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 383,
     name: "Mr. Suresh Sharma",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 13,
     specialization: "Irrigation planning",
@@ -6520,7 +6520,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 384,
     name: "Mr. Ajay Dubey",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ajay%20Dubey&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 7,
     specialization: "Government schemes",
@@ -6537,7 +6537,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 385,
     name: "Dr. Ravi Pandey",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Pandey&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 8,
     specialization: "Organic farming",
@@ -6554,7 +6554,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 386,
     name: "Dr. Dura Yadav",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dura%20Yadav&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 20,
     specialization: "Weather-related issues",
@@ -6571,7 +6571,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 387,
     name: "Dr. Kavita Sharma",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavita%20Sharma&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 13,
     specialization: "Post-harvest storage",
@@ -6588,7 +6588,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 388,
     name: "Ms. Asha Soren",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Soren&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 15,
     specialization: "Crop selection",
@@ -6605,7 +6605,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 389,
     name: "Ms. Birsa Verma",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Birsa%20Verma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 8,
     specialization: "Machinery guidance",
@@ -6622,7 +6622,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 390,
     name: "Mr. Mahendra Sahu",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mahendra%20Sahu&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 20,
     specialization: "Low crop yield",
@@ -6639,7 +6639,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 391,
     name: "Dr. Vijay Srivastava",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Srivastava&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 11,
     specialization: "Market price guidance",
@@ -6656,7 +6656,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 392,
     name: "Er. Hemla Kumar",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hemla%20Kumar&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 5,
     specialization: "Soil testing",
@@ -6673,7 +6673,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 393,
     name: "Mr. Sangeeta Gupta",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sangeeta%20Gupta&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 16,
     specialization: "Pest attack",
@@ -6690,7 +6690,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 394,
     name: "Mr. Neeta Hembram",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neeta%20Hembram&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 18,
     specialization: "Soil does not retain water",
@@ -6707,7 +6707,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 395,
     name: "Dr. Budhram Pandey",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Budhram%20Pandey&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 11,
     specialization: "Leaf diseases",
@@ -6724,7 +6724,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 396,
     name: "Dr. Ritu Yadav",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ritu%20Yadav&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 5,
     specialization: "Irrigation planning",
@@ -6741,7 +6741,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 397,
     name: "Mr. Deepak Jain",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepak%20Jain&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 7,
     specialization: "Fertilizer recommendation",
@@ -6758,7 +6758,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 398,
     name: "Mr. Govind Soren",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Govind%20Soren&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 18,
     specialization: "Organic farming",
@@ -6775,7 +6775,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 399,
     name: "Ms. Vikram Verma",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Verma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 12,
     specialization: "Weather-related issues",
@@ -6792,7 +6792,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 400,
     name: "Ms. Sanjay Munda",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanjay%20Munda&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 16,
     specialization: "Government schemes",
@@ -6809,7 +6809,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 401,
     name: "Ms. Suresh Mishra",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Mishra&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 10,
     specialization: "Crop selection",
@@ -6826,7 +6826,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 402,
     name: "Ms. Ajay Kumar",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ajay%20Kumar&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 21,
     specialization: "Machinery guidance",
@@ -6843,7 +6843,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 403,
     name: "Dr. Ravi Agarwal",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Agarwal&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 5,
     specialization: "Post-harvest storage",
@@ -6860,7 +6860,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 404,
     name: "Dr. Karma Munda",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Karma%20Munda&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 16,
     specialization: "Market price guidance",
@@ -6877,7 +6877,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 405,
     name: "Er. Kavita Mishra",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavita%20Mishra&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 10,
     specialization: "Soil testing",
@@ -6894,7 +6894,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 406,
     name: "Er. Sanna Oraon",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanna%20Oraon&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 14,
     specialization: "Low crop yield",
@@ -6911,7 +6911,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 407,
     name: "Er. Priya Tiwari",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Tiwari&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 8,
     specialization: "Soil does not retain water",
@@ -6928,7 +6928,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 408,
     name: "Mr. Suresh Jain",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Jain&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 19,
     specialization: "Leaf diseases",
@@ -6945,7 +6945,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 409,
     name: "Dr. Ramesh Chaurasia",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Chaurasia&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 21,
     specialization: "Pest attack",
@@ -6962,7 +6962,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 410,
     name: "Dr. Vikram Gond",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Gond&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 14,
     specialization: "Fertilizer recommendation",
@@ -6979,7 +6979,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 411,
     name: "Dr. Rohit Yadav",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rohit%20Yadav&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 8,
     specialization: "Organic farming",
@@ -6996,7 +6996,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 412,
     name: "Dr. Suresh Hembram",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Hembram&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 4,
     specialization: "Irrigation planning",
@@ -7013,7 +7013,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 413,
     name: "Dr. Amit Pandey",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amit%20Pandey&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 16,
     specialization: "Government schemes",
@@ -7030,7 +7030,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 414,
     name: "Dr. Sanjay Yadav",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanjay%20Yadav&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 9,
     specialization: "Crop selection",
@@ -7047,7 +7047,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 415,
     name: "Ms. Anuj Jain",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anuj%20Jain&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 11,
     specialization: "Weather-related issues",
@@ -7064,7 +7064,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 416,
     name: "Ms. Pankaj Soren",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pankaj%20Soren&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 4,
     specialization: "Post-harvest storage",
@@ -7081,7 +7081,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 417,
     name: "Ms. Ravi Verma",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Verma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 16,
     specialization: "Market price guidance",
@@ -7098,7 +7098,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 418,
     name: "Dr. Sangeeta Yadav",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sangeeta%20Yadav&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 18,
     specialization: "Machinery guidance",
@@ -7115,7 +7115,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 419,
     name: "Mr. Sanna Agarwal",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanna%20Agarwal&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 11,
     specialization: "Low crop yield",
@@ -7132,7 +7132,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 420,
     name: "Mr. Asha Munda",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Munda&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 5,
     specialization: "Soil does not retain water",
@@ -7149,7 +7149,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 421,
     name: "Mr. Ritu Gond",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ritu%20Gond&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 6,
     specialization: "Soil testing",
@@ -7166,7 +7166,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 422,
     name: "Dr. Suresh Yadav",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Yadav&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 18,
     specialization: "Pest attack",
@@ -7183,7 +7183,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 423,
     name: "Dr. Amit Agarwal",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amit%20Agarwal&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 11,
     specialization: "Fertilizer recommendation",
@@ -7200,7 +7200,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 424,
     name: "Er. Vikram Dubey",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Dubey&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 13,
     specialization: "Leaf diseases",
@@ -7217,7 +7217,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 425,
     name: "Mr. Anuj Baiga",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anuj%20Baiga&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 6,
     specialization: "Irrigation planning",
@@ -7234,7 +7234,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 426,
     name: "Mr. Pankaj Singh",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pankaj%20Singh&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 18,
     specialization: "Government schemes",
@@ -7251,7 +7251,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 427,
     name: "Dr. Hemla Sharma",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hemla%20Sharma&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 19,
     specialization: "Organic farming",
@@ -7268,7 +7268,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 428,
     name: "Dr. Sangeeta Dubey",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sangeeta%20Dubey&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 13,
     specialization: "Weather-related issues",
@@ -7285,7 +7285,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 429,
     name: "Dr. Sanna Baiga",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanna%20Baiga&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 6,
     specialization: "Post-harvest storage",
@@ -7302,7 +7302,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 430,
     name: "Ms. Mahendra Chaurasia",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mahendra%20Chaurasia&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 16,
     specialization: "Crop selection",
@@ -7319,7 +7319,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 431,
     name: "Ms. Sanjay Gond",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanjay%20Gond&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 9,
     specialization: "Machinery guidance",
@@ -7336,7 +7336,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 432,
     name: "Dr. Suresh Yadav",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Yadav&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 21,
     specialization: "Low crop yield",
@@ -7353,7 +7353,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 433,
     name: "Dr. Pankaj Sharma",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pankaj%20Sharma&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 5,
     specialization: "Market price guidance",
@@ -7370,7 +7370,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 434,
     name: "Er. Ravi Dubey",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Dubey&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 16,
     specialization: "Soil testing",
@@ -7387,7 +7387,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 435,
     name: "Mr. Dura Baiga",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dura%20Baiga&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 10,
     specialization: "Pest attack",
@@ -7404,7 +7404,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 436,
     name: "Mr. Karma Yadav",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Karma%20Yadav&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 11,
     specialization: "Soil does not retain water",
@@ -7421,7 +7421,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 437,
     name: "Dr. Asha Sharma",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Sharma&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 5,
     specialization: "Leaf diseases",
@@ -7438,7 +7438,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 438,
     name: "Dr. Birsa Dubey",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Birsa%20Dubey&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 16,
     specialization: "Irrigation planning",
@@ -7455,7 +7455,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 439,
     name: "Mr. Suresh Verma",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Verma&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 18,
     specialization: "Fertilizer recommendation",
@@ -7472,7 +7472,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 440,
     name: "Mr. Amit Sahu",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amit%20Sahu&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 11,
     specialization: "Organic farming",
@@ -7489,7 +7489,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 441,
     name: "Mr. Sanjay Murmu",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanjay%20Murmu&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 5,
     specialization: "Weather-related issues",
@@ -7506,7 +7506,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 442,
     name: "Mr. Birsa Gond",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Birsa%20Gond&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 19,
     specialization: "Government schemes",
@@ -7523,7 +7523,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 443,
     name: "Ms. Mahendra Yadav",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mahendra%20Yadav&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 13,
     specialization: "Crop selection",
@@ -7540,7 +7540,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 444,
     name: "Ms. Govind Agarwal",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Govind%20Agarwal&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 6,
     specialization: "Machinery guidance",
@@ -7557,7 +7557,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 445,
     name: "Dr. Asha Murmu",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Murmu&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 6,
     specialization: "Post-harvest storage",
@@ -7574,7 +7574,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 446,
     name: "Er. Birsa Srivastava",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Birsa%20Srivastava&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 17,
     specialization: "Market price guidance",
@@ -7591,7 +7591,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 447,
     name: "Mr. Deepak Kumar",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepak%20Kumar&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 11,
     specialization: "Soil testing",
@@ -7608,7 +7608,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 448,
     name: "Mr. Amit Sahu",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amit%20Sahu&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 12,
     specialization: "Low crop yield",
@@ -7625,7 +7625,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 449,
     name: "Dr. Sanjay Murmu",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanjay%20Murmu&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 6,
     specialization: "Soil does not retain water",
@@ -7642,7 +7642,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 450,
     name: "Dr. Suresh Srivastava",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Srivastava&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 17,
     specialization: "Leaf diseases",
@@ -7659,7 +7659,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 451,
     name: "Mr. Pankaj Mishra",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pankaj%20Mishra&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 19,
     specialization: "Pest attack",
@@ -7676,7 +7676,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 452,
     name: "Mr. Ravi Kumar",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Kumar&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 13,
     specialization: "Fertilizer recommendation",
@@ -7693,7 +7693,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 453,
     name: "Mr. Dura Hembram",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dura%20Hembram&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 6,
     specialization: "Organic farming",
@@ -7710,7 +7710,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 454,
     name: "Mr. Suresh Baiga",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Baiga&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 21,
     specialization: "Irrigation planning",
@@ -7727,7 +7727,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 455,
     name: "Mr. Ajay Singh",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ajay%20Singh&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 14,
     specialization: "Government schemes",
@@ -7744,7 +7744,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 456,
     name: "Ms. Dura Saxena",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dura%20Saxena&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 8,
     specialization: "Crop selection",
@@ -7761,7 +7761,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 457,
     name: "Dr. Karma Srivastava",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Karma%20Srivastava&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 9,
     specialization: "Weather-related issues",
@@ -7778,7 +7778,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 458,
     name: "Er. Kavita Kumar",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavita%20Kumar&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 21,
     specialization: "Post-harvest storage",
@@ -7795,7 +7795,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 459,
     name: "Ms. Mangal Gupta",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mangal%20Gupta&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 14,
     specialization: "Market price guidance",
@@ -7812,7 +7812,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 460,
     name: "Ms. Birsa Murmu",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Birsa%20Murmu&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 16,
     specialization: "Machinery guidance",
@@ -7829,7 +7829,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 461,
     name: "Dr. Mahendra Srivastava",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mahendra%20Srivastava&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 9,
     specialization: "Low crop yield",
@@ -7846,7 +7846,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 462,
     name: "Dr. Sanjay Kumar",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanjay%20Kumar&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 21,
     specialization: "Soil does not retain water",
@@ -7863,7 +7863,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 463,
     name: "Er. Rohit Kumar",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rohit%20Kumar&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 4,
     specialization: "Soil testing",
@@ -7880,7 +7880,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 464,
     name: "Mr. Suresh Hembram",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Hembram&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 16,
     specialization: "Pest attack",
@@ -7897,7 +7897,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 465,
     name: "Mr. Ajay Pandey",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ajay%20Pandey&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 9,
     specialization: "Fertilizer recommendation",
@@ -7914,7 +7914,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 466,
     name: "Dr. Ravi Tiwari",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Tiwari&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 11,
     specialization: "Leaf diseases",
@@ -7931,7 +7931,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 467,
     name: "Dr. Karma Kumar",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Karma%20Kumar&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 5,
     specialization: "Irrigation planning",
@@ -7948,7 +7948,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 468,
     name: "Dr. Asha Hembram",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Hembram&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 16,
     specialization: "Government schemes",
@@ -7965,7 +7965,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 469,
     name: "Er. Deepak Mehta",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepak%20Mehta&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 20,
     specialization: "Organic farming",
@@ -7982,7 +7982,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 470,
     name: "Mr. Nilesh Shinde",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilesh%20Shinde&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 13,
     specialization: "Weather-related issues",
@@ -7999,7 +7999,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 471,
     name: "Ms. Vrushali Salunke",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vrushali%20Salunke&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 7,
     specialization: "Post-harvest storage",
@@ -8016,7 +8016,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 472,
     name: "Ms. Neha Modi",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neha%20Modi&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 19,
     specialization: "Crop selection",
@@ -8033,7 +8033,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 473,
     name: "Ms. Mangesh Bhosale",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mangesh%20Bhosale&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 13,
     specialization: "Machinery guidance",
@@ -8050,7 +8050,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 474,
     name: "Ms. Suresh Shah",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Shah&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 6,
     specialization: "Low crop yield",
@@ -8067,7 +8067,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 475,
     name: "Dr. Kalpesh Parikh",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalpesh%20Parikh&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 8,
     specialization: "Market price guidance",
@@ -8084,7 +8084,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 476,
     name: "Dr. Suresh Patel",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Patel&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 20,
     specialization: "Soil testing",
@@ -8101,7 +8101,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 477,
     name: "Dr. Hetal Trivedi",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hetal%20Trivedi&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 13,
     specialization: "Pest attack",
@@ -8118,7 +8118,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 478,
     name: "Mr. Dhruv Joshi",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dhruv%20Joshi&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 15,
     specialization: "Soil does not retain water",
@@ -8135,7 +8135,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 479,
     name: "Mr. Raju Bhatt",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Raju%20Bhatt&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 8,
     specialization: "Leaf diseases",
@@ -8152,7 +8152,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 480,
     name: "Mr. Kalpesh Patel",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalpesh%20Patel&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 20,
     specialization: "Irrigation planning",
@@ -8169,7 +8169,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 481,
     name: "Dr. Smita Dave",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Smita%20Dave&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 4,
     specialization: "Fertilizer recommendation",
@@ -8186,7 +8186,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 482,
     name: "Dr. Nilesh Joshi",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilesh%20Joshi&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 15,
     specialization: "Organic farming",
@@ -8203,7 +8203,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 483,
     name: "Mr. Neha Bhatt",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neha%20Bhatt&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 9,
     specialization: "Weather-related issues",
@@ -8220,7 +8220,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 484,
     name: "Mr. Rima Mehta",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rima%20Mehta&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 10,
     specialization: "Government schemes",
@@ -8237,7 +8237,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 485,
     name: "Mr. Kalpesh Dave",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalpesh%20Dave&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 4,
     specialization: "Crop selection",
@@ -8254,7 +8254,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 486,
     name: "Dr. Suresh Desai",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Desai&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 15,
     specialization: "Machinery guidance",
@@ -8271,7 +8271,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 487,
     name: "Ms. Neha Patel",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neha%20Patel&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 12,
     specialization: "Post-harvest storage",
@@ -8288,7 +8288,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 488,
     name: "Dr. Jayesh Trivedi",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Jayesh%20Trivedi&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 5,
     specialization: "Market price guidance",
@@ -8305,7 +8305,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 489,
     name: "Dr. Hetal Modi",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hetal%20Modi&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 17,
     specialization: "Soil testing",
@@ -8322,7 +8322,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 490,
     name: "Er. Suresh Bhatt",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Bhatt&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 18,
     specialization: "Low crop yield",
@@ -8339,7 +8339,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 491,
     name: "Mr. Hetal Patel",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hetal%20Patel&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 12,
     specialization: "Soil does not retain water",
@@ -8356,7 +8356,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 492,
     name: "Mr. Ganesh Trivedi",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ganesh%20Trivedi&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 5,
     specialization: "Leaf diseases",
@@ -8373,7 +8373,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 493,
     name: "Dr. Raju Joshi",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Raju%20Joshi&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 7,
     specialization: "Pest attack",
@@ -8390,7 +8390,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 494,
     name: "Dr. Kalpesh Bhatt",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalpesh%20Bhatt&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 18,
     specialization: "Fertilizer recommendation",
@@ -8407,7 +8407,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 495,
     name: "Dr. Amol Patel",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amol%20Patel&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 12,
     specialization: "Organic farming",
@@ -8424,7 +8424,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 496,
     name: "Mr. Nilesh Dave",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilesh%20Dave&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 14,
     specialization: "Irrigation planning",
@@ -8441,7 +8441,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 497,
     name: "Mr. Neha Desai",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neha%20Desai&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 7,
     specialization: "Government schemes",
@@ -8458,7 +8458,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 498,
     name: "Mr. Jayesh Bhatt",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Jayesh%20Bhatt&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 19,
     specialization: "Crop selection",
@@ -8475,7 +8475,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 499,
     name: "Mr. Nilesh Trivedi",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilesh%20Trivedi&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 15,
     specialization: "Weather-related issues",
@@ -8492,7 +8492,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 500,
     name: "Mr. Neha Modi",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neha%20Modi&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 9,
     specialization: "Post-harvest storage",
@@ -8509,7 +8509,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 501,
     name: "Dr. Jayesh Shah",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Jayesh%20Shah&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 20,
     specialization: "Market price guidance",
@@ -8526,7 +8526,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 502,
     name: "Ms. Amol Dave",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amol%20Dave&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 17,
     specialization: "Machinery guidance",
@@ -8543,7 +8543,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 503,
     name: "Dr. Bhavna Joshi",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhavna%20Joshi&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 10,
     specialization: "Low crop yield",
@@ -8560,7 +8560,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 504,
     name: "Dr. Dhruv Bhatt",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dhruv%20Bhatt&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 4,
     specialization: "Soil does not retain water",
@@ -8577,7 +8577,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 505,
     name: "Ms. Jayesh Mehta",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Jayesh%20Mehta&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 5,
     specialization: "Soil testing",
@@ -8594,7 +8594,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 506,
     name: "Mr. Hetal Dave",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hetal%20Dave&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 17,
     specialization: "Pest attack",
@@ -8611,7 +8611,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 507,
     name: "Mr. Rima Desai",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rima%20Desai&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 10,
     specialization: "Fertilizer recommendation",
@@ -8628,7 +8628,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 508,
     name: "Dr. Hetal Shah",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hetal%20Shah&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 12,
     specialization: "Leaf diseases",
@@ -8645,7 +8645,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 509,
     name: "Dr. Ganesh Mehta",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ganesh%20Mehta&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 5,
     specialization: "Irrigation planning",
@@ -8662,7 +8662,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 510,
     name: "Er. Jayesh Dave",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Jayesh%20Dave&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 17,
     specialization: "Government schemes",
@@ -8679,7 +8679,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 511,
     name: "Dr. Raju Mehta",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Raju%20Mehta&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 21,
     specialization: "Organic farming",
@@ -8696,7 +8696,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 512,
     name: "Mr. Kalpesh Modi",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalpesh%20Modi&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 15,
     specialization: "Weather-related issues",
@@ -8713,7 +8713,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 513,
     name: "Mr. Nilesh Desai",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilesh%20Desai&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 8,
     specialization: "Post-harvest storage",
@@ -8730,7 +8730,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 514,
     name: "Mr. Nilesh Shah",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilesh%20Shah&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 10,
     specialization: "Crop selection",
@@ -8747,7 +8747,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 515,
     name: "Dr. Neha Trivedi",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neha%20Trivedi&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 4,
     specialization: "Machinery guidance",
@@ -8764,7 +8764,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 516,
     name: "Dr. Kalpesh Modi",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalpesh%20Modi&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 15,
     specialization: "Low crop yield",
@@ -8781,7 +8781,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 517,
     name: "Dr. Hetal Trivedi",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hetal%20Trivedi&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 20,
     specialization: "Market price guidance",
@@ -8798,7 +8798,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 518,
     name: "Dr. Rima Parikh",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rima%20Parikh&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 13,
     specialization: "Soil testing",
@@ -8815,7 +8815,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 519,
     name: "Dr. Ramji Shah",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramji%20Shah&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 7,
     specialization: "Pest attack",
@@ -8832,7 +8832,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 520,
     name: "Mr. Ganesh Patel",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ganesh%20Patel&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 8,
     specialization: "Soil does not retain water",
@@ -8849,7 +8849,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 521,
     name: "Mr. Jayesh Trivedi",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Jayesh%20Trivedi&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 20,
     specialization: "Leaf diseases",
@@ -8866,7 +8866,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 522,
     name: "Mr. Vijay Parikh",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Parikh&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 13,
     specialization: "Irrigation planning",
@@ -8883,7 +8883,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 523,
     name: "Mr. Ramji Mehta",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramji%20Mehta&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 10,
     specialization: "Fertilizer recommendation",
@@ -8900,7 +8900,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 524,
     name: "Mr. Dhruv Dave",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dhruv%20Dave&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 21,
     specialization: "Organic farming",
@@ -8917,7 +8917,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 525,
     name: "Dr. Raju Desai",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Raju%20Desai&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 15,
     specialization: "Weather-related issues",
@@ -8934,7 +8934,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 526,
     name: "Er. Vijay Shah",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Shah&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 16,
     specialization: "Government schemes",
@@ -8951,7 +8951,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 527,
     name: "Mr. Smita Mehta",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Smita%20Mehta&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 10,
     specialization: "Crop selection",
@@ -8968,7 +8968,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 528,
     name: "Mr. Nilesh Dave",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilesh%20Dave&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 21,
     specialization: "Machinery guidance",
@@ -8985,7 +8985,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 529,
     name: "Dr. Suresh Mehta",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Mehta&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 13,
     specialization: "Post-harvest storage",
@@ -9002,7 +9002,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 530,
     name: "Dr. Hetal Dave",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hetal%20Dave&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 6,
     specialization: "Market price guidance",
@@ -9019,7 +9019,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 531,
     name: "Dr. Ganesh Joshi",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ganesh%20Joshi&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 18,
     specialization: "Soil testing",
@@ -9036,7 +9036,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 532,
     name: "Ms. Raju Desai",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Raju%20Desai&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 19,
     specialization: "Low crop yield",
@@ -9053,7 +9053,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 533,
     name: "Ms. Kalpesh Mehta",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalpesh%20Mehta&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 13,
     specialization: "Soil does not retain water",
@@ -9070,7 +9070,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 534,
     name: "Mr. Amol Dave",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amol%20Dave&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 7,
     specialization: "Leaf diseases",
@@ -9087,7 +9087,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 535,
     name: "Dr. Nilesh Modi",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilesh%20Modi&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 8,
     specialization: "Pest attack",
@@ -9104,7 +9104,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 536,
     name: "Dr. Neha Shah",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neha%20Shah&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 20,
     specialization: "Fertilizer recommendation",
@@ -9121,7 +9121,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 537,
     name: "Er. Jayesh Mehta",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Jayesh%20Mehta&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 13,
     specialization: "Organic farming",
@@ -9138,7 +9138,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 538,
     name: "Dr. Amol Joshi",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amol%20Joshi&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 10,
     specialization: "Irrigation planning",
@@ -9155,7 +9155,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 539,
     name: "Er. Bhavna Parikh",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhavna%20Parikh&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 21,
     specialization: "Government schemes",
@@ -9172,7 +9172,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 540,
     name: "Mr. Jayesh Patel",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Jayesh%20Patel&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 15,
     specialization: "Crop selection",
@@ -9189,7 +9189,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 541,
     name: "Mr. Jayesh Dave",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Jayesh%20Dave&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 16,
     specialization: "Weather-related issues",
@@ -9206,7 +9206,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 542,
     name: "Dr. Hetal Joshi",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hetal%20Joshi&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 10,
     specialization: "Post-harvest storage",
@@ -9223,7 +9223,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 543,
     name: "Dr. Hetal Bhatt",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hetal%20Bhatt&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 21,
     specialization: "Market price guidance",
@@ -9240,7 +9240,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 544,
     name: "Ms. Vijay Joshi",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Joshi&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 13,
     specialization: "Machinery guidance",
@@ -9257,7 +9257,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 545,
     name: "Ms. Smita Parikh",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Smita%20Parikh&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 6,
     specialization: "Low crop yield",
@@ -9274,7 +9274,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 546,
     name: "Ms. Nilesh Patel",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilesh%20Patel&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 18,
     specialization: "Soil does not retain water",
@@ -9291,7 +9291,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 547,
     name: "Dr. Dhruv Dave",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dhruv%20Dave&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 19,
     specialization: "Soil testing",
@@ -9308,7 +9308,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 548,
     name: "Dr. Rima Joshi",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rima%20Joshi&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 13,
     specialization: "Pest attack",
@@ -9325,7 +9325,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 549,
     name: "Mr. Kalpesh Parikh",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalpesh%20Parikh&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 6,
     specialization: "Fertilizer recommendation",
@@ -9342,7 +9342,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 550,
     name: "Mr. Rima Bhatt",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rima%20Bhatt&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 8,
     specialization: "Leaf diseases",
@@ -9359,7 +9359,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 551,
     name: "Mr. Ramji Dave",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramji%20Dave&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 20,
     specialization: "Irrigation planning",
@@ -9376,7 +9376,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 552,
     name: "Dr. Dhruv Joshi",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dhruv%20Joshi&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 13,
     specialization: "Government schemes",
@@ -9393,7 +9393,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 553,
     name: "Mr. Nilesh Patel",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilesh%20Patel&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 5,
     specialization: "Organic farming",
@@ -9410,7 +9410,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 554,
     name: "Mr. Neha Joshi",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neha%20Joshi&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 16,
     specialization: "Weather-related issues",
@@ -9427,7 +9427,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 555,
     name: "Mr. Jayesh Parikh",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Jayesh%20Parikh&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 10,
     specialization: "Post-harvest storage",
@@ -9444,7 +9444,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 556,
     name: "Mr. Nilesh Mehta",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilesh%20Mehta&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 6,
     specialization: "Crop selection",
@@ -9461,7 +9461,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 557,
     name: "Mr. Neha Modi",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neha%20Modi&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 18,
     specialization: "Machinery guidance",
@@ -9478,7 +9478,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 558,
     name: "Ms. Jayesh Desai",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Jayesh%20Desai&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 11,
     specialization: "Low crop yield",
@@ -9495,7 +9495,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 559,
     name: "Dr. Kalpesh Shah",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalpesh%20Shah&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 13,
     specialization: "Market price guidance",
@@ -9512,7 +9512,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 560,
     name: "Dr. Suresh Mehta",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Mehta&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 6,
     specialization: "Soil testing",
@@ -9529,7 +9529,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 561,
     name: "Ms. Hetal Modi",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hetal%20Modi&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 18,
     specialization: "Pest attack",
@@ -9546,7 +9546,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 562,
     name: "Ms. Dhruv Parikh",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dhruv%20Parikh&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 19,
     specialization: "Soil does not retain water",
@@ -9563,7 +9563,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 563,
     name: "Mr. Raju Shah",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Raju%20Shah&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 13,
     specialization: "Leaf diseases",
@@ -9580,7 +9580,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 564,
     name: "Dr. Kalpesh Trivedi",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalpesh%20Trivedi&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 6,
     specialization: "Irrigation planning",
@@ -9597,7 +9597,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 565,
     name: "Mr. Hetal Desai",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hetal%20Desai&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 21,
     specialization: "Fertilizer recommendation",
@@ -9614,7 +9614,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 566,
     name: "Dr. Ganesh Bhatt",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ganesh%20Bhatt&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 14,
     specialization: "Organic farming",
@@ -9631,7 +9631,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 567,
     name: "Dr. Jayesh Patel",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Jayesh%20Patel&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 8,
     specialization: "Weather-related issues",
@@ -9648,7 +9648,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 568,
     name: "Mr. Dhruv Bhatt",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dhruv%20Bhatt&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 17,
     specialization: "Government schemes",
@@ -9665,7 +9665,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 569,
     name: "Mr. Rima Patel",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rima%20Patel&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 11,
     specialization: "Crop selection",
@@ -9682,7 +9682,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 570,
     name: "Mr. Kalpesh Trivedi",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalpesh%20Trivedi&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 4,
     specialization: "Machinery guidance",
@@ -9699,7 +9699,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 571,
     name: "Dr. Rima Joshi",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rima%20Joshi&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 6,
     specialization: "Post-harvest storage",
@@ -9716,7 +9716,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 572,
     name: "Dr. Ramji Bhatt",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramji%20Bhatt&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 18,
     specialization: "Market price guidance",
@@ -9733,7 +9733,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 573,
     name: "Er. Dhruv Patel",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dhruv%20Patel&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 11,
     specialization: "Soil testing",
@@ -9750,7 +9750,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 574,
     name: "Ms. Prabhjot Sidhu",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Prabhjot%20Sidhu&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 14,
     specialization: "Low crop yield",
@@ -9767,7 +9767,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 575,
     name: "Ms. Daljit Johal",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Daljit%20Johal&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 7,
     specialization: "Soil does not retain water",
@@ -9784,7 +9784,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 576,
     name: "Ms. Gurdip Arora",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gurdip%20Arora&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 19,
     specialization: "Leaf diseases",
@@ -9801,7 +9801,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 577,
     name: "Ms. Simranjit Aulakh",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Simranjit%20Aulakh&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 15,
     specialization: "Pest attack",
@@ -9818,7 +9818,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 578,
     name: "Mr. Paramjit Gill",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Paramjit%20Gill&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 9,
     specialization: "Fertilizer recommendation",
@@ -9835,7 +9835,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 579,
     name: "Dr. Gurdip Bajwa",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gurdip%20Bajwa&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 20,
     specialization: "Organic farming",
@@ -9852,7 +9852,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 580,
     name: "Mr. Simranjit Sandhu",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Simranjit%20Sandhu&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 17,
     specialization: "Irrigation planning",
@@ -9869,7 +9869,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 581,
     name: "Dr. Paramjit Randhawa",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Paramjit%20Randhawa&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 10,
     specialization: "Government schemes",
@@ -9886,7 +9886,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 582,
     name: "Dr. Lakhwinder Bhatia",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Lakhwinder%20Bhatia&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 4,
     specialization: "Crop selection",
@@ -9903,7 +9903,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 583,
     name: "Dr. Daljit Johal",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Daljit%20Johal&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 8,
     specialization: "Weather-related issues",
@@ -9920,7 +9920,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 584,
     name: "Dr. Gurdip Arora",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gurdip%20Arora&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 20,
     specialization: "Post-harvest storage",
@@ -9937,7 +9937,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 585,
     name: "Dr. Kulwinder Sandhu",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kulwinder%20Sandhu&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 13,
     specialization: "Market price guidance",
@@ -9954,7 +9954,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 586,
     name: "Mr. Jaswinder Brar",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Jaswinder%20Brar&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 15,
     specialization: "Machinery guidance",
@@ -9971,7 +9971,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 587,
     name: "Ms. Satinder Johal",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Satinder%20Johal&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 8,
     specialization: "Low crop yield",
@@ -9988,7 +9988,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 588,
     name: "Ms. Manpreet Arora",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manpreet%20Arora&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 20,
     specialization: "Soil does not retain water",
@@ -10005,7 +10005,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 589,
     name: "Ms. Kulwinder Aulakh",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kulwinder%20Aulakh&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 16,
     specialization: "Soil testing",
@@ -10022,7 +10022,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 590,
     name: "Ms. Satinder Kaur",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Satinder%20Kaur&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 10,
     specialization: "Pest attack",
@@ -10039,7 +10039,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 591,
     name: "Dr. Manpreet Cheema",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manpreet%20Cheema&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 21,
     specialization: "Fertilizer recommendation",
@@ -10056,7 +10056,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 592,
     name: "Ms. Kulwinder Sidhu",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kulwinder%20Sidhu&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 18,
     specialization: "Leaf diseases",
@@ -10073,7 +10073,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 593,
     name: "Dr. Ranjit Johal",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ranjit%20Johal&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 12,
     specialization: "Irrigation planning",
@@ -10090,7 +10090,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 594,
     name: "Dr. Harbhajan Arora",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Harbhajan%20Arora&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 5,
     specialization: "Government schemes",
@@ -10107,7 +10107,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 595,
     name: "Mr. Sukhwinder Randhawa",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sukhwinder%20Randhawa&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 15,
     specialization: "Organic farming",
@@ -10124,7 +10124,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 596,
     name: "Mr. Prabhjot Bhatia",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Prabhjot%20Bhatia&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 8,
     specialization: "Weather-related issues",
@@ -10141,7 +10141,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 597,
     name: "Mr. Daljit Dhillon",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Daljit%20Dhillon&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 20,
     specialization: "Post-harvest storage",
@@ -10158,7 +10158,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 598,
     name: "Dr. Balwinder Sandhu",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Balwinder%20Sandhu&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 21,
     specialization: "Crop selection",
@@ -10175,7 +10175,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 599,
     name: "Dr. Karamjit Randhawa",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Karamjit%20Randhawa&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 15,
     specialization: "Machinery guidance",
@@ -10192,7 +10192,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 600,
     name: "Mr. Jaswinder Bhatia",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Jaswinder%20Bhatia&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 8,
     specialization: "Low crop yield",
@@ -10209,7 +10209,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 601,
     name: "Dr. Daljit Mann",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Daljit%20Mann&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 5,
     specialization: "Market price guidance",
@@ -10226,7 +10226,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 602,
     name: "Ms. Gurdip Gill",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gurdip%20Gill&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 16,
     specialization: "Soil testing",
@@ -10243,7 +10243,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 603,
     name: "Ms. Kulwinder Bajwa",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kulwinder%20Bajwa&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 10,
     specialization: "Pest attack",
@@ -10260,7 +10260,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 604,
     name: "Ms. Jaswinder Dhillon",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Jaswinder%20Dhillon&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 11,
     specialization: "Soil does not retain water",
@@ -10277,7 +10277,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 605,
     name: "Dr. Satinder Aulakh",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Satinder%20Aulakh&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 5,
     specialization: "Leaf diseases",
@@ -10294,7 +10294,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 606,
     name: "Dr. Manpreet Gill",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manpreet%20Gill&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 16,
     specialization: "Irrigation planning",
@@ -10311,7 +10311,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 607,
     name: "Er. Gurpreet Bhatia",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gurpreet%20Bhatia&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 18,
     specialization: "Fertilizer recommendation",
@@ -10328,7 +10328,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 608,
     name: "Mr. Amarjit Dhillon",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amarjit%20Dhillon&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 11,
     specialization: "Organic farming",
@@ -10345,7 +10345,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 609,
     name: "Mr. Simranjit Aulakh",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Simranjit%20Aulakh&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 5,
     specialization: "Weather-related issues",
@@ -10362,7 +10362,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 610,
     name: "Dr. Kulwinder Cheema",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kulwinder%20Cheema&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 14,
     specialization: "Government schemes",
@@ -10379,7 +10379,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 611,
     name: "Dr. Ranjit Mann",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ranjit%20Mann&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 8,
     specialization: "Crop selection",
@@ -10396,7 +10396,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 612,
     name: "Er. Harbhajan Gill",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Harbhajan%20Gill&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 20,
     specialization: "Machinery guidance",
@@ -10413,7 +10413,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 613,
     name: "Dr. Balwinder Arora",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Balwinder%20Arora&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 16,
     specialization: "Post-harvest storage",
@@ -10430,7 +10430,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 614,
     name: "Er. Ranjit Sandhu",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ranjit%20Sandhu&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 10,
     specialization: "Market price guidance",
@@ -10447,7 +10447,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 615,
     name: "Ms. Harbhajan Sohal",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Harbhajan%20Sohal&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 21,
     specialization: "Soil testing",
@@ -10464,7 +10464,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 616,
     name: "Ms. Amarjit Grewal",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amarjit%20Grewal&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 13,
     specialization: "Low crop yield",
@@ -10481,7 +10481,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 617,
     name: "Dr. Simranjit Aulakh",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Simranjit%20Aulakh&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 6,
     specialization: "Soil does not retain water",
@@ -10498,7 +10498,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 618,
     name: "Dr. Daljit Kaur",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Daljit%20Kaur&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 18,
     specialization: "Leaf diseases",
@@ -10515,7 +10515,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 619,
     name: "Er. Daljit Bhatia",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Daljit%20Bhatia&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 19,
     specialization: "Pest attack",
@@ -10532,7 +10532,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 620,
     name: "Ms. Gurdip Grewal",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gurdip%20Grewal&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 13,
     specialization: "Fertilizer recommendation",
@@ -10549,7 +10549,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 621,
     name: "Mr. Jaswinder Sohal",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Jaswinder%20Sohal&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 6,
     specialization: "Organic farming",
@@ -10566,7 +10566,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 622,
     name: "Dr. Jaswinder Johal",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Jaswinder%20Johal&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 8,
     specialization: "Irrigation planning",
@@ -10583,7 +10583,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 623,
     name: "Dr. Satinder Arora",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Satinder%20Arora&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 19,
     specialization: "Government schemes",
@@ -10600,7 +10600,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 624,
     name: "Dr. Gurpreet Sandhu",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gurpreet%20Sandhu&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 13,
     specialization: "Crop selection",
@@ -10617,7 +10617,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 625,
     name: "Mr. Paramjit Bhatia",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Paramjit%20Bhatia&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 4,
     specialization: "Weather-related issues",
@@ -10634,7 +10634,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 626,
     name: "Mr. Lakhwinder Dhillon",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Lakhwinder%20Dhillon&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 16,
     specialization: "Post-harvest storage",
@@ -10651,7 +10651,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 627,
     name: "Dr. Balwinder Aulakh",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Balwinder%20Aulakh&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 9,
     specialization: "Market price guidance",
@@ -10668,7 +10668,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 628,
     name: "Dr. Kulwinder Randhawa",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kulwinder%20Randhawa&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 11,
     specialization: "Machinery guidance",
@@ -10685,7 +10685,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 629,
     name: "Er. Ranjit Bhatia",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ranjit%20Bhatia&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 4,
     specialization: "Low crop yield",
@@ -10702,7 +10702,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 630,
     name: "Ms. Harbhajan Grewal",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Harbhajan%20Grewal&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 16,
     specialization: "Soil does not retain water",
@@ -10719,7 +10719,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 631,
     name: "Er. Kulwinder Gill",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kulwinder%20Gill&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 12,
     specialization: "Soil testing",
@@ -10736,7 +10736,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 632,
     name: "Ms. Ranjit Bajwa",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ranjit%20Bajwa&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 6,
     specialization: "Pest attack",
@@ -10753,7 +10753,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 633,
     name: "Ms. Harbhajan Khanna",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Harbhajan%20Khanna&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 18,
     specialization: "Fertilizer recommendation",
@@ -10770,7 +10770,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 634,
     name: "Dr. Manpreet Aulakh",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manpreet%20Aulakh&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 19,
     specialization: "Leaf diseases",
@@ -10787,7 +10787,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 635,
     name: "Dr. Harpreet Kaur",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Harpreet%20Kaur&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 13,
     specialization: "Irrigation planning",
@@ -10804,7 +10804,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 636,
     name: "Dr. Tejinder Bajwa",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Tejinder%20Bajwa&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 6,
     specialization: "Government schemes",
@@ -10821,7 +10821,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 637,
     name: "Mr. Gurpreet Mann",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gurpreet%20Mann&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 13,
     specialization: "Organic farming",
@@ -10838,7 +10838,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 638,
     name: "Mr. Amarjit Gill",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amarjit%20Gill&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 7,
     specialization: "Weather-related issues",
@@ -10855,7 +10855,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 639,
     name: "Dr. Simranjit Bajwa",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Simranjit%20Bajwa&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 19,
     specialization: "Post-harvest storage",
@@ -10872,7 +10872,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 640,
     name: "Mr. Karamjit Randhawa",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Karamjit%20Randhawa&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 10,
     specialization: "Crop selection",
@@ -10889,7 +10889,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 641,
     name: "Mr. Jaswinder Singh",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Jaswinder%20Singh&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 21,
     specialization: "Machinery guidance",
@@ -10906,7 +10906,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 642,
     name: "Mr. Satinder Dhillon",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Satinder%20Dhillon&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 15,
     specialization: "Low crop yield",
@@ -10923,7 +10923,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 643,
     name: "Mr. Gurdip Brar",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gurdip%20Brar&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 11,
     specialization: "Market price guidance",
@@ -10940,7 +10940,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 644,
     name: "Mr. Kulwinder Sekhon",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kulwinder%20Sekhon&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 5,
     specialization: "Soil testing",
@@ -10957,7 +10957,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 645,
     name: "Ms. Ranjit Kapoor",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ranjit%20Kapoor&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 17,
     specialization: "Pest attack",
@@ -10974,7 +10974,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 646,
     name: "Ms. Harpreet Sandhu",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Harpreet%20Sandhu&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 11,
     specialization: "Soil does not retain water",
@@ -10991,7 +10991,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 647,
     name: "Ms. Tejinder Randhawa",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Tejinder%20Randhawa&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 4,
     specialization: "Leaf diseases",
@@ -11008,7 +11008,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 648,
     name: "Dr. Sukhwinder Singh",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sukhwinder%20Singh&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 16,
     specialization: "Irrigation planning",
@@ -11025,7 +11025,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 649,
     name: "Ms. Simranjit Johal",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Simranjit%20Johal&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 20,
     specialization: "Fertilizer recommendation",
@@ -11042,7 +11042,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 650,
     name: "Dr. Paramjit Bhatia",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Paramjit%20Bhatia&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 14,
     specialization: "Organic farming",
@@ -11059,7 +11059,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 651,
     name: "Dr. Gurdip Grewal",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gurdip%20Grewal&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 7,
     specialization: "Weather-related issues",
@@ -11076,7 +11076,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 652,
     name: "Mr. Gurdip Sidhu",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gurdip%20Sidhu&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 9,
     specialization: "Government schemes",
@@ -11093,7 +11093,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 653,
     name: "Mr. Kulwinder Johal",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kulwinder%20Johal&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 21,
     specialization: "Crop selection",
@@ -11110,7 +11110,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 654,
     name: "Mr. Satinder Arora",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Satinder%20Arora&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 14,
     specialization: "Machinery guidance",
@@ -11127,7 +11127,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 655,
     name: "Dr. Satinder Khanna",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Satinder%20Khanna&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 16,
     specialization: "Post-harvest storage",
@@ -11144,7 +11144,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 656,
     name: "Dr. Manpreet Brar",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manpreet%20Brar&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 9,
     specialization: "Market price guidance",
@@ -11161,7 +11161,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 657,
     name: "Er. Amarjit Sekhon",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amarjit%20Sekhon&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 21,
     specialization: "Soil testing",
@@ -11178,7 +11178,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 658,
     name: "Dr. Satinder Grewal",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Satinder%20Grewal&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 17,
     specialization: "Low crop yield",
@@ -11195,7 +11195,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 659,
     name: "Er. Manpreet Aulakh",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manpreet%20Aulakh&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 11,
     specialization: "Soil does not retain water",
@@ -11212,7 +11212,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 660,
     name: "Ms. Harpreet Kaur",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Harpreet%20Kaur&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 4,
     specialization: "Leaf diseases",
@@ -11229,7 +11229,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 661,
     name: "Er. Ranjit Kapoor",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ranjit%20Kapoor&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 19,
     specialization: "Pest attack",
@@ -11246,7 +11246,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 662,
     name: "Ms. Harbhajan Sidhu",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Harbhajan%20Sidhu&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 12,
     specialization: "Fertilizer recommendation",
@@ -11263,7 +11263,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 663,
     name: "Ms. Navdeep Johal",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Navdeep%20Johal&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 6,
     specialization: "Organic farming",
@@ -11280,7 +11280,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 664,
     name: "Dr. Navdeep Kapoor",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Navdeep%20Kapoor&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 13,
     specialization: "Irrigation planning",
@@ -11297,7 +11297,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 665,
     name: "Dr. Gurpreet Sidhu",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gurpreet%20Sidhu&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 7,
     specialization: "Government schemes",
@@ -11314,7 +11314,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 666,
     name: "Dr. Amarjit Randhawa",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amarjit%20Randhawa&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 18,
     specialization: "Crop selection",
@@ -11331,7 +11331,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 667,
     name: "Mr. Sukhwinder Bajwa",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sukhwinder%20Bajwa&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 20,
     specialization: "Weather-related issues",
@@ -11348,7 +11348,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 668,
     name: "Mr. Prabhjot Kapoor",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Prabhjot%20Kapoor&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 13,
     specialization: "Post-harvest storage",
@@ -11365,7 +11365,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 669,
     name: "Mr. Daljit Sidhu",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Daljit%20Sidhu&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 7,
     specialization: "Market price guidance",
@@ -11382,7 +11382,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 670,
     name: "Dr. Balwinder Gill",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Balwinder%20Gill&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 8,
     specialization: "Machinery guidance",
@@ -11399,7 +11399,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 671,
     name: "Mr. Karamjit Bajwa",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Karamjit%20Bajwa&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 20,
     specialization: "Low crop yield",
@@ -11416,7 +11416,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 672,
     name: "Mr. Jaswinder Khanna",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Jaswinder%20Khanna&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 13,
     specialization: "Soil does not retain water",
@@ -11433,7 +11433,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 673,
     name: "Mr. Amarjit Sekhon",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amarjit%20Sekhon&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 5,
     specialization: "Soil testing",
@@ -11450,7 +11450,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 674,
     name: "Dr. Simranjit Kapoor",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Simranjit%20Kapoor&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 16,
     specialization: "Pest attack",
@@ -11467,7 +11467,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 675,
     name: "Dr. Paramjit Sidhu",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Paramjit%20Sidhu&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 10,
     specialization: "Fertilizer recommendation",
@@ -11484,7 +11484,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 676,
     name: "Er. Vijay Saxena",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Saxena&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 6,
     specialization: "Leaf diseases",
@@ -11501,7 +11501,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 677,
     name: "Ms. Rajesh Oraon",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajesh%20Oraon&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 17,
     specialization: "Irrigation planning",
@@ -11518,7 +11518,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 678,
     name: "Ms. Sangeeta Tiwari",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sangeeta%20Tiwari&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 11,
     specialization: "Government schemes",
@@ -11535,7 +11535,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 679,
     name: "Ms. Anuj Murmu",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anuj%20Murmu&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 7,
     specialization: "Organic farming",
@@ -11552,7 +11552,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 680,
     name: "Mr. Pankaj Srivastava",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pankaj%20Srivastava&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 19,
     specialization: "Weather-related issues",
@@ -11569,7 +11569,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 681,
     name: "Mr. Ravi Kumar",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Kumar&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 12,
     specialization: "Post-harvest storage",
@@ -11586,7 +11586,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 682,
     name: "Mr. Rohit Agarwal",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rohit%20Agarwal&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 9,
     specialization: "Crop selection",
@@ -11603,7 +11603,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 683,
     name: "Mr. Pankaj Munda",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pankaj%20Munda&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 20,
     specialization: "Machinery guidance",
@@ -11620,7 +11620,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 684,
     name: "Mr. Ajay Mishra",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ajay%20Mishra&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 14,
     specialization: "Low crop yield",
@@ -11637,7 +11637,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 685,
     name: "Dr. Ravi Singh",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Singh&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 15,
     specialization: "Market price guidance",
@@ -11654,7 +11654,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 686,
     name: "Dr. Karma Saxena",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Karma%20Saxena&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 9,
     specialization: "Soil testing",
@@ -11671,7 +11671,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 687,
     name: "Er. Asha Oraon",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Oraon&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 20,
     specialization: "Pest attack",
@@ -11688,7 +11688,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 688,
     name: "Mr. Priya Baiga",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Baiga&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 4,
     specialization: "Soil does not retain water",
@@ -11705,7 +11705,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 689,
     name: "Dr. Suresh Singh",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Singh&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 16,
     specialization: "Leaf diseases",
@@ -11722,7 +11722,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 690,
     name: "Dr. Mahendra Saxena",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mahendra%20Saxena&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 9,
     specialization: "Irrigation planning",
@@ -11739,7 +11739,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 691,
     name: "Ms. Asha Verma",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Verma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 6,
     specialization: "Fertilizer recommendation",
@@ -11756,7 +11756,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 692,
     name: "Dr. Birsa Sahu",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Birsa%20Sahu&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 17,
     specialization: "Organic farming",
@@ -11773,7 +11773,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 693,
     name: "Dr. Deepak Murmu",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepak%20Murmu&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 11,
     specialization: "Weather-related issues",
@@ -11790,7 +11790,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 694,
     name: "Mr. Vijay Yadav",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Yadav&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 20,
     specialization: "Government schemes",
@@ -11807,7 +11807,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 695,
     name: "Mr. Hemla Sharma",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hemla%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 14,
     specialization: "Crop selection",
@@ -11824,7 +11824,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 696,
     name: "Mr. Sangeeta Dubey",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sangeeta%20Dubey&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 7,
     specialization: "Machinery guidance",
@@ -11841,7 +11841,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 697,
     name: "Dr. Neeta Verma",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neeta%20Verma&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 9,
     specialization: "Post-harvest storage",
@@ -11858,7 +11858,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 698,
     name: "Dr. Budhram Sahu",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Budhram%20Sahu&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 20,
     specialization: "Market price guidance",
@@ -11875,7 +11875,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 699,
     name: "Mr. Ritu Murmu",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ritu%20Murmu&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 14,
     specialization: "Soil testing",
@@ -11892,7 +11892,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 700,
     name: "Mr. Deepak Soren",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepak%20Soren&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 15,
     specialization: "Low crop yield",
@@ -11909,7 +11909,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 701,
     name: "Mr. Govind Verma",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Govind%20Verma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 9,
     specialization: "Soil does not retain water",
@@ -11926,7 +11926,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 702,
     name: "Dr. Vikram Sahu",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Sahu&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 20,
     specialization: "Leaf diseases",
@@ -11943,7 +11943,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 703,
     name: "Er. Ramesh Agarwal",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Agarwal&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 4,
     specialization: "Pest attack",
@@ -11960,7 +11960,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 704,
     name: "Ms. Vijay Munda",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Munda&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 15,
     specialization: "Fertilizer recommendation",
@@ -11977,7 +11977,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 705,
     name: "Ms. Hemla Mishra",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hemla%20Mishra&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 9,
     specialization: "Organic farming",
@@ -11994,7 +11994,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 706,
     name: "Ms. Ramesh Sharma",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 6,
     specialization: "Irrigation planning",
@@ -12011,7 +12011,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 707,
     name: "Ms. Anuj Dubey",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anuj%20Dubey&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 17,
     specialization: "Government schemes",
@@ -12028,7 +12028,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 708,
     name: "Mr. Rajesh Baiga",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajesh%20Baiga&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 11,
     specialization: "Crop selection",
@@ -12045,7 +12045,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 709,
     name: "Dr. Asha Chaurasia",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Chaurasia&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 20,
     specialization: "Weather-related issues",
@@ -12062,7 +12062,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 710,
     name: "Dr. Birsa Gond",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Birsa%20Gond&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 14,
     specialization: "Post-harvest storage",
@@ -12079,7 +12079,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 711,
     name: "Mr. Mahendra Yadav",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mahendra%20Yadav&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 7,
     specialization: "Market price guidance",
@@ -12096,7 +12096,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 712,
     name: "Dr. Kavita Hembram",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavita%20Hembram&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 4,
     specialization: "Machinery guidance",
@@ -12113,7 +12113,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 713,
     name: "Er. Mangal Pandey",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mangal%20Pandey&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 15,
     specialization: "Low crop yield",
@@ -12130,7 +12130,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 714,
     name: "Mr. Deepak Yadav",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepak%20Yadav&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 9,
     specialization: "Soil does not retain water",
@@ -12147,7 +12147,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 715,
     name: "Mr. Mahendra Kumar",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mahendra%20Kumar&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 10,
     specialization: "Soil testing",
@@ -12164,7 +12164,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 716,
     name: "Dr. Sanjay Hembram",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanjay%20Hembram&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 4,
     specialization: "Pest attack",
@@ -12181,7 +12181,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 717,
     name: "Dr. Ramesh Pandey",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Pandey&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 15,
     specialization: "Fertilizer recommendation",
@@ -12198,7 +12198,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 718,
     name: "Dr. Deepak Singh",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepak%20Singh&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 12,
     specialization: "Leaf diseases",
@@ -12215,7 +12215,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 719,
     name: "Dr. Govind Saxena",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Govind%20Saxena&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 5,
     specialization: "Irrigation planning",
@@ -12232,7 +12232,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 720,
     name: "Dr. Vikram Oraon",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Oraon&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 17,
     specialization: "Government schemes",
@@ -12249,7 +12249,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 721,
     name: "Ms. Suresh Kumar",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Kumar&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 18,
     specialization: "Organic farming",
@@ -12266,7 +12266,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 722,
     name: "Mr. Vijay Gupta",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Gupta&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 12,
     specialization: "Weather-related issues",
@@ -12283,7 +12283,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 723,
     name: "Mr. Hemla Chaurasia",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hemla%20Chaurasia&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 5,
     specialization: "Post-harvest storage",
@@ -12300,7 +12300,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 724,
     name: "Dr. Sanjay Soren",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanjay%20Soren&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 5,
     specialization: "Crop selection",
@@ -12317,7 +12317,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 725,
     name: "Er. Ramesh Verma",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Verma&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 16,
     specialization: "Machinery guidance",
@@ -12334,7 +12334,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 726,
     name: "Mr. Vijay Sahu",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Sahu&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 10,
     specialization: "Low crop yield",
@@ -12351,7 +12351,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 727,
     name: "Mr. Ajay Jain",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ajay%20Jain&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 11,
     specialization: "Market price guidance",
@@ -12368,7 +12368,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 728,
     name: "Dr. Dura Soren",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dura%20Soren&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 5,
     specialization: "Soil testing",
@@ -12385,7 +12385,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 729,
     name: "Dr. Kavita Verma",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavita%20Verma&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 17,
     specialization: "Pest attack",
@@ -12402,7 +12402,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 730,
     name: "Mr. Ramesh Hembram",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Hembram&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 8,
     specialization: "Soil does not retain water",
@@ -12419,7 +12419,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 731,
     name: "Ms. Vikram Pandey",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Pandey&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 20,
     specialization: "Leaf diseases",
@@ -12436,7 +12436,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 732,
     name: "Ms. Rohit Yadav",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rohit%20Yadav&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 13,
     specialization: "Irrigation planning",
@@ -12453,7 +12453,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 733,
     name: "Dr. Anuj Kumar",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anuj%20Kumar&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 15,
     specialization: "Fertilizer recommendation",
@@ -12470,7 +12470,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 734,
     name: "Dr. Rajesh Hembram",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajesh%20Hembram&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 8,
     specialization: "Organic farming",
@@ -12487,7 +12487,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 735,
     name: "Er. Sangeeta Pandey",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sangeeta%20Pandey&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 20,
     specialization: "Weather-related issues",
@@ -12504,7 +12504,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 736,
     name: "Dr. Anuj Gupta",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anuj%20Gupta&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 16,
     specialization: "Government schemes",
@@ -12521,7 +12521,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 737,
     name: "Er. Pankaj Saxena",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pankaj%20Saxena&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 10,
     specialization: "Crop selection",
@@ -12538,7 +12538,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 738,
     name: "Mr. Ravi Oraon",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Oraon&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 21,
     specialization: "Machinery guidance",
@@ -12555,7 +12555,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 739,
     name: "Mr. Sangeeta Kumar",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sangeeta%20Kumar&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 5,
     specialization: "Post-harvest storage",
@@ -12572,7 +12572,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 740,
     name: "Dr. Sanna Gupta",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanna%20Gupta&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 16,
     specialization: "Market price guidance",
@@ -12589,7 +12589,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 741,
     name: "Dr. Asha Chaurasia",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Chaurasia&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 10,
     specialization: "Soil testing",
@@ -12606,7 +12606,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 742,
     name: "Mr. Ritu Pandey",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ritu%20Pandey&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 11,
     specialization: "Low crop yield",
@@ -12623,7 +12623,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 743,
     name: "Mr. Suresh Yadav",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Yadav&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 5,
     specialization: "Soil does not retain water",
@@ -12640,7 +12640,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 744,
     name: "Mr. Amit Sharma",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amit%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 16,
     specialization: "Leaf diseases",
@@ -12657,7 +12657,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 745,
     name: "Dr. Budhram Jain",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Budhram%20Jain&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 16,
     specialization: "Pest attack",
@@ -12674,7 +12674,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 746,
     name: "Dr. Priya Soren",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Soren&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 9,
     specialization: "Fertilizer recommendation",
@@ -12691,7 +12691,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 747,
     name: "Er. Suresh Verma",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Verma&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 21,
     specialization: "Organic farming",
@@ -12708,7 +12708,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 748,
     name: "Ms. Suresh Venkataraman",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Venkataraman&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 5,
     specialization: "Irrigation planning",
@@ -12725,7 +12725,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 749,
     name: "Ms. Mani Bhat",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mani%20Bhat&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 17,
     specialization: "Government schemes",
@@ -12742,7 +12742,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 750,
     name: "Ms. Thenmozhi Kumar",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Thenmozhi%20Kumar&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 11,
     specialization: "Crop selection",
@@ -12759,7 +12759,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 751,
     name: "Dr. Kavitha Naidu",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavitha%20Naidu&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 12,
     specialization: "Weather-related issues",
@@ -12776,7 +12776,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 752,
     name: "Mr. Prakash Subramaniam",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Prakash%20Subramaniam&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 6,
     specialization: "Post-harvest storage",
@@ -12793,7 +12793,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 753,
     name: "Mr. Kumaran Kamath",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kumaran%20Kamath&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 17,
     specialization: "Market price guidance",
@@ -12810,7 +12810,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 754,
     name: "Mr. Kannan Gowda",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kannan%20Gowda&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 19,
     specialization: "Machinery guidance",
@@ -12827,7 +12827,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 755,
     name: "Dr. Narasimha Reddy",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Narasimha%20Reddy&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 12,
     specialization: "Low crop yield",
@@ -12844,7 +12844,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 756,
     name: "Dr. Selvam Krishnamurthy",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Selvam%20Krishnamurthy&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 6,
     specialization: "Soil does not retain water",
@@ -12861,7 +12861,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 757,
     name: "Er. Murugan Varma",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Murugan%20Varma&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 7,
     specialization: "Soil testing",
@@ -12878,7 +12878,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 758,
     name: "Mr. Suresh Viswanathan",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Viswanathan&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 19,
     specialization: "Pest attack",
@@ -12895,7 +12895,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 759,
     name: "Mr. Ravi Reddy",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Reddy&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 12,
     specialization: "Fertilizer recommendation",
@@ -12912,7 +12912,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 760,
     name: "Dr. Balu Pattnaik",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Balu%20Pattnaik&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 14,
     specialization: "Leaf diseases",
@@ -12929,7 +12929,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 761,
     name: "Dr. Kavitha Menon",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavitha%20Menon&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 7,
     specialization: "Irrigation planning",
@@ -12946,7 +12946,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 762,
     name: "Dr. Ramesh Ranganathan",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Ranganathan&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 19,
     specialization: "Government schemes",
@@ -12963,7 +12963,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 763,
     name: "Ms. Suresh Raghunathan",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Raghunathan&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 20,
     specialization: "Organic farming",
@@ -12980,7 +12980,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 764,
     name: "Ms. Kannan Swain",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kannan%20Swain&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 14,
     specialization: "Weather-related issues",
@@ -12997,7 +12997,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 765,
     name: "Dr. Rajasekhar Menon",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajasekhar%20Menon&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 8,
     specialization: "Post-harvest storage",
@@ -13014,7 +13014,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 766,
     name: "Ms. Ramesh Reddy",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Reddy&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 4,
     specialization: "Crop selection",
@@ -13031,7 +13031,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 767,
     name: "Mr. Kumaran Krishnamurthy",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kumaran%20Krishnamurthy&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 16,
     specialization: "Machinery guidance",
@@ -13048,7 +13048,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 768,
     name: "Dr. Narasimha Shetty",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Narasimha%20Shetty&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 9,
     specialization: "Low crop yield",
@@ -13065,7 +13065,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 769,
     name: "Mr. Rajasekhar Viswanathan",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajasekhar%20Viswanathan&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 11,
     specialization: "Market price guidance",
@@ -13082,7 +13082,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 770,
     name: "Mr. Selvam Reddy",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Selvam%20Reddy&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 4,
     specialization: "Soil testing",
@@ -13099,7 +13099,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 771,
     name: "Mr. Suresh Iyengar",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Iyengar&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 16,
     specialization: "Pest attack",
@@ -13116,7 +13116,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 772,
     name: "Dr. Deepa Menon",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepa%20Menon&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 17,
     specialization: "Soil does not retain water",
@@ -13133,7 +13133,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 773,
     name: "Dr. Ravi Ranganathan",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Ranganathan&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 11,
     specialization: "Leaf diseases",
@@ -13150,7 +13150,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 774,
     name: "Dr. Kavitha Parida",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavitha%20Parida&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 4,
     specialization: "Irrigation planning",
@@ -13167,7 +13167,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 775,
     name: "Mr. Sudha Swain",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudha%20Swain&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 6,
     specialization: "Fertilizer recommendation",
@@ -13184,7 +13184,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 776,
     name: "Ms. Ramesh Menon",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Menon&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 17,
     specialization: "Organic farming",
@@ -13201,7 +13201,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 777,
     name: "Ms. Kannan Natarajan",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kannan%20Natarajan&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 11,
     specialization: "Weather-related issues",
@@ -13218,7 +13218,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 778,
     name: "Ms. Kavitha Krishnamurthy",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavitha%20Krishnamurthy&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 7,
     specialization: "Government schemes",
@@ -13235,7 +13235,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 779,
     name: "Ms. Prakash Shetty",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Prakash%20Shetty&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 19,
     specialization: "Crop selection",
@@ -13252,7 +13252,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 780,
     name: "Dr. Kumaran Sharma",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kumaran%20Sharma&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 13,
     specialization: "Machinery guidance",
@@ -13269,7 +13269,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 781,
     name: "Dr. Kannan Reddy",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kannan%20Reddy&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 14,
     specialization: "Post-harvest storage",
@@ -13286,7 +13286,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 782,
     name: "Er. Narasimha Iyengar",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Narasimha%20Iyengar&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 8,
     specialization: "Market price guidance",
@@ -13303,7 +13303,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 783,
     name: "Mr. Selvam Hegde",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Selvam%20Hegde&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 19,
     specialization: "Soil testing",
@@ -13320,7 +13320,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 784,
     name: "Mr. Murugan Ranganathan",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Murugan%20Ranganathan&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 21,
     specialization: "Low crop yield",
@@ -13337,7 +13337,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 785,
     name: "Dr. Suresh Parida",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Parida&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 14,
     specialization: "Soil does not retain water",
@@ -13354,7 +13354,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 786,
     name: "Dr. Ravi Iyengar",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Iyengar&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 8,
     specialization: "Leaf diseases",
@@ -13371,7 +13371,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 787,
     name: "Dr. Padma Mohapatra",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Padma%20Mohapatra&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 12,
     specialization: "Pest attack",
@@ -13388,7 +13388,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 788,
     name: "Dr. Venkat Varma",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Venkat%20Varma&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 6,
     specialization: "Fertilizer recommendation",
@@ -13405,7 +13405,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 789,
     name: "Er. Sudha Viswanathan",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudha%20Viswanathan&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 17,
     specialization: "Organic farming",
@@ -13422,7 +13422,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 790,
     name: "Dr. Deepa Venkataraman",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepa%20Venkataraman&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 14,
     specialization: "Irrigation planning",
@@ -13439,7 +13439,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 791,
     name: "Dr. Balu Bhat",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Balu%20Bhat&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 7,
     specialization: "Government schemes",
@@ -13456,7 +13456,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 792,
     name: "Er. Kavitha Pillai",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavitha%20Pillai&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 19,
     specialization: "Crop selection",
@@ -13473,7 +13473,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 793,
     name: "Ms. Priya Naidu",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Naidu&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 20,
     specialization: "Weather-related issues",
@@ -13490,7 +13490,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 794,
     name: "Dr. Suresh Subramaniam",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Subramaniam&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 14,
     specialization: "Post-harvest storage",
@@ -13507,7 +13507,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 795,
     name: "Dr. Kannan Kamath",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kannan%20Kamath&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 7,
     specialization: "Market price guidance",
@@ -13524,7 +13524,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 796,
     name: "Dr. Thyagarajan Krishnamurthy",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Thyagarajan%20Krishnamurthy&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 12,
     specialization: "Machinery guidance",
@@ -13541,7 +13541,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 797,
     name: "Dr. Durai Shetty",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Durai%20Shetty&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 5,
     specialization: "Low crop yield",
@@ -13558,7 +13558,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 798,
     name: "Dr. Srinivas Sharma",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Srinivas%20Sharma&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 17,
     specialization: "Soil does not retain water",
@@ -13575,7 +13575,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 799,
     name: "Mr. Kalyan Parida",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalyan%20Parida&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 18,
     specialization: "Soil testing",
@@ -13592,7 +13592,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 800,
     name: "Mr. Arjun Iyengar",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arjun%20Iyengar&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 12,
     specialization: "Pest attack",
@@ -13609,7 +13609,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 801,
     name: "Mr. Padma Hegde",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Padma%20Hegde&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 6,
     specialization: "Fertilizer recommendation",
@@ -13626,7 +13626,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 802,
     name: "Dr. Bhavani Ranganathan",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhavani%20Ranganathan&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 7,
     specialization: "Leaf diseases",
@@ -13643,7 +13643,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 803,
     name: "Dr. Karthik Parida",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Karthik%20Parida&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 19,
     specialization: "Irrigation planning",
@@ -13660,7 +13660,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 804,
     name: "Ms. Meenakshi Iyengar",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meenakshi%20Iyengar&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 12,
     specialization: "Government schemes",
@@ -13677,7 +13677,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 805,
     name: "Ms. Lakshmi Nair",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Lakshmi%20Nair&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 14,
     specialization: "Organic farming",
@@ -13694,7 +13694,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 806,
     name: "Ms. Thyagarajan Natarajan",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Thyagarajan%20Natarajan&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 7,
     specialization: "Weather-related issues",
@@ -13711,7 +13711,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 807,
     name: "Dr. Arulmozhi Mohapatra",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arulmozhi%20Mohapatra&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 19,
     specialization: "Post-harvest storage",
@@ -13728,7 +13728,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 808,
     name: "Ms. Saranya Viswanathan",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Saranya%20Viswanathan&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 10,
     specialization: "Crop selection",
@@ -13745,7 +13745,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 809,
     name: "Mr. Balu Reddy",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Balu%20Reddy&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 4,
     specialization: "Machinery guidance",
@@ -13762,7 +13762,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 810,
     name: "Mr. Kavitha Iyengar",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavitha%20Iyengar&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 15,
     specialization: "Low crop yield",
@@ -13779,7 +13779,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 811,
     name: "Dr. Priya Menon",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Menon&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 17,
     specialization: "Market price guidance",
@@ -13796,7 +13796,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 812,
     name: "Dr. Suresh Ranganathan",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Ranganathan&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 10,
     specialization: "Soil testing",
@@ -13813,7 +13813,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 813,
     name: "Dr. Kannan Parida",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kannan%20Parida&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 4,
     specialization: "Pest attack",
@@ -13830,7 +13830,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 814,
     name: "Dr. Murugan Krishnamurthy",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Murugan%20Krishnamurthy&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 16,
     specialization: "Soil does not retain water",
@@ -13847,7 +13847,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 815,
     name: "Er. Suresh Shetty",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Shetty&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 10,
     specialization: "Leaf diseases",
@@ -13864,7 +13864,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 816,
     name: "Er. Mani Sharma",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mani%20Sharma&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 21,
     specialization: "Irrigation planning",
@@ -13881,7 +13881,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 817,
     name: "Mr. Balu Parida",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Balu%20Parida&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 5,
     specialization: "Fertilizer recommendation",
@@ -13898,7 +13898,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 818,
     name: "Dr. Kavitha Iyengar",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavitha%20Iyengar&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 16,
     specialization: "Organic farming",
@@ -13915,7 +13915,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 819,
     name: "Dr. Ramesh Hegde",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Hegde&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 10,
     specialization: "Weather-related issues",
@@ -13932,7 +13932,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 820,
     name: "Dr. Ravi Raghunathan",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Raghunathan&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 6,
     specialization: "Government schemes",
@@ -13949,7 +13949,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 821,
     name: "Dr. Thenmozhi Swain",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Thenmozhi%20Swain&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 18,
     specialization: "Crop selection",
@@ -13966,7 +13966,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 822,
     name: "Dr. Anand Nair",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anand%20Nair&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 11,
     specialization: "Machinery guidance",
@@ -13983,7 +13983,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 823,
     name: "Dr. Mani Reddy",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mani%20Reddy&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 8,
     specialization: "Post-harvest storage",
@@ -14000,7 +14000,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 824,
     name: "Dr. Bhavani Krishnamurthy",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhavani%20Krishnamurthy&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 20,
     specialization: "Market price guidance",
@@ -14017,7 +14017,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 825,
     name: "Dr. Karthik Shetty",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Karthik%20Shetty&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 13,
     specialization: "Soil testing",
@@ -14034,7 +14034,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 826,
     name: "Dr. Siva Srinivasan",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Siva%20Srinivasan&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 10,
     specialization: "Low crop yield",
@@ -14051,7 +14051,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 827,
     name: "Dr. Padma Pattnaik",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Padma%20Pattnaik&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 21,
     specialization: "Soil does not retain water",
@@ -14068,7 +14068,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 828,
     name: "Er. Venkat Menon",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Venkat%20Menon&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 15,
     specialization: "Leaf diseases",
@@ -14085,7 +14085,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 829,
     name: "Mr. Anand Kumar",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anand%20Kumar&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 16,
     specialization: "Pest attack",
@@ -14102,7 +14102,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 830,
     name: "Mr. Meenakshi Raghunathan",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meenakshi%20Raghunathan&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 10,
     specialization: "Fertilizer recommendation",
@@ -14119,7 +14119,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 831,
     name: "Dr. Balaji Swain",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Balaji%20Swain&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 21,
     specialization: "Organic farming",
@@ -14136,7 +14136,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 832,
     name: "Ms. Karthik Gowda",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Karthik%20Gowda&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 18,
     specialization: "Irrigation planning",
@@ -14153,7 +14153,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 833,
     name: "Dr. Priya Reddy",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Reddy&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 11,
     specialization: "Government schemes",
@@ -14170,7 +14170,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 834,
     name: "Dr. Suresh Krishnamurthy",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Krishnamurthy&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 5,
     specialization: "Crop selection",
@@ -14187,7 +14187,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 835,
     name: "Ms. Thyagarajan Varma",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Thyagarajan%20Varma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 6,
     specialization: "Weather-related issues",
@@ -14204,7 +14204,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 836,
     name: "Ms. Durai Viswanathan",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Durai%20Viswanathan&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 18,
     specialization: "Post-harvest storage",
@@ -14221,7 +14221,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 837,
     name: "Mr. Venkatesan Reddy",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Venkatesan%20Reddy&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 11,
     specialization: "Market price guidance",
@@ -14238,7 +14238,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 838,
     name: "Mr. Praveen Ranganathan",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Praveen%20Ranganathan&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 16,
     specialization: "Machinery guidance",
@@ -14255,7 +14255,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 839,
     name: "Mr. Kalyan Mohapatra",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalyan%20Mohapatra&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 9,
     specialization: "Low crop yield",
@@ -14272,7 +14272,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 840,
     name: "Mr. Siva Iyer",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Siva%20Iyer&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 21,
     specialization: "Soil does not retain water",
@@ -14289,7 +14289,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 841,
     name: "Mr. Narasimha Natarajan",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Narasimha%20Natarajan&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 17,
     specialization: "Soil testing",
@@ -14306,7 +14306,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 842,
     name: "Dr. Praveen Mohapatra",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Praveen%20Mohapatra&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 11,
     specialization: "Pest attack",
@@ -14323,7 +14323,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 843,
     name: "Dr. Mohan Iyer",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mohan%20Iyer&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 4,
     specialization: "Fertilizer recommendation",
@@ -14340,7 +14340,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 844,
     name: "Mr. Kumaran Bhat",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kumaran%20Bhat&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 4,
     specialization: "Leaf diseases",
@@ -14357,7 +14357,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 845,
     name: "Mr. Narasimha Pillai",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Narasimha%20Pillai&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 15,
     specialization: "Irrigation planning",
@@ -14374,7 +14374,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 846,
     name: "Mr. Praveen Raghunathan",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Praveen%20Raghunathan&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 9,
     specialization: "Government schemes",
@@ -14391,7 +14391,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 847,
     name: "Dr. Ramesh Reddy",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Reddy&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 8,
     specialization: "Organic farming",
@@ -14408,7 +14408,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 848,
     name: "Dr. Kumaran Krishnamurthy",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kumaran%20Krishnamurthy&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 20,
     specialization: "Weather-related issues",
@@ -14425,7 +14425,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 849,
     name: "Ms. Padmanabhan Shetty",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Padmanabhan%20Shetty&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 13,
     specialization: "Post-harvest storage",
@@ -14442,7 +14442,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 850,
     name: "Ms. Siva Venkataraman",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Siva%20Venkataraman&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 5,
     specialization: "Crop selection",
@@ -14459,7 +14459,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 851,
     name: "Dr. Padma Bhat",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Padma%20Bhat&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 16,
     specialization: "Machinery guidance",
@@ -14476,7 +14476,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 852,
     name: "Dr. Venkat Kumar",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Venkat%20Kumar&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 10,
     specialization: "Low crop yield",
@@ -14493,7 +14493,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 853,
     name: "Mr. Anand Naidu",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anand%20Naidu&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 11,
     specialization: "Market price guidance",
@@ -14510,7 +14510,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 854,
     name: "Mr. Meenakshi Subramaniam",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meenakshi%20Subramaniam&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 5,
     specialization: "Soil testing",
@@ -14527,7 +14527,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 855,
     name: "Mr. Balaji Kamath",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Balaji%20Kamath&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 16,
     specialization: "Pest attack",
@@ -14544,7 +14544,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 856,
     name: "Dr. Padmanabhan Gowda",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Padmanabhan%20Gowda&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 18,
     specialization: "Soil does not retain water",
@@ -14561,7 +14561,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 857,
     name: "Dr. Arulmozhi Naidu",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arulmozhi%20Naidu&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 12,
     specialization: "Leaf diseases",
@@ -14578,7 +14578,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 858,
     name: "Dr. Srinivas Krishnamurthy",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Srinivas%20Krishnamurthy&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 5,
     specialization: "Irrigation planning",
@@ -14595,7 +14595,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 859,
     name: "Mr. Mohan Varma",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mohan%20Varma&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 7,
     specialization: "Fertilizer recommendation",
@@ -14612,7 +14612,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 860,
     name: "Mr. Siva Viswanathan",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Siva%20Viswanathan&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 18,
     specialization: "Organic farming",
@@ -14629,7 +14629,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 861,
     name: "Ms. Padma Reddy",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Padma%20Reddy&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 12,
     specialization: "Weather-related issues",
@@ -14646,7 +14646,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 862,
     name: "Dr. Thenmozhi Pattnaik",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Thenmozhi%20Pattnaik&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 13,
     specialization: "Government schemes",
@@ -14663,7 +14663,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 863,
     name: "Er. Anand Menon",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anand%20Menon&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 7,
     specialization: "Crop selection",
@@ -14680,7 +14680,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 864,
     name: "Er. Meenakshi Ranganathan",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meenakshi%20Ranganathan&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 18,
     specialization: "Machinery guidance",
@@ -14697,7 +14697,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 865,
     name: "Ms. Venkatesan Iyer",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Venkatesan%20Iyer&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 10,
     specialization: "Post-harvest storage",
@@ -14714,7 +14714,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 866,
     name: "Dr. Senthil Gowda",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Senthil%20Gowda&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 21,
     specialization: "Market price guidance",
@@ -14731,7 +14731,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 867,
     name: "Dr. Deepa Naidu",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepa%20Naidu&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 15,
     specialization: "Soil testing",
@@ -14748,7 +14748,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 868,
     name: "Dr. Siva Viswanathan",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Siva%20Viswanathan&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 19,
     specialization: "Low crop yield",
@@ -14765,7 +14765,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 869,
     name: "Dr. Padma Parida",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Padma%20Parida&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 13,
     specialization: "Soil does not retain water",
@@ -14782,7 +14782,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 870,
     name: "Dr. Venkat Iyengar",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Venkat%20Iyengar&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 6,
     specialization: "Leaf diseases",
@@ -14799,7 +14799,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 871,
     name: "Mr. Anand Menon",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anand%20Menon&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 8,
     specialization: "Pest attack",
@@ -14816,7 +14816,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 872,
     name: "Mr. Meenakshi Ranganathan",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meenakshi%20Ranganathan&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 19,
     specialization: "Fertilizer recommendation",
@@ -14833,7 +14833,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 873,
     name: "Mr. Balaji Parida",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Balaji%20Parida&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 13,
     specialization: "Organic farming",
@@ -14850,7 +14850,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 874,
     name: "Dr. Bhavani Balasubramaniam",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhavani%20Balasubramaniam&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 12,
     specialization: "Irrigation planning",
@@ -14867,7 +14867,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 875,
     name: "Mr. Karthik Bhat",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Karthik%20Bhat&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 6,
     specialization: "Government schemes",
@@ -14884,7 +14884,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 876,
     name: "Ms. Meenakshi Pillai",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meenakshi%20Pillai&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 17,
     specialization: "Crop selection",
@@ -14901,7 +14901,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 877,
     name: "Ms. Lakshmi Rao",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Lakshmi%20Rao&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 19,
     specialization: "Weather-related issues",
@@ -14918,7 +14918,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 878,
     name: "Dr. Thyagarajan Venkataraman",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Thyagarajan%20Venkataraman&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 12,
     specialization: "Post-harvest storage",
@@ -14935,7 +14935,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 879,
     name: "Dr. Arulmozhi Bhat",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arulmozhi%20Bhat&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 6,
     specialization: "Market price guidance",
@@ -14952,7 +14952,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 880,
     name: "Dr. Rajasekhar Subramaniam",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajasekhar%20Subramaniam&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 10,
     specialization: "Machinery guidance",
@@ -14969,7 +14969,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 881,
     name: "Dr. Selvam Shetty",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Selvam%20Shetty&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 4,
     specialization: "Low crop yield",
@@ -14986,7 +14986,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 882,
     name: "Dr. Mohan Sharma",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mohan%20Sharma&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 15,
     specialization: "Soil does not retain water",
@@ -15003,7 +15003,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 883,
     name: "Dr. Vijay Rana",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Rana&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 8,
     specialization: "Soil testing",
@@ -15020,7 +15020,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 884,
     name: "Dr. Devendra Sharma",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Devendra%20Sharma&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 20,
     specialization: "Pest attack",
@@ -15037,7 +15037,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 885,
     name: "Dr. Neeta Chaurasia",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neeta%20Chaurasia&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 13,
     specialization: "Fertilizer recommendation",
@@ -15054,7 +15054,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 886,
     name: "Mr. Asha Pandey",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Pandey&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 15,
     specialization: "Leaf diseases",
@@ -15071,7 +15071,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 887,
     name: "Mr. Usha Chauhan",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Usha%20Chauhan&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 8,
     specialization: "Irrigation planning",
@@ -15088,7 +15088,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 888,
     name: "Mr. Mahendra Khanna",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mahendra%20Khanna&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 20,
     specialization: "Government schemes",
@@ -15105,7 +15105,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 889,
     name: "Dr. Vikram Tripathi",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Tripathi&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 21,
     specialization: "Organic farming",
@@ -15122,7 +15122,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 890,
     name: "Dr. Manoj Verma",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manoj%20Verma&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 15,
     specialization: "Weather-related issues",
@@ -15139,7 +15139,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 891,
     name: "Ms. Rajesh Chauhan",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajesh%20Chauhan&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 9,
     specialization: "Post-harvest storage",
@@ -15156,7 +15156,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 892,
     name: "Ms. Pramod Kumar",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pramod%20Kumar&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 10,
     specialization: "Crop selection",
@@ -15173,7 +15173,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 893,
     name: "Ms. Vijay Upadhyay",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Upadhyay&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 4,
     specialization: "Machinery guidance",
@@ -15190,7 +15190,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 894,
     name: "Dr. Devendra Mishra",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Devendra%20Mishra&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 15,
     specialization: "Low crop yield",
@@ -15207,7 +15207,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 895,
     name: "Ms. Rajesh Sharma",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajesh%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 12,
     specialization: "Market price guidance",
@@ -15224,7 +15224,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 896,
     name: "Dr. Anuj Chaurasia",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anuj%20Chaurasia&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 5,
     specialization: "Soil testing",
@@ -15241,7 +15241,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 897,
     name: "Dr. Hemant Rawat",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hemant%20Rawat&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 17,
     specialization: "Pest attack",
@@ -15258,7 +15258,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 898,
     name: "Mr. Devendra Chauhan",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Devendra%20Chauhan&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 18,
     specialization: "Soil does not retain water",
@@ -15275,7 +15275,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 899,
     name: "Mr. Kavita Khanna",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavita%20Khanna&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 12,
     specialization: "Leaf diseases",
@@ -15292,7 +15292,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 900,
     name: "Mr. Meena Dubey",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meena%20Dubey&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 5,
     specialization: "Irrigation planning",
@@ -15309,7 +15309,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 901,
     name: "Dr. Usha Verma",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Usha%20Verma&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 7,
     specialization: "Fertilizer recommendation",
@@ -15326,7 +15326,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 902,
     name: "Dr. Amit Chauhan",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amit%20Chauhan&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 18,
     specialization: "Organic farming",
@@ -15343,7 +15343,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 903,
     name: "Dr. Anil Malhotra",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anil%20Malhotra&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 12,
     specialization: "Weather-related issues",
@@ -15360,7 +15360,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 904,
     name: "Mr. Dinesh Upadhyay",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dinesh%20Upadhyay&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 13,
     specialization: "Government schemes",
@@ -15377,7 +15377,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 905,
     name: "Ms. Shyam Mishra",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyam%20Mishra&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 7,
     specialization: "Crop selection",
@@ -15394,7 +15394,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 906,
     name: "Dr. Anuj Shah",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anuj%20Shah&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 19,
     specialization: "Machinery guidance",
@@ -15411,7 +15411,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 907,
     name: "Dr. Ajay Jain",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ajay%20Jain&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 20,
     specialization: "Post-harvest storage",
@@ -15428,7 +15428,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 908,
     name: "Ms. Chandrashekhar Joshi",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Chandrashekhar%20Joshi&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 14,
     specialization: "Market price guidance",
@@ -15445,7 +15445,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 909,
     name: "Ms. Kavita Mishra",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavita%20Mishra&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 7,
     specialization: "Soil testing",
@@ -15462,7 +15462,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 910,
     name: "Ms. Priya Singh",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Singh&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 9,
     specialization: "Low crop yield",
@@ -15479,7 +15479,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 911,
     name: "Dr. Rekha Agarwal",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Agarwal&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 20,
     specialization: "Soil does not retain water",
@@ -15496,7 +15496,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 912,
     name: "Dr. Amit Joshi",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amit%20Joshi&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 14,
     specialization: "Leaf diseases",
@@ -15513,7 +15513,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 913,
     name: "Dr. Kavita Chauhan",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavita%20Chauhan&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 10,
     specialization: "Pest attack",
@@ -15530,7 +15530,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 914,
     name: "Dr. Usha Malhotra",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Usha%20Malhotra&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 4,
     specialization: "Fertilizer recommendation",
@@ -15547,7 +15547,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 915,
     name: "Dr. Mahendra Srivastava",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mahendra%20Srivastava&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 15,
     specialization: "Organic farming",
@@ -15564,7 +15564,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 916,
     name: "Mr. Amit Mishra",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amit%20Mishra&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 17,
     specialization: "Irrigation planning",
@@ -15581,7 +15581,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 917,
     name: "Mr. Manoj Shah",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manoj%20Shah&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 10,
     specialization: "Government schemes",
@@ -15598,7 +15598,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 918,
     name: "Mr. Rajesh Shukla",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajesh%20Shukla&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 4,
     specialization: "Crop selection",
@@ -15615,7 +15615,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 919,
     name: "Mr. Mahendra Rawat",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mahendra%20Rawat&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 18,
     specialization: "Weather-related issues",
@@ -15632,7 +15632,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 920,
     name: "Ms. Anil Singh",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anil%20Singh&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 12,
     specialization: "Post-harvest storage",
@@ -15649,7 +15649,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 921,
     name: "Dr. Pankaj Agarwal",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pankaj%20Agarwal&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 6,
     specialization: "Market price guidance",
@@ -15666,7 +15666,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 922,
     name: "Dr. Rajesh Dubey",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajesh%20Dubey&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 7,
     specialization: "Machinery guidance",
@@ -15683,7 +15683,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 923,
     name: "Er. Anuj Rawat",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anuj%20Rawat&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 19,
     specialization: "Low crop yield",
@@ -15700,7 +15700,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 924,
     name: "Mr. Hemant Gupta",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hemant%20Gupta&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 12,
     specialization: "Soil does not retain water",
@@ -15717,7 +15717,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 925,
     name: "Dr. Devendra Malhotra",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Devendra%20Malhotra&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 14,
     specialization: "Soil testing",
@@ -15734,7 +15734,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 926,
     name: "Dr. Kavita Srivastava",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavita%20Srivastava&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 7,
     specialization: "Pest attack",
@@ -15751,7 +15751,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 927,
     name: "Dr. Meena Thakur",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meena%20Thakur&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 19,
     specialization: "Fertilizer recommendation",
@@ -15768,7 +15768,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 928,
     name: "Mr. Usha Shah",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Usha%20Shah&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 20,
     specialization: "Leaf diseases",
@@ -15785,7 +15785,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 929,
     name: "Mr. Amit Shukla",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amit%20Shukla&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 14,
     specialization: "Irrigation planning",
@@ -15802,7 +15802,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 930,
     name: "Mr. Anil Srivastava",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anil%20Srivastava&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 7,
     specialization: "Government schemes",
@@ -15819,7 +15819,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 931,
     name: "Dr. Manoj Mishra",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manoj%20Mishra&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 9,
     specialization: "Organic farming",
@@ -15836,7 +15836,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 932,
     name: "Dr. Shyam Patel",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyam%20Patel&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 20,
     specialization: "Weather-related issues",
@@ -15853,7 +15853,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 933,
     name: "Mr. Anuj Shukla",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anuj%20Shukla&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 14,
     specialization: "Post-harvest storage",
@@ -15870,7 +15870,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 934,
     name: "Dr. Naresh Kumar",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Naresh%20Kumar&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 18,
     specialization: "Crop selection",
@@ -15887,7 +15887,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 935,
     name: "Ms. Ajay Upadhyay",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ajay%20Upadhyay&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 12,
     specialization: "Machinery guidance",
@@ -15904,7 +15904,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 936,
     name: "Ms. Chandrashekhar Verma",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Chandrashekhar%20Verma&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 5,
     specialization: "Low crop yield",
@@ -15921,7 +15921,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 937,
     name: "Ms. Ashok Yadav",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ashok%20Yadav&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 7,
     specialization: "Market price guidance",
@@ -15938,7 +15938,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 938,
     name: "Dr. Priya Jain",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Jain&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 19,
     specialization: "Soil testing",
@@ -15955,7 +15955,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 939,
     name: "Dr. Rekha Upadhyay",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Upadhyay&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 12,
     specialization: "Pest attack",
@@ -15972,7 +15972,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 940,
     name: "Dr. Bhupesh Rana",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhupesh%20Rana&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 9,
     specialization: "Soil does not retain water",
@@ -15989,7 +15989,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 941,
     name: "Dr. Asha Khanna",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Khanna&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 20,
     specialization: "Leaf diseases",
@@ -16006,7 +16006,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 942,
     name: "Dr. Usha Chaurasia",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Usha%20Chaurasia&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 14,
     specialization: "Irrigation planning",
@@ -16023,7 +16023,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 943,
     name: "Mr. Geeta Verma",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Geeta%20Verma&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 15,
     specialization: "Fertilizer recommendation",
@@ -16040,7 +16040,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 944,
     name: "Mr. Vikram Chauhan",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Chauhan&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 9,
     specialization: "Organic farming",
@@ -16057,7 +16057,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 945,
     name: "Mr. Manoj Malhotra",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manoj%20Malhotra&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 20,
     specialization: "Weather-related issues",
@@ -16074,7 +16074,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 946,
     name: "Mr. Rekha Negi",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Negi&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 17,
     specialization: "Government schemes",
@@ -16091,7 +16091,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 947,
     name: "Mr. Amit Yadav",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amit%20Yadav&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 10,
     specialization: "Crop selection",
@@ -16108,7 +16108,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 948,
     name: "Dr. Anil Jain",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anil%20Jain&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 4,
     specialization: "Machinery guidance",
@@ -16125,7 +16125,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 949,
     name: "Ms. Usha Pandey",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Usha%20Pandey&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 18,
     specialization: "Post-harvest storage",
@@ -16142,7 +16142,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 950,
     name: "Dr. Mahendra Rana",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mahendra%20Rana&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 12,
     specialization: "Market price guidance",
@@ -16159,7 +16159,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 951,
     name: "Dr. Sunita Khanna",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sunita%20Khanna&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 5,
     specialization: "Soil testing",
@@ -16176,7 +16176,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 952,
     name: "Er. Manoj Tripathi",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manoj%20Tripathi&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 7,
     specialization: "Low crop yield",
@@ -16193,7 +16193,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 953,
     name: "Mr. Rajesh Pandey",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajesh%20Pandey&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 18,
     specialization: "Soil does not retain water",
@@ -16210,7 +16210,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 954,
     name: "Mr. Rohit Chauhan",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rohit%20Chauhan&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 12,
     specialization: "Leaf diseases",
@@ -16227,7 +16227,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 955,
     name: "Mr. Sunita Saxena",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sunita%20Saxena&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 8,
     specialization: "Pest attack",
@@ -16244,7 +16244,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 956,
     name: "Mr. Pankaj Bisht",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pankaj%20Bisht&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 20,
     specialization: "Fertilizer recommendation",
@@ -16261,7 +16261,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 957,
     name: "Mr. Sanjay Yadav",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanjay%20Yadav&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 14,
     specialization: "Organic farming",
@@ -16278,7 +16278,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 958,
     name: "Dr. Rohit Sharma",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rohit%20Sharma&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 15,
     specialization: "Irrigation planning",
@@ -16295,7 +16295,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 959,
     name: "Dr. Hemant Chaurasia",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hemant%20Chaurasia&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 9,
     specialization: "Government schemes",
@@ -16312,7 +16312,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 960,
     name: "Er. Sangeeta Negi",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sangeeta%20Negi&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 20,
     specialization: "Crop selection",
@@ -16329,7 +16329,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 961,
     name: "Mr. Kavita Rana",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavita%20Rana&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 4,
     specialization: "Weather-related issues",
@@ -16346,7 +16346,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 962,
     name: "Mr. Meena Khanna",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meena%20Khanna&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 15,
     specialization: "Post-harvest storage",
@@ -16363,7 +16363,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 963,
     name: "Dr. Deepak Chaurasia",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepak%20Chaurasia&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 9,
     specialization: "Market price guidance",
@@ -16380,7 +16380,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 964,
     name: "Er. Rakesh Gupta",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rakesh%20Gupta&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 18,
     specialization: "Machinery guidance",
@@ -16397,7 +16397,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 965,
     name: "Ms. Pramod Saxena",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pramod%20Saxena&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 12,
     specialization: "Low crop yield",
@@ -16414,7 +16414,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 966,
     name: "Ms. Ajay Bisht",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ajay%20Bisht&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 5,
     specialization: "Soil does not retain water",
@@ -16431,7 +16431,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 967,
     name: "Dr. Ravi Thakur",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Thakur&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 7,
     specialization: "Soil testing",
@@ -16448,7 +16448,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 968,
     name: "Dr. Bhupesh Sharma",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhupesh%20Sharma&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 18,
     specialization: "Pest attack",
@@ -16465,7 +16465,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 969,
     name: "Dr. Priya Saxena",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Saxena&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 12,
     specialization: "Fertilizer recommendation",
@@ -16482,7 +16482,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 970,
     name: "Mr. Ritu Pandey",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ritu%20Pandey&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 13,
     specialization: "Leaf diseases",
@@ -16499,7 +16499,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 971,
     name: "Mr. Savita Rana",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Savita%20Rana&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 7,
     specialization: "Irrigation planning",
@@ -16516,7 +16516,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 972,
     name: "Mr. Ramesh Khanna",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Khanna&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 19,
     specialization: "Government schemes",
@@ -16533,7 +16533,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 973,
     name: "Mr. Priya Bisht",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Bisht&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 15,
     specialization: "Organic farming",
@@ -16550,7 +16550,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 974,
     name: "Mr. Rekha Tiwari",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Tiwari&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 9,
     specialization: "Weather-related issues",
@@ -16567,7 +16567,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 975,
     name: "Dr. Vikram Kumar",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Kumar&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 20,
     specialization: "Post-harvest storage",
@@ -16584,7 +16584,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 976,
     name: "Er. Ramesh Saxena",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Saxena&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 4,
     specialization: "Crop selection",
@@ -16601,7 +16601,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 977,
     name: "Ms. Dinesh Bisht",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dinesh%20Bisht&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 15,
     specialization: "Machinery guidance",
@@ -16618,7 +16618,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 978,
     name: "Ms. Pramod Yadav",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pramod%20Yadav&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 9,
     specialization: "Low crop yield",
@@ -16635,7 +16635,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 979,
     name: "Dr. Naresh Sharma",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Naresh%20Sharma&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 10,
     specialization: "Market price guidance",
@@ -16652,7 +16652,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 980,
     name: "Dr. Ajay Saxena",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ajay%20Saxena&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 4,
     specialization: "Soil testing",
@@ -16669,7 +16669,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 981,
     name: "Dr. Bhupesh Negi",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhupesh%20Negi&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 15,
     specialization: "Pest attack",
@@ -16686,7 +16686,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 982,
     name: "Ms. Amit Agarwal",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amit%20Agarwal&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 7,
     specialization: "Soil does not retain water",
@@ -16703,7 +16703,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 983,
     name: "Mr. Anil Joshi",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anil%20Joshi&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 18,
     specialization: "Leaf diseases",
@@ -16720,7 +16720,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 984,
     name: "Mr. Pankaj Tiwari",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pankaj%20Tiwari&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 12,
     specialization: "Irrigation planning",
@@ -16737,7 +16737,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 985,
     name: "Dr. Sangeeta Upadhyay",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sangeeta%20Upadhyay&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 21,
     specialization: "Fertilizer recommendation",
@@ -16754,7 +16754,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 986,
     name: "Er. Ashok Verma",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ashok%20Verma&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 15,
     specialization: "Organic farming",
@@ -16771,7 +16771,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 987,
     name: "Mr. Priya Shah",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Shah&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 8,
     specialization: "Weather-related issues",
@@ -16788,7 +16788,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 988,
     name: "Mr. Deepak Jain",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepak%20Jain&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 10,
     specialization: "Government schemes",
@@ -16805,7 +16805,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 989,
     name: "Dr. Savita Upadhyay",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Savita%20Upadhyay&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 21,
     specialization: "Crop selection",
@@ -16822,7 +16822,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 990,
     name: "Dr. Ramesh Mishra",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Mishra&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 15,
     specialization: "Machinery guidance",
@@ -16839,7 +16839,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 991,
     name: "Er. Pankaj Singh",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pankaj%20Singh&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 17,
     specialization: "Post-harvest storage",
@@ -16856,7 +16856,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 992,
     name: "Ms. Sanjay Agarwal",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanjay%20Agarwal&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 10,
     specialization: "Market price guidance",
@@ -16873,7 +16873,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 993,
     name: "Ms. Naresh Joshi",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Naresh%20Joshi&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 4,
     specialization: "Soil testing",
@@ -16890,7 +16890,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 994,
     name: "Dr. Hemant Rawat",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hemant%20Rawat&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 5,
     specialization: "Low crop yield",
@@ -16907,7 +16907,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 995,
     name: "Dr. Sangeeta Gupta",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sangeeta%20Gupta&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 17,
     specialization: "Soil does not retain water",
@@ -16924,7 +16924,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 996,
     name: "Dr. Ashok Agarwal",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ashok%20Agarwal&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 10,
     specialization: "Leaf diseases",
@@ -16941,7 +16941,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 997,
     name: "Dr. Kamlesh Verma",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kamlesh%20Verma&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 7,
     specialization: "Pest attack",
@@ -16958,7 +16958,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 998,
     name: "Dr. Ravi Shah",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Shah&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 18,
     specialization: "Fertilizer recommendation",
@@ -16975,7 +16975,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 999,
     name: "Mr. Bhupesh Malhotra",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhupesh%20Malhotra&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 12,
     specialization: "Organic farming",
@@ -16992,7 +16992,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1000,
     name: "Mr. Vinod Joshi",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vinod%20Joshi&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 13,
     specialization: "Irrigation planning",
@@ -17009,7 +17009,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1001,
     name: "Mr. Ritu Mishra",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ritu%20Mishra&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 7,
     specialization: "Government schemes",
@@ -17026,7 +17026,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1002,
     name: "Dr. Geeta Patel",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Geeta%20Patel&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 18,
     specialization: "Crop selection",
@@ -17043,7 +17043,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1003,
     name: "Er. Sunita Agarwal",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sunita%20Agarwal&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 20,
     specialization: "Weather-related issues",
@@ -17060,7 +17060,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1004,
     name: "Mr. Suresh Joshi",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Joshi&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 13,
     specialization: "Post-harvest storage",
@@ -17077,7 +17077,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1005,
     name: "Ms. Rakesh Tiwari",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rakesh%20Tiwari&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 7,
     specialization: "Market price guidance",
@@ -17094,7 +17094,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1006,
     name: "Dr. Rohit Gupta",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rohit%20Gupta&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 9,
     specialization: "Machinery guidance",
@@ -17111,7 +17111,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1007,
     name: "Dr. Kamlesh Agarwal",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kamlesh%20Agarwal&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 20,
     specialization: "Low crop yield",
@@ -17128,7 +17128,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1008,
     name: "Dr. Ravi Bisht",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Bisht&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 14,
     specialization: "Soil does not retain water",
@@ -17145,7 +17145,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1009,
     name: "Ms. Neeta Thakur",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neeta%20Thakur&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 15,
     specialization: "Soil testing",
@@ -17162,7 +17162,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1010,
     name: "Ms. Vinod Sharma",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vinod%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 9,
     specialization: "Pest attack",
@@ -17179,7 +17179,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1011,
     name: "Mr. Ritu Saxena",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ritu%20Saxena&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 20,
     specialization: "Fertilizer recommendation",
@@ -17196,7 +17196,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1012,
     name: "Dr. Mahendra Srivastava",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mahendra%20Srivastava&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 4,
     specialization: "Leaf diseases",
@@ -17213,7 +17213,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1013,
     name: "Dr. Sunita Rana",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sunita%20Rana&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 15,
     specialization: "Irrigation planning",
@@ -17230,7 +17230,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1014,
     name: "Er. Suresh Sharma",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Sharma&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 9,
     specialization: "Government schemes",
@@ -17247,7 +17247,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1015,
     name: "Mr. Rajesh Shukla",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajesh%20Shukla&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 10,
     specialization: "Organic farming",
@@ -17264,7 +17264,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1016,
     name: "Mr. Rohit Pandey",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rohit%20Pandey&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 4,
     specialization: "Weather-related issues",
@@ -17281,7 +17281,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1017,
     name: "Dr. Kamlesh Chauhan",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kamlesh%20Chauhan&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 15,
     specialization: "Post-harvest storage",
@@ -17298,7 +17298,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1018,
     name: "Er. Devendra Kumar",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Devendra%20Kumar&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 17,
     specialization: "Crop selection",
@@ -17315,7 +17315,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1019,
     name: "Mr. Neeta Tripathi",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neeta%20Tripathi&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 10,
     specialization: "Machinery guidance",
@@ -17332,7 +17332,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1020,
     name: "Ms. Vinod Verma",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vinod%20Verma&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 4,
     specialization: "Low crop yield",
@@ -17349,7 +17349,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1021,
     name: "Dr. Usha Yadav",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Usha%20Yadav&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 6,
     specialization: "Market price guidance",
@@ -17366,7 +17366,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1022,
     name: "Dr. Mahendra Kumar",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mahendra%20Kumar&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 17,
     specialization: "Soil testing",
@@ -17383,7 +17383,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1023,
     name: "Dr. Sunita Upadhyay",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sunita%20Upadhyay&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 11,
     specialization: "Pest attack",
@@ -17400,7 +17400,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1024,
     name: "Ms. Manoj Negi",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manoj%20Negi&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 12,
     specialization: "Soil does not retain water",
@@ -17417,7 +17417,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1025,
     name: "Mr. Rajesh Singh",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajesh%20Singh&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 6,
     specialization: "Leaf diseases",
@@ -17434,7 +17434,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1026,
     name: "Mr. Rohit Jain",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rohit%20Jain&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 17,
     specialization: "Irrigation planning",
@@ -17451,7 +17451,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1027,
     name: "Mr. Anil Pandey",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anil%20Pandey&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 14,
     specialization: "Fertilizer recommendation",
@@ -17468,7 +17468,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1028,
     name: "Mr. Pankaj Chauhan",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pankaj%20Chauhan&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 7,
     specialization: "Organic farming",
@@ -17485,7 +17485,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1029,
     name: "Dr. Sanjay Khanna",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanjay%20Khanna&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 19,
     specialization: "Weather-related issues",
@@ -17502,7 +17502,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1030,
     name: "Mr. Savita Bisht",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Savita%20Bisht&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 15,
     specialization: "Government schemes",
@@ -17519,7 +17519,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1031,
     name: "Dr. Suresh Yadav",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Yadav&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 9,
     specialization: "Crop selection",
@@ -17536,7 +17536,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1032,
     name: "Dr. Rakesh Kumar",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rakesh%20Kumar&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 20,
     specialization: "Machinery guidance",
@@ -17553,7 +17553,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1033,
     name: "Er. Sanjay Saxena",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanjay%20Saxena&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 4,
     specialization: "Post-harvest storage",
@@ -17570,7 +17570,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1034,
     name: "Ms. Kamlesh Negi",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kamlesh%20Negi&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 15,
     specialization: "Market price guidance",
@@ -17587,7 +17587,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1035,
     name: "Ms. Ravi Yadav",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Yadav&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 9,
     specialization: "Soil testing",
@@ -17604,7 +17604,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1036,
     name: "Ms. Rakesh Shukla",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rakesh%20Shukla&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 5,
     specialization: "Low crop yield",
@@ -17621,7 +17621,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1037,
     name: "Ms. Naresh Pandey",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Naresh%20Pandey&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 17,
     specialization: "Soil does not retain water",
@@ -17638,7 +17638,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1038,
     name: "Ms. Ajay Rana",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ajay%20Rana&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 11,
     specialization: "Leaf diseases",
@@ -17655,7 +17655,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1039,
     name: "Dr. Madhuri Jadhav",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Madhuri%20Jadhav&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 10,
     specialization: "Pest attack",
@@ -17672,7 +17672,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1040,
     name: "Ms. Jayesh Salunke",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Jayesh%20Salunke&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 21,
     specialization: "Fertilizer recommendation",
@@ -17689,7 +17689,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1041,
     name: "Mr. Smita Modi",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Smita%20Modi&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 15,
     specialization: "Organic farming",
@@ -17706,7 +17706,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1042,
     name: "Mr. Bhavna Mehta",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhavna%20Mehta&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 16,
     specialization: "Irrigation planning",
@@ -17723,7 +17723,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1043,
     name: "Dr. Santosh Shinde",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Santosh%20Shinde&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 10,
     specialization: "Government schemes",
@@ -17740,7 +17740,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1044,
     name: "Dr. Suresh Salunke",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Salunke&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 4,
     specialization: "Crop selection",
@@ -17757,7 +17757,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1045,
     name: "Er. Ramji Sawant",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramji%20Sawant&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 5,
     specialization: "Weather-related issues",
@@ -17774,7 +17774,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1046,
     name: "Mr. Nitin Trivedi",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nitin%20Trivedi&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 17,
     specialization: "Post-harvest storage",
@@ -17791,7 +17791,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1047,
     name: "Mr. Vijay Shinde",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Shinde&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 10,
     specialization: "Market price guidance",
@@ -17808,7 +17808,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1048,
     name: "Dr. Amol Deshmukh",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amol%20Deshmukh&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 12,
     specialization: "Machinery guidance",
@@ -17825,7 +17825,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1049,
     name: "Dr. Madhuri Rane",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Madhuri%20Rane&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 5,
     specialization: "Low crop yield",
@@ -17842,7 +17842,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1050,
     name: "Dr. Kalpesh Trivedi",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalpesh%20Trivedi&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 17,
     specialization: "Soil does not retain water",
@@ -17859,7 +17859,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1051,
     name: "Dr. Vijay Salunke",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Salunke&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 13,
     specialization: "Soil testing",
@@ -17876,7 +17876,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1052,
     name: "Dr. Rupali Modi",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rupali%20Modi&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 7,
     specialization: "Pest attack",
@@ -17893,7 +17893,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1053,
     name: "Er. Jayesh Kadam",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Jayesh%20Kadam&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 18,
     specialization: "Fertilizer recommendation",
@@ -17910,7 +17910,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1054,
     name: "Ms. Kalpesh Shinde",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalpesh%20Shinde&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 20,
     specialization: "Leaf diseases",
@@ -17927,7 +17927,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1055,
     name: "Mr. Bhavna Salunke",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhavna%20Salunke&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 13,
     specialization: "Irrigation planning",
@@ -17944,7 +17944,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1056,
     name: "Dr. Vishwas Parikh",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vishwas%20Parikh&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 7,
     specialization: "Government schemes",
@@ -17961,7 +17961,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1057,
     name: "Mr. Mangesh Trivedi",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mangesh%20Trivedi&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 8,
     specialization: "Organic farming",
@@ -17978,7 +17978,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1058,
     name: "Mr. Suresh Shinde",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Shinde&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 20,
     specialization: "Weather-related issues",
@@ -17995,7 +17995,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1059,
     name: "Mr. Nitin Mhaske",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nitin%20Mhaske&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 14,
     specialization: "Post-harvest storage",
@@ -18012,7 +18012,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1060,
     name: "Mr. Santosh Bhosale",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Santosh%20Bhosale&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 10,
     specialization: "Crop selection",
@@ -18029,7 +18029,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1061,
     name: "Mr. Hetal Shah",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hetal%20Shah&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 4,
     specialization: "Machinery guidance",
@@ -18046,7 +18046,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1062,
     name: "Mr. Sanjay Patil",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanjay%20Patil&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 15,
     specialization: "Low crop yield",
@@ -18063,7 +18063,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1063,
     name: "Mr. Vishwas Mehta",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vishwas%20Mehta&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 12,
     specialization: "Market price guidance",
@@ -18080,7 +18080,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1064,
     name: "Mr. Rima Shinde",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rima%20Shinde&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 5,
     specialization: "Soil testing",
@@ -18097,7 +18097,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1065,
     name: "Ms. Girish Salunke",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Girish%20Salunke&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 17,
     specialization: "Pest attack",
@@ -18114,7 +18114,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1066,
     name: "Ms. Suresh Pawar",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Pawar&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 21,
     specialization: "Soil does not retain water",
@@ -18131,7 +18131,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1067,
     name: "Ms. Nitin Mhaske",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nitin%20Mhaske&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 15,
     specialization: "Leaf diseases",
@@ -18148,7 +18148,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1068,
     name: "Dr. Vijay Bhatt",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Bhatt&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 8,
     specialization: "Irrigation planning",
@@ -18165,7 +18165,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1069,
     name: "Ms. Amol Joshi",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amol%20Joshi&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 10,
     specialization: "Fertilizer recommendation",
@@ -18182,7 +18182,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1070,
     name: "Mr. Rupali Pawar",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rupali%20Pawar&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 21,
     specialization: "Organic farming",
@@ -18199,7 +18199,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1071,
     name: "Mr. Jayesh Gaikwad",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Jayesh%20Gaikwad&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 15,
     specialization: "Weather-related issues",
@@ -18216,7 +18216,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1072,
     name: "Mr. Vijay Kadam",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Kadam&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 11,
     specialization: "Government schemes",
@@ -18233,7 +18233,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1073,
     name: "Mr. Rupali Patel",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rupali%20Patel&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 5,
     specialization: "Crop selection",
@@ -18250,7 +18250,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1074,
     name: "Mr. Dhruv Dave",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dhruv%20Dave&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 16,
     specialization: "Machinery guidance",
@@ -18267,7 +18267,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1075,
     name: "Dr. Rima Shah",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rima%20Shah&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 8,
     specialization: "Post-harvest storage",
@@ -18284,7 +18284,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1076,
     name: "Dr. Mangesh Deshmukh",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mangesh%20Deshmukh&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 19,
     specialization: "Market price guidance",
@@ -18301,7 +18301,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1077,
     name: "Mr. Ramji Rane",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramji%20Rane&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 13,
     specialization: "Soil testing",
@@ -18318,7 +18318,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1078,
     name: "Mr. Ganesh Kadam",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ganesh%20Kadam&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 14,
     specialization: "Low crop yield",
@@ -18335,7 +18335,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1079,
     name: "Ms. Deepak Shah",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepak%20Shah&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 8,
     specialization: "Soil does not retain water",
@@ -18352,7 +18352,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1080,
     name: "Dr. Nilesh Patil",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilesh%20Patil&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 19,
     specialization: "Leaf diseases",
@@ -18369,7 +18369,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1081,
     name: "Ms. Ramji Mehta",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramji%20Mehta&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 16,
     specialization: "Pest attack",
@@ -18386,7 +18386,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1082,
     name: "Dr. Mahesh Shinde",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mahesh%20Shinde&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 10,
     specialization: "Fertilizer recommendation",
@@ -18403,7 +18403,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1083,
     name: "Dr. Amol Salunke",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amol%20Salunke&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 21,
     specialization: "Organic farming",
@@ -18420,7 +18420,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1084,
     name: "Dr. Suresh Bhosale",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Bhosale&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 18,
     specialization: "Irrigation planning",
@@ -18437,7 +18437,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1085,
     name: "Dr. Nitin Desai",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nitin%20Desai&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 11,
     specialization: "Government schemes",
@@ -18454,7 +18454,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1086,
     name: "Dr. Vijay Deshmukh",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Deshmukh&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 5,
     specialization: "Crop selection",
@@ -18471,7 +18471,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1087,
     name: "Dr. Suresh Bhatt",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Bhatt&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 19,
     specialization: "Weather-related issues",
@@ -18488,7 +18488,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1088,
     name: "Dr. Sanjay Jadhav",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanjay%20Jadhav&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 13,
     specialization: "Post-harvest storage",
@@ -18505,7 +18505,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1089,
     name: "Er. Raju Salunke",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Raju%20Salunke&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 6,
     specialization: "Market price guidance",
@@ -18522,7 +18522,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1090,
     name: "Mr. Vijay Gaikwad",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Gaikwad&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 8,
     specialization: "Machinery guidance",
@@ -18539,7 +18539,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1091,
     name: "Mr. Rupali Mehta",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rupali%20Mehta&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 19,
     specialization: "Low crop yield",
@@ -18556,7 +18556,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1092,
     name: "Dr. Dhruv Shinde",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dhruv%20Shinde&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 13,
     specialization: "Soil does not retain water",
@@ -18573,7 +18573,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1093,
     name: "Ms. Raju Dave",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Raju%20Dave&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 9,
     specialization: "Soil testing",
@@ -18590,7 +18590,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1094,
     name: "Dr. Sonali Bhosale",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sonali%20Bhosale&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 21,
     specialization: "Pest attack",
@@ -18607,7 +18607,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1095,
     name: "Dr. Dhruv Desai",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dhruv%20Desai&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 14,
     specialization: "Fertilizer recommendation",
@@ -18624,7 +18624,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1096,
     name: "Er. Jayesh Talekar",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Jayesh%20Talekar&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 16,
     specialization: "Leaf diseases",
@@ -18641,7 +18641,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1097,
     name: "Ms. Meenal Modi",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meenal%20Modi&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 9,
     specialization: "Irrigation planning",
@@ -18658,7 +18658,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1098,
     name: "Mr. Prasad Bhosale",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Prasad%20Bhosale&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 21,
     specialization: "Government schemes",
@@ -18675,7 +18675,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1099,
     name: "Dr. Vishwas Jadhav",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vishwas%20Jadhav&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 5,
     specialization: "Organic farming",
@@ -18692,7 +18692,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1100,
     name: "Dr. Hetal Salunke",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hetal%20Salunke&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 16,
     specialization: "Weather-related issues",
@@ -18709,7 +18709,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1101,
     name: "Dr. Sanjay Modi",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanjay%20Modi&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 10,
     specialization: "Post-harvest storage",
@@ -18726,7 +18726,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1102,
     name: "Mr. Nitin Mehta",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nitin%20Mehta&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 11,
     specialization: "Crop selection",
@@ -18743,7 +18743,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1103,
     name: "Mr. Raju Shinde",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Raju%20Shinde&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 5,
     specialization: "Machinery guidance",
@@ -18760,7 +18760,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1104,
     name: "Mr. Sonali Salunke",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sonali%20Salunke&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 16,
     specialization: "Low crop yield",
@@ -18777,7 +18777,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1105,
     name: "Mr. Sanjay Bhosale",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanjay%20Bhosale&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 13,
     specialization: "Market price guidance",
@@ -18794,7 +18794,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1106,
     name: "Mr. Raju Desai",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Raju%20Desai&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 6,
     specialization: "Soil testing",
@@ -18811,7 +18811,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1107,
     name: "Dr. Deepak Deshmukh",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepak%20Deshmukh&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 18,
     specialization: "Pest attack",
@@ -18828,7 +18828,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1108,
     name: "Ms. Girish Bhatt",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Girish%20Bhatt&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 14,
     specialization: "Soil does not retain water",
@@ -18845,7 +18845,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1109,
     name: "Dr. Ganesh Jadhav",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ganesh%20Jadhav&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 8,
     specialization: "Leaf diseases",
@@ -18862,7 +18862,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1110,
     name: "Dr. Mahesh Talekar",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mahesh%20Talekar&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 19,
     specialization: "Irrigation planning",
@@ -18879,7 +18879,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1111,
     name: "Ms. Sonali Gaikwad",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sonali%20Gaikwad&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 21,
     specialization: "Fertilizer recommendation",
@@ -18896,7 +18896,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1112,
     name: "Mr. Nilesh Mehta",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilesh%20Mehta&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 14,
     specialization: "Organic farming",
@@ -18913,7 +18913,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1113,
     name: "Mr. Vrushali Jadhav",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vrushali%20Jadhav&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 8,
     specialization: "Weather-related issues",
@@ -18930,7 +18930,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1114,
     name: "Dr. Meenal Kulkarni",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meenal%20Kulkarni&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 9,
     specialization: "Government schemes",
@@ -18947,7 +18947,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1115,
     name: "Dr. Prasad Sawant",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Prasad%20Sawant&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 21,
     specialization: "Crop selection",
@@ -18964,7 +18964,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1116,
     name: "Er. Neha Mehta",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neha%20Mehta&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 15,
     specialization: "Machinery guidance",
@@ -18981,7 +18981,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1117,
     name: "Mr. Mahesh Mhaske",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mahesh%20Mhaske&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 6,
     specialization: "Post-harvest storage",
@@ -18998,7 +18998,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1118,
     name: "Mr. Amol Bhatt",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amol%20Bhatt&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 18,
     specialization: "Market price guidance",
@@ -19015,7 +19015,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1119,
     name: "Dr. Rupali Jadhav",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rupali%20Jadhav&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 11,
     specialization: "Soil testing",
@@ -19032,7 +19032,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1120,
     name: "Er. Madhuri Pawar",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Madhuri%20Pawar&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 13,
     specialization: "Low crop yield",
@@ -19049,7 +19049,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1121,
     name: "Er. Kalpesh Gaikwad",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalpesh%20Gaikwad&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 6,
     specialization: "Soil does not retain water",
@@ -19066,7 +19066,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1122,
     name: "Ms. Bhavna Mehta",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhavna%20Mehta&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 18,
     specialization: "Leaf diseases",
@@ -19083,7 +19083,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1123,
     name: "Er. Madhuri Patel",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Madhuri%20Patel&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 14,
     specialization: "Pest attack",
@@ -19100,7 +19100,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1124,
     name: "Ms. Jayesh Dave",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Jayesh%20Dave&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 8,
     specialization: "Fertilizer recommendation",
@@ -19117,7 +19117,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1125,
     name: "Ms. Smita Wagh",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Smita%20Wagh&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 19,
     specialization: "Organic farming",
@@ -19134,7 +19134,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1126,
     name: "Dr. Bhavna More",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhavna%20More&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 21,
     specialization: "Irrigation planning",
@@ -19151,7 +19151,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1127,
     name: "Dr. Santosh Talekar",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Santosh%20Talekar&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 14,
     specialization: "Government schemes",
@@ -19168,7 +19168,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1128,
     name: "Dr. Hetal Dave",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hetal%20Dave&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 8,
     specialization: "Crop selection",
@@ -19185,7 +19185,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1129,
     name: "Mr. Ramji Bhatt",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramji%20Bhatt&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 9,
     specialization: "Weather-related issues",
@@ -19202,7 +19202,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1130,
     name: "Mr. Nitin Jadhav",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nitin%20Jadhav&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 21,
     specialization: "Post-harvest storage",
@@ -19219,7 +19219,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1131,
     name: "Mr. Vijay Talekar",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Talekar&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 14,
     specialization: "Market price guidance",
@@ -19236,7 +19236,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1132,
     name: "Dr. Amol Gaikwad",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amol%20Gaikwad&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 16,
     specialization: "Machinery guidance",
@@ -19253,7 +19253,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1133,
     name: "Mr. Madhuri Mehta",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Madhuri%20Mehta&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 10,
     specialization: "Low crop yield",
@@ -19270,7 +19270,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1134,
     name: "Mr. Jayesh Jadhav",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Jayesh%20Jadhav&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 21,
     specialization: "Soil does not retain water",
@@ -19287,7 +19287,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1135,
     name: "Mr. Vijay Dave",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Dave&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 18,
     specialization: "Soil testing",
@@ -19304,7 +19304,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1136,
     name: "Ms. Rupali Wagh",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rupali%20Wagh&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 11,
     specialization: "Pest attack",
@@ -19321,7 +19321,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1137,
     name: "Ms. Jayesh Desai",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Jayesh%20Desai&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 5,
     specialization: "Fertilizer recommendation",
@@ -19338,7 +19338,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1138,
     name: "Ms. Vrushali Bhosale",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vrushali%20Bhosale&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 9,
     specialization: "Leaf diseases",
@@ -19355,7 +19355,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1139,
     name: "Ms. Kalpesh Shah",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalpesh%20Shah&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 21,
     specialization: "Irrigation planning",
@@ -19372,7 +19372,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1140,
     name: "Mr. Bhavna Patil",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhavna%20Patil&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 14,
     specialization: "Government schemes",
@@ -19389,7 +19389,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1141,
     name: "Dr. Neha Modi",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neha%20Modi&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 16,
     specialization: "Organic farming",
@@ -19406,7 +19406,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1142,
     name: "Dr. Mangesh Kadam",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mangesh%20Kadam&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 9,
     specialization: "Weather-related issues",
@@ -19423,7 +19423,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1143,
     name: "Mr. Ramji Patel",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramji%20Patel&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 21,
     specialization: "Post-harvest storage",
@@ -19440,7 +19440,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1144,
     name: "Mr. Rupali Bhosale",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rupali%20Bhosale&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 12,
     specialization: "Crop selection",
@@ -19457,7 +19457,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1145,
     name: "Mr. Jayesh Desai",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Jayesh%20Desai&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 6,
     specialization: "Machinery guidance",
@@ -19474,7 +19474,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1146,
     name: "Dr. Meenal Deshmukh",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meenal%20Deshmukh&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 17,
     specialization: "Low crop yield",
@@ -19491,7 +19491,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1147,
     name: "Er. Madhuri Barik",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Madhuri%20Barik&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 9,
     specialization: "Market price guidance",
@@ -19508,7 +19508,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1148,
     name: "Mr. Partha Talukdar",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Partha%20Talukdar&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 20,
     specialization: "Soil testing",
@@ -19525,7 +19525,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1149,
     name: "Mr. Nilotpal Swain",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilotpal%20Swain&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 14,
     specialization: "Pest attack",
@@ -19542,7 +19542,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1150,
     name: "Mr. Puja Roy",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Puja%20Roy&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 10,
     specialization: "Soil does not retain water",
@@ -19559,7 +19559,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1151,
     name: "Mr. Debabrata Pradhan",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Debabrata%20Pradhan&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 4,
     specialization: "Leaf diseases",
@@ -19576,7 +19576,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1152,
     name: "Ms. Nilotpal Hazarika",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilotpal%20Hazarika&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 15,
     specialization: "Irrigation planning",
@@ -19593,7 +19593,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1153,
     name: "Dr. Arun Deka",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arun%20Deka&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 17,
     specialization: "Fertilizer recommendation",
@@ -19610,7 +19610,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1154,
     name: "Dr. Kalyan Roy",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalyan%20Roy&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 10,
     specialization: "Organic farming",
@@ -19627,7 +19627,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1155,
     name: "Er. Suparna Sahoo",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suparna%20Sahoo&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 4,
     specialization: "Weather-related issues",
@@ -19644,7 +19644,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1156,
     name: "Ms. Pradip Deka",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pradip%20Deka&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 11,
     specialization: "Government schemes",
@@ -19661,7 +19661,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1157,
     name: "Dr. Rinku Roy",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rinku%20Roy&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 5,
     specialization: "Crop selection",
@@ -19678,7 +19678,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1158,
     name: "Dr. Tapas Pradhan",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Tapas%20Pradhan&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 16,
     specialization: "Machinery guidance",
@@ -19695,7 +19695,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1159,
     name: "Mr. Gautam Pattnaik",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gautam%20Pattnaik&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 18,
     specialization: "Post-harvest storage",
@@ -19712,7 +19712,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1160,
     name: "Mr. Mita Deka",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mita%20Deka&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 11,
     specialization: "Market price guidance",
@@ -19729,7 +19729,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1161,
     name: "Mr. Biplab Roy",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Biplab%20Roy&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 5,
     specialization: "Soil testing",
@@ -19746,7 +19746,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1162,
     name: "Mr. Bimal Gogoi",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bimal%20Gogoi&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 19,
     specialization: "Low crop yield",
@@ -19763,7 +19763,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1163,
     name: "Mr. Rekha Sen",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Sen&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 13,
     specialization: "Soil does not retain water",
@@ -19780,7 +19780,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1164,
     name: "Mr. Mrinal Barik",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mrinal%20Barik&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 6,
     specialization: "Leaf diseases",
@@ -19797,7 +19797,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1165,
     name: "Mr. Tapas Mohapatra",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Tapas%20Mohapatra&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 21,
     specialization: "Pest attack",
@@ -19814,7 +19814,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1166,
     name: "Ms. Rekha Kalita",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Kalita&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 15,
     specialization: "Fertilizer recommendation",
@@ -19831,7 +19831,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1167,
     name: "Dr. Anup Roy",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anup%20Roy&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 8,
     specialization: "Organic farming",
@@ -19848,7 +19848,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1168,
     name: "Er. Mrinal Ghosh",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mrinal%20Ghosh&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 10,
     specialization: "Irrigation planning",
@@ -19865,7 +19865,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1169,
     name: "Er. Madhuri Pattnaik",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Madhuri%20Pattnaik&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 21,
     specialization: "Government schemes",
@@ -19882,7 +19882,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1170,
     name: "Mr. Partha Deka",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Partha%20Deka&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 15,
     specialization: "Crop selection",
@@ -19899,7 +19899,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1171,
     name: "Dr. Biswajit Behera",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Biswajit%20Behera&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 16,
     specialization: "Weather-related issues",
@@ -19916,7 +19916,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1172,
     name: "Dr. Subhash Ghosh",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Subhash%20Ghosh&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 10,
     specialization: "Post-harvest storage",
@@ -19933,7 +19933,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1173,
     name: "Dr. Sudeshna Swain",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudeshna%20Swain&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 21,
     specialization: "Market price guidance",
@@ -19950,7 +19950,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1174,
     name: "Dr. Pradip Choudhury",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pradip%20Choudhury&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 8,
     specialization: "Machinery guidance",
@@ -19967,7 +19967,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1175,
     name: "Dr. Rinku Mitra",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rinku%20Mitra&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 19,
     specialization: "Low crop yield",
@@ -19984,7 +19984,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1176,
     name: "Er. Bimal Bora",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bimal%20Bora&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 13,
     specialization: "Soil does not retain water",
@@ -20001,7 +20001,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1177,
     name: "Mr. Madhuri Pattnaik",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Madhuri%20Pattnaik&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 4,
     specialization: "Soil testing",
@@ -20018,7 +20018,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1178,
     name: "Mr. Partha Deka",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Partha%20Deka&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 16,
     specialization: "Pest attack",
@@ -20035,7 +20035,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1179,
     name: "Dr. Nilotpal Dey",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilotpal%20Dey&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 9,
     specialization: "Fertilizer recommendation",
@@ -20052,7 +20052,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1180,
     name: "Ms. Biswajit Bora",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Biswajit%20Bora&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 14,
     specialization: "Leaf diseases",
@@ -20069,7 +20069,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1181,
     name: "Dr. Subhash Das",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Subhash%20Das&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 7,
     specialization: "Irrigation planning",
@@ -20086,7 +20086,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1182,
     name: "Dr. Preeti Mohapatra",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Preeti%20Mohapatra&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 19,
     specialization: "Government schemes",
@@ -20103,7 +20103,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1183,
     name: "Dr. Biswajit Mukherjee",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Biswajit%20Mukherjee&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 15,
     specialization: "Organic farming",
@@ -20120,7 +20120,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1184,
     name: "Dr. Arun Nayak",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arun%20Nayak&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 9,
     specialization: "Weather-related issues",
@@ -20137,7 +20137,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1185,
     name: "Dr. Sudeshna Das",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudeshna%20Das&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 20,
     specialization: "Post-harvest storage",
@@ -20154,7 +20154,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1186,
     name: "Mr. Preeti Sharma",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Preeti%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 4,
     specialization: "Crop selection",
@@ -20171,7 +20171,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1187,
     name: "Mr. Tapas Banerjee",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Tapas%20Banerjee&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 15,
     specialization: "Machinery guidance",
@@ -20188,7 +20188,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1188,
     name: "Mr. Sumita Sahu",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sumita%20Sahu&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 9,
     specialization: "Low crop yield",
@@ -20205,7 +20205,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1189,
     name: "Dr. Mita Sahoo",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mita%20Sahoo&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 11,
     specialization: "Market price guidance",
@@ -20222,7 +20222,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1190,
     name: "Er. Mrinal Kalita",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mrinal%20Kalita&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 4,
     specialization: "Soil testing",
@@ -20239,7 +20239,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1191,
     name: "Mr. Madhuri Chakraborty",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Madhuri%20Chakraborty&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 16,
     specialization: "Pest attack",
@@ -20256,7 +20256,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1192,
     name: "Er. Rekha Choudhury",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Choudhury&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 12,
     specialization: "Soil does not retain water",
@@ -20273,7 +20273,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1193,
     name: "Mr. Anup Mitra",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anup%20Mitra&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 6,
     specialization: "Leaf diseases",
@@ -20290,7 +20290,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1194,
     name: "Ms. Puja Bora",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Puja%20Bora&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 17,
     specialization: "Irrigation planning",
@@ -20307,7 +20307,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1195,
     name: "Mr. Rekha Chakraborty",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Chakraborty&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 9,
     specialization: "Fertilizer recommendation",
@@ -20324,7 +20324,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1196,
     name: "Ms. Mrinal Mishra",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mrinal%20Mishra&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 21,
     specialization: "Organic farming",
@@ -20341,7 +20341,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1197,
     name: "Ms. Madhuri Gogoi",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Madhuri%20Gogoi&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 14,
     specialization: "Weather-related issues",
@@ -20358,7 +20358,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1198,
     name: "Dr. Binay Deka",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Binay%20Deka&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 16,
     specialization: "Government schemes",
@@ -20375,7 +20375,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1199,
     name: "Er. Partha Roy",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Partha%20Roy&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 9,
     specialization: "Crop selection",
@@ -20392,7 +20392,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1200,
     name: "Mr. Arun Pradhan",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arun%20Pradhan&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 21,
     specialization: "Machinery guidance",
@@ -20409,7 +20409,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1201,
     name: "Mr. Subhash Pattnaik",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Subhash%20Pattnaik&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 4,
     specialization: "Post-harvest storage",
@@ -20426,7 +20426,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1202,
     name: "Dr. Preeti Deka",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Preeti%20Deka&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 16,
     specialization: "Market price guidance",
@@ -20443,7 +20443,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1203,
     name: "Dr. Tapas Dey",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Tapas%20Dey&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 10,
     specialization: "Soil testing",
@@ -20460,7 +20460,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1204,
     name: "Er. Bimal Talukdar",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bimal%20Talukdar&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 11,
     specialization: "Low crop yield",
@@ -20477,7 +20477,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1205,
     name: "Mr. Mita Swain",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mita%20Swain&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 5,
     specialization: "Soil does not retain water",
@@ -20494,7 +20494,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1206,
     name: "Mr. Mrinal Baruah",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mrinal%20Baruah&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 16,
     specialization: "Leaf diseases",
@@ -20511,7 +20511,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1207,
     name: "Mr. Rekha Baruah",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Baruah&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 8,
     specialization: "Pest attack",
@@ -20528,7 +20528,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1208,
     name: "Mr. Mrinal Dey",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mrinal%20Dey&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 20,
     specialization: "Fertilizer recommendation",
@@ -20545,7 +20545,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1209,
     name: "Dr. Puja Sahoo",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Puja%20Sahoo&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 13,
     specialization: "Organic farming",
@@ -20562,7 +20562,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1210,
     name: "Ms. Tapas Choudhury",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Tapas%20Choudhury&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 13,
     specialization: "Irrigation planning",
@@ -20579,7 +20579,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1211,
     name: "Ms. Rekha Bose",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Bose&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 6,
     specialization: "Government schemes",
@@ -20596,7 +20596,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1212,
     name: "Ms. Anup Behera",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anup%20Behera&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 18,
     specialization: "Crop selection",
@@ -20613,7 +20613,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1213,
     name: "Ms. Soumya Sahoo",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Soumya%20Sahoo&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 14,
     specialization: "Weather-related issues",
@@ -20630,7 +20630,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1214,
     name: "Mr. Sumita Sharma",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sumita%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 8,
     specialization: "Post-harvest storage",
@@ -20647,7 +20647,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1215,
     name: "Mr. Anup Banerjee",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anup%20Banerjee&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 19,
     specialization: "Market price guidance",
@@ -20664,7 +20664,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1216,
     name: "Dr. Mrinal Das",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mrinal%20Das&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 21,
     specialization: "Machinery guidance",
@@ -20681,7 +20681,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1217,
     name: "Dr. Puja Mohapatra",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Puja%20Mohapatra&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 15,
     specialization: "Low crop yield",
@@ -20698,7 +20698,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1218,
     name: "Mr. Debabrata Kalita",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Debabrata%20Kalita&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 8,
     specialization: "Soil does not retain water",
@@ -20715,7 +20715,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1219,
     name: "Mr. Partha Bora",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Partha%20Bora&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 10,
     specialization: "Soil testing",
@@ -20732,7 +20732,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1220,
     name: "Mr. Arun Das",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arun%20Das&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 21,
     specialization: "Pest attack",
@@ -20749,7 +20749,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1221,
     name: "Dr. Sudeshna Mohapatra",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudeshna%20Mohapatra&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 15,
     specialization: "Fertilizer recommendation",
@@ -20766,7 +20766,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1222,
     name: "Mr. Madhuri Gogoi",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Madhuri%20Gogoi&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 14,
     specialization: "Leaf diseases",
@@ -20783,7 +20783,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1223,
     name: "Ms. Partha Sen",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Partha%20Sen&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 8,
     specialization: "Irrigation planning",
@@ -20800,7 +20800,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1224,
     name: "Ms. Arun Barik",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arun%20Barik&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 19,
     specialization: "Government schemes",
@@ -20817,7 +20817,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1225,
     name: "Dr. Subhash Mishra",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Subhash%20Mishra&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 21,
     specialization: "Organic farming",
@@ -20834,7 +20834,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1226,
     name: "Dr. Sudeshna Gogoi",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudeshna%20Gogoi&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 14,
     specialization: "Weather-related issues",
@@ -20851,7 +20851,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1227,
     name: "Dr. Soumya Sen",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Soumya%20Sen&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 8,
     specialization: "Post-harvest storage",
@@ -20868,7 +20868,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1228,
     name: "Mr. Tapas Roy",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Tapas%20Roy&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 9,
     specialization: "Crop selection",
@@ -20885,7 +20885,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1229,
     name: "Mr. Rekha Pradhan",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Pradhan&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 21,
     specialization: "Machinery guidance",
@@ -20902,7 +20902,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1230,
     name: "Mr. Mrinal Hazarika",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mrinal%20Hazarika&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 14,
     specialization: "Low crop yield",
@@ -20919,7 +20919,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1231,
     name: "Mr. Anup Das",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anup%20Das&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 19,
     specialization: "Market price guidance",
@@ -20936,7 +20936,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1232,
     name: "Dr. Puja Bose",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Puja%20Bose&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 12,
     specialization: "Soil testing",
@@ -20953,7 +20953,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1233,
     name: "Dr. Sajal Behera",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sajal%20Behera&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 6,
     specialization: "Pest attack",
@@ -20970,7 +20970,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1234,
     name: "Er. Pradip Mitra",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pradip%20Mitra&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 15,
     specialization: "Soil does not retain water",
@@ -20987,7 +20987,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1235,
     name: "Mr. Preeti Bora",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Preeti%20Bora&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 9,
     specialization: "Leaf diseases",
@@ -21004,7 +21004,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1236,
     name: "Mr. Tapas Das",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Tapas%20Das&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 20,
     specialization: "Irrigation planning",
@@ -21021,7 +21021,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1237,
     name: "Mr. Mrinal Sahoo",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mrinal%20Sahoo&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 15,
     specialization: "Fertilizer recommendation",
@@ -21038,7 +21038,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1238,
     name: "Ms. Madhuri Sharma",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Madhuri%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 8,
     specialization: "Organic farming",
@@ -21055,7 +21055,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1239,
     name: "Ms. Partha Banerjee",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Partha%20Banerjee&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 20,
     specialization: "Weather-related issues",
@@ -21072,7 +21072,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1240,
     name: "Ms. Rituraj Kalita",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rituraj%20Kalita&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 6,
     specialization: "Government schemes",
@@ -21089,7 +21089,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1241,
     name: "Ms. Sudipta Roy",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudipta%20Roy&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 18,
     specialization: "Crop selection",
@@ -21106,7 +21106,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1242,
     name: "Dr. Subhash Pradhan",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Subhash%20Pradhan&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 11,
     specialization: "Machinery guidance",
@@ -21123,7 +21123,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1243,
     name: "Ms. Pradip Pattnaik",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pradip%20Pattnaik&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 13,
     specialization: "Post-harvest storage",
@@ -21140,7 +21140,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1244,
     name: "Mr. Rinku Deka",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rinku%20Deka&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 6,
     specialization: "Market price guidance",
@@ -21157,7 +21157,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1245,
     name: "Mr. Bimal Roy",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bimal%20Roy&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 18,
     specialization: "Soil testing",
@@ -21174,7 +21174,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1246,
     name: "Mr. Subhash Das",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Subhash%20Das&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 14,
     specialization: "Low crop yield",
@@ -21191,7 +21191,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1247,
     name: "Mr. Preeti Sen",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Preeti%20Sen&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 8,
     specialization: "Soil does not retain water",
@@ -21208,7 +21208,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1248,
     name: "Mr. Tapas Barik",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Tapas%20Barik&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 19,
     specialization: "Leaf diseases",
@@ -21225,7 +21225,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1249,
     name: "Dr. Bimal Mishra",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bimal%20Mishra&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 21,
     specialization: "Pest attack",
@@ -21242,7 +21242,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1250,
     name: "Dr. Mita Gogoi",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mita%20Gogoi&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 14,
     specialization: "Fertilizer recommendation",
@@ -21259,7 +21259,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1251,
     name: "Er. Mrinal Sen",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mrinal%20Sen&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 8,
     specialization: "Organic farming",
@@ -21276,7 +21276,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1252,
     name: "Dr. Tapas Ghosh",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Tapas%20Ghosh&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 5,
     specialization: "Irrigation planning",
@@ -21293,7 +21293,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1253,
     name: "Er. Rekha Pattnaik",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Pattnaik&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 16,
     specialization: "Government schemes",
@@ -21310,7 +21310,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1254,
     name: "Ms. Mrinal Deka",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mrinal%20Deka&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 10,
     specialization: "Crop selection",
@@ -21327,7 +21327,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1255,
     name: "Dr. Gautam Das",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gautam%20Das&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 17,
     specialization: "Weather-related issues",
@@ -21344,7 +21344,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1256,
     name: "Dr. Rani Mohapatra",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rani%20Mohapatra&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 10,
     specialization: "Post-harvest storage",
@@ -21361,7 +21361,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1257,
     name: "Dr. Sajal Kalita",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sajal%20Kalita&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 4,
     specialization: "Market price guidance",
@@ -21378,7 +21378,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1258,
     name: "Mr. Debabrata Bora",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Debabrata%20Bora&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 6,
     specialization: "Machinery guidance",
@@ -21395,7 +21395,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1259,
     name: "Mr. Nilotpal Ghosh",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilotpal%20Ghosh&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 17,
     specialization: "Low crop yield",
@@ -21412,7 +21412,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1260,
     name: "Mr. Sudipta Pattnaik",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudipta%20Pattnaik&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 11,
     specialization: "Soil does not retain water",
@@ -21429,7 +21429,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1261,
     name: "Dr. Kalyan Bose",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalyan%20Bose&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 12,
     specialization: "Soil testing",
@@ -21446,7 +21446,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1262,
     name: "Dr. Suparna Behera",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suparna%20Behera&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 6,
     specialization: "Pest attack",
@@ -21463,7 +21463,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1263,
     name: "Mr. Shyamali Ghosh",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyamali%20Ghosh&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 17,
     specialization: "Fertilizer recommendation",
@@ -21480,7 +21480,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1264,
     name: "Dr. Mita Baruah",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mita%20Baruah&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 13,
     specialization: "Leaf diseases",
@@ -21497,7 +21497,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1265,
     name: "Er. Mrinal Das",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mrinal%20Das&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 6,
     specialization: "Irrigation planning",
@@ -21514,7 +21514,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1266,
     name: "Mr. Madhuri Mohapatra",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Madhuri%20Mohapatra&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 18,
     specialization: "Government schemes",
@@ -21531,7 +21531,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1267,
     name: "Er. Rekha Mukherjee",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Mukherjee&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 14,
     specialization: "Organic farming",
@@ -21548,7 +21548,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1268,
     name: "Ms. Anup Nayak",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anup%20Nayak&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 8,
     specialization: "Weather-related issues",
@@ -21565,7 +21565,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1269,
     name: "Ms. Puja Choudhury",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Puja%20Choudhury&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 19,
     specialization: "Post-harvest storage",
@@ -21582,7 +21582,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1270,
     name: "Ms. Rinku Chakraborty",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rinku%20Chakraborty&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 21,
     specialization: "Crop selection",
@@ -21599,7 +21599,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1271,
     name: "Ms. Tapas Mishra",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Tapas%20Mishra&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 15,
     specialization: "Machinery guidance",
@@ -21616,7 +21616,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1272,
     name: "Mr. Rekha Hazarika",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Hazarika&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 9,
     specialization: "Low crop yield",
@@ -21633,7 +21633,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1273,
     name: "Dr. Mita Deka",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mita%20Deka&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 10,
     specialization: "Market price guidance",
@@ -21650,7 +21650,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1274,
     name: "Mr. Biplab Roy",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Biplab%20Roy&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 4,
     specialization: "Soil testing",
@@ -21667,7 +21667,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1275,
     name: "Mr. Binay Pradhan",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Binay%20Pradhan&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 15,
     specialization: "Pest attack",
@@ -21684,7 +21684,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1276,
     name: "Mr. Rekha Bose",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Bose&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 12,
     specialization: "Soil does not retain water",
@@ -21701,7 +21701,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1277,
     name: "Mr. Mrinal Barik",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mrinal%20Barik&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 5,
     specialization: "Leaf diseases",
@@ -21718,7 +21718,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1278,
     name: "Mr. Madhuri Talukdar",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Madhuri%20Talukdar&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 17,
     specialization: "Irrigation planning",
@@ -21735,7 +21735,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1279,
     name: "Mr. Sumita Kalita",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sumita%20Kalita&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 13,
     specialization: "Fertilizer recommendation",
@@ -21752,7 +21752,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1280,
     name: "Mr. Anup Chakraborty",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anup%20Chakraborty&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 7,
     specialization: "Organic farming",
@@ -21769,7 +21769,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1281,
     name: "Ms. Puja Mishra",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Puja%20Mishra&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 18,
     specialization: "Weather-related issues",
@@ -21786,7 +21786,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1282,
     name: "Dr. Madhuri Mohapatra",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Madhuri%20Mohapatra&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 20,
     specialization: "Government schemes",
@@ -21803,7 +21803,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1283,
     name: "Dr. Partha Deka",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Partha%20Deka&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 13,
     specialization: "Crop selection",
@@ -21820,7 +21820,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1284,
     name: "Er. Nilotpal Roy",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilotpal%20Roy&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 7,
     specialization: "Machinery guidance",
@@ -21837,7 +21837,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1285,
     name: "Dr. Puja Das",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Puja%20Das&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 21,
     specialization: "Post-harvest storage",
@@ -21854,7 +21854,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1286,
     name: "Er. Debabrata Bose",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Debabrata%20Bose&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 15,
     specialization: "Market price guidance",
@@ -21871,7 +21871,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1287,
     name: "Mr. Rituraj Behera",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rituraj%20Behera&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 8,
     specialization: "Soil testing",
@@ -21888,7 +21888,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1288,
     name: "Mr. Rinku Swain",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rinku%20Swain&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 18,
     specialization: "Low crop yield",
@@ -21905,7 +21905,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1289,
     name: "Dr. Bimal Bora",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bimal%20Bora&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 11,
     specialization: "Soil does not retain water",
@@ -21922,7 +21922,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1290,
     name: "Dr. Rekha Das",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Das&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 5,
     specialization: "Leaf diseases",
@@ -21939,7 +21939,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1291,
     name: "Mr. Mita Choudhury",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mita%20Choudhury&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 7,
     specialization: "Pest attack",
@@ -21956,7 +21956,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1292,
     name: "Mr. Biplab Mitra",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Biplab%20Mitra&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 18,
     specialization: "Fertilizer recommendation",
@@ -21973,7 +21973,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1293,
     name: "Mr. Binay Bora",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Binay%20Bora&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 12,
     specialization: "Organic farming",
@@ -21990,7 +21990,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1294,
     name: "Mr. Debabrata Bose",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Debabrata%20Bose&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 16,
     specialization: "Irrigation planning",
@@ -22007,7 +22007,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1295,
     name: "Ms. Nilotpal Barik",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilotpal%20Barik&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 10,
     specialization: "Government schemes",
@@ -22024,7 +22024,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1296,
     name: "Ms. Sudipta Talukdar",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudipta%20Talukdar&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 21,
     specialization: "Crop selection",
@@ -22041,7 +22041,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1297,
     name: "Ms. Sajal Kalita",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sajal%20Kalita&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 18,
     specialization: "Weather-related issues",
@@ -22058,7 +22058,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1298,
     name: "Ms. Rituraj Chakraborty",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rituraj%20Chakraborty&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 11,
     specialization: "Post-harvest storage",
@@ -22075,7 +22075,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1299,
     name: "Dr. Biswajit Mishra",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Biswajit%20Mishra&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 5,
     specialization: "Market price guidance",
@@ -22092,7 +22092,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1300,
     name: "Er. Sudipta Pattnaik",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudipta%20Pattnaik&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 6,
     specialization: "Machinery guidance",
@@ -22109,7 +22109,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1301,
     name: "Mr. Pradip Deka",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pradip%20Deka&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 18,
     specialization: "Low crop yield",
@@ -22126,7 +22126,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1302,
     name: "Mr. Rinku Roy",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rinku%20Roy&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 11,
     specialization: "Soil does not retain water",
@@ -22143,7 +22143,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1303,
     name: "Mr. Soumya Baruah",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Soumya%20Baruah&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 16,
     specialization: "Soil testing",
@@ -22160,7 +22160,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1304,
     name: "Mr. Sumita Dey",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sumita%20Dey&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 9,
     specialization: "Pest attack",
@@ -22177,7 +22177,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1305,
     name: "Mr. Gautam Sahoo",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gautam%20Sahoo&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 21,
     specialization: "Fertilizer recommendation",
@@ -22194,7 +22194,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1306,
     name: "Mr. Rekha Ghosh",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Ghosh&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 7,
     specialization: "Leaf diseases",
@@ -22211,7 +22211,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1307,
     name: "Mr. Mrinal Pattnaik",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mrinal%20Pattnaik&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 19,
     specialization: "Irrigation planning",
@@ -22228,7 +22228,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1308,
     name: "Dr. Madhuri Deka",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Madhuri%20Deka&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 12,
     specialization: "Government schemes",
@@ -22245,7 +22245,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1309,
     name: "Dr. Subhash Sharma",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Subhash%20Sharma&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 20,
     specialization: "Organic farming",
@@ -22262,7 +22262,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1310,
     name: "Dr. Preeti Banerjee",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Preeti%20Banerjee&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 14,
     specialization: "Weather-related issues",
@@ -22279,7 +22279,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1311,
     name: "Dr. Tapas Sahu",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Tapas%20Sahu&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 7,
     specialization: "Post-harvest storage",
@@ -22296,7 +22296,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1312,
     name: "Ms. Sumita Choudhury",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sumita%20Choudhury&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 6,
     specialization: "Crop selection",
@@ -22313,7 +22313,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1313,
     name: "Ms. Anup Mitra",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anup%20Mitra&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 17,
     specialization: "Machinery guidance",
@@ -22330,7 +22330,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1314,
     name: "Dr. Puja Bora",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Puja%20Bora&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 11,
     specialization: "Low crop yield",
@@ -22347,7 +22347,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1315,
     name: "Ms. Shyamali Pradhan",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyamali%20Pradhan&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 7,
     specialization: "Market price guidance",
@@ -22364,7 +22364,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1316,
     name: "Dr. Gautam Hazarika",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gautam%20Hazarika&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 19,
     specialization: "Soil testing",
@@ -22381,7 +22381,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1317,
     name: "Dr. Rani Banerjee",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rani%20Banerjee&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 12,
     specialization: "Pest attack",
@@ -22398,7 +22398,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1318,
     name: "Mr. Puja Dey",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Puja%20Dey&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 14,
     specialization: "Soil does not retain water",
@@ -22415,7 +22415,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1319,
     name: "Mr. Debabrata Sahoo",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Debabrata%20Sahoo&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 7,
     specialization: "Leaf diseases",
@@ -22432,7 +22432,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1320,
     name: "Mr. Rituraj Sharma",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rituraj%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 19,
     specialization: "Irrigation planning",
@@ -22449,7 +22449,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1321,
     name: "Dr. Arun Baruah",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arun%20Baruah&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 20,
     specialization: "Fertilizer recommendation",
@@ -22466,7 +22466,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1322,
     name: "Dr. Kalyan Das",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalyan%20Das&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 14,
     specialization: "Organic farming",
@@ -22483,7 +22483,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1323,
     name: "Er. Suparna Mohapatra",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suparna%20Mohapatra&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 7,
     specialization: "Weather-related issues",
@@ -22500,7 +22500,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1324,
     name: "Mr. Soumya Mitra",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Soumya%20Mitra&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 9,
     specialization: "Government schemes",
@@ -22517,7 +22517,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1325,
     name: "Ms. Sumita Bora",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sumita%20Bora&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 20,
     specialization: "Crop selection",
@@ -22534,7 +22534,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1326,
     name: "Dr. Gautam Das",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gautam%20Das&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 14,
     specialization: "Machinery guidance",
@@ -22551,7 +22551,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1327,
     name: "Dr. Mrinal Das",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mrinal%20Das&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 16,
     specialization: "Post-harvest storage",
@@ -22568,7 +22568,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1328,
     name: "Ms. Puja Bose",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Puja%20Bose&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 9,
     specialization: "Market price guidance",
@@ -22585,7 +22585,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1329,
     name: "Ms. Debabrata Behera",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Debabrata%20Behera&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 21,
     specialization: "Soil testing",
@@ -22602,7 +22602,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1330,
     name: "Ms. Anup Sahoo",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anup%20Sahoo&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 17,
     specialization: "Low crop yield",
@@ -22619,7 +22619,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1331,
     name: "Mr. Rani Sharma",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rani%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 11,
     specialization: "Soil does not retain water",
@@ -22636,7 +22636,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1332,
     name: "Mr. Sajal Banerjee",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sajal%20Banerjee&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 4,
     specialization: "Leaf diseases",
@@ -22653,7 +22653,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1333,
     name: "Mr. Gautam Choudhury",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gautam%20Choudhury&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 19,
     specialization: "Pest attack",
@@ -22670,7 +22670,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1334,
     name: "Mr. Rani Mitra",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rani%20Mitra&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 12,
     specialization: "Fertilizer recommendation",
@@ -22687,7 +22687,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1335,
     name: "Mr. Biplab Bora",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Biplab%20Bora&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 6,
     specialization: "Organic farming",
@@ -22704,7 +22704,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1336,
     name: "Dr. Sajal Nayak",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sajal%20Nayak&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 7,
     specialization: "Irrigation planning",
@@ -22721,7 +22721,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1337,
     name: "Dr. Rituraj Choudhury",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rituraj%20Choudhury&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 19,
     specialization: "Government schemes",
@@ -22738,7 +22738,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1338,
     name: "Mr. Sudipta Bose",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudipta%20Bose&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 12,
     specialization: "Crop selection",
@@ -22755,7 +22755,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1339,
     name: "Dr. Arun Gogoi",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arun%20Gogoi&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 17,
     specialization: "Weather-related issues",
@@ -22772,7 +22772,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1340,
     name: "Ms. Kalyan Sen",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalyan%20Sen&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 10,
     specialization: "Post-harvest storage",
@@ -22789,7 +22789,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1341,
     name: "Ms. Suparna Barik",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suparna%20Barik&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 4,
     specialization: "Market price guidance",
@@ -22806,7 +22806,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1342,
     name: "Ms. Soumya Mishra",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Soumya%20Mishra&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 5,
     specialization: "Machinery guidance",
@@ -22823,7 +22823,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1343,
     name: "Dr. Sumita Gogoi",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sumita%20Gogoi&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 17,
     specialization: "Low crop yield",
@@ -22840,7 +22840,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1344,
     name: "Dr. Anup Mukherjee",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anup%20Mukherjee&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 10,
     specialization: "Soil does not retain water",
@@ -22857,7 +22857,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1345,
     name: "Dr. Mita Sharma",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mita%20Sharma&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 15,
     specialization: "Soil testing",
@@ -22874,7 +22874,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1346,
     name: "Dr. Mrinal Banerjee",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mrinal%20Banerjee&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 8,
     specialization: "Pest attack",
@@ -22891,7 +22891,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1347,
     name: "Dr. Madhuri Sahu",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Madhuri%20Sahu&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 20,
     specialization: "Fertilizer recommendation",
@@ -22908,7 +22908,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1348,
     name: "Mr. Binay Sahoo",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Binay%20Sahoo&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 4,
     specialization: "Leaf diseases",
@@ -22925,7 +22925,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1349,
     name: "Mr. Biswajit Sharma",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Biswajit%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 15,
     specialization: "Irrigation planning",
@@ -22942,7 +22942,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1350,
     name: "Mr. Subhash Chakraborty",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Subhash%20Chakraborty&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 9,
     specialization: "Government schemes",
@@ -22959,7 +22959,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1351,
     name: "Dr. Pradip Das",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pradip%20Das&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 10,
     specialization: "Organic farming",
@@ -22976,7 +22976,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1352,
     name: "Mr. Preeti Mohapatra",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Preeti%20Mohapatra&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 4,
     specialization: "Weather-related issues",
@@ -22993,7 +22993,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1353,
     name: "Ms. Tapas Kalita",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Tapas%20Kalita&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 15,
     specialization: "Post-harvest storage",
@@ -23010,7 +23010,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1354,
     name: "Ms. Subhash Nayak",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Subhash%20Nayak&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 12,
     specialization: "Crop selection",
@@ -23027,7 +23027,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1355,
     name: "Ms. Preeti Das",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Preeti%20Das&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 5,
     specialization: "Machinery guidance",
@@ -23044,7 +23044,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1356,
     name: "Ms. Soumya Bose",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Soumya%20Bose&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 17,
     specialization: "Low crop yield",
@@ -23061,7 +23061,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1357,
     name: "Dr. Tapas Banerjee",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Tapas%20Banerjee&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 18,
     specialization: "Market price guidance",
@@ -23078,7 +23078,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1358,
     name: "Dr. Rekha Sahu",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Sahu&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 12,
     specialization: "Soil testing",
@@ -23095,7 +23095,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1359,
     name: "Dr. Mrinal Das",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mrinal%20Das&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 5,
     specialization: "Pest attack",
@@ -23112,7 +23112,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1360,
     name: "Mr. Biplab Sharma",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Biplab%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 7,
     specialization: "Soil does not retain water",
@@ -23129,7 +23129,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1361,
     name: "Mr. Binay Chakraborty",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Binay%20Chakraborty&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 18,
     specialization: "Leaf diseases",
@@ -23146,7 +23146,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1362,
     name: "Mr. Partha Mishra",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Partha%20Mishra&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 12,
     specialization: "Irrigation planning",
@@ -23163,7 +23163,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1363,
     name: "Dr. Biswajit Mohapatra",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Biswajit%20Mohapatra&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 14,
     specialization: "Fertilizer recommendation",
@@ -23180,7 +23180,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1364,
     name: "Dr. Subhash Kalita",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Subhash%20Kalita&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 7,
     specialization: "Organic farming",
@@ -23197,7 +23197,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1365,
     name: "Er. Preeti Chakraborty",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Preeti%20Chakraborty&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 19,
     specialization: "Weather-related issues",
@@ -23214,7 +23214,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1366,
     name: "Mr. Rinku Ghosh",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rinku%20Ghosh&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 20,
     specialization: "Government schemes",
@@ -23231,7 +23231,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1367,
     name: "Mr. Bimal Pattnaik",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bimal%20Pattnaik&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 14,
     specialization: "Crop selection",
@@ -23248,7 +23248,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1368,
     name: "Dr. Rekha Deka",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Deka&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 7,
     specialization: "Machinery guidance",
@@ -23265,7 +23265,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1369,
     name: "Ms. Mita Behera",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mita%20Behera&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 9,
     specialization: "Post-harvest storage",
@@ -23282,7 +23282,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1370,
     name: "Ms. Biplab Ghosh",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Biplab%20Ghosh&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 20,
     specialization: "Market price guidance",
@@ -23299,7 +23299,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1371,
     name: "Ms. Binay Swain",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Binay%20Swain&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 14,
     specialization: "Soil testing",
@@ -23316,7 +23316,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1372,
     name: "Dr. Sudeshna Das",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudeshna%20Das&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 5,
     specialization: "Low crop yield",
@@ -23333,7 +23333,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1373,
     name: "Dr. Soumya Mohapatra",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Soumya%20Mohapatra&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 17,
     specialization: "Soil does not retain water",
@@ -23350,7 +23350,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1374,
     name: "Dr. Sumita Kalita",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sumita%20Kalita&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 10,
     specialization: "Leaf diseases",
@@ -23367,7 +23367,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1375,
     name: "Mr. Rekha Bora",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Bora&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 12,
     specialization: "Pest attack",
@@ -23384,7 +23384,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1376,
     name: "Mr. Anup Das",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anup%20Das&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 5,
     specialization: "Fertilizer recommendation",
@@ -23401,7 +23401,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1377,
     name: "Mr. Puja Pattnaik",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Puja%20Pattnaik&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 17,
     specialization: "Organic farming",
@@ -23418,7 +23418,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1378,
     name: "Mr. Sumita Banerjee",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sumita%20Banerjee&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 13,
     specialization: "Irrigation planning",
@@ -23435,7 +23435,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1379,
     name: "Mr. Anup Sahu",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anup%20Sahu&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 7,
     specialization: "Government schemes",
@@ -23452,7 +23452,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1380,
     name: "Dr. Rani Das",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rani%20Das&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 19,
     specialization: "Crop selection",
@@ -23469,7 +23469,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1381,
     name: "Er. Puja Sharma",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Puja%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 20,
     specialization: "Weather-related issues",
@@ -23486,7 +23486,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1382,
     name: "Ms. Debabrata Chakraborty",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Debabrata%20Chakraborty&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 14,
     specialization: "Post-harvest storage",
@@ -23503,7 +23503,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1383,
     name: "Ms. Nilotpal Mishra",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilotpal%20Mishra&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 7,
     specialization: "Market price guidance",
@@ -23520,7 +23520,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1384,
     name: "Dr. Arun Mohapatra",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arun%20Mohapatra&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 9,
     specialization: "Machinery guidance",
@@ -23537,7 +23537,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1385,
     name: "Dr. Sudeshna Kalita",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudeshna%20Kalita&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 20,
     specialization: "Low crop yield",
@@ -23554,7 +23554,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1386,
     name: "Dr. Suparna Chakraborty",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suparna%20Chakraborty&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 14,
     specialization: "Soil does not retain water",
@@ -23571,7 +23571,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1387,
     name: "Ms. Rani Hazarika",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rani%20Hazarika&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 5,
     specialization: "Soil testing",
@@ -23588,7 +23588,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1388,
     name: "Mr. Biplab Banerjee",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Biplab%20Banerjee&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 17,
     specialization: "Pest attack",
@@ -23605,7 +23605,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1389,
     name: "Mr. Binay Sahu",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Binay%20Sahu&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 10,
     specialization: "Fertilizer recommendation",
@@ -23622,7 +23622,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1390,
     name: "Dr. Sudeshna Sen",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudeshna%20Sen&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 20,
     specialization: "Leaf diseases",
@@ -23639,7 +23639,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1391,
     name: "Er. Soumya Barik",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Soumya%20Barik&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 13,
     specialization: "Irrigation planning",
@@ -23656,7 +23656,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1392,
     name: "Mr. Sumita Talukdar",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sumita%20Talukdar&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 7,
     specialization: "Government schemes",
@@ -23673,7 +23673,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1393,
     name: "Er. Sudeshna Kalita",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudeshna%20Kalita&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 21,
     specialization: "Organic farming",
@@ -23690,7 +23690,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1394,
     name: "Mr. Suparna Roy",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suparna%20Roy&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 15,
     specialization: "Weather-related issues",
@@ -23707,7 +23707,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1395,
     name: "Mr. Shyamali Pradhan",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyamali%20Pradhan&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 8,
     specialization: "Post-harvest storage",
@@ -23724,7 +23724,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1396,
     name: "Dr. Sumita Pattnaik",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sumita%20Pattnaik&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 10,
     specialization: "Crop selection",
@@ -23741,7 +23741,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1397,
     name: "Dr. Anup Deka",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anup%20Deka&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 21,
     specialization: "Machinery guidance",
@@ -23758,7 +23758,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1398,
     name: "Dr. Rani Roy",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rani%20Roy&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 15,
     specialization: "Low crop yield",
@@ -23775,7 +23775,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1399,
     name: "Ms. Madhuri Talukdar",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Madhuri%20Talukdar&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 17,
     specialization: "Market price guidance",
@@ -23792,7 +23792,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1400,
     name: "Ms. Debabrata Swain",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Debabrata%20Swain&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 10,
     specialization: "Soil testing",
@@ -23809,7 +23809,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1401,
     name: "Mr. Nilotpal Baruah",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilotpal%20Baruah&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 4,
     specialization: "Pest attack",
@@ -23826,7 +23826,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1402,
     name: "Ms. Gurdip Randhawa",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gurdip%20Randhawa&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 9,
     specialization: "Soil does not retain water",
@@ -23843,7 +23843,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1403,
     name: "Mr. Kulwinder Bhatia",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kulwinder%20Bhatia&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 21,
     specialization: "Leaf diseases",
@@ -23860,7 +23860,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1404,
     name: "Dr. Ranjit Grewal",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ranjit%20Grewal&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 14,
     specialization: "Irrigation planning",
@@ -23877,7 +23877,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1405,
     name: "Mr. Lakhwinder Gill",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Lakhwinder%20Gill&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 11,
     specialization: "Fertilizer recommendation",
@@ -23894,7 +23894,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1406,
     name: "Dr. Balwinder Bajwa",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Balwinder%20Bajwa&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 4,
     specialization: "Organic farming",
@@ -23911,7 +23911,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1407,
     name: "Dr. Karamjit Kapoor",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Karamjit%20Kapoor&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 16,
     specialization: "Weather-related issues",
@@ -23928,7 +23928,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1408,
     name: "Mr. Ranjit Aulakh",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ranjit%20Aulakh&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 17,
     specialization: "Government schemes",
@@ -23945,7 +23945,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1409,
     name: "Mr. Harbhajan Gill",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Harbhajan%20Gill&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 11,
     specialization: "Crop selection",
@@ -23962,7 +23962,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1410,
     name: "Mr. Navdeep Bajwa",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Navdeep%20Bajwa&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 4,
     specialization: "Machinery guidance",
@@ -23979,7 +23979,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1411,
     name: "Dr. Kulwinder Bhatia",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kulwinder%20Bhatia&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 4,
     specialization: "Post-harvest storage",
@@ -23996,7 +23996,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1412,
     name: "Dr. Ranjit Grewal",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ranjit%20Grewal&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 15,
     specialization: "Market price guidance",
@@ -24013,7 +24013,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1413,
     name: "Er. Harbhajan Sohal",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Harbhajan%20Sohal&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 9,
     specialization: "Soil testing",
@@ -24030,7 +24030,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1414,
     name: "Ms. Manpreet Johal",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manpreet%20Johal&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 10,
     specialization: "Low crop yield",
@@ -24047,7 +24047,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1415,
     name: "Ms. Harpreet Arora",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Harpreet%20Arora&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 4,
     specialization: "Soil does not retain water",
@@ -24064,7 +24064,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1416,
     name: "Dr. Tejinder Grewal",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Tejinder%20Grewal&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 15,
     specialization: "Leaf diseases",
@@ -24081,7 +24081,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1417,
     name: "Dr. Simranjit Brar",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Simranjit%20Brar&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 17,
     specialization: "Pest attack",
@@ -24098,7 +24098,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1418,
     name: "Mr. Paramjit Johal",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Paramjit%20Johal&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 10,
     specialization: "Fertilizer recommendation",
@@ -24115,7 +24115,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1419,
     name: "Mr. Lakhwinder Arora",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Lakhwinder%20Arora&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 4,
     specialization: "Organic farming",
@@ -24132,7 +24132,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1420,
     name: "Mr. Gurdip Khanna",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gurdip%20Khanna&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 5,
     specialization: "Irrigation planning",
@@ -24149,7 +24149,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1421,
     name: "Dr. Kulwinder Brar",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kulwinder%20Brar&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 17,
     specialization: "Government schemes",
@@ -24166,7 +24166,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1422,
     name: "Dr. Ranjit Sekhon",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ranjit%20Sekhon&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 11,
     specialization: "Crop selection",
@@ -24183,7 +24183,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1423,
     name: "Dr. Lakhwinder Grewal",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Lakhwinder%20Grewal&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 7,
     specialization: "Weather-related issues",
@@ -24200,7 +24200,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1424,
     name: "Dr. Balwinder Sohal",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Balwinder%20Sohal&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 19,
     specialization: "Post-harvest storage",
@@ -24217,7 +24217,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1425,
     name: "Dr. Karamjit Singh",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Karamjit%20Singh&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 12,
     specialization: "Market price guidance",
@@ -24234,7 +24234,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1426,
     name: "Dr. Lakhwinder Khanna",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Lakhwinder%20Khanna&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 9,
     specialization: "Machinery guidance",
@@ -24251,7 +24251,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1427,
     name: "Dr. Balwinder Sidhu",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Balwinder%20Sidhu&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 20,
     specialization: "Low crop yield",
@@ -24268,7 +24268,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1428,
     name: "Ms. Karamjit Johal",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Karamjit%20Johal&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 14,
     specialization: "Soil does not retain water",
@@ -24285,7 +24285,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1429,
     name: "Ms. Manpreet Sandhu",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manpreet%20Sandhu&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 5,
     specialization: "Soil testing",
@@ -24302,7 +24302,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1430,
     name: "Ms. Amarjit Randhawa",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amarjit%20Randhawa&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 17,
     specialization: "Pest attack",
@@ -24319,7 +24319,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1431,
     name: "Dr. Simranjit Bhatia",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Simranjit%20Bhatia&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 10,
     specialization: "Fertilizer recommendation",
@@ -24336,7 +24336,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1432,
     name: "Mr. Manpreet Mann",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manpreet%20Mann&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 7,
     specialization: "Leaf diseases",
@@ -24353,7 +24353,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1433,
     name: "Dr. Harpreet Gill",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Harpreet%20Gill&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 18,
     specialization: "Irrigation planning",
@@ -24370,7 +24370,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1434,
     name: "Dr. Tejinder Bajwa",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Tejinder%20Bajwa&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 12,
     specialization: "Government schemes",
@@ -24387,7 +24387,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1435,
     name: "Dr. Harbhajan Sandhu",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Harbhajan%20Sandhu&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 8,
     specialization: "Organic farming",
@@ -24404,7 +24404,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1436,
     name: "Dr. Navdeep Randhawa",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Navdeep%20Randhawa&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 20,
     specialization: "Weather-related issues",
@@ -24421,7 +24421,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1437,
     name: "Dr. Tejinder Singh",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Tejinder%20Singh&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 13,
     specialization: "Post-harvest storage",
@@ -24438,7 +24438,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1438,
     name: "Dr. Harbhajan Khanna",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Harbhajan%20Khanna&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 10,
     specialization: "Crop selection",
@@ -24455,7 +24455,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1439,
     name: "Dr. Navdeep Brar",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Navdeep%20Brar&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 21,
     specialization: "Machinery guidance",
@@ -24472,7 +24472,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1440,
     name: "Ms. Gurpreet Sekhon",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gurpreet%20Sekhon&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 15,
     specialization: "Low crop yield",
@@ -24489,7 +24489,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1441,
     name: "Ms. Tejinder Cheema",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Tejinder%20Cheema&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 16,
     specialization: "Market price guidance",
@@ -24506,7 +24506,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1442,
     name: "Ms. Sukhwinder Mann",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sukhwinder%20Mann&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 10,
     specialization: "Soil testing",
@@ -24523,7 +24523,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1443,
     name: "Dr. Prabhjot Gill",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Prabhjot%20Gill&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 4,
     specialization: "Pest attack",
@@ -24540,7 +24540,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1444,
     name: "Er. Lakhwinder Singh",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Lakhwinder%20Singh&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 5,
     specialization: "Soil does not retain water",
@@ -24557,7 +24557,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1445,
     name: "Er. Balwinder Dhillon",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Balwinder%20Dhillon&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 17,
     specialization: "Leaf diseases",
@@ -24574,7 +24574,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1446,
     name: "Mr. Karamjit Mann",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Karamjit%20Mann&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 10,
     specialization: "Irrigation planning",
@@ -24591,7 +24591,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1447,
     name: "Dr. Ranjit Randhawa",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ranjit%20Randhawa&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 12,
     specialization: "Fertilizer recommendation",
@@ -24608,7 +24608,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1448,
     name: "Dr. Harbhajan Singh",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Harbhajan%20Singh&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 5,
     specialization: "Organic farming",
@@ -24625,7 +24625,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1449,
     name: "Dr. Navdeep Dhillon",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Navdeep%20Dhillon&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 17,
     specialization: "Weather-related issues",
@@ -24642,7 +24642,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1450,
     name: "Dr. Karamjit Brar",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Karamjit%20Brar&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 13,
     specialization: "Government schemes",
@@ -24659,7 +24659,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1451,
     name: "Dr. Jaswinder Sekhon",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Jaswinder%20Sekhon&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 7,
     specialization: "Crop selection",
@@ -24676,7 +24676,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1452,
     name: "Dr. Satinder Kapoor",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Satinder%20Kapoor&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 18,
     specialization: "Machinery guidance",
@@ -24693,7 +24693,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1453,
     name: "Mr. Simranjit Johal",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Simranjit%20Johal&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 10,
     specialization: "Post-harvest storage",
@@ -24710,7 +24710,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1454,
     name: "Ms. Paramjit Arora",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Paramjit%20Arora&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 21,
     specialization: "Market price guidance",
@@ -24727,7 +24727,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1455,
     name: "Dr. Lakhwinder Grewal",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Lakhwinder%20Grewal&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 15,
     specialization: "Soil testing",
@@ -24744,7 +24744,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1456,
     name: "Dr. Gurdip Brar",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gurdip%20Brar&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 16,
     specialization: "Low crop yield",
@@ -24761,7 +24761,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1457,
     name: "Er. Kulwinder Johal",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kulwinder%20Johal&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 10,
     specialization: "Soil does not retain water",
@@ -24778,7 +24778,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1458,
     name: "Ms. Ranjit Arora",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ranjit%20Arora&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 21,
     specialization: "Leaf diseases",
@@ -24795,7 +24795,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1459,
     name: "Dr. Tejinder Randhawa",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Tejinder%20Randhawa&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 13,
     specialization: "Pest attack",
@@ -24812,7 +24812,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1460,
     name: "Dr. Sukhwinder Bhatia",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sukhwinder%20Bhatia&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 6,
     specialization: "Fertilizer recommendation",
@@ -24829,7 +24829,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1461,
     name: "Dr. Prabhjot Grewal",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Prabhjot%20Grewal&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 18,
     specialization: "Organic farming",
@@ -24846,7 +24846,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1462,
     name: "Dr. Gurpreet Gill",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gurpreet%20Gill&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 14,
     specialization: "Irrigation planning",
@@ -24863,7 +24863,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1463,
     name: "Dr. Amarjit Bajwa",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amarjit%20Bajwa&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 8,
     specialization: "Government schemes",
@@ -24880,7 +24880,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1464,
     name: "Dr. Prabhjot Khanna",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Prabhjot%20Khanna&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 20,
     specialization: "Crop selection",
@@ -24897,7 +24897,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1465,
     name: "Dr. Gurpreet Randhawa",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gurpreet%20Randhawa&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 16,
     specialization: "Weather-related issues",
@@ -24914,7 +24914,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1466,
     name: "Dr. Amarjit Singh",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amarjit%20Singh&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 10,
     specialization: "Post-harvest storage",
@@ -24931,7 +24931,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1467,
     name: "Er. Simranjit Dhillon",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Simranjit%20Dhillon&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 21,
     specialization: "Market price guidance",
@@ -24948,7 +24948,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1468,
     name: "Mr. Vikram Shah",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Shah&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 17,
     specialization: "Machinery guidance",
@@ -24965,7 +24965,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1469,
     name: "Mr. Manoj Malhotra",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manoj%20Malhotra&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 10,
     specialization: "Low crop yield",
@@ -24982,7 +24982,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1470,
     name: "Ms. Shyam Srivastava",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyam%20Srivastava&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 4,
     specialization: "Soil does not retain water",
@@ -24999,7 +24999,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1471,
     name: "Dr. Pramod Mishra",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pramod%20Mishra&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 5,
     specialization: "Soil testing",
@@ -25016,7 +25016,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1472,
     name: "Er. Vijay Shah",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Shah&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 17,
     specialization: "Pest attack",
@@ -25033,7 +25033,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1473,
     name: "Ms. Chandrashekhar Shukla",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Chandrashekhar%20Shukla&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 10,
     specialization: "Fertilizer recommendation",
@@ -25050,7 +25050,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1474,
     name: "Er. Shyam Rawat",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyam%20Rawat&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 7,
     specialization: "Leaf diseases",
@@ -25067,7 +25067,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1475,
     name: "Mr. Anuj Singh",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anuj%20Singh&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 18,
     specialization: "Irrigation planning",
@@ -25084,7 +25084,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1476,
     name: "Mr. Devendra Agarwal",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Devendra%20Agarwal&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 12,
     specialization: "Government schemes",
@@ -25101,7 +25101,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1477,
     name: "Dr. Chandrashekhar Dubey",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Chandrashekhar%20Dubey&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 14,
     specialization: "Organic farming",
@@ -25118,7 +25118,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1478,
     name: "Dr. Kavita Rawat",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavita%20Rawat&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 7,
     specialization: "Weather-related issues",
@@ -25135,7 +25135,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1479,
     name: "Dr. Usha Gupta",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Usha%20Gupta&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 19,
     specialization: "Post-harvest storage",
@@ -25152,7 +25152,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1480,
     name: "Mr. Rekha Malhotra",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Malhotra&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 20,
     specialization: "Crop selection",
@@ -25169,7 +25169,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1481,
     name: "Mr. Amit Srivastava",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amit%20Srivastava&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 14,
     specialization: "Machinery guidance",
@@ -25186,7 +25186,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1482,
     name: "Mr. Manoj Thakur",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manoj%20Thakur&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 7,
     specialization: "Low crop yield",
@@ -25203,7 +25203,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1483,
     name: "Dr. Dinesh Shah",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dinesh%20Shah&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 9,
     specialization: "Market price guidance",
@@ -25220,7 +25220,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1484,
     name: "Dr. Shyam Shukla",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyam%20Shukla&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 20,
     specialization: "Soil testing",
@@ -25237,7 +25237,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1485,
     name: "Ms. Vijay Srivastava",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Srivastava&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 14,
     specialization: "Pest attack",
@@ -25254,7 +25254,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1486,
     name: "Ms. Ajay Mishra",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ajay%20Mishra&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 15,
     specialization: "Soil does not retain water",
@@ -25271,7 +25271,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1487,
     name: "Ms. Chandrashekhar Patel",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Chandrashekhar%20Patel&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 9,
     specialization: "Leaf diseases",
@@ -25288,7 +25288,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1488,
     name: "Dr. Asha Tripathi",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Tripathi&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 20,
     specialization: "Irrigation planning",
@@ -25305,7 +25305,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1489,
     name: "Er. Priya Bisht",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Bisht&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 4,
     specialization: "Fertilizer recommendation",
@@ -25322,7 +25322,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1490,
     name: "Mr. Rekha Tiwari",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Tiwari&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 16,
     specialization: "Organic farming",
@@ -25339,7 +25339,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1491,
     name: "Mr. Vikram Kumar",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Kumar&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 9,
     specialization: "Weather-related issues",
@@ -25356,7 +25356,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1492,
     name: "Dr. Ramesh Saxena",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Saxena&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 11,
     specialization: "Government schemes",
@@ -25373,7 +25373,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1493,
     name: "Dr. Dinesh Bisht",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dinesh%20Bisht&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 4,
     specialization: "Crop selection",
@@ -25390,7 +25390,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1494,
     name: "Dr. Pramod Yadav",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pramod%20Yadav&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 16,
     specialization: "Machinery guidance",
@@ -25407,7 +25407,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1495,
     name: "Dr. Vikram Shukla",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Shukla&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 12,
     specialization: "Post-harvest storage",
@@ -25424,7 +25424,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1496,
     name: "Dr. Manoj Srivastava",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manoj%20Srivastava&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 6,
     specialization: "Market price guidance",
@@ -25441,7 +25441,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1497,
     name: "Er. Shyam Rana",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyam%20Rana&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 17,
     specialization: "Soil testing",
@@ -25458,7 +25458,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1498,
     name: "Mr. Pramod Patel",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pramod%20Patel&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 19,
     specialization: "Low crop yield",
@@ -25475,7 +25475,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1499,
     name: "Ms. Vijay Tripathi",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Tripathi&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 12,
     specialization: "Soil does not retain water",
@@ -25492,7 +25492,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1500,
     name: "Dr. Chandrashekhar Pandey",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Chandrashekhar%20Pandey&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 6,
     specialization: "Leaf diseases",
@@ -25509,7 +25509,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1501,
     name: "Ms. Shyam Gupta",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyam%20Gupta&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 20,
     specialization: "Pest attack",
@@ -25526,7 +25526,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1502,
     name: "Dr. Anuj Saxena",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anuj%20Saxena&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 14,
     specialization: "Fertilizer recommendation",
@@ -25543,7 +25543,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1503,
     name: "Dr. Hemant Bisht",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hemant%20Bisht&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 7,
     specialization: "Organic farming",
@@ -25560,7 +25560,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1504,
     name: "Mr. Chandrashekhar Thakur",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Chandrashekhar%20Thakur&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 9,
     specialization: "Irrigation planning",
@@ -25577,7 +25577,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1505,
     name: "Mr. Kavita Sharma",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavita%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 21,
     specialization: "Government schemes",
@@ -25594,7 +25594,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1506,
     name: "Mr. Meena Saxena",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meena%20Saxena&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 14,
     specialization: "Crop selection",
@@ -25611,7 +25611,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1507,
     name: "Dr. Rekha Srivastava",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Srivastava&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 16,
     specialization: "Weather-related issues",
@@ -25628,7 +25628,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1508,
     name: "Dr. Amit Rana",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amit%20Rana&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 9,
     specialization: "Post-harvest storage",
@@ -25645,7 +25645,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1509,
     name: "Dr. Manoj Khanna",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manoj%20Khanna&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 21,
     specialization: "Market price guidance",
@@ -25662,7 +25662,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1510,
     name: "Mr. Asha Kumar",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Kumar&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 20,
     specialization: "Machinery guidance",
@@ -25679,7 +25679,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1511,
     name: "Mr. Rekha Upadhyay",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Upadhyay&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 14,
     specialization: "Low crop yield",
@@ -25696,7 +25696,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1512,
     name: "Dr. Amit Verma",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amit%20Verma&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 7,
     specialization: "Soil does not retain water",
@@ -25713,7 +25713,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1513,
     name: "Er. Rohit Shukla",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rohit%20Shukla&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 17,
     specialization: "Soil testing",
@@ -25730,7 +25730,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1514,
     name: "Er. Kamlesh Pandey",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kamlesh%20Pandey&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 10,
     specialization: "Pest attack",
@@ -25747,7 +25747,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1515,
     name: "Ms. Sangeeta Rana",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sangeeta%20Rana&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 4,
     specialization: "Fertilizer recommendation",
@@ -25764,7 +25764,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1516,
     name: "Dr. Neeta Patel",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neeta%20Patel&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 5,
     specialization: "Leaf diseases",
@@ -25781,7 +25781,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1517,
     name: "Dr. Vinod Tripathi",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vinod%20Tripathi&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 17,
     specialization: "Irrigation planning",
@@ -25798,7 +25798,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1518,
     name: "Dr. Deepak Pandey",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepak%20Pandey&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 10,
     specialization: "Government schemes",
@@ -25815,7 +25815,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1519,
     name: "Mr. Mahendra Tiwari",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mahendra%20Tiwari&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 12,
     specialization: "Organic farming",
@@ -25832,7 +25832,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1520,
     name: "Mr. Sunita Kumar",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sunita%20Kumar&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 5,
     specialization: "Weather-related issues",
@@ -25849,7 +25849,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1521,
     name: "Mr. Pankaj Tripathi",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pankaj%20Tripathi&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 17,
     specialization: "Post-harvest storage",
@@ -25866,7 +25866,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1522,
     name: "Dr. Rajesh Negi",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajesh%20Negi&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 18,
     specialization: "Crop selection",
@@ -25883,7 +25883,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1523,
     name: "Dr. Rohit Yadav",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rohit%20Yadav&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 12,
     specialization: "Machinery guidance",
@@ -25900,7 +25900,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1524,
     name: "Mr. Hemant Jain",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hemant%20Jain&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 5,
     specialization: "Low crop yield",
@@ -25917,7 +25917,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1525,
     name: "Mr. Devendra Chaurasia",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Devendra%20Chaurasia&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 7,
     specialization: "Market price guidance",
@@ -25934,7 +25934,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1526,
     name: "Mr. Neeta Negi",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neeta%20Negi&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 19,
     specialization: "Soil testing",
@@ -25951,7 +25951,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1527,
     name: "Dr. Meena Singh",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meena%20Singh&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 12,
     specialization: "Pest attack",
@@ -25968,7 +25968,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1528,
     name: "Er. Usha Khanna",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Usha%20Khanna&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 14,
     specialization: "Soil does not retain water",
@@ -25985,7 +25985,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1529,
     name: "Ms. Mahendra Chaurasia",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mahendra%20Chaurasia&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 7,
     specialization: "Leaf diseases",
@@ -26002,7 +26002,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1530,
     name: "Ms. Anil Rawat",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anil%20Rawat&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 19,
     specialization: "Irrigation planning",
@@ -26019,7 +26019,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1531,
     name: "Er. Meena Kumar",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meena%20Kumar&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 15,
     specialization: "Fertilizer recommendation",
@@ -26036,7 +26036,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1532,
     name: "Mr. Deepak Upadhyay",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepak%20Upadhyay&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 9,
     specialization: "Organic farming",
@@ -26053,7 +26053,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1533,
     name: "Mr. Sunita Verma",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sunita%20Verma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 20,
     specialization: "Weather-related issues",
@@ -26070,7 +26070,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1534,
     name: "Dr. Anil Yadav",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anil%20Yadav&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 4,
     specialization: "Government schemes",
@@ -26087,7 +26087,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1535,
     name: "Dr. Pankaj Jain",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pankaj%20Jain&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 15,
     specialization: "Crop selection",
@@ -26104,7 +26104,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1536,
     name: "Dr. Rohit Upadhyay",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rohit%20Upadhyay&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 9,
     specialization: "Machinery guidance",
@@ -26121,7 +26121,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1537,
     name: "Dr. Pramod Agarwal",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pramod%20Agarwal&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 13,
     specialization: "Post-harvest storage",
@@ -26138,7 +26138,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1538,
     name: "Er. Vijay Joshi",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Joshi&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 7,
     specialization: "Market price guidance",
@@ -26155,7 +26155,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1539,
     name: "Mr. Devendra Tiwari",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Devendra%20Tiwari&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 18,
     specialization: "Soil testing",
@@ -26172,7 +26172,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1540,
     name: "Mr. Deepak Upadhyay",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepak%20Upadhyay&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 10,
     specialization: "Low crop yield",
@@ -26189,7 +26189,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1541,
     name: "Dr. Sunita Verma",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sunita%20Verma&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 21,
     specialization: "Soil does not retain water",
@@ -26206,7 +26206,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1542,
     name: "Dr. Suresh Shah",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Shah&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 15,
     specialization: "Leaf diseases",
@@ -26223,7 +26223,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1543,
     name: "Er. Pankaj Jain",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pankaj%20Jain&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 16,
     specialization: "Pest attack",
@@ -26240,7 +26240,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1544,
     name: "Ms. Rohit Joshi",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rohit%20Joshi&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 10,
     specialization: "Fertilizer recommendation",
@@ -26257,7 +26257,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1545,
     name: "Mr. Kamlesh Mishra",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kamlesh%20Mishra&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 4,
     specialization: "Organic farming",
@@ -26274,7 +26274,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1546,
     name: "Dr. Priya Tripathi",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Tripathi&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 13,
     specialization: "Irrigation planning",
@@ -26291,7 +26291,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1547,
     name: "Dr. Rekha Pandey",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Pandey&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 7,
     specialization: "Government schemes",
@@ -26308,7 +26308,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1548,
     name: "Er. Vikram Chauhan",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Chauhan&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 18,
     specialization: "Crop selection",
@@ -26325,7 +26325,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1549,
     name: "Dr. Asha Saxena",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Saxena&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 15,
     specialization: "Weather-related issues",
@@ -26342,7 +26342,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1550,
     name: "Er. Usha Negi",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Usha%20Negi&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 8,
     specialization: "Post-harvest storage",
@@ -26359,7 +26359,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1551,
     name: "Mr. Mahendra Yadav",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mahendra%20Yadav&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 20,
     specialization: "Market price guidance",
@@ -26376,7 +26376,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1552,
     name: "Mr. Vikram Sharma",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 21,
     specialization: "Machinery guidance",
@@ -26393,7 +26393,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1553,
     name: "Dr. Manoj Chaurasia",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manoj%20Chaurasia&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 15,
     specialization: "Low crop yield",
@@ -26410,7 +26410,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1554,
     name: "Dr. Rajesh Negi",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajesh%20Negi&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 8,
     specialization: "Soil does not retain water",
@@ -26427,7 +26427,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1555,
     name: "Er. Pramod Rana",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pramod%20Rana&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 10,
     specialization: "Soil testing",
@@ -26444,7 +26444,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1556,
     name: "Ms. Vijay Khanna",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Khanna&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 21,
     specialization: "Pest attack",
@@ -26461,7 +26461,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1557,
     name: "Ms. Devendra Chaurasia",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Devendra%20Chaurasia&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 15,
     specialization: "Fertilizer recommendation",
@@ -26478,7 +26478,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1558,
     name: "Dr. Bhupesh Verma",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhupesh%20Verma&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 16,
     specialization: "Leaf diseases",
@@ -26495,7 +26495,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1559,
     name: "Dr. Asha Chauhan",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Chauhan&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 10,
     specialization: "Irrigation planning",
@@ -26512,7 +26512,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1560,
     name: "Dr. Usha Malhotra",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Usha%20Malhotra&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 21,
     specialization: "Government schemes",
@@ -26529,7 +26529,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1561,
     name: "Dr. Chandrashekhar Negi",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Chandrashekhar%20Negi&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 18,
     specialization: "Organic farming",
@@ -26546,7 +26546,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1562,
     name: "Dr. Kavita Yadav",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavita%20Yadav&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 11,
     specialization: "Weather-related issues",
@@ -26563,7 +26563,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1563,
     name: "Mr. Meena Jain",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meena%20Jain&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 5,
     specialization: "Post-harvest storage",
@@ -26580,7 +26580,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1564,
     name: "Dr. Devendra Pandey",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Devendra%20Pandey&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 19,
     specialization: "Crop selection",
@@ -26597,7 +26597,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1565,
     name: "Mr. Neeta Rana",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neeta%20Rana&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 13,
     specialization: "Machinery guidance",
@@ -26614,7 +26614,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1566,
     name: "Mr. Vinod Khanna",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vinod%20Khanna&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 7,
     specialization: "Low crop yield",
@@ -26631,7 +26631,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1567,
     name: "Er. Sudeshna Bora",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudeshna%20Bora&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 20,
     specialization: "Market price guidance",
@@ -26648,7 +26648,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1568,
     name: "Mr. Suparna Das",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suparna%20Das&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 13,
     specialization: "Soil testing",
@@ -26665,7 +26665,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1569,
     name: "Mr. Shyamali Mohapatra",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyamali%20Mohapatra&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 7,
     specialization: "Pest attack",
@@ -26682,7 +26682,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1570,
     name: "Mr. Suparna Mohapatra",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suparna%20Mohapatra&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 17,
     specialization: "Soil does not retain water",
@@ -26699,7 +26699,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1571,
     name: "Ms. Rinku Kalita",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rinku%20Kalita&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 11,
     specialization: "Leaf diseases",
@@ -26716,7 +26716,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1572,
     name: "Dr. Bimal Chakraborty",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bimal%20Chakraborty&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 4,
     specialization: "Irrigation planning",
@@ -26733,7 +26733,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1573,
     name: "Er. Binay Hazarika",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Binay%20Hazarika&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 14,
     specialization: "Fertilizer recommendation",
@@ -26750,7 +26750,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1574,
     name: "Ms. Partha Banerjee",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Partha%20Banerjee&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 7,
     specialization: "Organic farming",
@@ -26767,7 +26767,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1575,
     name: "Mr. Arun Sahu",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arun%20Sahu&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 19,
     specialization: "Weather-related issues",
@@ -26784,7 +26784,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1576,
     name: "Mr. Sudipta Chakraborty",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudipta%20Chakraborty&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 5,
     specialization: "Government schemes",
@@ -26801,7 +26801,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1577,
     name: "Mr. Pradip Mishra",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pradip%20Mishra&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 17,
     specialization: "Crop selection",
@@ -26818,7 +26818,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1578,
     name: "Mr. Preeti Gogoi",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Preeti%20Gogoi&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 10,
     specialization: "Machinery guidance",
@@ -26835,7 +26835,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1579,
     name: "Dr. Rinku Kalita",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rinku%20Kalita&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 12,
     specialization: "Post-harvest storage",
@@ -26852,7 +26852,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1580,
     name: "Dr. Bimal Roy",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bimal%20Roy&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 5,
     specialization: "Market price guidance",
@@ -26869,7 +26869,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1581,
     name: "Er. Mita Pradhan",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mita%20Pradhan&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 17,
     specialization: "Soil testing",
@@ -26886,7 +26886,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1582,
     name: "Mr. Pradip Talukdar",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pradip%20Talukdar&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 16,
     specialization: "Low crop yield",
@@ -26903,7 +26903,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1583,
     name: "Mr. Rinku Swain",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rinku%20Swain&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 10,
     specialization: "Soil does not retain water",
@@ -26920,7 +26920,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1584,
     name: "Dr. Bimal Baruah",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bimal%20Baruah&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 21,
     specialization: "Leaf diseases",
@@ -26937,7 +26937,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1585,
     name: "Mr. Venkatesan Reddy",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Venkatesan%20Reddy&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 11,
     specialization: "Pest attack",
@@ -26954,7 +26954,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1586,
     name: "Dr. Senthil Iyengar",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Senthil%20Iyengar&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 4,
     specialization: "Fertilizer recommendation",
@@ -26971,7 +26971,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1587,
     name: "Dr. Deepa Hegde",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepa%20Hegde&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 16,
     specialization: "Organic farming",
@@ -26988,7 +26988,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1588,
     name: "Er. Prakash Subramaniam",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Prakash%20Subramaniam&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 7,
     specialization: "Irrigation planning",
@@ -27005,7 +27005,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1589,
     name: "Ms. Lakshmi Kamath",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Lakshmi%20Kamath&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 19,
     specialization: "Government schemes",
@@ -27022,7 +27022,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1590,
     name: "Mr. Thyagarajan Kumar",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Thyagarajan%20Kumar&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 13,
     specialization: "Crop selection",
@@ -27039,7 +27039,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1591,
     name: "Dr. Narasimha Reddy",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Narasimha%20Reddy&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 14,
     specialization: "Weather-related issues",
@@ -27056,7 +27056,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1592,
     name: "Dr. Praveen Krishnamurthy",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Praveen%20Krishnamurthy&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 8,
     specialization: "Post-harvest storage",
@@ -27073,7 +27073,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1593,
     name: "Dr. Kalyan Shetty",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalyan%20Shetty&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 19,
     specialization: "Market price guidance",
@@ -27090,7 +27090,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1594,
     name: "Mr. Suresh Viswanathan",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Viswanathan&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 21,
     specialization: "Machinery guidance",
@@ -27107,7 +27107,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1595,
     name: "Mr. Mani Reddy",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mani%20Reddy&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 14,
     specialization: "Low crop yield",
@@ -27124,7 +27124,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1596,
     name: "Mr. Thenmozhi Iyengar",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Thenmozhi%20Iyengar&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 8,
     specialization: "Soil does not retain water",
@@ -27141,7 +27141,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1597,
     name: "Dr. Kavitha Menon",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavitha%20Menon&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 9,
     specialization: "Soil testing",
@@ -27158,7 +27158,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1598,
     name: "Mr. Prakash Ranganathan",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Prakash%20Ranganathan&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 21,
     specialization: "Pest attack",
@@ -27175,7 +27175,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1599,
     name: "Ms. Kumaran Parida",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kumaran%20Parida&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 14,
     specialization: "Fertilizer recommendation",
@@ -27192,7 +27192,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1600,
     name: "Ms. Thenmozhi Kamath",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Thenmozhi%20Kamath&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 11,
     specialization: "Leaf diseases",
@@ -27209,7 +27209,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1601,
     name: "Ms. Anand Kumar",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anand%20Kumar&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 4,
     specialization: "Irrigation planning",
@@ -27226,7 +27226,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1602,
     name: "Ms. Meenakshi Balasubramaniam",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meenakshi%20Balasubramaniam&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 16,
     specialization: "Government schemes",
@@ -27243,7 +27243,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1603,
     name: "Dr. Kumaran Krishnamurthy",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kumaran%20Krishnamurthy&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 17,
     specialization: "Organic farming",
@@ -27260,7 +27260,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1604,
     name: "Dr. Padmanabhan Shetty",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Padmanabhan%20Shetty&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 11,
     specialization: "Weather-related issues",
@@ -27277,7 +27277,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1605,
     name: "Dr. Arulmozhi Sharma",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arulmozhi%20Sharma&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 5,
     specialization: "Post-harvest storage",
@@ -27294,7 +27294,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1606,
     name: "Dr. Lakshmi Pattnaik",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Lakshmi%20Pattnaik&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 19,
     specialization: "Crop selection",
@@ -27311,7 +27311,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1607,
     name: "Dr. Thyagarajan Menon",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Thyagarajan%20Menon&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 13,
     specialization: "Machinery guidance",
@@ -27328,7 +27328,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1608,
     name: "Er. Durai Ranganathan",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Durai%20Ranganathan&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 6,
     specialization: "Low crop yield",
@@ -27345,7 +27345,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1609,
     name: "Mr. Ganesan Pattnaik",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ganesan%20Pattnaik&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 13,
     specialization: "Market price guidance",
@@ -27362,7 +27362,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1610,
     name: "Dr. Rajasekhar Varma",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajasekhar%20Varma&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 7,
     specialization: "Soil testing",
@@ -27379,7 +27379,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1611,
     name: "Dr. Selvam Viswanathan",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Selvam%20Viswanathan&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 18,
     specialization: "Pest attack",
@@ -27396,7 +27396,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1612,
     name: "Er. Senthil Srinivasan",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Senthil%20Srinivasan&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 20,
     specialization: "Soil does not retain water",
@@ -27413,7 +27413,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1613,
     name: "Ms. Deepa Pattnaik",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepa%20Pattnaik&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 14,
     specialization: "Leaf diseases",
@@ -27430,7 +27430,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1614,
     name: "Ms. Ravi Menon",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Menon&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 7,
     specialization: "Irrigation planning",
@@ -27447,7 +27447,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1615,
     name: "Dr. Venkat Kumar",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Venkat%20Kumar&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 9,
     specialization: "Fertilizer recommendation",
@@ -27464,7 +27464,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1616,
     name: "Dr. Sudha Raghunathan",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudha%20Raghunathan&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 20,
     specialization: "Organic farming",
@@ -27481,7 +27481,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1617,
     name: "Dr. Ramesh Swain",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Swain&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 14,
     specialization: "Weather-related issues",
@@ -27498,7 +27498,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1618,
     name: "Ms. Balaji Kamath",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Balaji%20Kamath&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 15,
     specialization: "Government schemes",
@@ -27515,7 +27515,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1619,
     name: "Mr. Ganesan Sharma",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ganesan%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 9,
     specialization: "Crop selection",
@@ -27532,7 +27532,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1620,
     name: "Mr. Rajasekhar Balasubramaniam",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajasekhar%20Balasubramaniam&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 20,
     specialization: "Machinery guidance",
@@ -27549,7 +27549,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1621,
     name: "Dr. Ravi Pillai",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Pillai&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 12,
     specialization: "Post-harvest storage",
@@ -27566,7 +27566,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1622,
     name: "Mr. Thenmozhi Srinivasan",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Thenmozhi%20Srinivasan&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 5,
     specialization: "Market price guidance",
@@ -27583,7 +27583,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1623,
     name: "Mr. Anand Pattnaik",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anand%20Pattnaik&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 17,
     specialization: "Soil testing",
@@ -27600,7 +27600,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1624,
     name: "Mr. Ramesh Bhat",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Bhat&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 18,
     specialization: "Low crop yield",
@@ -27617,7 +27617,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1625,
     name: "Dr. Kumaran Kumar",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kumaran%20Kumar&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 12,
     specialization: "Soil does not retain water",
@@ -27634,7 +27634,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1626,
     name: "Dr. Padmanabhan Raghunathan",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Padmanabhan%20Raghunathan&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 5,
     specialization: "Leaf diseases",
@@ -27651,7 +27651,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1627,
     name: "Dr. Anand Iyer",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anand%20Iyer&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 20,
     specialization: "Pest attack",
@@ -27668,7 +27668,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1628,
     name: "Dr. Lakshmi Gowda",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Lakshmi%20Gowda&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 13,
     specialization: "Fertilizer recommendation",
@@ -27685,7 +27685,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1629,
     name: "Dr. Thyagarajan Naidu",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Thyagarajan%20Naidu&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 7,
     specialization: "Organic farming",
@@ -27702,7 +27702,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1630,
     name: "Ms. Narasimha Pattnaik",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Narasimha%20Pattnaik&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 9,
     specialization: "Irrigation planning",
@@ -27719,7 +27719,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1631,
     name: "Ms. Praveen Varma",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Praveen%20Varma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 20,
     specialization: "Government schemes",
@@ -27736,7 +27736,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1632,
     name: "Mr. Kalyan Viswanathan",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalyan%20Viswanathan&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 14,
     specialization: "Crop selection",
@@ -27753,7 +27753,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1633,
     name: "Dr. Suresh Srinivasan",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Srinivasan&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 15,
     specialization: "Weather-related issues",
@@ -27770,7 +27770,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1634,
     name: "Dr. Mani Pattnaik",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mani%20Pattnaik&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 9,
     specialization: "Post-harvest storage",
@@ -27787,7 +27787,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1635,
     name: "Er. Bhavani Varma",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhavani%20Varma&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 20,
     specialization: "Market price guidance",
@@ -27804,7 +27804,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1636,
     name: "Mr. Balaji Mohapatra",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Balaji%20Mohapatra&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 12,
     specialization: "Machinery guidance",
@@ -27821,7 +27821,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1637,
     name: "Dr. Ganesan Iyer",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ganesan%20Iyer&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 5,
     specialization: "Low crop yield",
@@ -27838,7 +27838,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1638,
     name: "Dr. Venkatesan Gowda",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Venkatesan%20Gowda&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 17,
     specialization: "Soil does not retain water",
@@ -27855,7 +27855,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1639,
     name: "Er. Srinivas Natarajan",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Srinivas%20Natarajan&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 18,
     specialization: "Soil testing",
@@ -27872,7 +27872,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1640,
     name: "Mr. Arjun Mohapatra",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arjun%20Mohapatra&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 12,
     specialization: "Pest attack",
@@ -27889,7 +27889,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1641,
     name: "Ms. Saranya Varma",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Saranya%20Varma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 5,
     specialization: "Fertilizer recommendation",
@@ -27906,7 +27906,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1642,
     name: "Dr. Ramesh Parida",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Parida&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 15,
     specialization: "Leaf diseases",
@@ -27923,7 +27923,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1643,
     name: "Dr. Kumaran Iyengar",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kumaran%20Iyengar&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 8,
     specialization: "Irrigation planning",
@@ -27940,7 +27940,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1644,
     name: "Er. Padmanabhan Hegde",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Padmanabhan%20Hegde&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 20,
     specialization: "Government schemes",
@@ -27957,7 +27957,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1645,
     name: "Ms. Rajasekhar Ranganathan",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajasekhar%20Ranganathan&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 21,
     specialization: "Organic farming",
@@ -27974,7 +27974,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1646,
     name: "Ms. Selvam Parida",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Selvam%20Parida&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 15,
     specialization: "Weather-related issues",
@@ -27991,7 +27991,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1647,
     name: "Dr. Mohan Iyer",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mohan%20Iyer&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 9,
     specialization: "Post-harvest storage",
@@ -28008,7 +28008,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1648,
     name: "Mr. Narasimha Sharma",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Narasimha%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 5,
     specialization: "Crop selection",
@@ -28025,7 +28025,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1649,
     name: "Dr. Praveen Balasubramaniam",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Praveen%20Balasubramaniam&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 17,
     specialization: "Machinery guidance",
@@ -28042,7 +28042,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1650,
     name: "Dr. Kalyan Naik",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalyan%20Naik&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 10,
     specialization: "Low crop yield",
@@ -28059,7 +28059,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1651,
     name: "Mr. Suresh Shetty",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Shetty&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 12,
     specialization: "Market price guidance",
@@ -28076,7 +28076,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1652,
     name: "Mr. Mani Rao",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mani%20Rao&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 5,
     specialization: "Soil testing",
@@ -28093,7 +28093,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1653,
     name: "Mr. Bhavani Venkataraman",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhavani%20Venkataraman&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 17,
     specialization: "Pest attack",
@@ -28110,7 +28110,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1654,
     name: "Mr. Mohan Menon",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mohan%20Menon&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 13,
     specialization: "Soil does not retain water",
@@ -28127,7 +28127,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1655,
     name: "Mr. Siva Ranganathan",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Siva%20Ranganathan&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 7,
     specialization: "Leaf diseases",
@@ -28144,7 +28144,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1656,
     name: "Ms. Padma Parida",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Padma%20Parida&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 18,
     specialization: "Irrigation planning",
@@ -28161,7 +28161,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1657,
     name: "Dr. Thenmozhi Swain",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Thenmozhi%20Swain&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 20,
     specialization: "Fertilizer recommendation",
@@ -28178,7 +28178,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1658,
     name: "Dr. Anand Nair",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anand%20Nair&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 13,
     specialization: "Organic farming",
@@ -28195,7 +28195,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1659,
     name: "Ms. Meenakshi Natarajan",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meenakshi%20Natarajan&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 7,
     specialization: "Weather-related issues",
@@ -28212,7 +28212,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1660,
     name: "Ms. Kumaran Balasubramaniam",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kumaran%20Balasubramaniam&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 8,
     specialization: "Government schemes",
@@ -28229,7 +28229,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1661,
     name: "Mr. Padmanabhan Naik",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Padmanabhan%20Naik&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 20,
     specialization: "Crop selection",
@@ -28246,7 +28246,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1662,
     name: "Dr. Arulmozhi Nair",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arulmozhi%20Nair&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 13,
     specialization: "Machinery guidance",
@@ -28263,7 +28263,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1663,
     name: "Er. Selvam Rao",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Selvam%20Rao&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 15,
     specialization: "Post-harvest storage",
@@ -28280,7 +28280,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1664,
     name: "Er. Mohan Venkataraman",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mohan%20Venkataraman&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 9,
     specialization: "Market price guidance",
@@ -28297,7 +28297,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1665,
     name: "Mr. Siva Bhat",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Siva%20Bhat&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 20,
     specialization: "Soil testing",
@@ -28314,7 +28314,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1666,
     name: "Dr. Ravi Hegde",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Hegde&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 4,
     specialization: "Low crop yield",
@@ -28331,7 +28331,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1667,
     name: "Dr. Thenmozhi Rao",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Thenmozhi%20Rao&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 15,
     specialization: "Soil does not retain water",
@@ -28348,7 +28348,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1668,
     name: "Dr. Anand Subramaniam",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anand%20Subramaniam&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 9,
     specialization: "Leaf diseases",
@@ -28365,7 +28365,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1669,
     name: "Mr. Ramesh Iyer",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Iyer&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 10,
     specialization: "Pest attack",
@@ -28382,7 +28382,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1670,
     name: "Mr. Kumaran Gowda",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kumaran%20Gowda&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 4,
     specialization: "Fertilizer recommendation",
@@ -28399,7 +28399,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1671,
     name: "Ms. Padmanabhan Naidu",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Padmanabhan%20Naidu&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 15,
     specialization: "Organic farming",
@@ -28416,7 +28416,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1672,
     name: "Dr. Rajasekhar Mohapatra",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajasekhar%20Mohapatra&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 17,
     specialization: "Irrigation planning",
@@ -28433,7 +28433,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1673,
     name: "Dr. Selvam Iyer",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Selvam%20Iyer&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 10,
     specialization: "Government schemes",
@@ -28450,7 +28450,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1674,
     name: "Ms. Mohan Viswanathan",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mohan%20Viswanathan&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 4,
     specialization: "Crop selection",
@@ -28467,7 +28467,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1675,
     name: "Ms. Deepa Srinivasan",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepa%20Srinivasan&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 5,
     specialization: "Weather-related issues",
@@ -28484,7 +28484,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1676,
     name: "Mr. Ravi Pattnaik",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Pattnaik&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 17,
     specialization: "Post-harvest storage",
@@ -28501,7 +28501,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1677,
     name: "Dr. Thenmozhi Varma",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Thenmozhi%20Varma&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 11,
     specialization: "Market price guidance",
@@ -28518,7 +28518,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1678,
     name: "Er. Sudha Pillai",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudha%20Pillai&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 12,
     specialization: "Machinery guidance",
@@ -28535,7 +28535,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1679,
     name: "Mr. Ramesh Raghunathan",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Raghunathan&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 6,
     specialization: "Low crop yield",
@@ -28552,7 +28552,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1680,
     name: "Mr. Kumaran Swain",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kumaran%20Swain&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 17,
     specialization: "Soil does not retain water",
@@ -28569,7 +28569,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1681,
     name: "Dr. Ganesan Kamath",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ganesan%20Kamath&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 19,
     specialization: "Soil testing",
@@ -28586,7 +28586,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1682,
     name: "Dr. Rajasekhar Kumar",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajasekhar%20Kumar&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 12,
     specialization: "Pest attack",
@@ -28603,7 +28603,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1683,
     name: "Dr. Selvam Raghunathan",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Selvam%20Raghunathan&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 6,
     specialization: "Fertilizer recommendation",
@@ -28620,7 +28620,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1684,
     name: "Mr. Senthil Krishnamurthy",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Senthil%20Krishnamurthy&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 7,
     specialization: "Leaf diseases",
@@ -28637,7 +28637,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1685,
     name: "Ms. Deepa Shetty",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepa%20Shetty&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 19,
     specialization: "Irrigation planning",
@@ -28654,7 +28654,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1686,
     name: "Ms. Ravi Sharma",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 12,
     specialization: "Government schemes",
@@ -28671,7 +28671,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1687,
     name: "Dr. Kumaran Bhat",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kumaran%20Bhat&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 4,
     specialization: "Organic farming",
@@ -28688,7 +28688,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1688,
     name: "Dr. Padmanabhan Pillai",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Padmanabhan%20Pillai&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 15,
     specialization: "Weather-related issues",
@@ -28705,7 +28705,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1689,
     name: "Er. Arulmozhi Srinivasan",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arulmozhi%20Srinivasan&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 9,
     specialization: "Post-harvest storage",
@@ -28722,7 +28722,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1690,
     name: "Ms. Selvam Subramaniam",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Selvam%20Subramaniam&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 10,
     specialization: "Crop selection",
@@ -28739,7 +28739,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1691,
     name: "Mr. Mohan Kamath",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mohan%20Kamath&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 4,
     specialization: "Machinery guidance",
@@ -28756,7 +28756,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1692,
     name: "Dr. Siva Kumar",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Siva%20Kumar&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 15,
     specialization: "Low crop yield",
@@ -28773,7 +28773,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1693,
     name: "Mr. Ravi Naidu",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Naidu&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 17,
     specialization: "Market price guidance",
@@ -28790,7 +28790,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1694,
     name: "Mr. Thenmozhi Subramaniam",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Thenmozhi%20Subramaniam&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 11,
     specialization: "Soil testing",
@@ -28807,7 +28807,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1695,
     name: "Mr. Anand Shetty",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anand%20Shetty&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 4,
     specialization: "Pest attack",
@@ -28824,7 +28824,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1696,
     name: "Dr. Prakash Shetty",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Prakash%20Shetty&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 7,
     specialization: "Soil does not retain water",
@@ -28841,7 +28841,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1697,
     name: "Mr. Lakshmi Sharma",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Lakshmi%20Sharma&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 19,
     specialization: "Leaf diseases",
@@ -28858,7 +28858,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1698,
     name: "Mr. Thyagarajan Venkataraman",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Thyagarajan%20Venkataraman&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 12,
     specialization: "Irrigation planning",
@@ -28875,7 +28875,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1699,
     name: "Mr. Venkat Iyengar",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Venkat%20Iyengar&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 10,
     specialization: "Fertilizer recommendation",
@@ -28892,7 +28892,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1700,
     name: "Mr. Priya Hegde",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Hegde&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 4,
     specialization: "Organic farming",
@@ -28909,7 +28909,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1701,
     name: "Dr. Suresh Rao",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Rao&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 15,
     specialization: "Weather-related issues",
@@ -28926,7 +28926,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1702,
     name: "Ms. Balu Naik",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Balu%20Naik&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 12,
     specialization: "Government schemes",
@@ -28943,7 +28943,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1703,
     name: "Dr. Kavitha Nair",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavitha%20Nair&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 5,
     specialization: "Crop selection",
@@ -28960,7 +28960,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1704,
     name: "Dr. Ramesh Natarajan",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Natarajan&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 17,
     specialization: "Machinery guidance",
@@ -28977,7 +28977,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1705,
     name: "Ms. Anand Swain",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anand%20Swain&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 6,
     specialization: "Post-harvest storage",
@@ -28994,7 +28994,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1706,
     name: "Mr. Meenakshi Menon",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meenakshi%20Menon&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 17,
     specialization: "Market price guidance",
@@ -29011,7 +29011,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1707,
     name: "Mr. Thyagarajan Ranganathan",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Thyagarajan%20Ranganathan&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 11,
     specialization: "Soil testing",
@@ -29028,7 +29028,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1708,
     name: "Dr. Padmanabhan Raghunathan",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Padmanabhan%20Raghunathan&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 13,
     specialization: "Low crop yield",
@@ -29045,7 +29045,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1709,
     name: "Dr. Arulmozhi Naik",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arulmozhi%20Naik&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 6,
     specialization: "Soil does not retain water",
@@ -29062,7 +29062,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1710,
     name: "Mr. Kalyan Nair",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalyan%20Nair&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 18,
     specialization: "Leaf diseases",
@@ -29079,7 +29079,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1711,
     name: "Mr. Venkat Pattnaik",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Venkat%20Pattnaik&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 9,
     specialization: "Pest attack",
@@ -29096,7 +29096,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1712,
     name: "Mr. Sudha Varma",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudha%20Varma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 21,
     specialization: "Fertilizer recommendation",
@@ -29113,7 +29113,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1713,
     name: "Dr. Ramesh Viswanathan",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Viswanathan&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 14,
     specialization: "Organic farming",
@@ -29130,7 +29130,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1714,
     name: "Mr. Balaji Raghunathan",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Balaji%20Raghunathan&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 16,
     specialization: "Irrigation planning",
@@ -29147,7 +29147,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1715,
     name: "Ms. Ganesan Swain",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ganesan%20Swain&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 9,
     specialization: "Government schemes",
@@ -29164,7 +29164,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1716,
     name: "Ms. Rajasekhar Menon",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajasekhar%20Menon&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 21,
     specialization: "Crop selection",
@@ -29181,7 +29181,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1717,
     name: "Dr. Srinivas Kumar",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Srinivas%20Kumar&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 4,
     specialization: "Weather-related issues",
@@ -29198,7 +29198,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1718,
     name: "Dr. Senthil Raghunathan",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Senthil%20Raghunathan&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 16,
     specialization: "Post-harvest storage",
@@ -29215,7 +29215,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1719,
     name: "Dr. Deepa Naik",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepa%20Naik&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 9,
     specialization: "Market price guidance",
@@ -29232,7 +29232,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1720,
     name: "Ms. Padma Shetty",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Padma%20Shetty&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 11,
     specialization: "Machinery guidance",
@@ -29249,7 +29249,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1721,
     name: "Mr. Venkat Sharma",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Venkat%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 4,
     specialization: "Low crop yield",
@@ -29266,7 +29266,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1722,
     name: "Mr. Sudha Balasubramaniam",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudha%20Balasubramaniam&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 16,
     specialization: "Soil does not retain water",
@@ -29283,7 +29283,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1723,
     name: "Mr. Saranya Varma",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Saranya%20Varma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 12,
     specialization: "Soil testing",
@@ -29300,7 +29300,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1724,
     name: "Mr. Balu Viswanathan",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Balu%20Viswanathan&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 6,
     specialization: "Pest attack",
@@ -29317,7 +29317,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1725,
     name: "Dr. Kavitha Parida",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavitha%20Parida&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 18,
     specialization: "Fertilizer recommendation",
@@ -29334,7 +29334,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1726,
     name: "Dr. Priya Swain",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Swain&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 19,
     specialization: "Leaf diseases",
@@ -29351,7 +29351,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1727,
     name: "Er. Suresh Menon",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Menon&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 13,
     specialization: "Irrigation planning",
@@ -29368,7 +29368,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1728,
     name: "Mr. Kannan Ranganathan",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kannan%20Ranganathan&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 6,
     specialization: "Government schemes",
@@ -29385,7 +29385,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1729,
     name: "Mr. Durai Raghunathan",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Durai%20Raghunathan&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 8,
     specialization: "Organic farming",
@@ -29402,7 +29402,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1730,
     name: "Dr. Venkatesan Naik",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Venkatesan%20Naik&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 19,
     specialization: "Weather-related issues",
@@ -29419,7 +29419,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1731,
     name: "Dr. Murugan Nair",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Murugan%20Nair&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 13,
     specialization: "Post-harvest storage",
@@ -29436,7 +29436,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1732,
     name: "Ms. Arjun Sharma",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arjun%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 14,
     specialization: "Crop selection",
@@ -29453,7 +29453,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1733,
     name: "Ms. Saranya Balasubramaniam",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Saranya%20Balasubramaniam&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 8,
     specialization: "Machinery guidance",
@@ -29470,7 +29470,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1734,
     name: "Mr. Balu Naik",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Balu%20Naik&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 19,
     specialization: "Low crop yield",
@@ -29487,7 +29487,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1735,
     name: "Dr. Kannan Srinivasan",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kannan%20Srinivasan&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 11,
     specialization: "Market price guidance",
@@ -29504,7 +29504,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1736,
     name: "Dr. Narasimha Swain",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Narasimha%20Swain&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 4,
     specialization: "Soil testing",
@@ -29521,7 +29521,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1737,
     name: "Mr. Praveen Menon",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Praveen%20Menon&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 16,
     specialization: "Pest attack",
@@ -29538,7 +29538,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1738,
     name: "Mr. Murugan Kumar",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Murugan%20Kumar&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 17,
     specialization: "Soil does not retain water",
@@ -29555,7 +29555,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1739,
     name: "Mr. Suresh Raghunathan",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Raghunathan&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 11,
     specialization: "Leaf diseases",
@@ -29572,7 +29572,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1740,
     name: "Dr. Mani Swain",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mani%20Swain&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 5,
     specialization: "Irrigation planning",
@@ -29589,7 +29589,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1741,
     name: "Er. Balu Shetty",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Balu%20Shetty&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 6,
     specialization: "Fertilizer recommendation",
@@ -29606,7 +29606,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1742,
     name: "Mr. Kavitha Sharma",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavitha%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 18,
     specialization: "Organic farming",
@@ -29623,7 +29623,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1743,
     name: "Ms. Prakash Balasubramaniam",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Prakash%20Balasubramaniam&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 11,
     specialization: "Weather-related issues",
@@ -29640,7 +29640,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1744,
     name: "Dr. Suresh Krishnamurthy",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Krishnamurthy&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 13,
     specialization: "Government schemes",
@@ -29657,7 +29657,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1745,
     name: "Dr. Kannan Shetty",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kannan%20Shetty&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 6,
     specialization: "Crop selection",
@@ -29674,7 +29674,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1746,
     name: "Dr. Narasimha Rao",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Narasimha%20Rao&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 18,
     specialization: "Machinery guidance",
@@ -29691,7 +29691,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1747,
     name: "Ms. Venkatesan Parida",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Venkatesan%20Parida&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 19,
     specialization: "Post-harvest storage",
@@ -29708,7 +29708,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1748,
     name: "Ms. Murugan Iyengar",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Murugan%20Iyengar&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 13,
     specialization: "Market price guidance",
@@ -29725,7 +29725,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1749,
     name: "Mr. Suresh Hegde",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Hegde&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 6,
     specialization: "Soil testing",
@@ -29742,7 +29742,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1750,
     name: "Dr. Saranya Ranganathan",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Saranya%20Ranganathan&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 8,
     specialization: "Low crop yield",
@@ -29759,7 +29759,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1751,
     name: "Dr. Balu Parida",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Balu%20Parida&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 19,
     specialization: "Soil does not retain water",
@@ -29776,7 +29776,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1752,
     name: "Er. Kavitha Iyer",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavitha%20Iyer&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 13,
     specialization: "Leaf diseases",
@@ -29793,7 +29793,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1753,
     name: "Dr. Deepa Sharma",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepa%20Sharma&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 9,
     specialization: "Pest attack",
@@ -29810,7 +29810,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1754,
     name: "Mr. Ravi Balasubramaniam",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Balasubramaniam&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 21,
     specialization: "Fertilizer recommendation",
@@ -29827,7 +29827,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1755,
     name: "Mr. Thenmozhi Naik",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Thenmozhi%20Naik&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 15,
     specialization: "Organic farming",
@@ -29844,7 +29844,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1756,
     name: "Mr. Sudha Shetty",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudha%20Shetty&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 16,
     specialization: "Irrigation planning",
@@ -29861,7 +29861,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1757,
     name: "Dr. Ramesh Rao",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Rao&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 10,
     specialization: "Government schemes",
@@ -29878,7 +29878,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1758,
     name: "Dr. Kumaran Venkataraman",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kumaran%20Venkataraman&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 21,
     specialization: "Crop selection",
@@ -29895,7 +29895,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1759,
     name: "Ms. Ganesan Iyengar",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ganesan%20Iyengar&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 5,
     specialization: "Weather-related issues",
@@ -29912,7 +29912,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1760,
     name: "Ms. Rajasekhar Hegde",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajasekhar%20Hegde&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 16,
     specialization: "Post-harvest storage",
@@ -29929,7 +29929,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1761,
     name: "Ms. Selvam Rao",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Selvam%20Rao&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 10,
     specialization: "Market price guidance",
@@ -29946,7 +29946,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1762,
     name: "Dr. Senthil Parida",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Senthil%20Parida&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 11,
     specialization: "Machinery guidance",
@@ -29963,7 +29963,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1763,
     name: "Dr. Deepa Iyer",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepa%20Iyer&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 5,
     specialization: "Low crop yield",
@@ -29980,7 +29980,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1764,
     name: "Er. Ravi Gowda",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Gowda&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 16,
     specialization: "Soil does not retain water",
@@ -29997,7 +29997,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1765,
     name: "Mr. Venkat Natarajan",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Venkat%20Natarajan&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 18,
     specialization: "Soil testing",
@@ -30014,7 +30014,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1766,
     name: "Mr. Sudha Mohapatra",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudha%20Mohapatra&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 11,
     specialization: "Pest attack",
@@ -30031,7 +30031,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1767,
     name: "Dr. Ramesh Iyer",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Iyer&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 5,
     specialization: "Fertilizer recommendation",
@@ -30048,7 +30048,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1768,
     name: "Er. Praveen Parida",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Praveen%20Parida&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 14,
     specialization: "Leaf diseases",
@@ -30065,7 +30065,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1769,
     name: "Er. Mohan Iyengar",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mohan%20Iyengar&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 8,
     specialization: "Irrigation planning",
@@ -30082,7 +30082,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1770,
     name: "Mr. Siva Hegde",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Siva%20Hegde&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 19,
     specialization: "Government schemes",
@@ -30099,7 +30099,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1771,
     name: "Dr. Priya Subramaniam",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Subramaniam&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 11,
     specialization: "Organic farming",
@@ -30116,7 +30116,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1772,
     name: "Dr. Suresh Kamath",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Kamath&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 4,
     specialization: "Weather-related issues",
@@ -30133,7 +30133,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1773,
     name: "Dr. Ganesan Kumar",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ganesan%20Kumar&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 16,
     specialization: "Post-harvest storage",
@@ -30150,7 +30150,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1774,
     name: "Ms. Durai Reddy",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Durai%20Reddy&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 18,
     specialization: "Crop selection",
@@ -30167,7 +30167,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1775,
     name: "Ms. Venkatesan Krishnamurthy",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Venkatesan%20Krishnamurthy&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 11,
     specialization: "Machinery guidance",
@@ -30184,7 +30184,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1776,
     name: "Ms. Senthil Shetty",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Senthil%20Shetty&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 5,
     specialization: "Low crop yield",
@@ -30201,7 +30201,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1777,
     name: "Ms. Ganesan Srinivasan",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ganesan%20Srinivasan&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 19,
     specialization: "Market price guidance",
@@ -30218,7 +30218,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1778,
     name: "Mr. Rajasekhar Pattnaik",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajasekhar%20Pattnaik&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 13,
     specialization: "Soil testing",
@@ -30235,7 +30235,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1779,
     name: "Dr. Selvam Menon",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Selvam%20Menon&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 6,
     specialization: "Pest attack",
@@ -30252,7 +30252,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1780,
     name: "Dr. Senthil Kumar",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Senthil%20Kumar&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 8,
     specialization: "Soil does not retain water",
@@ -30269,7 +30269,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1781,
     name: "Er. Deepa Raghunathan",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepa%20Raghunathan&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 19,
     specialization: "Leaf diseases",
@@ -30286,7 +30286,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1782,
     name: "Mr. Ravi Swain",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Swain&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 13,
     specialization: "Irrigation planning",
@@ -30303,7 +30303,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1783,
     name: "Mr. Venkat Kamath",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Venkat%20Kamath&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 14,
     specialization: "Fertilizer recommendation",
@@ -30320,7 +30320,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1784,
     name: "Dr. Sudha Kumar",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudha%20Kumar&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 8,
     specialization: "Organic farming",
@@ -30337,7 +30337,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1785,
     name: "Dr. Ramesh Balasubramaniam",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Balasubramaniam&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 19,
     specialization: "Weather-related issues",
@@ -30354,7 +30354,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1786,
     name: "Dr. Lakshmi Rao",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Lakshmi%20Rao&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 6,
     specialization: "Government schemes",
@@ -30371,7 +30371,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1787,
     name: "Dr. Thyagarajan Venkataraman",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Thyagarajan%20Venkataraman&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 17,
     specialization: "Crop selection",
@@ -30388,7 +30388,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1788,
     name: "Dr. Durai Bhat",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Durai%20Bhat&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 11,
     specialization: "Machinery guidance",
@@ -30405,7 +30405,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1789,
     name: "Dr. Priya Ranganathan",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Ranganathan&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 7,
     specialization: "Post-harvest storage",
@@ -30422,7 +30422,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1790,
     name: "Dr. Balaji Parida",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Balaji%20Parida&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 19,
     specialization: "Market price guidance",
@@ -30439,7 +30439,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1791,
     name: "Er. Ganesan Iyer",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ganesan%20Iyer&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 12,
     specialization: "Soil testing",
@@ -30456,7 +30456,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1792,
     name: "Mr. Durai Nair",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Durai%20Nair&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 14,
     specialization: "Low crop yield",
@@ -30473,7 +30473,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1793,
     name: "Mr. Srinivas Natarajan",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Srinivas%20Natarajan&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 8,
     specialization: "Soil does not retain water",
@@ -30490,7 +30490,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1794,
     name: "Dr. Senthil Mohapatra",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Senthil%20Mohapatra&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 19,
     specialization: "Leaf diseases",
@@ -30507,7 +30507,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1795,
     name: "Er. Kavitha Viswanathan",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavitha%20Viswanathan&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 11,
     specialization: "Pest attack",
@@ -30524,7 +30524,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1796,
     name: "Mr. Prakash Parida",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Prakash%20Parida&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 4,
     specialization: "Fertilizer recommendation",
@@ -30541,7 +30541,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1797,
     name: "Mr. Kumaran Iyengar",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kumaran%20Iyengar&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 16,
     specialization: "Organic farming",
@@ -30558,7 +30558,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1798,
     name: "Dr. Kalyan Mitra",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalyan%20Mitra&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 15,
     specialization: "Irrigation planning",
@@ -30575,7 +30575,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1799,
     name: "Dr. Pradip Bora",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pradip%20Bora&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 8,
     specialization: "Government schemes",
@@ -30592,7 +30592,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1800,
     name: "Mr. Rinku Das",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rinku%20Das&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 20,
     specialization: "Crop selection",
@@ -30609,7 +30609,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1801,
     name: "Dr. Soumya Behera",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Soumya%20Behera&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 6,
     specialization: "Weather-related issues",
@@ -30626,7 +30626,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1802,
     name: "Ms. Sumita Ghosh",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sumita%20Ghosh&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 18,
     specialization: "Post-harvest storage",
@@ -30643,7 +30643,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1803,
     name: "Ms. Gautam Pattnaik",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gautam%20Pattnaik&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 11,
     specialization: "Market price guidance",
@@ -30660,7 +30660,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1804,
     name: "Dr. Sudeshna Hazarika",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudeshna%20Hazarika&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 11,
     specialization: "Machinery guidance",
@@ -30677,7 +30677,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1805,
     name: "Dr. Soumya Mukherjee",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Soumya%20Mukherjee&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 4,
     specialization: "Low crop yield",
@@ -30694,7 +30694,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1806,
     name: "Dr. Shyamali Nayak",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyamali%20Nayak&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 16,
     specialization: "Soil does not retain water",
@@ -30711,7 +30711,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1807,
     name: "Dr. Tapas Banerjee",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Tapas%20Banerjee&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 20,
     specialization: "Soil testing",
@@ -30728,7 +30728,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1808,
     name: "Dr. Rekha Sahu",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Sahu&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 14,
     specialization: "Pest attack",
@@ -30745,7 +30745,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1809,
     name: "Mr. Mrinal Das",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mrinal%20Das&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 7,
     specialization: "Fertilizer recommendation",
@@ -30762,7 +30762,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1810,
     name: "Dr. Partha Mitra",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Partha%20Mitra&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 20,
     specialization: "Leaf diseases",
@@ -30779,7 +30779,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1811,
     name: "Er. Arun Behera",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arun%20Behera&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 13,
     specialization: "Irrigation planning",
@@ -30796,7 +30796,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1812,
     name: "Mr. Kalyan Ghosh",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalyan%20Ghosh&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 7,
     specialization: "Government schemes",
@@ -30813,7 +30813,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1813,
     name: "Dr. Preeti Das",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Preeti%20Das&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 8,
     specialization: "Organic farming",
@@ -30830,7 +30830,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1814,
     name: "Dr. Soumya Bose",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Soumya%20Bose&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 20,
     specialization: "Weather-related issues",
@@ -30847,7 +30847,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1815,
     name: "Dr. Sumita Behera",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sumita%20Behera&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 13,
     specialization: "Post-harvest storage",
@@ -30864,7 +30864,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1816,
     name: "Ms. Rekha Mishra",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Mishra&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 15,
     specialization: "Crop selection",
@@ -30881,7 +30881,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1817,
     name: "Ms. Mrinal Gogoi",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mrinal%20Gogoi&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 9,
     specialization: "Machinery guidance",
@@ -30898,7 +30898,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1818,
     name: "Ms. Puja Sen",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Puja%20Sen&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 20,
     specialization: "Low crop yield",
@@ -30915,7 +30915,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1819,
     name: "Dr. Kalyan Choudhury",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalyan%20Choudhury&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 12,
     specialization: "Market price guidance",
@@ -30932,7 +30932,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1820,
     name: "Dr. Suparna Mitra",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suparna%20Mitra&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 5,
     specialization: "Soil testing",
@@ -30949,7 +30949,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1821,
     name: "Er. Rinku Bora",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rinku%20Bora&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 17,
     specialization: "Pest attack",
@@ -30966,7 +30966,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1822,
     name: "Mr. Biplab Swain",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Biplab%20Swain&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 8,
     specialization: "Soil does not retain water",
@@ -30983,7 +30983,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1823,
     name: "Dr. Madhuri Baruah",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Madhuri%20Baruah&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 20,
     specialization: "Leaf diseases",
@@ -31000,7 +31000,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1824,
     name: "Dr. Partha Dey",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Partha%20Dey&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 13,
     specialization: "Irrigation planning",
@@ -31017,7 +31017,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1825,
     name: "Mr. Sunita Saxena",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sunita%20Saxena&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 21,
     specialization: "Fertilizer recommendation",
@@ -31034,7 +31034,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1826,
     name: "Dr. Suresh Negi",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Negi&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 14,
     specialization: "Organic farming",
@@ -31051,7 +31051,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1827,
     name: "Dr. Rakesh Singh",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rakesh%20Singh&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 8,
     specialization: "Weather-related issues",
@@ -31068,7 +31068,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1828,
     name: "Er. Rohit Khanna",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rohit%20Khanna&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 9,
     specialization: "Government schemes",
@@ -31085,7 +31085,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1829,
     name: "Mr. Kamlesh Chaurasia",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kamlesh%20Chaurasia&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 21,
     specialization: "Crop selection",
@@ -31102,7 +31102,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1830,
     name: "Mr. Ravi Rawat",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Rawat&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 14,
     specialization: "Machinery guidance",
@@ -31119,7 +31119,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1831,
     name: "Dr. Neeta Chauhan",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neeta%20Chauhan&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 16,
     specialization: "Post-harvest storage",
@@ -31136,7 +31136,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1832,
     name: "Dr. Vinod Khanna",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vinod%20Khanna&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 9,
     specialization: "Market price guidance",
@@ -31153,7 +31153,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1833,
     name: "Dr. Ritu Dubey",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ritu%20Dubey&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 21,
     specialization: "Soil testing",
@@ -31170,7 +31170,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1834,
     name: "Ms. Mahendra Verma",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mahendra%20Verma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 5,
     specialization: "Low crop yield",
@@ -31187,7 +31187,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1835,
     name: "Ms. Sunita Shah",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sunita%20Shah&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 16,
     specialization: "Soil does not retain water",
@@ -31204,7 +31204,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1836,
     name: "Mr. Suresh Malhotra",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Malhotra&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 10,
     specialization: "Leaf diseases",
@@ -31221,7 +31221,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1837,
     name: "Dr. Rajesh Upadhyay",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajesh%20Upadhyay&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 11,
     specialization: "Pest attack",
@@ -31238,7 +31238,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1838,
     name: "Mr. Rohit Mishra",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rohit%20Mishra&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 5,
     specialization: "Fertilizer recommendation",
@@ -31255,7 +31255,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1839,
     name: "Mr. Kamlesh Shah",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kamlesh%20Shah&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 16,
     specialization: "Organic farming",
@@ -31272,7 +31272,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1840,
     name: "Mr. Devendra Jain",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Devendra%20Jain&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 18,
     specialization: "Irrigation planning",
@@ -31289,7 +31289,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1841,
     name: "Dr. Neeta Joshi",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neeta%20Joshi&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 11,
     specialization: "Government schemes",
@@ -31306,7 +31306,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1842,
     name: "Dr. Vinod Mishra",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vinod%20Mishra&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 5,
     specialization: "Crop selection",
@@ -31323,7 +31323,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1843,
     name: "Er. Usha Gupta",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Usha%20Gupta&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 6,
     specialization: "Weather-related issues",
@@ -31340,7 +31340,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1844,
     name: "Mr. Mahendra Agarwal",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mahendra%20Agarwal&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 18,
     specialization: "Post-harvest storage",
@@ -31357,7 +31357,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1845,
     name: "Ms. Anil Bisht",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anil%20Bisht&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 11,
     specialization: "Market price guidance",
@@ -31374,7 +31374,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1846,
     name: "Dr. Manoj Thakur",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manoj%20Thakur&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 13,
     specialization: "Machinery guidance",
@@ -31391,7 +31391,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1847,
     name: "Dr. Rajesh Gupta",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajesh%20Gupta&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 7,
     specialization: "Low crop yield",
@@ -31408,7 +31408,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1848,
     name: "Dr. Anuj Saxena",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anuj%20Saxena&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 18,
     specialization: "Soil does not retain water",
@@ -31425,7 +31425,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1849,
     name: "Dr. Anil Mishra",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anil%20Mishra&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 15,
     specialization: "Soil testing",
@@ -31442,7 +31442,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1850,
     name: "Dr. Pankaj Shah",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pankaj%20Shah&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 8,
     specialization: "Pest attack",
@@ -31459,7 +31459,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1851,
     name: "Er. Sanjay Shukla",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanjay%20Shukla&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 20,
     specialization: "Fertilizer recommendation",
@@ -31476,7 +31476,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1852,
     name: "Mr. Anuj Joshi",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anuj%20Joshi&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 21,
     specialization: "Leaf diseases",
@@ -31493,7 +31493,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1853,
     name: "Mr. Hemant Tiwari",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hemant%20Tiwari&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 15,
     specialization: "Irrigation planning",
@@ -31510,7 +31510,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1854,
     name: "Dr. Sangeeta Patel",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sangeeta%20Patel&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 8,
     specialization: "Government schemes",
@@ -31527,7 +31527,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1855,
     name: "Mr. Kavita Agarwal",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavita%20Agarwal&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 10,
     specialization: "Organic farming",
@@ -31544,7 +31544,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1856,
     name: "Mr. Meena Bisht",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meena%20Bisht&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 21,
     specialization: "Weather-related issues",
@@ -31561,7 +31561,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1857,
     name: "Mr. Deepak Tiwari",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepak%20Tiwari&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 15,
     specialization: "Post-harvest storage",
@@ -31578,7 +31578,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1858,
     name: "Dr. Amit Gupta",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amit%20Gupta&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 16,
     specialization: "Crop selection",
@@ -31595,7 +31595,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1859,
     name: "Dr. Anil Saxena",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anil%20Saxena&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 10,
     specialization: "Machinery guidance",
@@ -31612,7 +31612,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1860,
     name: "Dr. Pankaj Bisht",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pankaj%20Bisht&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 21,
     specialization: "Low crop yield",
@@ -31629,7 +31629,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1861,
     name: "Ms. Shyam Rana",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyam%20Rana&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 5,
     specialization: "Market price guidance",
@@ -31646,7 +31646,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1862,
     name: "Ms. Anuj Sharma",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anuj%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 17,
     specialization: "Soil testing",
@@ -31663,7 +31663,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1863,
     name: "Ms. Devendra Chaurasia",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Devendra%20Chaurasia&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 10,
     specialization: "Pest attack",
@@ -31680,7 +31680,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1864,
     name: "Dr. Chandrashekhar Pandey",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Chandrashekhar%20Pandey&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 12,
     specialization: "Soil does not retain water",
@@ -31697,7 +31697,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1865,
     name: "Dr. Kavita Rana",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavita%20Rana&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 5,
     specialization: "Leaf diseases",
@@ -31714,7 +31714,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1866,
     name: "Er. Usha Khanna",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Usha%20Khanna&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 17,
     specialization: "Irrigation planning",
@@ -31731,7 +31731,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1867,
     name: "Mr. Rekha Tripathi",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Tripathi&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 18,
     specialization: "Fertilizer recommendation",
@@ -31748,7 +31748,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1868,
     name: "Dr. Amit Pandey",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amit%20Pandey&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 12,
     specialization: "Organic farming",
@@ -31765,7 +31765,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1869,
     name: "Dr. Manoj Chauhan",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manoj%20Chauhan&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 5,
     specialization: "Weather-related issues",
@@ -31782,7 +31782,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1870,
     name: "Mr. Dinesh Kumar",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dinesh%20Kumar&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 7,
     specialization: "Government schemes",
@@ -31799,7 +31799,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1871,
     name: "Mr. Shyam Upadhyay",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyam%20Upadhyay&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 18,
     specialization: "Crop selection",
@@ -31816,7 +31816,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1872,
     name: "Mr. Vijay Verma",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Verma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 12,
     specialization: "Machinery guidance",
@@ -31833,7 +31833,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1873,
     name: "Dr. Ajay Yadav",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ajay%20Yadav&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 13,
     specialization: "Post-harvest storage",
@@ -31850,7 +31850,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1874,
     name: "Dr. Chandrashekhar Jain",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Chandrashekhar%20Jain&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 7,
     specialization: "Market price guidance",
@@ -31867,7 +31867,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1875,
     name: "Dr. Asha Upadhyay",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Upadhyay&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 18,
     specialization: "Soil testing",
@@ -31884,7 +31884,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1876,
     name: "Ms. Priya Negi",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Negi&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 20,
     specialization: "Low crop yield",
@@ -31901,7 +31901,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1877,
     name: "Ms. Rekha Singh",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Singh&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 14,
     specialization: "Soil does not retain water",
@@ -31918,7 +31918,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1878,
     name: "Ms. Vikram Agarwal",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Agarwal&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 7,
     specialization: "Leaf diseases",
@@ -31935,7 +31935,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1879,
     name: "Dr. Ramesh Dubey",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Dubey&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 9,
     specialization: "Pest attack",
@@ -31952,7 +31952,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1880,
     name: "Er. Dinesh Rawat",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dinesh%20Rawat&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 20,
     specialization: "Fertilizer recommendation",
@@ -31969,7 +31969,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1881,
     name: "Er. Pramod Gupta",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pramod%20Gupta&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 14,
     specialization: "Organic farming",
@@ -31986,7 +31986,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1882,
     name: "Mr. Naresh Malhotra",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Naresh%20Malhotra&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 15,
     specialization: "Irrigation planning",
@@ -32003,7 +32003,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1883,
     name: "Dr. Ajay Dubey",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ajay%20Dubey&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 9,
     specialization: "Government schemes",
@@ -32020,7 +32020,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1884,
     name: "Dr. Bhupesh Thakur",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhupesh%20Thakur&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 20,
     specialization: "Crop selection",
@@ -32037,7 +32037,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1885,
     name: "Dr. Pramod Jain",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pramod%20Jain&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 17,
     specialization: "Weather-related issues",
@@ -32054,7 +32054,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1886,
     name: "Dr. Vijay Upadhyay",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Upadhyay&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 10,
     specialization: "Post-harvest storage",
@@ -32071,7 +32071,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1887,
     name: "Dr. Chandrashekhar Mishra",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Chandrashekhar%20Mishra&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 4,
     specialization: "Market price guidance",
@@ -32088,7 +32088,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1888,
     name: "Mr. Bhupesh Singh",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhupesh%20Singh&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 5,
     specialization: "Machinery guidance",
@@ -32105,7 +32105,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1889,
     name: "Ms. Asha Agarwal",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Agarwal&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 17,
     specialization: "Low crop yield",
@@ -32122,7 +32122,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1890,
     name: "Ms. Rekha Joshi",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Joshi&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 10,
     specialization: "Soil does not retain water",
@@ -32139,7 +32139,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1891,
     name: "Ms. Chandrashekhar Chauhan",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Chandrashekhar%20Chauhan&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 7,
     specialization: "Soil testing",
@@ -32156,7 +32156,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1892,
     name: "Ms. Kavita Malhotra",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavita%20Malhotra&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 19,
     specialization: "Pest attack",
@@ -32173,7 +32173,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1893,
     name: "Ms. Meena Dubey",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meena%20Dubey&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 12,
     specialization: "Fertilizer recommendation",
@@ -32190,7 +32190,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1894,
     name: "Ms. Devendra Yadav",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Devendra%20Yadav&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 9,
     specialization: "Leaf diseases",
@@ -32207,7 +32207,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1895,
     name: "Mr. Neeta Jain",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neeta%20Jain&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 20,
     specialization: "Irrigation planning",
@@ -32224,7 +32224,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1896,
     name: "Dr. Vinod Upadhyay",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vinod%20Upadhyay&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 14,
     specialization: "Government schemes",
@@ -32241,7 +32241,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1897,
     name: "Er. Usha Negi",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Usha%20Negi&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 15,
     specialization: "Organic farming",
@@ -32258,7 +32258,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1898,
     name: "Mr. Mahendra Singh",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mahendra%20Singh&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 9,
     specialization: "Weather-related issues",
@@ -32275,7 +32275,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1899,
     name: "Mr. Sunita Jain",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sunita%20Jain&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 20,
     specialization: "Post-harvest storage",
@@ -32292,7 +32292,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1900,
     name: "Mr. Meena Pandey",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meena%20Pandey&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 17,
     specialization: "Crop selection",
@@ -32309,7 +32309,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1901,
     name: "Mr. Deepak Chauhan",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepak%20Chauhan&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 10,
     specialization: "Machinery guidance",
@@ -32326,7 +32326,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1902,
     name: "Mr. Savita Khanna",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Savita%20Khanna&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 4,
     specialization: "Low crop yield",
@@ -32343,7 +32343,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1903,
     name: "Dr. Anil Upadhyay",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anil%20Upadhyay&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 5,
     specialization: "Market price guidance",
@@ -32360,7 +32360,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1904,
     name: "Dr. Pankaj Verma",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pankaj%20Verma&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 17,
     specialization: "Soil testing",
@@ -32377,7 +32377,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1905,
     name: "Er. Sanjay Shah",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanjay%20Shah&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 10,
     specialization: "Pest attack",
@@ -32394,7 +32394,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1906,
     name: "Ms. Anuj Jain",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anuj%20Jain&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 12,
     specialization: "Soil does not retain water",
@@ -32411,7 +32411,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1907,
     name: "Ms. Hemant Upadhyay",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hemant%20Upadhyay&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 5,
     specialization: "Leaf diseases",
@@ -32428,7 +32428,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1908,
     name: "Dr. Sangeeta Mishra",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sangeeta%20Mishra&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 17,
     specialization: "Irrigation planning",
@@ -32445,7 +32445,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1909,
     name: "Mr. Rohit Khanna",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rohit%20Khanna&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 13,
     specialization: "Fertilizer recommendation",
@@ -32462,7 +32462,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1910,
     name: "Dr. Kamlesh Chaurasia",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kamlesh%20Chaurasia&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 7,
     specialization: "Organic farming",
@@ -32479,7 +32479,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1911,
     name: "Dr. Ravi Rawat",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Rawat&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 19,
     specialization: "Weather-related issues",
@@ -32496,7 +32496,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1912,
     name: "Er. Neeta Chauhan",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neeta%20Chauhan&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 20,
     specialization: "Government schemes",
@@ -32513,7 +32513,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1913,
     name: "Mr. Vinod Khanna",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vinod%20Khanna&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 14,
     specialization: "Crop selection",
@@ -32530,7 +32530,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1914,
     name: "Mr. Ritu Dubey",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ritu%20Dubey&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 7,
     specialization: "Machinery guidance",
@@ -32547,7 +32547,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1915,
     name: "Dr. Mahendra Verma",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mahendra%20Verma&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 9,
     specialization: "Post-harvest storage",
@@ -32564,7 +32564,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1916,
     name: "Dr. Sunita Shah",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sunita%20Shah&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 20,
     specialization: "Market price guidance",
@@ -32581,7 +32581,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1917,
     name: "Dr. Suresh Malhotra",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Malhotra&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 14,
     specialization: "Soil testing",
@@ -32598,7 +32598,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1918,
     name: "Ms. Rajesh Upadhyay",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajesh%20Upadhyay&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 15,
     specialization: "Low crop yield",
@@ -32615,7 +32615,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1919,
     name: "Ms. Rohit Mishra",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rohit%20Mishra&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 9,
     specialization: "Soil does not retain water",
@@ -32632,7 +32632,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1920,
     name: "Ms. Kamlesh Shah",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kamlesh%20Shah&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 20,
     specialization: "Leaf diseases",
@@ -32649,7 +32649,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1921,
     name: "Dr. Devendra Jain",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Devendra%20Jain&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 4,
     specialization: "Pest attack",
@@ -32666,7 +32666,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1922,
     name: "Er. Neeta Joshi",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neeta%20Joshi&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 15,
     specialization: "Fertilizer recommendation",
@@ -32683,7 +32683,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1923,
     name: "Mr. Vinod Tiwari",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vinod%20Tiwari&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 9,
     specialization: "Organic farming",
@@ -32700,7 +32700,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1924,
     name: "Er. Hemant Malhotra",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hemant%20Malhotra&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 6,
     specialization: "Irrigation planning",
@@ -32717,7 +32717,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1925,
     name: "Mr. Sangeeta Dubey",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sangeeta%20Dubey&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 17,
     specialization: "Government schemes",
@@ -32734,7 +32734,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1926,
     name: "Mr. Ashok Thakur",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ashok%20Thakur&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 11,
     specialization: "Crop selection",
@@ -32751,7 +32751,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1927,
     name: "Dr. Meena Shah",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meena%20Shah&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 12,
     specialization: "Weather-related issues",
@@ -32768,7 +32768,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1928,
     name: "Dr. Deepak Malhotra",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepak%20Malhotra&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 6,
     specialization: "Post-harvest storage",
@@ -32785,7 +32785,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1929,
     name: "Dr. Savita Srivastava",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Savita%20Srivastava&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 17,
     specialization: "Market price guidance",
@@ -32802,7 +32802,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1930,
     name: "Mr. Anil Mishra",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anil%20Mishra&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 19,
     specialization: "Machinery guidance",
@@ -32819,7 +32819,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1931,
     name: "Mr. Pankaj Shah",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pankaj%20Shah&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 12,
     specialization: "Low crop yield",
@@ -32836,7 +32836,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1932,
     name: "Ms. Sanjay Shukla",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanjay%20Shukla&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 6,
     specialization: "Soil does not retain water",
@@ -32853,7 +32853,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1933,
     name: "Dr. Anuj Joshi",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anuj%20Joshi&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 7,
     specialization: "Soil testing",
@@ -32870,7 +32870,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1934,
     name: "Dr. Hemant Tiwari",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hemant%20Tiwari&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 19,
     specialization: "Pest attack",
@@ -32887,7 +32887,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1935,
     name: "Ms. Sangeeta Patel",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sangeeta%20Patel&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 12,
     specialization: "Fertilizer recommendation",
@@ -32904,7 +32904,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1936,
     name: "Ms. Geeta Verma",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Geeta%20Verma&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 4,
     specialization: "Leaf diseases",
@@ -32921,7 +32921,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1937,
     name: "Dr. Ramesh Shah",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Shah&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 15,
     specialization: "Irrigation planning",
@@ -32938,7 +32938,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1938,
     name: "Dr. Dinesh Malhotra",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dinesh%20Malhotra&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 9,
     specialization: "Government schemes",
@@ -32955,7 +32955,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1939,
     name: "Mr. Rakesh Upadhyay",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rakesh%20Upadhyay&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 10,
     specialization: "Organic farming",
@@ -32972,7 +32972,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1940,
     name: "Mr. Naresh Mishra",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Naresh%20Mishra&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 4,
     specialization: "Weather-related issues",
@@ -32989,7 +32989,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1941,
     name: "Mr. Ajay Shah",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ajay%20Shah&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 16,
     specialization: "Post-harvest storage",
@@ -33006,7 +33006,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1942,
     name: "Dr. Ravi Jain",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Jain&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 17,
     specialization: "Crop selection",
@@ -33023,7 +33023,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1943,
     name: "Dr. Ashok Joshi",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ashok%20Joshi&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 11,
     specialization: "Machinery guidance",
@@ -33040,7 +33040,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1944,
     name: "Dr. Priya Mishra",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Mishra&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 4,
     specialization: "Low crop yield",
@@ -33057,7 +33057,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1945,
     name: "Dr. Ajay Khanna",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ajay%20Khanna&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 19,
     specialization: "Market price guidance",
@@ -33074,7 +33074,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1946,
     name: "Dr. Bhupesh Dubey",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhupesh%20Dubey&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 12,
     specialization: "Soil testing",
@@ -33091,7 +33091,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1947,
     name: "Ms. Asha Rawat",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Rawat&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 6,
     specialization: "Pest attack",
@@ -33108,7 +33108,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1948,
     name: "Ms. Priya Shah",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Shah&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 7,
     specialization: "Soil does not retain water",
@@ -33125,7 +33125,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1949,
     name: "Ms. Geeta Malhotra",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Geeta%20Malhotra&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 19,
     specialization: "Leaf diseases",
@@ -33142,7 +33142,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1950,
     name: "Dr. Vikram Srivastava",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Srivastava&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 12,
     specialization: "Irrigation planning",
@@ -33159,7 +33159,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1951,
     name: "Dr. Ramesh Mishra",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Mishra&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 14,
     specialization: "Fertilizer recommendation",
@@ -33176,7 +33176,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1952,
     name: "Er. Rakesh Shah",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rakesh%20Shah&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 7,
     specialization: "Organic farming",
@@ -33193,7 +33193,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1953,
     name: "Mr. Pramod Shukla",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pramod%20Shukla&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 19,
     specialization: "Weather-related issues",
@@ -33210,7 +33210,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1954,
     name: "Dr. Naresh Joshi",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Naresh%20Joshi&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 20,
     specialization: "Government schemes",
@@ -33227,7 +33227,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1955,
     name: "Dr. Ravi Mishra",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Mishra&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 14,
     specialization: "Crop selection",
@@ -33244,7 +33244,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1956,
     name: "Dr. Bhupesh Patel",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhupesh%20Patel&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 8,
     specialization: "Machinery guidance",
@@ -33261,7 +33261,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1957,
     name: "Mr. Ashok Agarwal",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ashok%20Agarwal&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 9,
     specialization: "Post-harvest storage",
@@ -33278,7 +33278,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1958,
     name: "Mr. Ritu Bisht",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ritu%20Bisht&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 21,
     specialization: "Market price guidance",
@@ -33295,7 +33295,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1959,
     name: "Mr. Geeta Tiwari",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Geeta%20Tiwari&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 14,
     specialization: "Soil testing",
@@ -33312,7 +33312,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1960,
     name: "Dr. Savita Gupta",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Savita%20Gupta&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 16,
     specialization: "Low crop yield",
@@ -33329,7 +33329,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1961,
     name: "Dr. Suresh Saxena",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Saxena&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 9,
     specialization: "Soil does not retain water",
@@ -33346,7 +33346,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1962,
     name: "Ms. Rakesh Bisht",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rakesh%20Bisht&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 21,
     specialization: "Leaf diseases",
@@ -33363,7 +33363,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1963,
     name: "Ms. Sanjay Thakur",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanjay%20Thakur&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 4,
     specialization: "Pest attack",
@@ -33380,7 +33380,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1964,
     name: "Ms. Kamlesh Sharma",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kamlesh%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 16,
     specialization: "Fertilizer recommendation",
@@ -33397,7 +33397,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1965,
     name: "Dr. Ravi Chaurasia",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Chaurasia&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 9,
     specialization: "Organic farming",
@@ -33414,7 +33414,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1966,
     name: "Ms. Rakesh Tiwari",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rakesh%20Tiwari&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 6,
     specialization: "Irrigation planning",
@@ -33431,7 +33431,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1967,
     name: "Dr. Naresh Patel",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Naresh%20Patel&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 17,
     specialization: "Government schemes",
@@ -33448,7 +33448,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1968,
     name: "Dr. Ajay Tripathi",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ajay%20Tripathi&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 11,
     specialization: "Crop selection",
@@ -33465,7 +33465,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1969,
     name: "Er. Ravi Bisht",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Bisht&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 12,
     specialization: "Weather-related issues",
@@ -33482,7 +33482,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1970,
     name: "Mr. Ashok Tiwari",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ashok%20Tiwari&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 6,
     specialization: "Post-harvest storage",
@@ -33499,7 +33499,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1971,
     name: "Mr. Priya Kumar",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Kumar&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 18,
     specialization: "Market price guidance",
@@ -33516,7 +33516,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1972,
     name: "Mr. Ajay Srivastava",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ajay%20Srivastava&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 14,
     specialization: "Machinery guidance",
@@ -33533,7 +33533,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1973,
     name: "Mr. Chandrashekhar Thakur",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Chandrashekhar%20Thakur&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 8,
     specialization: "Low crop yield",
@@ -33550,7 +33550,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1974,
     name: "Mr. Asha Sharma",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 19,
     specialization: "Soil does not retain water",
@@ -33567,7 +33567,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1975,
     name: "Dr. Priya Shukla",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Shukla&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 21,
     specialization: "Soil testing",
@@ -33584,7 +33584,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1976,
     name: "Dr. Rekha Srivastava",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Srivastava&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 14,
     specialization: "Pest attack",
@@ -33601,7 +33601,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1977,
     name: "Er. Vikram Rana",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Rana&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 8,
     specialization: "Fertilizer recommendation",
@@ -33618,7 +33618,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1978,
     name: "Ms. Ramesh Patel",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Patel&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 9,
     specialization: "Leaf diseases",
@@ -33635,7 +33635,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1979,
     name: "Ms. Dinesh Tripathi",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dinesh%20Tripathi&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 21,
     specialization: "Irrigation planning",
@@ -33652,7 +33652,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1980,
     name: "Dr. Pramod Pandey",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pramod%20Pandey&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 14,
     specialization: "Government schemes",
@@ -33669,7 +33669,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1981,
     name: "Mr. Naresh Tiwari",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Naresh%20Tiwari&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 16,
     specialization: "Organic farming",
@@ -33686,7 +33686,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1982,
     name: "Mr. Ajay Kumar",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ajay%20Kumar&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 9,
     specialization: "Weather-related issues",
@@ -33703,7 +33703,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1983,
     name: "Mr. Bhupesh Tripathi",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhupesh%20Tripathi&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 21,
     specialization: "Post-harvest storage",
@@ -33720,7 +33720,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1984,
     name: "Dr. Ashok Bisht",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ashok%20Bisht&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 4,
     specialization: "Crop selection",
@@ -33737,7 +33737,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1985,
     name: "Dr. Ritu Yadav",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ritu%20Yadav&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 16,
     specialization: "Machinery guidance",
@@ -33754,7 +33754,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1986,
     name: "Dr. Geeta Jain",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Geeta%20Jain&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 10,
     specialization: "Low crop yield",
@@ -33771,7 +33771,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1987,
     name: "Mr. Savita Chaurasia",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Savita%20Chaurasia&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 11,
     specialization: "Market price guidance",
@@ -33788,7 +33788,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1988,
     name: "Mr. Suresh Negi",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Negi&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 5,
     specialization: "Soil testing",
@@ -33805,7 +33805,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1989,
     name: "Ms. Rakesh Singh",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rakesh%20Singh&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 16,
     specialization: "Pest attack",
@@ -33822,7 +33822,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1990,
     name: "Dr. Sanjay Khanna",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanjay%20Khanna&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 18,
     specialization: "Soil does not retain water",
@@ -33839,7 +33839,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1991,
     name: "Dr. Kamlesh Chaurasia",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kamlesh%20Chaurasia&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 11,
     specialization: "Leaf diseases",
@@ -33856,7 +33856,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1992,
     name: "Er. Ravi Rawat",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Rawat&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 5,
     specialization: "Irrigation planning",
@@ -33873,7 +33873,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1993,
     name: "Ms. Sangeeta Chauhan",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sangeeta%20Chauhan&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 6,
     specialization: "Fertilizer recommendation",
@@ -33890,7 +33890,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1994,
     name: "Dr. Vinod Malhotra",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vinod%20Malhotra&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 18,
     specialization: "Organic farming",
@@ -33907,7 +33907,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1995,
     name: "Dr. Ritu Dubey",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ritu%20Dubey&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 11,
     specialization: "Weather-related issues",
@@ -33924,7 +33924,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1996,
     name: "Mr. Deepak Verma",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepak%20Verma&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 13,
     specialization: "Government schemes",
@@ -33941,7 +33941,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1997,
     name: "Mr. Sunita Shah",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sunita%20Shah&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 6,
     specialization: "Crop selection",
@@ -33958,7 +33958,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1998,
     name: "Mr. Suresh Malhotra",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Malhotra&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 18,
     specialization: "Machinery guidance",
@@ -33975,7 +33975,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 1999,
     name: "Mr. Manoj Patel",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manoj%20Patel&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 4,
     specialization: "Post-harvest storage",
@@ -33992,7 +33992,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2000,
     name: "Mr. Rajesh Tripathi",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajesh%20Tripathi&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 16,
     specialization: "Market price guidance",
@@ -34009,7 +34009,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2001,
     name: "Mr. Rohit Pandey",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rohit%20Pandey&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 9,
     specialization: "Soil testing",
@@ -34026,7 +34026,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2002,
     name: "Dr. Vijay Tiwari",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Tiwari&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 11,
     specialization: "Low crop yield",
@@ -34043,7 +34043,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2003,
     name: "Dr. Devendra Kumar",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Devendra%20Kumar&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 5,
     specialization: "Soil does not retain water",
@@ -34060,7 +34060,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2004,
     name: "Ms. Neeta Tripathi",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neeta%20Tripathi&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 16,
     specialization: "Leaf diseases",
@@ -34077,7 +34077,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2005,
     name: "Ms. Asha Bisht",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Bisht&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 18,
     specialization: "Pest attack",
@@ -34094,7 +34094,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2006,
     name: "Ms. Usha Yadav",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Usha%20Yadav&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 11,
     specialization: "Fertilizer recommendation",
@@ -34111,7 +34111,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2007,
     name: "Dr. Mahendra Kumar",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mahendra%20Kumar&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 5,
     specialization: "Organic farming",
@@ -34128,7 +34128,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2008,
     name: "Ms. Rohit Mishra",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rohit%20Mishra&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 14,
     specialization: "Irrigation planning",
@@ -34145,7 +34145,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2009,
     name: "Mr. Kamlesh Patel",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kamlesh%20Patel&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 8,
     specialization: "Government schemes",
@@ -34162,7 +34162,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2010,
     name: "Mr. Ravi Shukla",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Shukla&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 19,
     specialization: "Crop selection",
@@ -34179,7 +34179,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2011,
     name: "Dr. Neeta Joshi",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neeta%20Joshi&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 21,
     specialization: "Weather-related issues",
@@ -34196,7 +34196,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2012,
     name: "Dr. Vinod Tiwari",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vinod%20Tiwari&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 14,
     specialization: "Post-harvest storage",
@@ -34213,7 +34213,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2013,
     name: "Dr. Ritu Kumar",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ritu%20Kumar&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 8,
     specialization: "Market price guidance",
@@ -34230,7 +34230,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2014,
     name: "Dr. Sangeeta Dubey",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sangeeta%20Dubey&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 4,
     specialization: "Machinery guidance",
@@ -34247,7 +34247,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2015,
     name: "Dr. Ashok Thakur",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ashok%20Thakur&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 16,
     specialization: "Low crop yield",
@@ -34264,7 +34264,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2016,
     name: "Mr. Priya Sharma",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Sharma&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 9,
     specialization: "Soil does not retain water",
@@ -34281,7 +34281,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2017,
     name: "Mr. Deepak Shukla",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepak%20Shukla&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 11,
     specialization: "Soil testing",
@@ -34298,7 +34298,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2018,
     name: "Ms. Savita Srivastava",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Savita%20Srivastava&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 4,
     specialization: "Pest attack",
@@ -34315,7 +34315,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2019,
     name: "Dr. Ramesh Rana",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Rana&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 16,
     specialization: "Fertilizer recommendation",
@@ -34332,7 +34332,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2020,
     name: "Dr. Pankaj Patel",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pankaj%20Patel&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 18,
     specialization: "Leaf diseases",
@@ -34349,7 +34349,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2021,
     name: "Er. Sanjay Shukla",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanjay%20Shukla&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 11,
     specialization: "Irrigation planning",
@@ -34366,7 +34366,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2022,
     name: "Ms. Naresh Pandey",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Naresh%20Pandey&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 5,
     specialization: "Government schemes",
@@ -34383,7 +34383,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2023,
     name: "Dr. Hemant Tiwari",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hemant%20Tiwari&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 6,
     specialization: "Organic farming",
@@ -34400,7 +34400,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2024,
     name: "Dr. Sangeeta Kumar",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sangeeta%20Kumar&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 18,
     specialization: "Weather-related issues",
@@ -34417,7 +34417,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2025,
     name: "Dr. Ashok Tripathi",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ashok%20Tripathi&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 11,
     specialization: "Post-harvest storage",
@@ -34434,7 +34434,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2026,
     name: "Mr. Meena Bisht",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meena%20Bisht&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 13,
     specialization: "Crop selection",
@@ -34451,7 +34451,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2027,
     name: "Mr. Deepak Yadav",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepak%20Yadav&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 6,
     specialization: "Machinery guidance",
@@ -34468,7 +34468,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2028,
     name: "Mr. Savita Kumar",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Savita%20Kumar&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 18,
     specialization: "Low crop yield",
@@ -34485,7 +34485,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2029,
     name: "Dr. Anil Saxena",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anil%20Saxena&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 19,
     specialization: "Market price guidance",
@@ -34502,7 +34502,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2030,
     name: "Dr. Pankaj Negi",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pankaj%20Negi&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 13,
     specialization: "Soil testing",
@@ -34519,7 +34519,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2031,
     name: "Mr. Sanjay Yadav",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanjay%20Yadav&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 6,
     specialization: "Pest attack",
@@ -34536,7 +34536,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2032,
     name: "Mr. Anuj Khanna",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anuj%20Khanna&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 8,
     specialization: "Soil does not retain water",
@@ -34553,7 +34553,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2033,
     name: "Ms. Hemant Chaurasia",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hemant%20Chaurasia&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 20,
     specialization: "Leaf diseases",
@@ -34570,7 +34570,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2034,
     name: "Dr. Sangeeta Rawat",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sangeeta%20Rawat&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 13,
     specialization: "Irrigation planning",
@@ -34587,7 +34587,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2035,
     name: "Er. Kavita Chauhan",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavita%20Chauhan&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 15,
     specialization: "Fertilizer recommendation",
@@ -34604,7 +34604,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2036,
     name: "Ms. Meena Khanna",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meena%20Khanna&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 8,
     specialization: "Organic farming",
@@ -34621,7 +34621,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2037,
     name: "Mr. Deepak Dubey",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepak%20Dubey&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 20,
     specialization: "Weather-related issues",
@@ -34638,7 +34638,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2038,
     name: "Dr. Amit Verma",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amit%20Verma&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 21,
     specialization: "Government schemes",
@@ -34655,7 +34655,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2039,
     name: "Dr. Anil Chauhan",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anil%20Chauhan&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 15,
     specialization: "Crop selection",
@@ -34672,7 +34672,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2040,
     name: "Dr. Pankaj Malhotra",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pankaj%20Malhotra&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 8,
     specialization: "Machinery guidance",
@@ -34689,7 +34689,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2041,
     name: "Mr. Shyam Upadhyay",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyam%20Upadhyay&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 10,
     specialization: "Post-harvest storage",
@@ -34706,7 +34706,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2042,
     name: "Mr. Anuj Mishra",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anuj%20Mishra&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 21,
     specialization: "Market price guidance",
@@ -34723,7 +34723,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2043,
     name: "Mr. Hemant Shah",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hemant%20Shah&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 15,
     specialization: "Soil testing",
@@ -34740,7 +34740,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2044,
     name: "Dr. Ritu Pandey",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ritu%20Pandey&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 6,
     specialization: "Low crop yield",
@@ -34757,7 +34757,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2045,
     name: "Dr. Savita Chauhan",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Savita%20Chauhan&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 18,
     specialization: "Soil does not retain water",
@@ -34774,7 +34774,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2046,
     name: "Er. Ramesh Khanna",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Khanna&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 11,
     specialization: "Leaf diseases",
@@ -34791,7 +34791,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2047,
     name: "Dr. Priya Bisht",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Bisht&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 8,
     specialization: "Pest attack",
@@ -34808,7 +34808,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2048,
     name: "Er. Geeta Yadav",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Geeta%20Yadav&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 19,
     specialization: "Fertilizer recommendation",
@@ -34825,7 +34825,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2049,
     name: "Ms. Vikram Kumar",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Kumar&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 13,
     specialization: "Organic farming",
@@ -34842,7 +34842,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2050,
     name: "Dr. Neeta Jain",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neeta%20Jain&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 12,
     specialization: "Irrigation planning",
@@ -34859,7 +34859,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2051,
     name: "Dr. Vinod Joshi",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vinod%20Joshi&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 6,
     specialization: "Government schemes",
@@ -34876,7 +34876,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2052,
     name: "Dr. Ritu Mishra",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ritu%20Mishra&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 17,
     specialization: "Crop selection",
@@ -34893,7 +34893,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2053,
     name: "Dr. Sangeeta Khanna",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sangeeta%20Khanna&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 14,
     specialization: "Weather-related issues",
@@ -34910,7 +34910,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2054,
     name: "Dr. Ashok Dubey",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ashok%20Dubey&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 7,
     specialization: "Post-harvest storage",
@@ -34927,7 +34927,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2055,
     name: "Mr. Priya Rawat",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Rawat&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 19,
     specialization: "Market price guidance",
@@ -34944,7 +34944,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2056,
     name: "Dr. Ravi Kumar",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Kumar&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 15,
     specialization: "Machinery guidance",
@@ -34961,7 +34961,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2057,
     name: "Mr. Bhupesh Upadhyay",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhupesh%20Upadhyay&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 9,
     specialization: "Low crop yield",
@@ -34978,7 +34978,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2058,
     name: "Mr. Asha Verma",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Verma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 20,
     specialization: "Soil does not retain water",
@@ -34995,7 +34995,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2059,
     name: "Mr. Ritu Yadav",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ritu%20Yadav&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 4,
     specialization: "Soil testing",
@@ -35012,7 +35012,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2060,
     name: "Dr. Geeta Jain",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Geeta%20Jain&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 16,
     specialization: "Pest attack",
@@ -35029,7 +35029,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2061,
     name: "Dr. Vikram Upadhyay",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Upadhyay&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 9,
     specialization: "Fertilizer recommendation",
@@ -35046,7 +35046,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2062,
     name: "Dr. Asha Rana",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Rana&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 6,
     specialization: "Leaf diseases",
@@ -35063,7 +35063,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2063,
     name: "Dr. Rekha Khanna",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Khanna&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 17,
     specialization: "Irrigation planning",
@@ -35080,7 +35080,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2064,
     name: "Dr. Amit Dubey",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amit%20Dubey&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 11,
     specialization: "Government schemes",
@@ -35097,7 +35097,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2065,
     name: "Ms. Bhupesh Upadhyay",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhupesh%20Upadhyay&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 10,
     specialization: "Organic farming",
@@ -35114,7 +35114,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2066,
     name: "Ms. Asha Mishra",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Mishra&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 4,
     specialization: "Weather-related issues",
@@ -35131,7 +35131,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2067,
     name: "Mr. Usha Shah",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Usha%20Shah&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 15,
     specialization: "Post-harvest storage",
@@ -35148,7 +35148,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2068,
     name: "Er. Meena Tripathi",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meena%20Tripathi&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 4,
     specialization: "Crop selection",
@@ -35165,7 +35165,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2069,
     name: "Mr. Deepak Verma",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepak%20Verma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 16,
     specialization: "Machinery guidance",
@@ -35182,7 +35182,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2070,
     name: "Mr. Savita Shah",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Savita%20Shah&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 10,
     specialization: "Low crop yield",
@@ -35199,7 +35199,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2071,
     name: "Dr. Naresh Srivastava",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Naresh%20Srivastava&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 19,
     specialization: "Market price guidance",
@@ -35216,7 +35216,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2072,
     name: "Dr. Ajay Rana",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ajay%20Rana&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 13,
     specialization: "Soil testing",
@@ -35233,7 +35233,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2073,
     name: "Dr. Chandrashekhar Sharma",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Chandrashekhar%20Sharma&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 6,
     specialization: "Pest attack",
@@ -35250,7 +35250,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2074,
     name: "Mr. Ashok Tripathi",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ashok%20Tripathi&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 8,
     specialization: "Soil does not retain water",
@@ -35267,7 +35267,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2075,
     name: "Mr. Priya Pandey",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Pandey&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 19,
     specialization: "Leaf diseases",
@@ -35284,7 +35284,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2076,
     name: "Ms. Rekha Chauhan",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Chauhan&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 13,
     specialization: "Irrigation planning",
@@ -35301,7 +35301,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2077,
     name: "Dr. Rajesh Dubey",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajesh%20Dubey&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 4,
     specialization: "Fertilizer recommendation",
@@ -35318,7 +35318,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2078,
     name: "Ms. Rohit Thakur",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rohit%20Thakur&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 16,
     specialization: "Organic farming",
@@ -35335,7 +35335,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2079,
     name: "Ms. Hemant Sharma",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hemant%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 9,
     specialization: "Weather-related issues",
@@ -35352,7 +35352,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2080,
     name: "Ms. Ritu Negi",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ritu%20Negi&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 19,
     specialization: "Government schemes",
@@ -35369,7 +35369,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2081,
     name: "Dr. Geeta Singh",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Geeta%20Singh&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 12,
     specialization: "Crop selection",
@@ -35386,7 +35386,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2082,
     name: "Dr. Vikram Jain",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Jain&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 6,
     specialization: "Machinery guidance",
@@ -35403,7 +35403,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2083,
     name: "Dr. Priya Pandey",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Pandey&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 20,
     specialization: "Post-harvest storage",
@@ -35420,7 +35420,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2084,
     name: "Dr. Rekha Chauhan",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Chauhan&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 14,
     specialization: "Market price guidance",
@@ -35437,7 +35437,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2085,
     name: "Dr. Amit Khanna",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amit%20Khanna&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 7,
     specialization: "Soil testing",
@@ -35454,7 +35454,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2086,
     name: "Mr. Ramesh Upadhyay",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Upadhyay&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 9,
     specialization: "Low crop yield",
@@ -35471,7 +35471,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2087,
     name: "Mr. Dinesh Verma",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dinesh%20Verma&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 20,
     specialization: "Soil does not retain water",
@@ -35488,7 +35488,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2088,
     name: "Mr. Shyam Shah",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyam%20Shah&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 14,
     specialization: "Leaf diseases",
@@ -35505,7 +35505,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2089,
     name: "Mr. Gautam Das",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gautam%20Das&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 15,
     specialization: "Pest attack",
@@ -35522,7 +35522,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2090,
     name: "Mr. Rani Sen",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rani%20Sen&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 8,
     specialization: "Fertilizer recommendation",
@@ -35539,7 +35539,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2091,
     name: "Ms. Biplab Barik",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Biplab%20Barik&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 20,
     specialization: "Organic farming",
@@ -35556,7 +35556,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2092,
     name: "Ms. Bimal Mohapatra",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bimal%20Mohapatra&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 16,
     specialization: "Irrigation planning",
@@ -35573,7 +35573,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2093,
     name: "Ms. Mita Kalita",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mita%20Kalita&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 10,
     specialization: "Government schemes",
@@ -35590,7 +35590,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2094,
     name: "Dr. Biplab Chakraborty",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Biplab%20Chakraborty&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 21,
     specialization: "Crop selection",
@@ -35607,7 +35607,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2095,
     name: "Dr. Sajal Ghosh",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sajal%20Ghosh&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 5,
     specialization: "Weather-related issues",
@@ -35624,7 +35624,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2096,
     name: "Ms. Binay Pattnaik",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Binay%20Pattnaik&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 16,
     specialization: "Post-harvest storage",
@@ -35641,7 +35641,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2097,
     name: "Mr. Biswajit Deka",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Biswajit%20Deka&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 10,
     specialization: "Market price guidance",
@@ -35658,7 +35658,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2098,
     name: "Mr. Biplab Sahu",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Biplab%20Sahu&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 6,
     specialization: "Machinery guidance",
@@ -35675,7 +35675,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2099,
     name: "Mr. Binay Das",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Binay%20Das&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 18,
     specialization: "Low crop yield",
@@ -35692,7 +35692,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2100,
     name: "Mr. Partha Bose",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Partha%20Bose&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 11,
     specialization: "Soil does not retain water",
@@ -35709,7 +35709,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2101,
     name: "Mr. Mrinal Das",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mrinal%20Das&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 8,
     specialization: "Soil testing",
@@ -35726,7 +35726,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2102,
     name: "Mr. Madhuri Mohapatra",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Madhuri%20Mohapatra&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 19,
     specialization: "Pest attack",
@@ -35743,7 +35743,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2103,
     name: "Mr. Debabrata Kalita",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Debabrata%20Kalita&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 13,
     specialization: "Fertilizer recommendation",
@@ -35760,7 +35760,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2104,
     name: "Dr. Biswajit Bora",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Biswajit%20Bora&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 15,
     specialization: "Leaf diseases",
@@ -35777,7 +35777,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2105,
     name: "Dr. Arun Das",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arun%20Das&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 8,
     specialization: "Irrigation planning",
@@ -35794,7 +35794,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2106,
     name: "Er. Sudeshna Pattnaik",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudeshna%20Pattnaik&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 20,
     specialization: "Government schemes",
@@ -35811,7 +35811,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2107,
     name: "Ms. Binay Gogoi",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Binay%20Gogoi&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 19,
     specialization: "Organic farming",
@@ -35828,7 +35828,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2108,
     name: "Ms. Partha Sen",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Partha%20Sen&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 13,
     specialization: "Weather-related issues",
@@ -35845,7 +35845,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2109,
     name: "Dr. Arun Barik",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arun%20Barik&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 6,
     specialization: "Post-harvest storage",
@@ -35862,7 +35862,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2110,
     name: "Ms. Subhash Mishra",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Subhash%20Mishra&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 8,
     specialization: "Crop selection",
@@ -35879,7 +35879,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2111,
     name: "Mr. Preeti Gogoi",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Preeti%20Gogoi&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 19,
     specialization: "Machinery guidance",
@@ -35896,7 +35896,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2112,
     name: "Mr. Soumya Mukherjee",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Soumya%20Mukherjee&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 13,
     specialization: "Low crop yield",
@@ -35913,7 +35913,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2113,
     name: "Dr. Puja Das",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Puja%20Das&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 4,
     specialization: "Market price guidance",
@@ -35930,7 +35930,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2114,
     name: "Dr. Debabrata Bose",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Debabrata%20Bose&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 16,
     specialization: "Soil testing",
@@ -35947,7 +35947,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2115,
     name: "Dr. Rituraj Behera",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rituraj%20Behera&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 9,
     specialization: "Pest attack",
@@ -35964,7 +35964,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2116,
     name: "Mr. Nilotpal Sahu",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilotpal%20Sahu&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 11,
     specialization: "Soil does not retain water",
@@ -35981,7 +35981,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2117,
     name: "Mr. Kalyan Das",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalyan%20Das&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 4,
     specialization: "Leaf diseases",
@@ -35998,7 +35998,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2118,
     name: "Mr. Suparna Sen",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suparna%20Sen&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 16,
     specialization: "Irrigation planning",
@@ -36015,7 +36015,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2119,
     name: "Mr. Nilotpal Das",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilotpal%20Das&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 12,
     specialization: "Fertilizer recommendation",
@@ -36032,7 +36032,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2120,
     name: "Ms. Sudipta Mohapatra",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudipta%20Mohapatra&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 6,
     specialization: "Organic farming",
@@ -36049,7 +36049,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2121,
     name: "Dr. Pradip Kalita",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pradip%20Kalita&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 17,
     specialization: "Weather-related issues",
@@ -36066,7 +36066,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2122,
     name: "Er. Suparna Bora",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suparna%20Bora&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 19,
     specialization: "Government schemes",
@@ -36083,7 +36083,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2123,
     name: "Ms. Shyamali Ghosh",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyamali%20Ghosh&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 12,
     specialization: "Crop selection",
@@ -36100,7 +36100,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2124,
     name: "Mr. Bimal Pattnaik",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bimal%20Pattnaik&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 6,
     specialization: "Machinery guidance",
@@ -36117,7 +36117,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2125,
     name: "Dr. Binay Dey",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Binay%20Dey&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 15,
     specialization: "Post-harvest storage",
@@ -36134,7 +36134,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2126,
     name: "Dr. Partha Sahoo",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Partha%20Sahoo&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 9,
     specialization: "Market price guidance",
@@ -36151,7 +36151,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2127,
     name: "Dr. Arun Sharma",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arun%20Sharma&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 21,
     specialization: "Soil testing",
@@ -36168,7 +36168,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2128,
     name: "Mr. Subhash Baruah",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Subhash%20Baruah&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 4,
     specialization: "Low crop yield",
@@ -36185,7 +36185,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2129,
     name: "Mr. Preeti Das",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Preeti%20Das&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 16,
     specialization: "Soil does not retain water",
@@ -36202,7 +36202,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2130,
     name: "Mr. Tapas Mohapatra",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Tapas%20Mohapatra&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 9,
     specialization: "Leaf diseases",
@@ -36219,7 +36219,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2131,
     name: "Mr. Arun Mukherjee",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arun%20Mukherjee&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 6,
     specialization: "Pest attack",
@@ -36236,7 +36236,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2132,
     name: "Mr. Sudeshna Nayak",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudeshna%20Nayak&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 17,
     specialization: "Fertilizer recommendation",
@@ -36253,7 +36253,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2133,
     name: "Dr. Soumya Choudhury",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Soumya%20Choudhury&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 11,
     specialization: "Organic farming",
@@ -36270,7 +36270,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2134,
     name: "Dr. Tapas Hazarika",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Tapas%20Hazarika&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 12,
     specialization: "Irrigation planning",
@@ -36287,7 +36287,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2135,
     name: "Er. Rekha Banerjee",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Banerjee&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 6,
     specialization: "Government schemes",
@@ -36304,7 +36304,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2136,
     name: "Ms. Anup Sahu",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anup%20Sahu&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 17,
     specialization: "Crop selection",
@@ -36321,7 +36321,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2137,
     name: "Dr. Nilotpal Sen",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilotpal%20Sen&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 9,
     specialization: "Weather-related issues",
@@ -36338,7 +36338,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2138,
     name: "Dr. Sudipta Barik",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudipta%20Barik&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 20,
     specialization: "Post-harvest storage",
@@ -36355,7 +36355,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2139,
     name: "Dr. Pradip Talukdar",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pradip%20Talukdar&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 14,
     specialization: "Market price guidance",
@@ -36372,7 +36372,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2140,
     name: "Mr. Suparna Hazarika",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suparna%20Hazarika&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 15,
     specialization: "Machinery guidance",
@@ -36389,7 +36389,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2141,
     name: "Mr. Shyamali Mukherjee",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyamali%20Mukherjee&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 9,
     specialization: "Low crop yield",
@@ -36406,7 +36406,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2142,
     name: "Mr. Gautam Nayak",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Gautam%20Nayak&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 20,
     specialization: "Soil does not retain water",
@@ -36423,7 +36423,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2143,
     name: "Dr. Anup Pradhan",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anup%20Pradhan&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 4,
     specialization: "Soil testing",
@@ -36440,7 +36440,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2144,
     name: "Dr. Rani Hazarika",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rani%20Hazarika&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 16,
     specialization: "Pest attack",
@@ -36457,7 +36457,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2145,
     name: "Er. Sajal Banerjee",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sajal%20Banerjee&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 9,
     specialization: "Fertilizer recommendation",
@@ -36474,7 +36474,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2146,
     name: "Mr. Debabrata Dey",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Debabrata%20Dey&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 11,
     specialization: "Leaf diseases",
@@ -36491,7 +36491,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2147,
     name: "Mr. Nilotpal Sahoo",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilotpal%20Sahoo&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 4,
     specialization: "Irrigation planning",
@@ -36508,7 +36508,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2148,
     name: "Dr. Kalyan Sharma",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalyan%20Sharma&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 16,
     specialization: "Government schemes",
@@ -36525,7 +36525,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2149,
     name: "Er. Sudeshna Baruah",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudeshna%20Baruah&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 17,
     specialization: "Organic farming",
@@ -36542,7 +36542,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2150,
     name: "Ms. Soumya Dey",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Soumya%20Dey&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 11,
     specialization: "Weather-related issues",
@@ -36559,7 +36559,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2151,
     name: "Ms. Shyamali Mohapatra",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyamali%20Mohapatra&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 4,
     specialization: "Post-harvest storage",
@@ -36576,7 +36576,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2152,
     name: "Ms. Tapas Ghosh",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Tapas%20Ghosh&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 9,
     specialization: "Crop selection",
@@ -36593,7 +36593,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2153,
     name: "Mr. Rekha Pattnaik",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Pattnaik&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 20,
     specialization: "Machinery guidance",
@@ -36610,7 +36610,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2154,
     name: "Mr. Mrinal Deka",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mrinal%20Deka&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 14,
     specialization: "Low crop yield",
@@ -36627,7 +36627,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2155,
     name: "Dr. Nilotpal Sahoo",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilotpal%20Sahoo&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 5,
     specialization: "Market price guidance",
@@ -36644,7 +36644,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2156,
     name: "Dr. Kalyan Sharma",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalyan%20Sharma&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 17,
     specialization: "Soil testing",
@@ -36661,7 +36661,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2157,
     name: "Er. Pradip Chakraborty",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pradip%20Chakraborty&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 10,
     specialization: "Pest attack",
@@ -36678,7 +36678,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2158,
     name: "Dr. Rohit Patel",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rohit%20Patel&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 5,
     specialization: "Soil does not retain water",
@@ -36695,7 +36695,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2159,
     name: "Er. Hemant Shukla",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hemant%20Shukla&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 17,
     specialization: "Leaf diseases",
@@ -36712,7 +36712,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2160,
     name: "Mr. Sangeeta Pandey",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sangeeta%20Pandey&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 10,
     specialization: "Irrigation planning",
@@ -36729,7 +36729,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2161,
     name: "Mr. Geeta Malhotra",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Geeta%20Malhotra&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 20,
     specialization: "Fertilizer recommendation",
@@ -36746,7 +36746,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2162,
     name: "Dr. Vikram Dubey",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Dubey&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 13,
     specialization: "Organic farming",
@@ -36763,7 +36763,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2163,
     name: "Dr. Dinesh Thakur",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dinesh%20Thakur&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 7,
     specialization: "Weather-related issues",
@@ -36780,7 +36780,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2164,
     name: "Dr. Vikram Thakur",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Thakur&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 17,
     specialization: "Government schemes",
@@ -36797,7 +36797,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2165,
     name: "Dr. Manoj Gupta",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manoj%20Gupta&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 11,
     specialization: "Crop selection",
@@ -36814,7 +36814,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2166,
     name: "Ms. Rajesh Saxena",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajesh%20Saxena&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 4,
     specialization: "Machinery guidance",
@@ -36831,7 +36831,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2167,
     name: "Ms. Pramod Srivastava",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pramod%20Srivastava&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 6,
     specialization: "Post-harvest storage",
@@ -36848,7 +36848,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2168,
     name: "Ms. Vijay Thakur",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Thakur&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 17,
     specialization: "Market price guidance",
@@ -36865,7 +36865,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2169,
     name: "Dr. Devendra Sharma",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Devendra%20Sharma&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 11,
     specialization: "Soil testing",
@@ -36882,7 +36882,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2170,
     name: "Er. Bhupesh Shukla",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhupesh%20Shukla&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 12,
     specialization: "Low crop yield",
@@ -36899,7 +36899,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2171,
     name: "Ms. Asha Pandey",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Pandey&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 6,
     specialization: "Soil does not retain water",
@@ -36916,7 +36916,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2172,
     name: "Mr. Usha Rana",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Usha%20Rana&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 17,
     specialization: "Leaf diseases",
@@ -36933,7 +36933,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2173,
     name: "Dr. Geeta Patel",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Geeta%20Patel&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 19,
     specialization: "Pest attack",
@@ -36950,7 +36950,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2174,
     name: "Dr. Vikram Tripathi",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Tripathi&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 12,
     specialization: "Fertilizer recommendation",
@@ -36967,7 +36967,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2175,
     name: "Dr. Manoj Pandey",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manoj%20Pandey&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 6,
     specialization: "Organic farming",
@@ -36984,7 +36984,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2176,
     name: "Dr. Vijay Rana",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Rana&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 18,
     specialization: "Irrigation planning",
@@ -37001,7 +37001,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2177,
     name: "Dr. Devendra Sharma",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Devendra%20Sharma&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 12,
     specialization: "Government schemes",
@@ -37018,7 +37018,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2178,
     name: "Mr. Neeta Chaurasia",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neeta%20Chaurasia&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 5,
     specialization: "Crop selection",
@@ -37035,7 +37035,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2179,
     name: "Mr. Asha Pandey",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Pandey&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 7,
     specialization: "Weather-related issues",
@@ -37052,7 +37052,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2180,
     name: "Mr. Usha Rana",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Usha%20Rana&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 18,
     specialization: "Post-harvest storage",
@@ -37069,7 +37069,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2181,
     name: "Dr. Mahendra Khanna",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mahendra%20Khanna&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 12,
     specialization: "Market price guidance",
@@ -37086,7 +37086,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2182,
     name: "Er. Vikram Tripathi",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Tripathi&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 14,
     specialization: "Machinery guidance",
@@ -37103,7 +37103,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2183,
     name: "Ms. Manoj Verma",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manoj%20Verma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 7,
     specialization: "Low crop yield",
@@ -37120,7 +37120,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2184,
     name: "Ms. Shyam Chauhan",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyam%20Chauhan&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 19,
     specialization: "Soil does not retain water",
@@ -37137,7 +37137,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2185,
     name: "Dr. Pramod Kumar",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pramod%20Kumar&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 20,
     specialization: "Soil testing",
@@ -37154,7 +37154,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2186,
     name: "Dr. Vijay Upadhyay",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Upadhyay&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 14,
     specialization: "Pest attack",
@@ -37171,7 +37171,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2187,
     name: "Dr. Chandrashekhar Verma",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Chandrashekhar%20Verma&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 7,
     specialization: "Fertilizer recommendation",
@@ -37188,7 +37188,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2188,
     name: "Mr. Dinesh Rawat",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dinesh%20Rawat&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 7,
     specialization: "Leaf diseases",
@@ -37205,7 +37205,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2189,
     name: "Mr. Pramod Singh",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pramod%20Singh&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 18,
     specialization: "Irrigation planning",
@@ -37222,7 +37222,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2190,
     name: "Mr. Vijay Agarwal",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Agarwal&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 12,
     specialization: "Government schemes",
@@ -37239,7 +37239,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2191,
     name: "Dr. Neeta Upadhyay",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Neeta%20Upadhyay&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 17,
     specialization: "Organic farming",
@@ -37256,7 +37256,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2192,
     name: "Dr. Meena Verma",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meena%20Verma&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 11,
     specialization: "Weather-related issues",
@@ -37273,7 +37273,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2193,
     name: "Dr. Deepak Shah",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepak%20Shah&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 4,
     specialization: "Post-harvest storage",
@@ -37290,7 +37290,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2194,
     name: "Dr. Sangeeta Chaurasia",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sangeeta%20Chaurasia&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 19,
     specialization: "Crop selection",
@@ -37307,7 +37307,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2195,
     name: "Dr. Ashok Negi",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ashok%20Negi&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 12,
     specialization: "Machinery guidance",
@@ -37324,7 +37324,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2196,
     name: "Dr. Ritu Singh",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ritu%20Singh&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 6,
     specialization: "Low crop yield",
@@ -37341,7 +37341,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2197,
     name: "Ms. Deepak Khanna",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepak%20Khanna&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 8,
     specialization: "Market price guidance",
@@ -37358,7 +37358,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2198,
     name: "Ms. Savita Chaurasia",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Savita%20Chaurasia&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 19,
     specialization: "Soil testing",
@@ -37375,7 +37375,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2199,
     name: "Ms. Suresh Rawat",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Rawat&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 13,
     specialization: "Pest attack",
@@ -37392,7 +37392,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2200,
     name: "Dr. Pankaj Chauhan",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pankaj%20Chauhan&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 14,
     specialization: "Soil does not retain water",
@@ -37409,7 +37409,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2201,
     name: "Mr. Sanjay Malhotra",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanjay%20Malhotra&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 8,
     specialization: "Leaf diseases",
@@ -37426,7 +37426,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2202,
     name: "Mr. Kamlesh Dubey",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kamlesh%20Dubey&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 19,
     specialization: "Irrigation planning",
@@ -37443,7 +37443,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2203,
     name: "Mr. Priya Sharma",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 11,
     specialization: "Fertilizer recommendation",
@@ -37460,7 +37460,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2204,
     name: "Dr. Rekha Chaurasia",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Chaurasia&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 4,
     specialization: "Organic farming",
@@ -37477,7 +37477,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2205,
     name: "Dr. Amit Negi",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amit%20Negi&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 16,
     specialization: "Weather-related issues",
@@ -37494,7 +37494,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2206,
     name: "Dr. Savita Dubey",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Savita%20Dubey&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 20,
     specialization: "Government schemes",
@@ -37511,7 +37511,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2207,
     name: "Dr. Suresh Rawat",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Rawat&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 14,
     specialization: "Crop selection",
@@ -37528,7 +37528,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2208,
     name: "Dr. Rakesh Gupta",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rakesh%20Gupta&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 7,
     specialization: "Machinery guidance",
@@ -37545,7 +37545,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2209,
     name: "Dr. Rajesh Rana",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajesh%20Rana&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 12,
     specialization: "Post-harvest storage",
@@ -37562,7 +37562,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2210,
     name: "Er. Rohit Sharma",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rohit%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 5,
     specialization: "Market price guidance",
@@ -37579,7 +37579,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2211,
     name: "Ms. Kamlesh Chaurasia",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kamlesh%20Chaurasia&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 17,
     specialization: "Soil testing",
@@ -37596,7 +37596,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2212,
     name: "Er. Pankaj Tiwari",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pankaj%20Tiwari&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 13,
     specialization: "Low crop yield",
@@ -37613,7 +37613,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2213,
     name: "Ms. Sanjay Patel",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanjay%20Patel&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 7,
     specialization: "Soil does not retain water",
@@ -37630,7 +37630,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2214,
     name: "Mr. Naresh Tripathi",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Naresh%20Tripathi&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 18,
     specialization: "Leaf diseases",
@@ -37647,7 +37647,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2215,
     name: "Dr. Hemant Bisht",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Hemant%20Bisht&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 20,
     specialization: "Pest attack",
@@ -37664,7 +37664,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2216,
     name: "Dr. Sangeeta Tiwari",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sangeeta%20Tiwari&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 13,
     specialization: "Fertilizer recommendation",
@@ -37681,7 +37681,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2217,
     name: "Dr. Ashok Kumar",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ashok%20Kumar&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 7,
     specialization: "Organic farming",
@@ -37698,7 +37698,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2218,
     name: "Mr. Meena Saxena",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meena%20Saxena&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 8,
     specialization: "Irrigation planning",
@@ -37715,7 +37715,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2219,
     name: "Mr. Deepak Negi",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepak%20Negi&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 20,
     specialization: "Government schemes",
@@ -37732,7 +37732,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2220,
     name: "Mr. Savita Yadav",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Savita%20Yadav&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 14,
     specialization: "Crop selection",
@@ -37749,7 +37749,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2221,
     name: "Dr. Anil Sharma",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anil%20Sharma&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 15,
     specialization: "Weather-related issues",
@@ -37766,7 +37766,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2222,
     name: "Dr. Pankaj Chaurasia",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pankaj%20Chaurasia&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 9,
     specialization: "Post-harvest storage",
@@ -37783,7 +37783,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2223,
     name: "Ms. Sanjay Negi",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sanjay%20Negi&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 20,
     specialization: "Market price guidance",
@@ -37800,7 +37800,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2224,
     name: "Er. Sangeeta Yadav",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sangeeta%20Yadav&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 14,
     specialization: "Machinery guidance",
@@ -37817,7 +37817,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2225,
     name: "Ms. Ashok Kumar",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ashok%20Kumar&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 8,
     specialization: "Low crop yield",
@@ -37834,7 +37834,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2226,
     name: "Ms. Ritu Upadhyay",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ritu%20Upadhyay&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 20,
     specialization: "Soil does not retain water",
@@ -37851,7 +37851,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2227,
     name: "Dr. Deepak Negi",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepak%20Negi&background=random&color=fff&size=256",
     qualification: "Ph.D. Organic Farming",
     experience: 21,
     specialization: "Soil testing",
@@ -37868,7 +37868,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2228,
     name: "Dr. Savita Yadav",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Savita%20Yadav&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 15,
     specialization: "Pest attack",
@@ -37885,7 +37885,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2229,
     name: "Dr. Suresh Jain",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Jain&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 8,
     specialization: "Fertilizer recommendation",
@@ -37902,7 +37902,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2230,
     name: "Mr. Ajay Tiwari",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ajay%20Tiwari&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 18,
     specialization: "Leaf diseases",
@@ -37919,7 +37919,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2231,
     name: "Mr. Chandrashekhar Patel",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Chandrashekhar%20Patel&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 11,
     specialization: "Irrigation planning",
@@ -37936,7 +37936,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2232,
     name: "Mr. Kavita Tripathi",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavita%20Tripathi&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 5,
     specialization: "Government schemes",
@@ -37953,7 +37953,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2233,
     name: "Dr. Priya Bisht",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Bisht&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 6,
     specialization: "Organic farming",
@@ -37970,7 +37970,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2234,
     name: "Dr. Rekha Yadav",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rekha%20Yadav&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 18,
     specialization: "Weather-related issues",
@@ -37987,7 +37987,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2235,
     name: "Er. Amit Kumar",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amit%20Kumar&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 11,
     specialization: "Post-harvest storage",
@@ -38004,7 +38004,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2236,
     name: "Mr. Ramesh Saxena",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ramesh%20Saxena&background=random&color=fff&size=256",
     qualification: "M.Sc. Horticulture",
     experience: 13,
     specialization: "Crop selection",
@@ -38021,7 +38021,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2237,
     name: "Mr. Dinesh Negi",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dinesh%20Negi&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 6,
     specialization: "Machinery guidance",
@@ -38038,7 +38038,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2238,
     name: "Dr. Shyam Yadav",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyam%20Yadav&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 18,
     specialization: "Low crop yield",
@@ -38055,7 +38055,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2239,
     name: "Ms. Vikram Shukla",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Shukla&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 14,
     specialization: "Market price guidance",
@@ -38072,7 +38072,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2240,
     name: "Dr. Manoj Pandey",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manoj%20Pandey&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 8,
     specialization: "Soil testing",
@@ -38089,7 +38089,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2241,
     name: "Dr. Rajesh Rana",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rajesh%20Rana&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 20,
     specialization: "Pest attack",
@@ -38106,7 +38106,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2242,
     name: "Ms. Pramod Patel",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pramod%20Patel&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 21,
     specialization: "Soil does not retain water",
@@ -38123,7 +38123,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2243,
     name: "Mr. Vijay Tripathi",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vijay%20Tripathi&background=random&color=fff&size=256",
     qualification: "M.Sc. Entomology",
     experience: 15,
     specialization: "Leaf diseases",
@@ -38140,7 +38140,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2244,
     name: "Mr. Devendra Pandey",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Devendra%20Pandey&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 8,
     specialization: "Irrigation planning",
@@ -38157,7 +38157,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2245,
     name: "Dr. Bhupesh Yadav",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhupesh%20Yadav&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 10,
     specialization: "Fertilizer recommendation",
@@ -38174,7 +38174,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2246,
     name: "Dr. Asha Kumar",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Kumar&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 21,
     specialization: "Organic farming",
@@ -38191,7 +38191,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2247,
     name: "Er. Usha Upadhyay",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Usha%20Upadhyay&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 15,
     specialization: "Weather-related issues",
@@ -38208,7 +38208,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2248,
     name: "Mr. Pankaj Shah",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Pankaj%20Shah&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 6,
     specialization: "Government schemes",
@@ -38225,7 +38225,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2249,
     name: "Mr. Rohit Shukla",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rohit%20Shukla&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 18,
     specialization: "Crop selection",
@@ -38242,7 +38242,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2250,
     name: "Dr. Kamlesh Pandey",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kamlesh%20Pandey&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 11,
     specialization: "Machinery guidance",
@@ -38259,7 +38259,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2251,
     name: "Mr. Usha Chauhan",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Usha%20Chauhan&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 16,
     specialization: "Post-harvest storage",
@@ -38276,7 +38276,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2252,
     name: "Dr. Mahendra Khanna",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Mahendra%20Khanna&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 9,
     specialization: "Market price guidance",
@@ -38293,7 +38293,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2253,
     name: "Dr. Anil Dubey",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anil%20Dubey&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 21,
     specialization: "Soil testing",
@@ -38310,7 +38310,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2254,
     name: "Dr. Meena Yadav",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meena%20Yadav&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 17,
     specialization: "Low crop yield",
@@ -38327,7 +38327,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2255,
     name: "Dr. Deepak Kumar",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Deepak%20Kumar&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 11,
     specialization: "Soil does not retain water",
@@ -38344,7 +38344,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2256,
     name: "Dr. Sunita Upadhyay",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sunita%20Upadhyay&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 4,
     specialization: "Leaf diseases",
@@ -38361,7 +38361,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2257,
     name: "Dr. Ranjit Johal",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ranjit%20Johal&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 4,
     specialization: "Pest attack",
@@ -38378,7 +38378,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2258,
     name: "Ms. Harbhajan Bhatia",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Harbhajan%20Bhatia&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 16,
     specialization: "Fertilizer recommendation",
@@ -38395,7 +38395,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2259,
     name: "Mr. Navdeep Grewal",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Navdeep%20Grewal&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 9,
     specialization: "Organic farming",
@@ -38412,7 +38412,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2260,
     name: "Dr. Lakshmi Iyengar",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Lakshmi%20Iyengar&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 12,
     specialization: "Irrigation planning",
@@ -38429,7 +38429,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2261,
     name: "Dr. Padmanabhan Hegde",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Padmanabhan%20Hegde&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 6,
     specialization: "Government schemes",
@@ -38446,7 +38446,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2262,
     name: "Er. Arulmozhi Rao",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Arulmozhi%20Rao&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 17,
     specialization: "Crop selection",
@@ -38463,7 +38463,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2263,
     name: "Mr. Saranya Kamath",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Saranya%20Kamath&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 9,
     specialization: "Weather-related issues",
@@ -38480,7 +38480,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2264,
     name: "Mr. Balu Sharma",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Balu%20Sharma&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 20,
     specialization: "Post-harvest storage",
@@ -38497,7 +38497,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2265,
     name: "Dr. Sudha Balasubramaniam",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Sudha%20Balasubramaniam&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 14,
     specialization: "Market price guidance",
@@ -38514,7 +38514,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2266,
     name: "Ms. Anand Rao",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Anand%20Rao&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 18,
     specialization: "Machinery guidance",
@@ -38531,7 +38531,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2267,
     name: "Dr. Meenakshi Venkataraman",
-    photo: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meenakshi%20Venkataraman&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 12,
     specialization: "Low crop yield",
@@ -38548,7 +38548,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2268,
     name: "Dr. Balaji Bhat",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Balaji%20Bhat&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 5,
     specialization: "Soil does not retain water",
@@ -38565,7 +38565,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2269,
     name: "Dr. Priya Bhat",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Priya%20Bhat&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 16,
     specialization: "Soil testing",
@@ -38582,7 +38582,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2270,
     name: "Dr. Suresh Pillai",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Pillai&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 9,
     specialization: "Pest attack",
@@ -38599,7 +38599,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2271,
     name: "Mr. Ganesan Srinivasan",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ganesan%20Srinivasan&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 21,
     specialization: "Fertilizer recommendation",
@@ -38616,7 +38616,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2272,
     name: "Dr. Asha Yadav",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Asha%20Yadav&background=random&color=fff&size=256",
     qualification: "Ph.D. Soil Science",
     experience: 11,
     specialization: "Leaf diseases",
@@ -38633,7 +38633,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2273,
     name: "Ms. Usha Kumar",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Usha%20Kumar&background=random&color=fff&size=256",
     qualification: "B.Sc. Agriculture",
     experience: 5,
     specialization: "Irrigation planning",
@@ -38650,7 +38650,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2274,
     name: "Mr. Amit Upadhyay",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Amit%20Upadhyay&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Protection",
     experience: 16,
     specialization: "Government schemes",
@@ -38667,7 +38667,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2275,
     name: "Mr. Vikram Negi",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Vikram%20Negi&background=random&color=fff&size=256",
     qualification: "M.Sc. Plant Pathology",
     experience: 18,
     specialization: "Organic farming",
@@ -38684,7 +38684,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2276,
     name: "Dr. Manoj Singh",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Manoj%20Singh&background=random&color=fff&size=256",
     qualification: "Ph.D. Arid Zone Agriculture",
     experience: 11,
     specialization: "Weather-related issues",
@@ -38701,7 +38701,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2277,
     name: "Dr. Shyam Jain",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Shyam%20Jain&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Economics",
     experience: 5,
     specialization: "Post-harvest storage",
@@ -38718,7 +38718,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2278,
     name: "Dr. Devendra Upadhyay",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Devendra%20Upadhyay&background=random&color=fff&size=256",
     qualification: "Ph.D. Horticulture",
     experience: 17,
     specialization: "Crop selection",
@@ -38735,7 +38735,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2279,
     name: "Dr. Kavita Verma",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kavita%20Verma&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 11,
     specialization: "Machinery guidance",
@@ -38752,7 +38752,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2280,
     name: "Dr. Meena Shah",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Meena%20Shah&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 4,
     specialization: "Low crop yield",
@@ -38769,7 +38769,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2281,
     name: "Er. Suresh Bhatt",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Suresh%20Bhatt&background=random&color=fff&size=256",
     qualification: "B.Tech Agricultural Engineering",
     experience: 19,
     specialization: "Market price guidance",
@@ -38786,7 +38786,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2282,
     name: "Mr. Dhruv Dave",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Dhruv%20Dave&background=random&color=fff&size=256",
     qualification: "M.Sc. Water Resources",
     experience: 13,
     specialization: "Soil testing",
@@ -38803,7 +38803,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2283,
     name: "Ms. Raju Joshi",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Raju%20Joshi&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Extension",
     experience: 6,
     specialization: "Pest attack",
@@ -38820,7 +38820,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2284,
     name: "Dr. Raju Desai",
-    photo: "https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Raju%20Desai&background=random&color=fff&size=256",
     qualification: "Ph.D. Agricultural Meteorology",
     experience: 8,
     specialization: "Soil does not retain water",
@@ -38837,7 +38837,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2285,
     name: "Dr. Smita Bhatt",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Smita%20Bhatt&background=random&color=fff&size=256",
     qualification: "Ph.D. Entomology",
     experience: 19,
     specialization: "Leaf diseases",
@@ -38854,7 +38854,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2286,
     name: "Dr. Nilesh Dave",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilesh%20Dave&background=random&color=fff&size=256",
     qualification: "Ph.D. Agronomy",
     experience: 13,
     specialization: "Irrigation planning",
@@ -38871,7 +38871,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2287,
     name: "Ms. Nilesh Modi",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Nilesh%20Modi&background=random&color=fff&size=256",
     qualification: "M.Sc. Agricultural Economics",
     experience: 14,
     specialization: "Fertilizer recommendation",
@@ -38888,7 +38888,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2288,
     name: "Mr. Rima Desai",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Rima%20Desai&background=random&color=fff&size=256",
     qualification: "M.Sc. Soil Science",
     experience: 8,
     specialization: "Organic farming",
@@ -38905,7 +38905,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2289,
     name: "Mr. Kalpesh Mehta",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Kalpesh%20Mehta&background=random&color=fff&size=256",
     qualification: "M.Sc. Agronomy",
     experience: 19,
     specialization: "Weather-related issues",
@@ -38922,7 +38922,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2290,
     name: "Dr. Naresh Kumar",
-    photo: "https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Naresh%20Kumar&background=random&color=fff&size=256",
     qualification: "Ph.D. Plant Pathology",
     experience: 6,
     specialization: "Government schemes",
@@ -38939,7 +38939,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2291,
     name: "Er. Ravi Upadhyay",
-    photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Ravi%20Upadhyay&background=random&color=fff&size=256",
     qualification: "M.Tech Water Resources Engineering",
     experience: 18,
     specialization: "Crop selection",
@@ -38956,7 +38956,7 @@ window.CONSULTANTS_DATA = [
   {
     id: 2292,
     name: "Mr. Bhupesh Verma",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300&q=80",
+    photo: "https://ui-avatars.com/api/?name=Bhupesh%20Verma&background=random&color=fff&size=256",
     qualification: "M.Sc. Agriculture",
     experience: 12,
     specialization: "Machinery guidance",

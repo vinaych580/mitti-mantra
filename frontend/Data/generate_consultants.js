@@ -737,9 +737,8 @@ for (const [state, districts] of Object.entries(DISTRICT_DATA)) {
       const bioTemplate = BIO_TEMPLATES[Math.floor(rng() * BIO_TEMPLATES.length)];
       const bio = bioTemplate(name, spec.toLowerCase(), district, state);
 
-      const photo = gender === "F"
-        ? PHOTOS_FEMALE[Math.floor(rng() * PHOTOS_FEMALE.length)]
-        : PHOTOS_MALE[Math.floor(rng() * PHOTOS_MALE.length)];
+      const cleanName = name.replace(/^(Mr\.|Ms\.|Dr\.|Er\.)\s+/i, '');
+      const photo = `https://ui-avatars.com/api/?name=${encodeURIComponent(cleanName)}&background=random&color=fff&size=256`;
 
       // Slightly offset coordinates so multiple experts are distributed in the vicinity
       const offsetLat = lat + (i - 1) * 0.015;
