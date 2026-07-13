@@ -1,47 +1,41 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "api/index.py",
-      "use": "@vercel/python",
-      "config": {
-        "includeFiles": [
-          "dataset/*.csv",
-          "backend/**/*.py",
-          "backend/*.json",
-          "engine/**/*.py",
-          "utils/**/*.py",
-          "ml/**/*.py",
-          "ml/models/*.joblib",
-          "data_ingestion/**/*.py"
-        ]
-      }
-    },
-    {
-      "src": "frontend/**",
-      "use": "@vercel/static"
+  "functions": {
+    "api/index.py": {
+      "includeFiles": [
+        "dataset/*.csv",
+        "backend/**/*.py",
+        "backend/*.json",
+        "engine/**/*.py",
+        "utils/**/*.py",
+        "ml/**/*.py",
+        "ml/models/*.joblib",
+        "data_ingestion/**/*.py"
+      ],
+      "maxDuration": 30,
+      "memory": 1024
     }
-  ],
-  "routes": [
+  },
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "dest": "/api/index.py"
+      "source": "/api/(.*)",
+      "destination": "/api/index.py"
     },
     {
-      "src": "/docs",
-      "dest": "/api/index.py"
+      "source": "/docs",
+      "destination": "/api/index.py"
     },
     {
-      "src": "/openapi.json",
-      "dest": "/api/index.py"
+      "source": "/openapi.json",
+      "destination": "/api/index.py"
     },
     {
-      "src": "/gyan-seva",
-      "dest": "/frontend/gyan-seva.html"
+      "source": "/gyan-seva",
+      "destination": "/frontend/gyan-seva.html"
     },
     {
-      "src": "/(.*)",
-      "dest": "/frontend/$1"
+      "source": "/(.*)",
+      "destination": "/frontend/$1"
     }
   ]
 }
