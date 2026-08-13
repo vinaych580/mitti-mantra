@@ -765,6 +765,13 @@
             <div class="kpi__sub">ROI ${PCT(top.roi_percent)}</div></div>
         </div>
 
+        <div class="alert alert--green" style="margin-top:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--brand-soft);border-left:4px solid var(--brand);">
+          <div class="alert__body" style="color:var(--brand-deep);">
+            <strong>🌾 Ready to sell?</strong> List ${cropLabel(top.crop_id)} on the Marketplace once it's harvested — buyers can see it alongside real mandi price context.
+          </div>
+          <a class="btn btn-primary" style="flex-shrink:0;" href="marketplace.html?view=sell&crop_id=${encodeURIComponent(top.crop_id)}&qty=${Math.max(1, Math.round(area * top.predicted_yield_kg_per_acre / 100))}">Sell this produce →</a>
+        </div>
+
         ${top.reasons ? `
         <div class="alert alert--green" style="margin-top: 16px; border-left: 4px solid var(--brand); background: var(--brand-soft);">
           <div class="alert__body" style="color: var(--brand-deep);">

@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MittiMantra Marketplace — buy agricultural produce directly from verified farmers, or sell your harvest to retailers, restaurants, wholesalers and traders.">
+  <title>Marketplace — Mitti Mantra</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="icon" href="assets/logo-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/logo-192.png">
+
+  <style>
+    /* ===== Page-scoped overrides — Marketplace ===== */
+
+    /* ---- Hero ---- */
+    .mkt-hero {
+      position: relative;
+      padding: calc(var(--nav-h) + 72px) 0 56px;
+      background: linear-gradient(160deg, var(--brand-soft) 0%, var(--bg) 70%);
+      overflow: hidden; text-align: center;
+    }
+    .mkt-hero::before {
+      content: ''; position: absolute; inset: -10%;
+      background:
+        radial-gradient(ellipse 60% 50% at 80% 0%, rgba(47,107,58,.08) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 60% at 20% 100%, rgba(200,138,58,.07) 0%, transparent 70%);
+      pointer-events: none;
+      animation: mktHeroDrift 16s ease-in-out infinite;
+    }
+    .mkt-hero__inner { position: relative; z-index: 1; }
+    @keyframes mktHeroDrift {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-1.5%, 1.5%) scale(1.04); }
+    }
+    .mkt-hero__badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 16px; border-radius: 999px;
+      background: var(--surface); box-shadow: var(--shadow-sm);
+      font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--brand); border: 1px solid var(--brand-soft); margin-bottom: 22px;
+    }
+    .mkt-hero h1 {
+      font-size: clamp(2.1rem, 4.6vw, 3.6rem); margin-bottom: 14px;
+      background: linear-gradient(100deg, var(--brand-deep) 30%, var(--brand) 50%, var(--accent) 70%, var(--brand-deep) 90%);
+      background-size: 220% auto; -webkit-background-clip: text; background-clip: text; color: transparent;
+      animation: mktHeroShine 7s ease-in-out infinite;
+    }
+    @keyframes mktHeroShine { 0%, 100% { background-position: 0% center; } 50% { background-position: 100% center; } }
+    .mkt-hero__sub { max-width: 620px; margin: 0 auto 30px; font-size: 1.05rem; color: var(--ink-soft); line-height: 1.6; }
+
+    .mkt-hero__search {
+      max-width: 560px; margin: 0 auto 26px;
+      display: flex; align-items: center; gap: 10px;
+      background: var(--surface); border-radius: 999px; box-shadow: var(--shadow-md);
+      padding: 6px 8px 6px 20px; border: 1px solid rgba(29,26,21,.06);
+    }
+    .mkt-hero__search svg { flex-shrink: 0; color: var(--ink-faint); width: 18px; height: 18px; }
+    .mkt-hero__search input {
+      flex: 1; border: none; outline: none; background: transparent;
+      font-size: .95rem; font-family: inherit; color: var(--ink); padding: 10px 0;
+    }
+    .mkt-hero__search button {
+      background: var(--brand); color: #fff; border: none; border-radius: 999px;
+      padding: 11px 22px; font-weight: 700; font-size: .88rem; cursor: pointer;
+    }
+
+    .mkt-hero__ctas { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .mkt-cta-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 26px; border-radius: var(--r-md); font-weight: 700; font-size: .95rem;
+      cursor: pointer; border: 2px solid transparent; font-family: inherit;
+    }
+    .mkt-cta-btn--sell { background: var(--brand); color: #fff; }
+    .mkt-cta-btn--sell:hover { background: var(--brand-deep); }
+    .mkt-cta-btn--buy { background: var(--surface); color: var(--brand-deep); border-color: var(--brand-soft); }
+    .mkt-cta-btn--buy:hover { border-color: var(--brand); }
+
+    /* ---- Category chips ---- */
+    .mkt-chips-wrap { padding: 22px 0; background: var(--bg); }
+    .mkt-chips { display: flex; gap: 10px; overflow-x: auto; padding: 4px 4px 8px; -webkit-overflow-scrolling: touch; }
+    .mkt-chip {
+      flex-shrink: 0; padding: 8px 16px; border-radius: 999px; border: 1px solid rgba(29,26,21,.1);
+      background: var(--surface); color: var(--ink-soft); font-size: .84rem; font-weight: 600;
+      cursor: pointer; font-family: inherit; white-space: nowrap; transition: all .2s ease;
+    }
+    .mkt-chip:hover { border-color: var(--brand); }
+    .mkt-chip.active { background: var(--brand); color: #fff; border-color: var(--brand); }
+
+    /* ---- Tabs ---- */
+    .mkt-tabs-wrap { position: sticky; top: var(--nav-h); z-index: 30; background: var(--bg); border-bottom: 1px solid rgba(29,26,21,.07); }
+    .mkt-tabs { display: flex; gap: 4px; overflow-x: auto; }
+    .mkt-tab {
+      flex-shrink: 0; padding: 14px 18px; background: transparent; border: none; cursor: pointer;
+      font-family: inherit; font-size: .88rem; font-weight: 600; color: var(--ink-faint);
+      border-bottom: 2px solid transparent; white-space: nowrap;
+    }
+    .mkt-tab:hover { color: var(--ink); }
+    .mkt-tab.active { color: var(--brand-deep); border-bottom-color: var(--brand); }
+    .mkt-cart-badge {
+      display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px;
+      padding: 0 5px; border-radius: 999px; background: var(--brand); color: #fff; font-size: .68rem; font-weight: 700; margin-left: 2px;
+    }
+    .mkt-cart-badge.bump { animation: mktBadgeBump .45s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    @keyframes mktBadgeBump { 0% { transform: scale(1); } 35% { transform: scale(1.6); background: var(--accent); } 100% { transform: scale(1); } }
+
+    /* ---- Cart ---- */
+    .mkt-cart-row {
+      background: var(--surface); border: 1px solid rgba(29,26,21,.07); border-radius: var(--r-lg);
+      padding: 14px 18px; display: flex; align-items: center; gap: 14px; margin-bottom: 10px; flex-wrap: wrap;
+    }
+    .mkt-cart-row__media { width: 56px; height: 56px; border-radius: var(--r-md); overflow: hidden; flex-shrink: 0; background: var(--bg-soft); display: flex; align-items: center; justify-content: center; font-size: 26px; }
+    .mkt-cart-row__media img { width: 100%; height: 100%; object-fit: cover; }
+    .mkt-cart-row__info { flex: 1; min-width: 160px; display: flex; flex-direction: column; gap: 2px; }
+    .mkt-cart-row__info strong { color: var(--ink); }
+    .mkt-cart-row__info span { font-size: .78rem; color: var(--ink-faint); }
+    .mkt-cart-row__qty { display: flex; align-items: center; gap: 6px; }
+    .mkt-cart-row__qty input { width: 70px; padding: 7px 8px; border-radius: var(--r-md); border: 1px solid rgba(29,26,21,.15); font-family: inherit; }
+    .mkt-cart-row__total { font-family: 'Fraunces', serif; font-weight: 600; color: var(--brand-deep); min-width: 100px; text-align: right; }
+    .mkt-cart-summary {
+      background: var(--bg-soft); border-radius: var(--r-lg); padding: 18px; margin-top: 16px;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    }
+    .mkt-cart-summary__total { font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 600; color: var(--brand-deep); }
+    .mkt-checkout-form { max-width: 560px; margin: 20px auto 0; background: var(--surface); border: 1px solid rgba(29,26,21,.07); border-radius: var(--r-lg); padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+
+    /* ---- View sections ---- */
+    .mkt-view { display: none; padding: 32px 0 64px; }
+    .mkt-view.active { display: block; animation: mktViewIn .45s var(--ease); }
+    @keyframes mktViewIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .mkt-section-title { font-size: 1.5rem; color: var(--brand-deep); margin-bottom: 6px; }
+    .mkt-section-sub { color: var(--ink-soft); margin-bottom: 24px; }
+
+    /* ---- Browse layout ---- */
+    .mkt-browse-layout { display: grid; grid-template-columns: 260px 1fr; gap: 28px; align-items: start; }
+    @media (max-width: 900px) { .mkt-browse-layout { grid-template-columns: 1fr; } }
+
+    .mkt-filters {
+      background: var(--surface); border: 1px solid rgba(29,26,21,.07); border-radius: var(--r-lg);
+      padding: 20px; display: flex; flex-direction: column; gap: 14px; position: sticky; top: calc(var(--nav-h) + 56px);
+    }
+    .mkt-filters h4 { font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-faint); margin: 0 0 2px; }
+    .mkt-filters label { display: flex; flex-direction: column; gap: 4px; font-size: .8rem; color: var(--ink-soft); font-weight: 600; }
+    .mkt-filters select, .mkt-filters input[type="number"] {
+      width: 100%; max-width: 100%; box-sizing: border-box;
+      padding: 8px 10px; border-radius: var(--r-md); border: 1px solid rgba(29,26,21,.14);
+      background: var(--bg-soft); color: var(--ink); font-family: inherit; font-size: .86rem;
+    }
+    /* Grid (not flex) so each field is genuinely constrained to its 1fr track —
+       a bare flex row lets a number input's default intrinsic width push it
+       past the sidebar edge instead of shrinking to fit. */
+    .mkt-filters .mkt-range { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .mkt-filters .mkt-range input { min-width: 0; }
+    /* Drop the spinner arrows in these tight two-up fields — they eat into
+       already-scarce width and aren't needed for typing a price bound. */
+    .mkt-filters input[type="number"]::-webkit-outer-spin-button,
+    .mkt-filters input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .mkt-filters input[type="number"] { -moz-appearance: textfield; }
+    .mkt-check { display: flex !important; flex-direction: row !important; align-items: center; gap: 8px !important; cursor: pointer; }
+    .mkt-check input { width: auto; }
+    #fClear { align-self: flex-start; background: transparent; border: none; color: var(--brand); font-weight: 700; font-size: .82rem; cursor: pointer; padding: 0; }
+    #mktFilterToggle { display: none; }
+    @media (max-width: 900px) {
+      #mktFilterToggle {
+        display: inline-flex; align-items: center; gap: 8px; margin-bottom: 16px;
+        background: var(--surface); border: 1px solid rgba(29,26,21,.1); border-radius: var(--r-md);
+        padding: 10px 16px; font-family: inherit; font-weight: 700; font-size: .86rem; cursor: pointer;
+      }
+      .mkt-filters { display: none; position: fixed; inset: 0; z-index: 200; border-radius: 0; top: 0; overflow-y: auto; max-height: 100vh; }
+      .mkt-filters.open { display: flex; }
+    }
+
+    .mkt-browse-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
+    #mktResultCount { color: var(--ink-faint); font-size: .86rem; }
+
+    .mkt-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+    @media (max-width: 1080px) { .mkt-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px)  { .mkt-grid { grid-template-columns: 1fr; } }
+
+    /* ---- Product card ---- */
+    .mkt-card {
+      background: var(--surface); border: 1px solid rgba(29,26,21,.07); border-radius: var(--r-lg);
+      overflow: hidden; display: flex; flex-direction: column; cursor: pointer;
+      transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+      opacity: 0; animation: mktCardIn .55s var(--ease) both;
+    }
+    .mkt-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+    @keyframes mktCardIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    @media (prefers-reduced-motion: reduce) { .mkt-card { animation: none; opacity: 1; } }
+    .mkt-card__media {
+      position: relative; height: 130px; display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, var(--brand-soft), var(--bg-soft));
+    }
+    .mkt-card__media--vegetables, .mkt-card__media--fruits { background: linear-gradient(135deg, #eaf5e0, var(--bg-soft)); }
+    .mkt-card__media--spices { background: linear-gradient(135deg, var(--accent-soft), var(--bg-soft)); }
+    .mkt-card__media--cotton { background: linear-gradient(135deg, #eef2f5, var(--bg-soft)); }
+    .mkt-card__media--oilseeds, .mkt-card__media--pulses { background: linear-gradient(135deg, #f3ecd9, var(--bg-soft)); }
+    .mkt-card__media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s var(--ease); }
+    .mkt-card:hover .mkt-card__media img { transform: scale(1.05); }
+    .mkt-card__ico { font-size: 40px; }
+    .mkt-card__avail {
+      position: absolute; top: 10px; right: 10px; padding: 3px 10px; border-radius: 999px;
+      font-size: .64rem; font-weight: 700; text-transform: uppercase; letter-spacing: .03em;
+      background: rgba(255,255,255,.94); color: var(--brand-deep);
+    }
+    .mkt-card__avail--limited { color: var(--accent); }
+    .mkt-card__avail--sold, .mkt-card__avail--paused { color: #b91c1c; }
+    .mkt-card__avail--forward { color: #0e7490; }
+    .mkt-card__mine {
+      position: absolute; top: 10px; left: 10px; padding: 3px 10px; border-radius: 999px;
+      font-size: .62rem; font-weight: 700; background: var(--brand); color: #fff;
+    }
+    .mkt-card__demo {
+      position: absolute; top: 10px; left: 10px; padding: 3px 10px; border-radius: 999px;
+      font-size: .62rem; font-weight: 700; background: rgba(29,26,21,.55); color: #fff;
+    }
+    .mkt-card__body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+    .mkt-card__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+    .mkt-card__head h3 { font-size: 1rem; margin: 0; color: var(--ink); line-height: 1.3; }
+    .mkt-card__head h3 small { display: block; font-size: .74rem; font-weight: 500; color: var(--ink-faint); }
+    .mkt-card__grade { font-size: .68rem; font-weight: 700; padding: 3px 8px; border-radius: 999px; background: var(--brand-soft); color: var(--brand-deep); white-space: nowrap; }
+    .mkt-card__price { font-family: 'Fraunces', serif; font-size: 1.2rem; font-weight: 600; color: var(--brand-deep); }
+    .mkt-card__price small { font-size: .6em; color: var(--ink-faint); font-family: 'Inter', sans-serif; font-weight: 500; }
+    .mkt-card__meta { display: flex; justify-content: space-between; font-size: .74rem; color: var(--ink-soft); gap: 8px; flex-wrap: wrap; }
+    .mkt-card__seller { display: flex; flex-direction: column; gap: 2px; padding-top: 8px; border-top: 1px dashed rgba(29,26,21,.1); font-size: .78rem; }
+    .mkt-card__seller-name { font-weight: 700; color: var(--ink); }
+    .mkt-verified { color: var(--brand); }
+    .mkt-card__loc { color: var(--ink-faint); }
+    .mkt-card__actions { display: flex; gap: 8px; margin-top: 4px; }
+    .mkt-btn-sm { padding: 9px 12px !important; font-size: .8rem !important; flex: 1; justify-content: center; }
+    .mkt-btn-danger { color: #b91c1c !important; border-color: rgba(185,28,28,.3) !important; }
+
+    /* ---- Empty state ---- */
+    .mkt-empty { grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--ink-soft); }
+    .mkt-empty__ico { font-size: 40px; margin-bottom: 12px; }
+    .mkt-empty h3 { color: var(--ink); margin-bottom: 6px; }
+    #mktLoadMore { grid-column: 1 / -1; text-align: center; margin-top: 12px; }
+
+    /* ---- Alerts / notes / insight ---- */
+    .mkt-alert { background: var(--accent-soft); border-left: 3px solid var(--accent); border-radius: var(--r-md); padding: 12px 14px; font-size: .84rem; color: var(--ink-soft); margin-bottom: 6px; }
+    .mkt-alert--info { background: var(--brand-soft); border-left-color: var(--brand); color: var(--brand-deep); }
+    .mkt-note { font-size: .76rem; color: var(--ink-faint); margin: 0; }
+    .mkt-insight { background: var(--bg-soft); border-radius: var(--r-md); padding: 12px 14px; font-size: .82rem; color: var(--ink-soft); margin: 4px 0; border: 1px solid rgba(29,26,21,.05); animation: mktFadeUp .35s var(--ease) both; }
+    .mkt-insight--loading, .mkt-insight--empty { color: var(--ink-faint); font-style: italic; }
+    .mkt-insight--loading {
+      background: linear-gradient(90deg, var(--bg-soft) 25%, rgba(255,255,255,.7) 37%, var(--bg-soft) 63%);
+      background-size: 400% 100%; animation: mktShimmer 1.4s ease infinite;
+    }
+    @keyframes mktShimmer { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
+    @media (prefers-reduced-motion: reduce) { .mkt-insight--loading { animation: none; } }
+    .mkt-insight__title { font-weight: 700; color: var(--ink); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+    .mkt-insight__tag { font-size: .62rem; text-transform: uppercase; letter-spacing: .05em; background: var(--accent-soft); color: var(--accent); padding: 2px 8px; border-radius: 999px; font-weight: 700; }
+    .mkt-insight__note { font-size: .72rem; color: var(--ink-faint); margin-top: 4px; }
+    .mkt-insight__msp { font-size: .8rem; color: var(--ink-soft); margin-top: 6px; padding-top: 6px; border-top: 1px dashed rgba(29,26,21,.1); }
+    .mkt-insight__chart-title { font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-faint); margin-top: 10px; margin-bottom: 4px; }
+    .mkt-insight__chart-wrap { height: 150px; position: relative; }
+
+    /* ---- Product detail modal ---- */
+    .mm-modal-card--wide { max-width: 760px; }
+    .mkt-detail { display: flex; flex-direction: column; }
+    .mkt-detail__media { height: 220px; display: flex; align-items: center; justify-content: center; position: relative; border-radius: var(--r-lg) var(--r-lg) 0 0; overflow: hidden; }
+    .mkt-detail__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .mkt-detail__thumbs { display: flex; gap: 8px; padding: 10px 28px 0; overflow-x: auto; }
+    .mkt-detail__thumb {
+      flex-shrink: 0; width: 52px; height: 52px; border-radius: var(--r-md); overflow: hidden;
+      border: 2px solid transparent; padding: 0; cursor: pointer; background: var(--bg-soft);
+    }
+    .mkt-detail__thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .mkt-detail__thumb.active { border-color: var(--brand); }
+    .mkt-detail__body { padding: 22px 28px 28px; display: flex; flex-direction: column; gap: 14px; }
+
+    /* ---- Sell form photo upload ---- */
+    .mkt-photo-strip { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+    .mkt-photo-thumb { position: relative; width: 76px; height: 76px; border-radius: var(--r-md); overflow: hidden; border: 1px solid rgba(29,26,21,.1); }
+    .mkt-photo-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .mkt-photo-remove {
+      position: absolute; top: 3px; right: 3px; width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(0,0,0,.6); color: #fff; border: none; font-size: .7rem; line-height: 1; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .mkt-detail__body h2 { font-size: 1.4rem; margin: 0; color: var(--brand-deep); }
+    .mkt-detail__body h2 small { display: block; font-size: .8rem; font-weight: 500; color: var(--ink-faint); margin-top: 2px; }
+    .mkt-detail__chips { display: flex; gap: 6px; flex-wrap: wrap; }
+    .mkt-detail__desc { color: var(--ink-soft); font-size: .9rem; line-height: 1.55; margin: 0; }
+    .mkt-detail__kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .mkt-detail__meta { display: flex; flex-direction: column; gap: 4px; font-size: .84rem; color: var(--ink-soft); background: var(--bg-soft); border-radius: var(--r-md); padding: 12px 14px; }
+    .mkt-detail__seller { background: var(--bg-soft); border-radius: var(--r-md); padding: 14px; }
+    .mkt-detail__seller-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .mkt-verified-badge { background: var(--brand-soft); color: var(--brand-deep); font-size: .68rem; font-weight: 700; padding: 3px 9px; border-radius: 999px; }
+    .mkt-pending-badge { background: var(--accent-soft); color: var(--accent); font-size: .68rem; font-weight: 700; padding: 3px 9px; border-radius: 999px; }
+    .mkt-detail__seller-stats { display: flex; gap: 14px; flex-wrap: wrap; font-size: .78rem; color: var(--ink-soft); }
+    .mkt-reviews { display: flex; flex-direction: column; gap: 8px; }
+    .mkt-review { background: var(--bg-soft); border-radius: var(--r-md); padding: 10px 14px; font-size: .82rem; }
+    .mkt-review__stars { font-size: .78rem; margin-bottom: 2px; }
+    .mkt-review p { margin: 0 0 4px; color: var(--ink-soft); }
+    .mkt-review small { color: var(--ink-faint); }
+
+    /* ---- Seller profile modal ---- */
+    .mkt-seller-profile { padding: 28px; }
+    .mkt-seller-profile h2 { font-size: 1.35rem; color: var(--brand-deep); margin: 0 0 8px; }
+    .mkt-seller-profile__h4 { font-size: .76rem; text-transform: uppercase; letter-spacing: .08em; color: var(--brand); margin: 22px 0 12px; }
+    .mkt-seller-profile__grid { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 560px) { .mkt-seller-profile__grid { grid-template-columns: 1fr; } }
+
+    /* ---- Similar listings strip (product detail) ---- */
+    .mkt-similar { margin-top: 4px; }
+    .mkt-similar h4 { font-size: .76rem; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-faint); margin: 0 0 10px; }
+    .mkt-similar__row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; }
+    .mkt-similar__card {
+      flex-shrink: 0; min-width: 140px; text-align: left; background: var(--bg-soft); border: 1px solid rgba(29,26,21,.07);
+      border-radius: var(--r-md); padding: 10px 12px; cursor: pointer; font-family: inherit; display: flex; flex-direction: column; gap: 3px;
+    }
+    .mkt-similar__card strong { color: var(--brand-deep); font-size: .88rem; }
+    .mkt-similar__card span { font-size: .72rem; color: var(--ink-faint); }
+    .mkt-similar__card:hover { border-color: var(--brand); }
+
+    .mkt-detail__calc { background: var(--bg-soft); border-radius: var(--r-md); padding: 16px; }
+    .mkt-detail__calc h4 { margin: 0 0 10px; font-size: .85rem; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-faint); }
+    .mkt-detail__calc-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; font-size: .84rem; font-weight: 600; color: var(--ink-soft); flex-wrap: wrap; }
+    .mkt-detail__calc-row span:first-child { flex: 1 1 auto; min-width: 0; }
+    .mkt-detail__calc-row input { width: 110px; max-width: 100%; flex-shrink: 0; box-sizing: border-box; padding: 8px 10px; border-radius: var(--r-md); border: 1px solid rgba(29,26,21,.15); background: var(--surface); font-family: inherit; }
+    .mkt-detail__actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .mkt-detail__actions .btn { flex: 1 1 120px; justify-content: center; }
+
+    /* ---- Sell form ---- */
+    .mkt-sell-form { max-width: 720px; margin: 0 auto; background: var(--surface); border: 1px solid rgba(29,26,21,.07); border-radius: var(--r-lg); padding: 28px; display: flex; flex-direction: column; gap: 20px; }
+    .mkt-sell-form h3 { font-size: 1.3rem; color: var(--brand-deep); margin: 0; }
+    .mkt-sell-sub { color: var(--ink-soft); font-size: .88rem; margin: -12px 0 0; }
+    .mkt-sell-section { display: flex; flex-direction: column; gap: 12px; padding-top: 16px; border-top: 1px dashed rgba(29,26,21,.1); }
+    .mkt-sell-section:first-of-type { border-top: none; padding-top: 0; }
+    .mkt-sell-section h4 { margin: 0; font-size: .76rem; text-transform: uppercase; letter-spacing: .08em; color: var(--brand); }
+    .mkt-sell-form textarea.mm-form-input { resize: vertical; }
+    .mkt-sell-actions { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
+    .mkt-sell-actions .btn-ghost { padding: 12px 22px; }
+
+    /* ---- My Listings / My Requests rows ---- */
+    .mkt-manage-row, .mkt-req-row {
+      background: var(--surface); border: 1px solid rgba(29,26,21,.07); border-radius: var(--r-lg);
+      padding: 16px 18px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-bottom: 12px;
+    }
+    .mkt-manage-row__info { display: flex; flex-direction: column; gap: 4px; min-width: 200px; flex: 1; }
+    .mkt-manage-row__info strong { color: var(--ink); font-size: .95rem; }
+    .mkt-manage-row__info strong small { font-weight: 500; color: var(--ink-faint); font-size: .78em; }
+    .mkt-manage-row__info span { font-size: .8rem; color: var(--ink-soft); }
+    .mkt-manage-row__stats { display: flex; gap: 14px; font-size: .78rem; color: var(--ink-faint); }
+    .mkt-manage-row__actions { display: flex; gap: 6px; flex-wrap: wrap; }
+    .mkt-status { display: inline-block; width: fit-content; font-size: .68rem; font-weight: 700; padding: 2px 9px; border-radius: 999px; text-transform: uppercase; }
+    .mkt-status--active { background: var(--brand-soft); color: var(--brand-deep); }
+    .mkt-status--paused { background: var(--accent-soft); color: var(--accent); }
+    .mkt-status--sold_out { background: rgba(185,28,28,.1); color: #b91c1c; }
+    .mkt-status--limited { background: var(--accent-soft); color: var(--accent); }
+    .mkt-status--draft { background: var(--bg-soft); color: var(--ink-faint); border: 1px dashed rgba(29,26,21,.2); }
+    .mkt-expiry-warn { display: block; font-size: .74rem; color: var(--accent); font-weight: 700; margin-top: 4px; }
+
+    .mkt-req-row { flex-direction: column; align-items: stretch; }
+    .mkt-req-row__head { display: flex; justify-content: space-between; align-items: center; }
+    .mkt-req-row__meta { display: flex; gap: 16px; flex-wrap: wrap; font-size: .8rem; color: var(--ink-soft); }
+    .mkt-lifecycle { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; font-size: .68rem; color: var(--ink-faint); }
+    .mkt-lifecycle__step { padding: 3px 8px; border-radius: 999px; background: var(--bg-soft); text-transform: uppercase; font-weight: 700; letter-spacing: .02em; }
+    .mkt-lifecycle__step.done { background: var(--brand-soft); color: var(--brand-deep); }
+    .mkt-lifecycle__sep { color: var(--ink-faint); }
+    .mkt-req-row__actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .mkt-review-form { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; background: var(--bg-soft); padding: 12px; border-radius: var(--r-md); }
+    .mkt-review-form textarea { resize: vertical; }
+    .mkt-manage-row__sale-host:not(:empty) { flex-basis: 100%; }
+
+    /* ---- Nearby Demand ---- */
+    .mkt-demand-map { height: 340px; border-radius: var(--r-lg); overflow: hidden; margin-bottom: 20px; border: 1px solid rgba(29,26,21,.07); background: var(--bg-soft); }
+    .mkt-demand-popup { font-family: 'Inter', system-ui, sans-serif; font-size: .82rem; }
+    .mkt-demand-popup strong { display: block; color: var(--brand-deep); font-size: .92rem; margin-bottom: 4px; }
+    .mkt-demand-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    @media (max-width: 900px) { .mkt-demand-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) { .mkt-demand-grid { grid-template-columns: 1fr; } }
+    .mkt-demand-card { background: var(--surface); border: 1px solid rgba(29,26,21,.07); border-radius: var(--r-lg); padding: 16px 18px; display: flex; flex-direction: column; gap: 8px; }
+    .mkt-demand-card__head { font-size: 1rem; font-weight: 700; color: var(--brand-deep); margin-bottom: 4px; }
+    .mkt-demand-card__row { display: flex; justify-content: space-between; font-size: .82rem; color: var(--ink-soft); }
+
+    /* ---- Tractor Booking Modal Styles (shared pattern) ---- */
+    .mm-modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(18,16,13,0.55);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 10000; opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease; font-family: 'Inter', sans-serif; padding: 20px;
+    }
+    .mm-modal-overlay.open { opacity: 1; pointer-events: auto; }
+    .mm-modal-card {
+      background: var(--surface); border-radius: var(--r-lg);
+      border: 1px solid rgba(255,255,255,0.08);
+      width: 100%; max-width: 520px; max-height: 90vh;
+      overflow-y: auto; box-shadow: var(--shadow-xl, var(--shadow-lg));
+      transform: translateY(30px);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+    }
+    .mm-modal-overlay.open .mm-modal-card { transform: translateY(0); }
+    .mm-modal-close {
+      position: absolute; top: 18px; right: 18px; z-index: 2;
+      background: var(--bg-soft); border: none;
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--ink-soft); cursor: pointer; transition: all 0.2s var(--ease);
+    }
+    .mm-modal-close:hover { background: rgba(29,26,21,0.08); color: var(--ink); }
+    .mm-modal-header { padding: 24px 28px 12px; border-bottom: 1px solid rgba(29,26,21,0.06); }
+    .mm-modal-header h3 { font-family: 'Fraunces', serif; font-size: 1.4rem; color: var(--brand-deep); margin: 0; }
+    .mm-modal-header p { font-size: 0.85rem; color: var(--ink-faint); margin: 4px 0 0; }
+    .mm-modal-body { padding: 20px 28px 28px; display: flex; flex-direction: column; gap: 18px; }
+    .mm-form-group { display: flex; flex-direction: column; gap: 6px; text-align: left; }
+    .mm-form-group label { font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; color: var(--ink-soft); }
+    .mm-form-input {
+      padding: 11px 14px; border-radius: var(--r-md); border: 1px solid rgba(29,26,21,0.15);
+      background: var(--bg-soft); color: var(--ink); font-size: 0.92rem; font-family: inherit;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease; width: 100%;
+    }
+    .mm-form-input:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px rgba(47,107,58,0.12); }
+    .mm-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 480px) { .mm-form-row { grid-template-columns: 1fr; } }
+    .mkt-form-step { border: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+    .mkt-step-label { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: var(--brand); font-weight: 700; }
+    .mkt-step-actions { display: flex; gap: 10px; }
+    .mkt-step-actions .btn-ghost { flex-shrink: 0; padding: 14px 20px; }
+    .mkt-step-actions .mm-form-submit { flex: 1; }
+    .mm-calc-box { background: var(--bg-soft); border-radius: var(--r-md); padding: 16px; border: 1px solid rgba(29,26,21,0.05); display: flex; flex-direction: column; gap: 8px; text-align: left; }
+    .mm-calc-row { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--ink-soft); }
+    .mm-calc-row.total { border-top: 1px dashed rgba(29,26,21,0.15); padding-top: 8px; font-weight: 700; color: var(--brand-deep); font-size: 1.05rem; }
+    .mm-form-submit {
+      background: var(--brand); color: #fff; border: 1px solid var(--brand);
+      padding: 14px; font-size: 0.95rem; font-weight: 700; border-radius: var(--r-md); cursor: pointer; width: 100%;
+      transition: background 0.3s ease, transform 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: inherit;
+    }
+    .mm-form-submit:hover { background: var(--brand-deep); }
+    .mm-form-submit:active { transform: scale(0.98); }
+    .mm-success-screen { padding: 36px 28px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px; font-family: 'Inter', sans-serif; }
+    .mm-success-icon {
+      width: 64px; height: 64px; border-radius: 50%; background: var(--brand-soft); color: var(--brand);
+      display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700;
+      animation: popSuccess 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popSuccess { 0% { transform: scale(0.4); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+    .mm-success-screen h3 { font-family: 'Fraunces', serif; font-size: 1.45rem; color: var(--brand-deep); margin: 0; }
+    .mm-success-screen p { font-size: 0.9rem; color: var(--ink-soft); line-height: 1.55; margin: 0; }
+    .mm-success-details { background: var(--bg-soft); border-radius: var(--r-md); padding: 16px; width: 100%; border: 1px solid rgba(29,26,21,0.06); display: flex; flex-direction: column; gap: 10px; text-align: left; font-size: 0.84rem; }
+    .mm-success-row { display: flex; justify-content: space-between; color: var(--ink-soft); }
+    .mm-success-row span:first-child { color: var(--ink-faint); }
+    .mm-success-row strong { color: var(--ink); }
+
+    /* ===== Wow-factor features: Sell/Hold, Field Health, Demand Match, Voice, Pools ===== */
+
+    /* ---- Sell Now vs. Hold ---- */
+    .mkt-sellhold {
+      border-radius: var(--r-md); padding: 12px 14px; margin: 4px 0; font-size: .82rem;
+      border: 1px solid rgba(29,26,21,.06); animation: mktFadeUp .35s var(--ease) both;
+    }
+    .mkt-sellhold--sell_now { background: var(--brand-soft); border-color: rgba(47,107,58,.18); }
+    .mkt-sellhold--hold { background: var(--accent-soft); border-color: rgba(200,138,58,.22); }
+    .mkt-sellhold__badge { font-weight: 800; font-size: .86rem; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+    .mkt-sellhold--sell_now .mkt-sellhold__badge { color: var(--brand-deep); }
+    .mkt-sellhold--hold .mkt-sellhold__badge { color: var(--accent); }
+    .mkt-sellhold p { margin: 0 0 4px; color: var(--ink-soft); line-height: 1.5; }
+    .mkt-sellhold__demand { font-weight: 700; color: var(--brand-deep) !important; }
+
+    /* ---- Verified Field Health ---- */
+    .mkt-fieldhealth {
+      border-radius: var(--r-md); padding: 14px 16px; margin: 6px 0; border: 1px solid rgba(29,26,21,.06);
+      animation: mktFadeUp .35s var(--ease) both;
+    }
+    .mkt-fieldhealth--good { background: linear-gradient(135deg, var(--brand-soft), transparent); border-color: rgba(47,107,58,.2); }
+    .mkt-fieldhealth--moderate { background: linear-gradient(135deg, var(--accent-soft), transparent); border-color: rgba(200,138,58,.2); }
+    .mkt-fieldhealth--poor { background: linear-gradient(135deg, rgba(185,28,28,.08), transparent); border-color: rgba(185,28,28,.18); }
+    .mkt-fieldhealth__badge { font-weight: 800; font-size: .92rem; color: var(--ink); margin-bottom: 8px; }
+    .mkt-fieldhealth__stats { display: flex; gap: 18px; margin-bottom: 8px; font-size: .82rem; color: var(--ink-soft); }
+    .mkt-fieldhealth__stats b { color: var(--ink); }
+
+    /* ---- Demand Match ---- */
+    .mkt-demand-flare {
+      display: inline-flex; width: fit-content; align-items: center; gap: 4px; font-size: .72rem; font-weight: 700;
+      color: #b45309; background: rgba(245,158,11,.12); border: 1px solid rgba(245,158,11,.3);
+      padding: 3px 9px; border-radius: 999px; margin-top: 2px; animation: mktPulseSoft 2.4s ease-in-out infinite;
+    }
+    .mkt-demand-banner {
+      display: flex; align-items: flex-start; gap: 14px; padding: 16px 18px; margin-bottom: 14px;
+      border-radius: var(--r-lg); background: linear-gradient(120deg, #fff7ed, #fef3c7);
+      border: 1px solid rgba(245,158,11,.35); box-shadow: var(--shadow-sm);
+      animation: mktPopIn .5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+    }
+    .mkt-demand-banner__ico { font-size: 1.8rem; line-height: 1; animation: mktPulseSoft 1.8s ease-in-out infinite; }
+    .mkt-demand-banner strong { color: #92400e; font-size: 1rem; }
+    .mkt-demand-banner p { margin: 4px 0 0; font-size: .85rem; color: #78350f; line-height: 1.5; }
+
+    /* ---- Voice-first listing ---- */
+    .mkt-voice-bar {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 16px; margin: -4px 0 2px;
+      background: linear-gradient(120deg, var(--brand-soft), var(--bg-soft)); border-radius: var(--r-md);
+      border: 1px dashed rgba(47,107,58,.3);
+    }
+    .mkt-voice-btn {
+      display: inline-flex; align-items: center; gap: 8px; background: var(--brand); color: #fff; border: none;
+      padding: 10px 18px; border-radius: 999px; font-family: inherit; font-weight: 700; font-size: .85rem;
+      cursor: pointer; transition: transform .2s var(--ease), background .2s ease; flex-shrink: 0;
+    }
+    .mkt-voice-btn:hover:not(:disabled) { background: var(--brand-deep); transform: translateY(-1px); }
+    .mkt-voice-btn:active:not(:disabled) { transform: scale(.96); }
+    .mkt-voice-btn:disabled { background: rgba(29,26,21,.15); color: var(--ink-faint); cursor: not-allowed; }
+    .mkt-voice-btn.listening { background: #b91c1c; animation: mktPulseRing 1.4s ease-out infinite; }
+    .mkt-voice-status { font-size: .78rem; color: var(--ink-soft); flex: 1 1 220px; }
+
+    /* ---- Collective Selling / Pools ---- */
+    .mkt-pool-flare {
+      display: inline-flex; width: fit-content; align-items: center; gap: 4px; font-size: .72rem; font-weight: 700;
+      color: var(--brand-deep); background: var(--brand-soft); border: 1px solid rgba(47,107,58,.25);
+      padding: 3px 9px; border-radius: 999px; margin-top: 2px;
+    }
+    .mkt-pool-flare--suggest { color: var(--accent); background: var(--accent-soft); border-color: rgba(200,138,58,.3); }
+    .mkt-card__pool-tag {
+      font-size: .72rem; font-weight: 700; color: var(--brand-deep); background: var(--brand-soft);
+      padding: 5px 10px; border-radius: var(--r-md); margin-top: -2px;
+    }
+    .mkt-pool-section { background: var(--bg-soft); border-radius: var(--r-md); padding: 16px; animation: mktFadeUp .35s var(--ease) both; }
+    .mkt-pool-section h4 { margin: 0 0 6px; font-size: .95rem; color: var(--brand-deep); display: flex; align-items: center; gap: 8px; }
+    .mkt-pool-members { display: flex; flex-direction: column; gap: 6px; margin: 10px 0; }
+    .mkt-pool-member {
+      display: flex; justify-content: space-between; gap: 10px; font-size: .82rem; color: var(--ink-soft);
+      background: var(--surface); padding: 8px 12px; border-radius: var(--r-sm, 8px); border: 1px solid rgba(29,26,21,.06);
+    }
+    .mkt-pool-member--this { border-color: var(--brand); background: var(--brand-soft); font-weight: 700; color: var(--brand-deep); }
+
+    /* ---- Pool Orders browsing tab ---- */
+    .mkt-pools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    @media (max-width: 1080px) { .mkt-pools-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px)  { .mkt-pools-grid { grid-template-columns: 1fr; } }
+    .mkt-pool-card {
+      background: var(--surface); border: 1px solid rgba(29,26,21,.07); border-radius: var(--r-lg);
+      padding: 18px; display: flex; flex-direction: column; gap: 12px;
+      transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+      opacity: 0; animation: mktCardIn .55s var(--ease) both;
+    }
+    .mkt-pool-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .mkt-pool-card__head { display: flex; align-items: center; gap: 12px; }
+    .mkt-pool-card__ico {
+      font-size: 1.6rem; width: 48px; height: 48px; flex-shrink: 0; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; background: var(--brand-soft);
+    }
+    .mkt-pool-card__title { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+    .mkt-pool-card__title strong { color: var(--brand-deep); font-size: 1rem; }
+    .mkt-pool-card__title span { font-size: .78rem; color: var(--ink-faint); }
+    .mkt-pool-card__stats { display: flex; gap: 20px; padding: 12px 0; border-top: 1px dashed rgba(29,26,21,.1); border-bottom: 1px dashed rgba(29,26,21,.1); }
+    .mkt-pool-card__stats div { display: flex; flex-direction: column; gap: 2px; }
+    .mkt-pool-card__stats b { font-family: 'Fraunces', serif; font-size: 1.05rem; color: var(--ink); }
+    .mkt-pool-card__stats span { font-size: .72rem; color: var(--ink-faint); }
+    .mkt-pool-card__members { display: flex; flex-wrap: wrap; gap: 6px; font-size: .74rem; color: var(--ink-soft); }
+    .mkt-pool-card__members span { background: var(--bg-soft); padding: 3px 9px; border-radius: 999px; }
+
+    /* ---- Post-Harvest Credit Simulator ---- */
+    .mkt-credit-sim {
+      border-radius: var(--r-md); padding: 14px 16px; margin: 6px 0;
+      background: linear-gradient(135deg, #fff7ed, var(--bg-soft)); border: 1px solid rgba(200,138,58,.25);
+      animation: mktFadeUp .35s var(--ease) both;
+    }
+    .mkt-credit-sim__badge { font-weight: 800; font-size: .9rem; color: var(--accent); margin-bottom: 6px; }
+    .mkt-credit-sim p { margin: 0 0 8px; font-size: .84rem; color: var(--ink-soft); line-height: 1.55; }
+    .mkt-credit-sim__net { font-weight: 700; }
+    .mkt-credit-sim__net--pos { color: var(--brand-deep) !important; }
+    .mkt-credit-sim__net--neg { color: #b45309 !important; }
+    .mkt-credit-sim .mkt-btn-sm { display: inline-flex; margin-bottom: 8px; }
+    .mkt-credit-flare {
+      display: inline-flex; width: fit-content; align-items: center; gap: 4px; font-size: .72rem; font-weight: 700;
+      color: #92400e; background: #fff7ed; border: 1px solid rgba(200,138,58,.35);
+      padding: 3px 9px; border-radius: 999px; margin-top: 2px;
+    }
+
+    /* ---- Digital Farmer Credit Profile ---- */
+    .mkt-credit-profile {
+      max-width: 640px; margin: 0 auto; background: var(--surface); border: 1px solid rgba(29,26,21,.07);
+      border-radius: var(--r-lg); padding: 26px; display: flex; flex-direction: column; gap: 16px;
+      box-shadow: var(--shadow-sm); animation: mktCardIn .5s var(--ease) both;
+    }
+    .mkt-credit-profile__head { display: flex; align-items: center; gap: 16px; }
+    .mkt-credit-profile__avatar {
+      width: 56px; height: 56px; border-radius: 50%; flex-shrink: 0; font-size: 1.8rem;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, var(--brand-soft), var(--accent-soft));
+    }
+    .mkt-credit-profile__head strong { font-family: 'Fraunces', serif; font-size: 1.3rem; color: var(--brand-deep); display: block; }
+    .mkt-credit-profile__head span { font-size: .82rem; color: var(--ink-faint); }
+    .mkt-credit-profile__stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; padding: 14px 0; border-top: 1px dashed rgba(29,26,21,.1); border-bottom: 1px dashed rgba(29,26,21,.1); }
+    @media (max-width: 640px) { .mkt-credit-profile__stats { grid-template-columns: repeat(2, 1fr); } }
+    .mkt-credit-profile__stats div { display: flex; flex-direction: column; gap: 2px; text-align: center; }
+    .mkt-credit-profile__stats b { font-family: 'Fraunces', serif; font-size: 1.15rem; color: var(--ink); }
+    .mkt-credit-profile__stats span { font-size: .68rem; color: var(--ink-faint); text-transform: uppercase; letter-spacing: .03em; }
+
+    /* ---- Forward Booking / Pre-Harvest Marketplace ---- */
+    .mkt-forward-panel {
+      border-radius: var(--r-md); padding: 14px 16px; margin: 4px 0;
+      background: linear-gradient(135deg, #ecfeff, var(--bg-soft)); border: 1px solid rgba(14,116,144,.25);
+      animation: mktFadeUp .35s var(--ease) both;
+    }
+    .mkt-forward-panel__badge { font-weight: 800; font-size: .9rem; color: #0e7490; margin-bottom: 6px; }
+    .mkt-forward-panel p { margin: 0 0 8px; font-size: .84rem; color: var(--ink-soft); line-height: 1.55; }
+    .mkt-forward-panel p:last-child { margin-bottom: 0; }
+
+    /* ---- Shared motion ---- */
+    @keyframes mktFadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes mktPopIn { 0% { opacity: 0; transform: scale(.92) translateY(6px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+    @keyframes mktPulseSoft { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
+    @keyframes mktPulseRing { 0% { box-shadow: 0 0 0 0 rgba(185,28,28,.5); } 70% { box-shadow: 0 0 0 10px rgba(185,28,28,0); } 100% { box-shadow: 0 0 0 0 rgba(185,28,28,0); } }
+
+    @media (prefers-reduced-motion: reduce) {
+      .mkt-sellhold, .mkt-fieldhealth, .mkt-demand-banner, .mkt-pool-section, .mkt-demand-flare,
+      .mkt-demand-banner__ico, .mkt-voice-btn.listening { animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============= NAV ============= -->
+  <nav class="nav" id="nav">
+    <div class="nav__wrap">
+      <a href="index.html" class="logo" aria-label="Mitti Mantra home">
+        <img src="assets/logo.png" alt="Mitti Mantra — Growing the future" class="logo__img">
+      </a>
+
+      <ul class="nav__links">
+        <li><a href="index.html#features">Features</a></li>
+        <li><a href="farm-boundary.html">Draw farm</a></li>
+        <li><a href="marketplace.html" class="nav__market-link" style="color:var(--brand-deep);font-weight:700;">🌾 Marketplace</a></li>
+        <li><a href="book-a-tractor.html" class="nav__tractor-link">Book a Tractor <span class="nav__upcoming-badge">Upcoming</span></a></li>
+        <li><a href="/gyan-seva" class="nav__gyanseva-link">🌱 Gyan Seva</a></li>
+      </ul>
+
+      <div class="nav__cta">
+        <a href="/docs" class="btn btn-ghost">API Docs</a>
+        <a href="dashboard.html" class="btn btn-primary">
+          Dashboard
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+        <button class="nav__burger" id="burger" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile panel -->
+  <div class="mobile-backdrop" id="mBackdrop"></div>
+  <aside class="mobile-panel" id="mPanel">
+    <button class="mobile-panel__close" id="mClose" aria-label="Close">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <ul>
+      <li><a href="index.html#features">Features</a></li>
+      <li><a href="farm-boundary.html">Draw farm</a></li>
+      <li><a href="marketplace.html">🌾 Marketplace</a></li>
+      <li><a href="book-a-tractor.html">Book a Tractor <span class="nav__upcoming-badge">Upcoming</span></a></li>
+      <li><a href="/gyan-seva">🌱 Gyan Seva</a></li>
+      <li><a href="/docs">API Docs</a></li>
+    </ul>
+    <a href="dashboard.html" class="btn btn-primary">Dashboard</a>
+  </aside>
+
+  <!-- ============= HERO ============= -->
+  <header class="mkt-hero">
+    <div class="container">
+      <div class="mkt-hero__inner">
+        <div class="mkt-hero__badge">🌾 Prototype · Demo data + real market prices</div>
+        <h1>MittiMantra Marketplace</h1>
+        <p class="mkt-hero__sub">Buy directly from farmers. Sell your produce. Build better agricultural connections.</p>
+
+        <div class="mkt-hero__search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input type="text" id="mktHeroSearch" placeholder="Search for rice, wheat, cotton, tomatoes…">
+          <button type="button" id="mktHeroSearchBtn" onclick="document.getElementById('mktHeroSearch').dispatchEvent(new KeyboardEvent('keydown',{key:'Enter'}))">Search</button>
+        </div>
+
+        <div class="mkt-hero__ctas">
+          <button type="button" class="mkt-cta-btn mkt-cta-btn--sell" id="mktHeroSell">🌾 Sell Your Produce</button>
+          <button type="button" class="mkt-cta-btn mkt-cta-btn--buy" id="mktHeroBrowse">🛒 Find Agricultural Products</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============= CATEGORY CHIPS ============= -->
+  <div class="mkt-chips-wrap">
+    <div class="container">
+      <div class="mkt-chips" id="mktCategoryChips"></div>
+    </div>
+  </div>
+
+  <!-- ============= TABS ============= -->
+  <div class="mkt-tabs-wrap">
+    <div class="container">
+      <div class="mkt-tabs" id="mktTabs">
+        <button type="button" class="mkt-tab active" data-view="browse">🛒 Browse Products</button>
+        <button type="button" class="mkt-tab" data-view="cart">🧺 Cart <span class="mkt-cart-badge" id="mktCartBadge" style="display:none;">0</span></button>
+        <button type="button" class="mkt-tab" data-view="sell">🌾 Sell Produce</button>
+        <button type="button" class="mkt-tab" data-view="my-listings">📋 My Listings</button>
+        <button type="button" class="mkt-tab" data-view="my-requests">🧾 My Requests</button>
+        <button type="button" class="mkt-tab" data-view="pools">🧺 Pool Orders</button>
+        <button type="button" class="mkt-tab" data-view="demand">🔥 Nearby Demand</button>
+        <button type="button" class="mkt-tab" data-view="credit-profile">💳 Credit Profile</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============= BROWSE VIEW ============= -->
+  <section class="mkt-view active" data-view="browse">
+    <div class="container">
+      <button type="button" id="mktFilterToggle">⚙️ Filters</button>
+      <div class="mkt-browse-layout">
+        <aside class="mkt-filters" id="mktFilters">
+          <h4>Price (₹ / quintal)</h4>
+          <div class="mkt-range">
+            <input type="number" id="fPriceMin" placeholder="₹ Min" min="0" inputmode="numeric">
+            <input type="number" id="fPriceMax" placeholder="₹ Max" min="0" inputmode="numeric">
+          </div>
+
+          <label>Min. quantity available (quintal)
+            <input type="number" id="fQtyMin" placeholder="Any">
+          </label>
+
+          <label>State
+            <select id="fState"><option value="">Any state</option></select>
+          </label>
+
+          <label>Grade
+            <select id="fGrade">
+              <option value="">Any grade</option>
+              <option>Premium</option><option>Grade A</option><option>Grade B</option><option>Standard</option>
+            </select>
+          </label>
+
+          <label>Availability
+            <select id="fAvailability">
+              <option value="">Any</option>
+              <option value="available">Available now</option>
+              <option value="limited">Limited stock</option>
+            </select>
+          </label>
+
+          <label class="mkt-check"><input type="checkbox" id="fVerified"> Verified sellers only</label>
+
+          <h4>Sort by</h4>
+          <select id="fSort">
+            <option value="recent">Recently listed</option>
+            <option value="price_asc">Price: Low → High</option>
+            <option value="price_desc">Price: High → Low</option>
+            <option value="qty_desc">Quantity available</option>
+            <option value="distance">Distance</option>
+          </select>
+
+          <button type="button" id="fClear">Clear all filters</button>
+        </aside>
+
+        <div>
+          <div class="mkt-browse-head">
+            <span id="mktResultCount">Loading…</span>
+            <input type="search" id="mktSearch" placeholder="Search this list…" style="padding:9px 14px;border-radius:999px;border:1px solid rgba(29,26,21,.14);background:var(--surface);font-family:inherit;font-size:.85rem;min-width:200px;">
+          </div>
+          <div class="mkt-grid" id="mktGrid"></div>
+          <div id="mktLoadMore"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============= CART VIEW ============= -->
+  <section class="mkt-view" data-view="cart">
+    <div class="container">
+      <h2 class="mkt-section-title">🧺 Your Cart</h2>
+      <p class="mkt-section-sub">Review quantities across sellers, then send all requests in one go.</p>
+      <div id="mktCartHost"></div>
+    </div>
+  </section>
+
+  <!-- ============= SELL VIEW ============= -->
+  <section class="mkt-view" data-view="sell">
+    <div class="container">
+      <div id="mktSellHost"></div>
+    </div>
+  </section>
+
+  <!-- ============= MY LISTINGS VIEW ============= -->
+  <section class="mkt-view" data-view="my-listings">
+    <div class="container">
+      <h2 class="mkt-section-title">My Listings</h2>
+      <p class="mkt-section-sub">Manage what you're selling — pause, update, or mark items sold. Stored on this device.</p>
+      <div id="mktMyListingsHost"></div>
+    </div>
+  </section>
+
+  <!-- ============= MY REQUESTS VIEW ============= -->
+  <section class="mkt-view" data-view="my-requests">
+    <div class="container">
+      <h2 class="mkt-section-title">My Requests</h2>
+      <p class="mkt-section-sub">Produce you've requested from sellers, and their status.</p>
+      <div id="mktMyRequestsHost"></div>
+    </div>
+  </section>
+
+  <!-- ============= POOL ORDERS VIEW ============= -->
+  <section class="mkt-view" data-view="pools">
+    <div class="container">
+      <h2 class="mkt-section-title">🧺 Pool Orders</h2>
+      <p class="mkt-section-sub">Nearby farmers selling the same crop, combined into one bulk offer for buyers.</p>
+      <div id="mktPoolsHost"></div>
+    </div>
+  </section>
+
+  <!-- ============= NEARBY DEMAND VIEW ============= -->
+  <section class="mkt-view" data-view="demand">
+    <div class="container">
+      <h2 class="mkt-section-title">🔥 High Demand Near You</h2>
+      <p class="mkt-section-sub">What buyers are currently looking for — a signal for what to grow or list next.</p>
+      <div id="mktDemandMap" class="mkt-demand-map"></div>
+      <div id="mktDemandHost"></div>
+    </div>
+  </section>
+
+  <!-- ============= CREDIT PROFILE VIEW ============= -->
+  <section class="mkt-view" data-view="credit-profile">
+    <div class="container">
+      <h2 class="mkt-section-title">💳 Farmer Credit Profile</h2>
+      <p class="mkt-section-sub">Your farm health and selling history in one shareable profile — an informational aid for a loan conversation, not a credit score.</p>
+      <div id="mktCreditProfileHost"></div>
+    </div>
+  </section>
+
+  <!-- ============= FOOTER ============= -->
+  <footer class="tractor-footer">
+    <div class="container">
+      <div class="tractor-footer__inner">
+        <div style="font-size:.85rem;">© 2026 Mitti Mantra · Growing the future. Built with ❤ for Bharat.</div>
+        <nav class="tractor-footer__links">
+          <a href="index.html">Home</a>
+          <a href="dashboard.html">Dashboard</a>
+          <a href="book-a-tractor.html">Book a Tractor</a>
+          <a href="/docs">API Docs</a>
+        </nav>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Product detail modal -->
+  <div class="mm-modal-overlay" id="mktDetailOverlay">
+    <div class="mm-modal-card mm-modal-card--wide" id="mktDetailCard"></div>
+  </div>
+
+  <!-- Seller profile modal -->
+  <div class="mm-modal-overlay" id="mktSellerOverlay">
+    <div class="mm-modal-card mm-modal-card--wide" id="mktSellerCard"></div>
+  </div>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script defer src="mm-core.js"></script>
+  <script defer src="site-ui.js"></script>
+  <script defer src="farm-state.js"></script>
+  <script defer src="toolbar.js"></script>
+  <script defer src="Data/marketplace-listings.js"></script>
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script defer src="marketplace.js"></script>
+</body>
+</html>

@@ -6,13 +6,14 @@
      • Network-only for API calls to the backend.
 */
 
-const VERSION = 'mittimantra-v27';
+const VERSION = 'mittimantra-v39';
 const CORE = [
   './',
   './index.html',
   './dashboard.html',
   './farm-boundary.html',
   './login.html',
+  './marketplace.html',
   './firebase-config.js',
   './auth.js',
   './style.css',
@@ -36,6 +37,33 @@ const CORE = [
   './mm-plots.js',
   './mm-enhance.js',
   './chatbot.js',
+  './marketplace.js',
+  './Data/marketplace-listings.js',
+  './assets/marketplace/rice.webp',
+  './assets/marketplace/paddy_basmati.webp',
+  './assets/marketplace/wheat.webp',
+  './assets/marketplace/cotton.webp',
+  './assets/marketplace/maize.webp',
+  './assets/marketplace/soybean.webp',
+  './assets/marketplace/groundnut.webp',
+  './assets/marketplace/mustard.webp',
+  './assets/marketplace/tomato.webp',
+  './assets/marketplace/onion.webp',
+  './assets/marketplace/potato.webp',
+  './assets/marketplace/chilli.webp',
+  './assets/marketplace/turmeric.webp',
+  './assets/marketplace/sugarcane.webp',
+  './assets/marketplace/arhar.webp',
+  './assets/marketplace/pulses.webp',
+  './assets/marketplace/moong.webp',
+  './assets/marketplace/banana.webp',
+  './assets/marketplace/mango.webp',
+  './assets/marketplace/jute.webp',
+  './assets/marketplace/bajra.webp',
+  './assets/marketplace/jowar.webp',
+  './assets/marketplace/coconut.webp',
+  './assets/marketplace/sunflower.webp',
+  './assets/marketplace/ragi.webp',
   './manifest.webmanifest',
 ];
 
