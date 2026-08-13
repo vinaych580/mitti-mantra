@@ -289,13 +289,18 @@ Slash commands are accepted: `/help /recommend /msp /mandi /pest /sell /irrigate
 
 ### `POST /api/ml/train`
 
-Retrains all 3 models from current CSV data. Returns training metrics
-(R², MAE, RMSE, accuracy) and top feature importances.
+Retrains all 3 models from current CSV data. This endpoint is disabled by
+default. It must be enabled with `ENABLE_MODEL_TRAINING=true` and called with
+an `X-Admin-Key` header that matches `ADMIN_API_KEY`; otherwise it returns a
+4xx response. Run it as an administrator-controlled maintenance job, never
+from the public dashboard.
 
 ### `GET /api/ml/status`
 
 `{yield_model_loaded, price_model_loaded, recommend_model_loaded,
-model_dir, models_exist, training_report}`.
+disease_model_loaded, disease_screening_available, model_dir,
+model_provenance, models_exist, training_enabled, training_report,
+audit_metrics}`.
 
 ---
 

@@ -2,7 +2,7 @@
 
 # 🌾 Mitti Mantra · AgriSim
 
-**AI-powered farm intelligence for Indian agriculture.**
+**Farm-planning tools for Indian agriculture.**
 Smart crop recommendations, yield forecasts, mandi-price analytics and a
 site-aware farmer chatbot — all trained on real Indian farm data and served
 from a single FastAPI process with a zero-build vanilla-JS frontend.
@@ -22,16 +22,16 @@ _Mitti se judao, fasal se pao._
 
 ## Features
 
-- **Smart crop recommender** — 3 ML models (yield, price forecast, fit score) ranked for your region, season, and budget.
+- **Smart crop recommender** — model-assisted planning estimates ranked for your region, season, and budget; validate recommendations locally before use.
 - **Yield & profit simulator** — full cost breakdown, ROI, water efficiency, nutrient gap, sensitivity heatmap.
 - **Rotation planner** — best kharif → rabi pairs for the whole year.
 - **Mandi analytics** — cross-region arbitrage, MSP-vs-market, 6-month price forecast, best-time-to-sell advisor.
-- **Pest & disease alerts** — weather-driven risk matrix per crop.
+- **Pest alerts and visual screening** — rule-based planning aids, not diagnoses or official weather warnings.
 - **Fertilizer / irrigation schedules**, loan calculator, multi-year soil-health projection.
 - **Government scheme matcher** (PM-KISAN, PMFBY, KCC, etc.).
 - **Site-aware chatbot** — grounded in the actual datasets, supports slash commands (`/recommend`, `/msp`, `/pest`…), voice input, session memory, and deep-link buttons into the dashboard.
 - **Unified Farm Profile** — set region / season / area / budget once; every tool auto-fills, chatbot remembers.
-- **Live 3D India map** — clickable states, multiple heatmap modes, per-crop suitability overlay.
+- **3D India map** — clickable states, multiple planning overlays, and crop suitability indicators.
 - **Draw-your-farm tool** — Leaflet polygon + SoilGrids fetch at the centroid, auto-filled into the dashboard.
 - **PWA** — installable, offline-capable, precached shell with service worker.
 - **Share & export** — WhatsApp share, print/PDF, high-contrast / large-text accessibility modes.
