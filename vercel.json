@@ -2,16 +2,7 @@
   "version": 2,
   "functions": {
     "api/index.py": {
-      "includeFiles": [
-        "dataset/*.csv",
-        "backend/**/*.py",
-        "backend/*.json",
-        "engine/**/*.py",
-        "utils/**/*.py",
-        "ml/**/*.py",
-        "ml/models/*.joblib",
-        "data_ingestion/**/*.py"
-      ],
+      "includeFiles": "{dataset/*.csv,backend/**/*.py,backend/*.json,engine/**/*.py,utils/**/*.py,ml/**/*.py,ml/models/*.joblib,data_ingestion/**/*.py}",
       "maxDuration": 30,
       "memory": 1024
     }
