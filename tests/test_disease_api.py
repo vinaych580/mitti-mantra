@@ -22,34 +22,42 @@ def test_ml_status_sanitized():
     response = client.get("/api/ml/status")
     assert response.status_code == 200
     data = response.json()
-    
+
     # Check that model_dir is relative
     model_dir = data.get("model_dir", "")
     assert model_dir == "ml/models"
     assert "Users" not in model_dir
     assert "C:\\" not in model_dir
     assert ":" not in model_dir
-    
-    # The product provides heuristic screening, not a loaded diagnostic model.
-    assert data["disease_model_loaded"] is False
+
+    # A trained disease classifier (ml/models/disease_model.joblib) is optional:
+    # present when dataset/plantvillage/ has enough labeled images per class
+    # (see ml/training/disease_model.py), absent otherwise. Either way, the
+    # heuristic screening path is always available as the fallback.
+    assert isinstance(data["disease_model_loaded"], bool)
     assert data["disease_screening_available"] is True
 
-def test_disease_predict_fallback_tomato():
-    """Test backend fallback prediction for Tomato."""
-    # Create a small 3x3 mock green leaf image encoded in base64
+def test_disease_predict_fallback_tomato(monkeypatch):
+    """Test the HSV/texture heuristic fallback for Tomato (ML path bypassed).
+
+    Forces predict_disease_ml() to return None so this exercises the
+    hand-tuned decision tree directly, regardless of whether a trained
+    disease_model.joblib happens to be present on disk.
+    """
+    monkeypatch.setattr("backend.main.predict_disease_ml", lambda *a, **k: None)
     # A valid tiny 1x1 green pixel PNG base64
     img_b64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
-    
+
     payload = {
         "image_b64": img_b64,
         "crop_id": "tomato",
         "region_id": "up_lucknow"
     }
-    
+
     response = client.post("/api/disease/predict", json=payload)
     assert response.status_code == 200
     data = response.json()
-    
+
     assert "disease" in data
     assert "confidence" in data
     assert "severity" in data
@@ -59,32 +67,60 @@ def test_disease_predict_fallback_tomato():
     assert "lesion_area_pct" in data
     assert "subsidy_eligible_schemes" in data
     assert data["analysis_type"] == "heuristic_screening"
+    assert data["prediction_source"] == "heuristic"
     assert "not" in data["disclaimer"].lower()
-    
+
     # Since the image is pure green, it should predict healthy
     assert data["crop_matched"] == "tomato"
     assert "healthy" in data["disease"].lower()
     assert data["severity"] == "early"
     assert len(data["treatment"]) > 0
 
-def test_disease_predict_fallback_maize_lesions():
-    """Test backend fallback prediction for Maize with yellow/brown pixels."""
+def test_disease_predict_fallback_maize_lesions(monkeypatch):
+    """Test the HSV/texture heuristic fallback for Maize with yellow/brown pixels
+    (ML path bypassed — see test_disease_predict_fallback_tomato)."""
+    monkeypatch.setattr("backend.main.predict_disease_ml", lambda *a, **k: None)
     # A tiny 1x1 yellow pixel PNG base64: RGB (255, 255, 0)
     img_b64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGP4/58BAAT/Af9dfQKHAAAAAElFTkSuQmCC"
-    
+
     payload = {
         "image_b64": img_b64,
         "crop_id": "maize",
         "region_id": "mp_sehore"
     }
-    
+
     response = client.post("/api/disease/predict", json=payload)
     assert response.status_code == 200
     data = response.json()
-    
+
     assert data["crop_matched"] == "maize"
     assert data["severity"] == "severe"  # Pure yellow/brown pixel represents severe lesion
     assert "rust" in data["disease"].lower() or "blight" in data["disease"].lower()
+
+def test_disease_predict_ml_path_schema():
+    """When a trained disease_model.joblib is present, the ML path must return
+    the same response schema as the heuristic, tagged accordingly. Doesn't
+    assert an exact class for this degenerate 1x1 image — a real classifier's
+    prediction on an out-of-distribution single-pixel input isn't a
+    meaningful thing to pin down, only that the plumbing is correct."""
+    import ml.predict as pred
+    pred._load_ml_models()
+    if pred._ml_disease_model is None:
+        import pytest
+        pytest.skip("No trained disease_model.joblib present in ml/models/")
+
+    img_b64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+    payload = {"image_b64": img_b64, "crop_id": "tomato", "region_id": "up_lucknow"}
+
+    response = client.post("/api/disease/predict", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+
+    assert data["prediction_source"] == "ml_model"
+    assert data["analysis_type"] == "trained_classifier_screening"
+    assert "PlantVillage" in data["model_provenance"]
+    assert 0.0 <= data["confidence"] <= 1.0
+    assert data["crop_matched"] == "tomato"
 
 def test_disease_predict_soybean_does_not_assert_confident_health():
     """Soybean has no disease classes in DISEASE_METADATA, so the heuristic

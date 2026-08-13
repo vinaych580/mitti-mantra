@@ -37,6 +37,8 @@ _ml_recommend_model = None
 _ml_label_encoders = None
 _ml_price_encoders = None
 _ml_recommend_encoders = None
+_ml_disease_model = None
+_ml_disease_label_encoder = None
 _ml_models_loaded = False
 
 # FIX (2.1): Thread-safe locks for model loading and cache writes
@@ -48,6 +50,7 @@ def _load_ml_models():
     """Load trained ML models from disk. Silent no-op if models don't exist."""
     global _ml_yield_model, _ml_price_model, _ml_recommend_model
     global _ml_label_encoders, _ml_price_encoders, _ml_recommend_encoders
+    global _ml_disease_model, _ml_disease_label_encoder
     global _ml_models_loaded
     if _ml_models_loaded:
         return
@@ -75,10 +78,45 @@ def _load_ml_models():
             re_ = MODEL_DIR / "recommend_encoders.joblib"
             if re_.exists():
                 _ml_recommend_encoders = joblib.load(re_)
+            dm = MODEL_DIR / "disease_model.joblib"
+            if dm.exists():
+                _ml_disease_model = joblib.load(dm)
+            dle = MODEL_DIR / "disease_label_encoder.joblib"
+            if dle.exists():
+                _ml_disease_label_encoder = joblib.load(dle)
         except Exception as e:
             # FIX (4.1): Log the actual error instead of silently swallowing
             logger.warning("Failed to load ML models, falling back to heuristics: %s", e)
         _ml_models_loaded = True
+
+
+def predict_disease_ml(features: dict[str, float], crop: str = "") -> tuple[str, float] | None:
+    """Classify a leaf feature vector with the trained disease model, if loaded.
+
+    When `crop` is given, only that crop's classes are considered (mirrors the
+    heuristic fallback's crop-bound behaviour) -- otherwise defaults to the
+    tomato_* classes, the most comprehensive set, matching the heuristic's
+    own no-crop-selected default.
+
+    Returns (class_name, confidence) or None if no trained model is present --
+    callers must fall back to the heuristic decision tree in that case.
+    """
+    _load_ml_models()
+    if _ml_disease_model is None or _ml_disease_label_encoder is None:
+        return None
+    from engine.disease_features import feature_vector as _fv
+    x = np.array([_fv(features)])
+    proba = _ml_disease_model.predict_proba(x)[0]
+    classes = _ml_disease_label_encoder.classes_
+
+    prefix = (crop or "tomato") + "_"
+    candidate_idxs = [i for i, c in enumerate(classes) if str(c).startswith(prefix)]
+    if not candidate_idxs:
+        candidate_idxs = list(range(len(classes)))
+
+    best_idx = max(candidate_idxs, key=lambda i: proba[i])
+    class_name = classes[best_idx]
+    return str(class_name), float(proba[best_idx])
 
 
 # FIX (2.2): Cache invalidation function for use after model retraining
@@ -88,6 +126,7 @@ def invalidate_caches():
     global _cache_soil, _cache_mandi
     global _ml_yield_model, _ml_price_model, _ml_recommend_model
     global _ml_label_encoders, _ml_price_encoders, _ml_recommend_encoders
+    global _ml_disease_model, _ml_disease_label_encoder
     global _ml_models_loaded
     with _cache_lock:
         _cache_crop_params = None
@@ -102,6 +141,8 @@ def invalidate_caches():
         _ml_label_encoders = None
         _ml_price_encoders = None
         _ml_recommend_encoders = None
+        _ml_disease_model = None
+        _ml_disease_label_encoder = None
         _ml_models_loaded = False
     logger.info("All predict module caches invalidated.")
 

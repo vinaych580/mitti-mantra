@@ -242,6 +242,7 @@
      showLoading/showError/results all overwrite innerHTML, so these
      disappear on their own the moment a tool is run. */
   const TOOL_OUTPUTS = {
+    score: ['One blended 0-100 farm grade', 'Profit, risk & market pillars', 'Field-health & pest pressure (if located)', 'Top alternative crops'],
     recommend: ['Ranked crop shortlist', 'Expected ROI per crop', 'Risk & soil-health score', 'ML model confidence'],
     simulate: ['Yield in kg/acre', 'Full cost breakdown', 'Profit & ROI', 'Water efficiency & nutrient gap'],
     rotation: ['Kharif × rabi pairings', 'Combined two-season profit', 'Soil nitrogen impact', 'Ranked rotation options'],
@@ -676,6 +677,61 @@
       });
       updateRegionalTelemetry(val, name);
     }
+  });
+
+  /* ==========================================================
+     TOOL 0: Farm Score — blends recommend + risk + NDVI + pest
+     ========================================================== */
+  const scoreForm = $('[data-form="score"]');
+  if (scoreForm) scoreForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    const out = $('[data-out="score"]');
+    showLoading(out, 'Blending farm signals…');
+    try {
+      const f = formToObj(e.target);
+      const body = {
+        region_id: f.region_id, season: f.season,
+        area_acres: parseFloat(f.area_acres),
+        budget_per_acre: parseFloat(f.budget_per_acre),
+      };
+      if (f.crop_id) body.crop_id = f.crop_id;
+      if (f.lat) body.lat = parseFloat(f.lat);
+      if (f.lon) body.lon = parseFloat(f.lon);
+
+      const r = await api('/api/farm-score', { method: 'POST', body: JSON.stringify(body) });
+
+      const gradeClass = r.farm_score >= 70 ? 'kpi--good' : 'kpi--warn';
+      const PILLAR_LABELS = {
+        profitability: 'Profitability', risk_resilience: 'Risk resilience', market_fit: 'Market fit',
+        field_health: 'Field health (NDVI)', pest_pressure: 'Pest pressure (low = risk)',
+      };
+      const pillarBars = Object.entries(r.pillars).map(([key, val]) => `
+        <div style="margin-bottom:.6rem;">
+          <div style="display:flex;justify-content:space-between;font-size:.82rem;color:var(--ink-soft);margin-bottom:.25rem;">
+            <span>${PILLAR_LABELS[key] || key}</span><span>${FIX(val, 0)}</span>
+          </div>
+          <div style="height:8px;border-radius:4px;background:var(--bg-soft,rgba(29,26,21,.08));overflow:hidden;">
+            <div style="height:100%;width:${Math.max(0, Math.min(100, val))}%;background:var(--brand-deep);border-radius:4px;"></div>
+          </div>
+        </div>`).join('');
+
+      out.innerHTML = `
+        <div class="kpi-grid">
+          <div class="kpi ${gradeClass}"><div class="kpi__lbl">Farm Score</div>
+            <div class="kpi__val" style="font-size:2rem;">${r.grade}</div>
+            <div class="kpi__sub">${FIX(r.farm_score, 0)} / 100</div></div>
+          <div class="kpi kpi--info"><div class="kpi__lbl">Best-fit crop</div>
+            <div class="kpi__val" style="font-size:1.1rem;">${cropLabel(r.recommended_crop)}</div></div>
+          <div class="kpi"><div class="kpi__lbl">Source</div>
+            <div class="kpi__val" style="font-size:.95rem;">${r.prediction_source === 'ml_model' ? 'ML model' : 'Heuristic'}</div></div>
+        </div>
+        <div style="margin-top:1rem;">${pillarBars}</div>
+        ${r.top_alternatives && r.top_alternatives.length ? `
+        <div style="margin-top:.8rem;font-size:.85rem;color:var(--ink-soft);">
+          Also worth comparing: ${r.top_alternatives.map(cropLabel).join(', ')}
+        </div>` : ''}
+        <div class="alert alert--gold" style="margin-top:1rem;"><div class="alert__body">${r.disclaimer}</div></div>`;
+    } catch (err) { showError(out, err); }
   });
 
   /* ==========================================================
@@ -2012,8 +2068,28 @@
       const r = await api('/api/field/ndvi', {
         method: 'POST', body: JSON.stringify({ lat: +f.lat, lon: +f.lon, crop_id: f.crop_id })
       });
+      const grid = Array.isArray(r.sub_field_grid) ? r.sub_field_grid : [];
+      const cells = grid.map(cell => `
+        <div title="${cell.sub_cell_id}: NDVI ${cell.ndvi} — ${cell.status}"
+             style="aspect-ratio:1;border-radius:6px;background:${cell.color};
+                    display:flex;align-items:center;justify-content:center;
+                    font-size:.68rem;font-weight:600;color:#fff;
+                    text-shadow:0 1px 2px rgba(0,0,0,.35);cursor:default;">
+          ${cell.ndvi}
+        </div>`).join('');
+      const heatmap = grid.length ? `
+        <div style="margin-top:1rem;">
+          <div style="font-size:.85rem;font-weight:600;color:var(--ink-soft);margin-bottom:.5rem;">Sub-field health zones</div>
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;max-width:320px;">${cells}</div>
+          <div style="display:flex;gap:1rem;margin-top:.6rem;font-size:.72rem;color:var(--ink-faint);">
+            <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#2e7d32;margin-right:4px;"></span>Optimal</span>
+            <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#f57c00;margin-right:4px;"></span>Mild stress</span>
+            <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#d32f2f;margin-right:4px;"></span>High stress</span>
+          </div>
+        </div>` : '';
       out.innerHTML = `<div class="alert alert--gold"><div class="alert__body"><strong>Planning estimate, not satellite imagery</strong><p>${r.satellite_source}</p></div></div>
-        <div class="kpi-grid"><div class="kpi kpi--info"><div class="kpi__lbl">Estimated vegetation index</div><div class="kpi__val">${r.mean_ndvi}</div></div><div class="kpi"><div class="kpi__lbl">Estimated canopy cover</div><div class="kpi__val">${r.canopy_cover_pct}%</div></div><div class="kpi"><div class="kpi__lbl">Planning status</div><div class="kpi__val" style="font-size:1rem">${r.health_status}</div></div></div>`;
+        <div class="kpi-grid"><div class="kpi kpi--info"><div class="kpi__lbl">Estimated vegetation index</div><div class="kpi__val">${r.mean_ndvi}</div></div><div class="kpi"><div class="kpi__lbl">Estimated canopy cover</div><div class="kpi__val">${r.canopy_cover_pct}%</div></div><div class="kpi"><div class="kpi__lbl">Planning status</div><div class="kpi__val" style="font-size:1rem">${r.health_status}</div></div></div>
+        ${heatmap}`;
     } catch (err) { showError(out, err); }
   });
 

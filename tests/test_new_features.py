@@ -48,6 +48,56 @@ def test_carbon_credits_endpoint():
     assert data["estimated_annual_earning_inr"] > 0
 
 
+def test_farm_score_basic():
+    payload = {
+        "region_id": "mp_sehore",
+        "season": "kharif",
+        "budget_per_acre": 15000,
+        "area_acres": 4.0,
+    }
+    response = client.post("/api/farm-score", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert 0.0 <= data["farm_score"] <= 100.0
+    assert data["grade"] in {"A+", "A", "B+", "B", "C", "D", "F"}
+    assert "recommended_crop" in data
+    assert "profitability" in data["pillars"]
+    assert "risk_resilience" in data["pillars"]
+    assert "market_fit" in data["pillars"]
+    # No lat/lon given, so the optional field-health pillar must be absent.
+    assert "field_health" not in data["pillars"]
+
+
+def test_farm_score_with_location_adds_field_health():
+    payload = {
+        "region_id": "mp_sehore",
+        "season": "kharif",
+        "budget_per_acre": 15000,
+        "area_acres": 4.0,
+        "lat": 23.20,
+        "lon": 77.08,
+    }
+    response = client.post("/api/farm-score", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert "field_health" in data["pillars"]
+    # Weights are individually rounded to 2dp for display, so their sum can be
+    # off from 1.0 by a couple cents -- the underlying score blend itself
+    # uses the unrounded weights.
+    assert abs(sum(data["weights"].values()) - 1.0) < 0.02
+
+
+def test_farm_score_invalid_region_errors():
+    payload = {
+        "region_id": "not_a_real_region",
+        "season": "kharif",
+        "budget_per_acre": 15000,
+        "area_acres": 4.0,
+    }
+    response = client.post("/api/farm-score", json=payload)
+    assert response.status_code == 400
+
+
 def test_iot_telemetry_and_pump_trigger():
     # Telemetry
     res_tel = client.post("/api/iot/telemetry?farm_id=test_farm")

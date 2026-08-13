@@ -589,10 +589,12 @@ def train_recommendation_model() -> dict[str, Any]:
 # ===================================================================
 
 def train_all() -> dict[str, Any]:
-    """Train the 3 ML models (yield, price, recommendation) and return a combined report.
+    """Train the 4 ML models (yield, price, recommendation, disease) and return a combined report.
 
-    Also refreshes the crop-disease status entry in the manifests (there is no
-    trained disease model — see ml/training/disease_model.py).
+    The disease classifier trains only if dataset/plantvillage/ has enough
+    labeled images per class; otherwise it reports NOT_APPLICABLE and the
+    live endpoint falls back to its HSV/texture heuristic — see
+    ml/training/disease_model.py.
     """
     print("=" * 60)
     print("Training Yield Prediction Model...")
@@ -607,11 +609,15 @@ def train_all() -> dict[str, Any]:
     rec_report = train_recommendation_model()
     print(f"  Accuracy = {rec_report['metrics']['accuracy']}")
 
-    print("Crop Disease Detection: heuristic screening, not a trained model.")
+    print("Training Crop Disease Classifier (or reporting heuristic-only status)...")
     try:
         from ml.training.disease_model import train_disease_model
         disease_report = train_disease_model()
-        print(f"  {disease_report['note']}")
+        if disease_report.get("status") == "TRAINED":
+            print(f"  Test accuracy = {disease_report['metrics']['test_accuracy']}  "
+                  f"CV mean = {disease_report['metrics']['cv_mean_accuracy']}")
+        else:
+            print(f"  {disease_report['note']}")
     except Exception as e:
         logger.warning("Disease model status update failed: %s", e)
         print(f"  Failed to update disease model status: {e}")

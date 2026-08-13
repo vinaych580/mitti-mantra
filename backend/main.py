@@ -27,9 +27,11 @@ except Exception:
 
 from utils.csv_cache import load as _csv_load, index_by as _csv_index, first_by as _csv_first
 from utils.calculations import calculate_ndvi_and_field_health
+from engine.farm_score import compute_farm_score
 from engine.simulator import simulate
 from backend.chatbot import answer as chatbot_answer
-from ml.predict import recommend_crops, location_based_insights, mandi_price_analytics, rotation_planner
+from ml.predict import recommend_crops, location_based_insights, mandi_price_analytics, rotation_planner, predict_disease_ml
+from engine.disease_features import extract_leaf_features, severity_from_lesion_frac
 from engine.features import (
     fertilizer_recommendation,
     get_msp_data,
@@ -122,6 +124,7 @@ from backend.models import (
     IrrigationQuery,
     FertilizerQuery,
     NDVIQuery,
+    FarmScoreQuery,
     ClimateAlertQuery,
     CarbonCreditQuery,
     IoTTelemetryQuery,
@@ -296,6 +299,25 @@ def get_field_ndvi(req: NDVIQuery):
             crop_id=req.crop_id or "wheat",
             area_acres=req.area_acres or 4.0
         )
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.post("/api/farm-score")
+def get_farm_score(req: FarmScoreQuery):
+    """Blends recommendation, risk, and (when location is given) field-health and
+    pest signals from the platform's own tools into one headline score/grade."""
+    try:
+        return compute_farm_score(
+            region_id=req.region_id,
+            season=req.season,
+            budget_per_acre=req.budget_per_acre,
+            area_acres=req.area_acres,
+            crop_id=req.crop_id,
+            lat=req.lat,
+            lon=req.lon,
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -672,7 +694,7 @@ def model_status():
         "yield_model_loaded": pred._ml_yield_model is not None,
         "price_model_loaded": pred._ml_price_model is not None,
         "recommend_model_loaded": pred._ml_recommend_model is not None,
-        "disease_model_loaded": False,
+        "disease_model_loaded": pred._ml_disease_model is not None,
         "disease_screening_available": True,
         "model_dir": "ml/models",
         "model_provenance": "Development planning artifacts trained from the repository seed data and synthetic augmentation; not independently validated field models.",
@@ -975,7 +997,8 @@ async def predict_disease_api(req: DiseasePredictQuery):
                 )
 
                 return {
-                    "analysis_type": "heuristic_screening",
+                    "analysis_type": "demo_precomputed",
+                    "prediction_source": "demo_precomputed",
                     "disclaimer": "This is not a diagnosis. Confirm symptoms with a qualified agronomist before treatment.",
                     "disease": meta["disease"],
                     "confidence": dm["confidence"],
@@ -994,69 +1017,26 @@ async def predict_disease_api(req: DiseasePredictQuery):
                 }
 
         # -----------------------------------------------------------------
-        # 2. LOAD + RESIZE
+        # 2. LOAD + FEATURE EXTRACTION
+        #    Shared with the offline trainer (engine/disease_features.py) so
+        #    the trained model sees the exact same feature vector at
+        #    inference time that it was fit on.
         # -----------------------------------------------------------------
-        image = Image.open(io.BytesIO(image_data)).convert("RGB").resize((128, 128))
-        img_hsv = np.array(image.convert("HSV"), dtype=np.float32)  # H:0-255, S:0-255, V:0-255
-        img_rgb = np.array(image, dtype=np.float32)
-
-        H = img_hsv[:, :, 0]   # Hue
-        S = img_hsv[:, :, 1]   # Saturation
-        V = img_hsv[:, :, 2]   # Value (brightness)
-        R = img_rgb[:, :, 0]
-        G = img_rgb[:, :, 1]
-        B = img_rgb[:, :, 2]
-        eps = 1e-6
-
-        # -----------------------------------------------------------------
-        # 3. FEATURE EXTRACTION
-        # -----------------------------------------------------------------
-        # PIL HSV: H channel is 0-255, mapping 0-360 degrees
-        # Measured values from real images:
-        #   Green leaf:  H≈85 (120°), S>150
-        #   Yellow leaf: H≈36 (51°), S>200
-        #   Orange/rust: H≈14 (20°), S>150
-        #   Brown (dark):H≈16 (23°), S~127, V<100
-        #   Gray/white:  S<30
-
-        n_total = float(H.size)
-
-        # NOTE: Check yellow BEFORE green since their hue ranges overlap (H 36-40)
-        hue_yellow  = ((H >= 25) & (H <= 44) & (S > 100) & (V > 100)).sum() / n_total   # yellow
-        hue_green   = ((H >= 44) & (H <= 96) & (S > 60)  & ~((H >= 25) & (H <= 44) & (S > 100) & (V > 100))).sum() / n_total  # vivid green (not yellow)
-        hue_orange  = ((H >= 6)  & (H <= 20) & (S > 130) & (V > 80)).sum()  / n_total   # orange-rust (bright)
-        hue_brown   = ((H >= 5)  & (H <= 26) & (S > 50)  & (V <= 130)).sum() / n_total  # dark brown (dark val)
-        hue_gray    = (S < 35).sum()  / n_total                                           # desaturated/gray
-        hue_dark    = (V < 50).sum()  / n_total                                           # very dark / black
-        hue_bright  = ((V > 200) & (S < 40)).sum() / n_total                             # bleached/white
-
-        sat_mean   = float(S.mean()) / 255.0   # 0-1
-        val_mean   = float(V.mean()) / 255.0   # 0-1
-        hue_mean   = float(H.mean()) / 255.0   # 0-1
-
-        # Texture (std of brightness within 8x8 blocks)
-        block_stds = []
-        for row in range(0, 128, 8):
-            for col in range(0, 128, 8):
-                blk = V[row:row+8, col:col+8]
-                block_stds.append(float(blk.std()))
-        texture_score = float(np.mean(block_stds)) / 255.0  # 0-1 normalized
-
-        # Lesion fraction: pixels that are NOT vivid green and NOT background
-        non_bg    = (V > 35)
-        green_px  = non_bg & (H >= 44) & (H <= 96) & (S > 60)
-        lesion_px = non_bg & ~green_px
-        n_non_bg  = float(non_bg.sum()) + eps
-        lesion_frac = float(lesion_px.sum()) / n_non_bg  # 0-1
-
-        # Severity based on lesion fraction
-        if lesion_frac < 0.08:
-            severity = "early"
-        elif lesion_frac < 0.35:
-            severity = "moderate"
-        else:
-            severity = "severe"
-
+        image = Image.open(io.BytesIO(image_data))
+        leaf_features = extract_leaf_features(image)
+        hue_yellow = leaf_features["hue_yellow"]
+        hue_green = leaf_features["hue_green"]
+        hue_orange = leaf_features["hue_orange"]
+        hue_brown = leaf_features["hue_brown"]
+        hue_gray = leaf_features["hue_gray"]
+        hue_dark = leaf_features["hue_dark"]
+        hue_bright = leaf_features["hue_bright"]
+        sat_mean = leaf_features["sat_mean"]
+        val_mean = leaf_features["val_mean"]
+        hue_mean = leaf_features["hue_mean"]
+        texture_score = leaf_features["texture_score"]
+        lesion_frac = leaf_features["lesion_frac"]
+        severity = severity_from_lesion_frac(lesion_frac)
 
         # -----------------------------------------------------------------
         # 4. CROP CONTEXT
@@ -1138,7 +1118,18 @@ async def predict_disease_api(req: DiseasePredictQuery):
                 else:
                     return ("tomato_healthy", 0.78)
 
-        best_class, raw_conf = classify(crop)
+        # Soybean has no disease classes in DISEASE_METADATA or the training
+        # set — only a healthy baseline exists — so the ML path is skipped
+        # entirely rather than let it report an overconfident "healthy" with
+        # no disclosure of the coverage gap. The heuristic below already
+        # floors confidence and the coverage_note always fires for soybean.
+        ml_result = predict_disease_ml(leaf_features, crop) if crop != "soybean" else None
+        if ml_result is not None:
+            best_class, raw_conf = ml_result
+            prediction_source = "ml_model"
+        else:
+            best_class, raw_conf = classify(crop)
+            prediction_source = "heuristic"
         confidence = round(float(np.clip(raw_conf, 0.45, 0.97)), 4)
 
         meta = DISEASE_METADATA.get(best_class, DISEASE_METADATA["tomato_healthy"])
@@ -1176,7 +1167,14 @@ async def predict_disease_api(req: DiseasePredictQuery):
         )
 
         response = {
-            "analysis_type": "heuristic_screening",
+            "analysis_type": "trained_classifier_screening" if prediction_source == "ml_model" else "heuristic_screening",
+            "prediction_source": prediction_source,
+            "model_provenance": (
+                "RandomForestClassifier trained on a small real-photo sample from the public "
+                "PlantVillage research benchmark (lab-bench accuracy, not field-validated)."
+                if prediction_source == "ml_model"
+                else "Rule-based HSV colour/texture heuristic, not a trained model."
+            ),
             "disclaimer": "This is not a diagnosis. Confirm symptoms with a qualified agronomist before treatment.",
             "disease": meta["disease"],
             "confidence": confidence,

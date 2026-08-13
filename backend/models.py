@@ -149,6 +149,16 @@ class NDVIQuery(BaseModel):
     crop_id: Optional[str] = "wheat"
     area_acres: Optional[float] = Field(4.0, gt=0, le=100_000)
 
+class FarmScoreQuery(BaseModel):
+    region_id: str
+    season: str
+    budget_per_acre: float = Field(gt=0)
+    area_acres: float = Field(gt=0, le=100_000)
+    crop_id: Optional[str] = None
+    lat: Optional[float] = Field(None, ge=-90, le=90)
+    lon: Optional[float] = Field(None, ge=-180, le=180)
+
+
 class ClimateAlertQuery(BaseModel):
     crop_id: str = "wheat"
     region_id: Optional[str] = "mp_sehore"
