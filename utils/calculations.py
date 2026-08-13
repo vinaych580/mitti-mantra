@@ -37,11 +37,11 @@ CROP_OPTIMAL_PH = {
 }
 
 
-def calculate_soil_factor(soil: dict[str, float], crop: CropParameter) -> float:
-    ph = soil.get("ph", 7.0)
-    n = soil.get("n_kg_per_acre", 40.0)
-    p = soil.get("p_kg_per_acre", 20.0)
-    k = soil.get("k_kg_per_acre", 20.0)
+def calculate_soil_factor(soil: dict[str, Any], crop: CropParameter) -> float:
+    ph = float(soil.get("ph", 7.0))
+    n = float(soil.get("n_kg_per_acre", soil.get("n", 40.0)))
+    p = float(soil.get("p_kg_per_acre", soil.get("p", 20.0)))
+    k = float(soil.get("k_kg_per_acre", soil.get("k", 20.0)))
 
     ph_min, ph_max = CROP_OPTIMAL_PH.get(crop.crop_id.lower(), (6.0, 7.5))
     if ph < ph_min:
@@ -146,8 +146,14 @@ def calculate_risk_score_and_subscores(
 
     flood = clamp((rainfall - crop.water_requirement_mm) / max(crop.water_requirement_mm, 1.0) * 100.0, 0.0, 95.0)
 
-    # Heat/Pest risk
-    heat = clamp(25.0 + (avg_temp - crop.temp_max_c) * 4.0, 5.0, 95.0)
+    # Temperature / Heat / Cold stress risk
+    if avg_temp > crop.temp_max_c:
+        temp_stress = (avg_temp - crop.temp_max_c) * 4.0
+    elif avg_temp < crop.temp_min_c:
+        temp_stress = (crop.temp_min_c - avg_temp) * 4.0
+    else:
+        temp_stress = 0.0
+    heat = clamp(10.0 + temp_stress, 5.0, 95.0)
 
     # Price volatility
     price_vol = clamp(
@@ -169,3 +175,65 @@ def calculate_risk_score_and_subscores(
     risk_score = (0.50 * max_climatic_risk) + (0.30 * mean_climatic_risk) + (0.20 * price_vol)
 
     return round(risk_score, 2), risk_subscores
+
+
+def calculate_ndvi_and_field_health(
+    lat: float,
+    lon: float,
+    crop_id: str = "wheat",
+    area_acres: float = 4.0,
+) -> dict[str, Any]:
+    """Simulate Sentinel-2 satellite NDVI and sub-field health grid for coordinates."""
+    # Deterministic pseudo-random seed based on lat/lon
+    seed = int(abs(lat * 1000 + lon * 100)) % 1000
+    base_ndvi = 0.52 + ((seed % 35) / 100.0)  # 0.52 - 0.87
+    base_ndvi = clamp(base_ndvi, 0.25, 0.90)
+
+    if base_ndvi >= 0.70:
+        health_status = "Vibrant Healthy Canopy"
+    elif base_ndvi >= 0.50:
+        health_status = "Moderate Stress / Normal Growth"
+    else:
+        health_status = "High Stress / Moisture Deficit"
+
+    canopy_cover_pct = clamp(base_ndvi * 115.0, 15.0, 98.0)
+
+    grid = []
+    for r in range(5):
+        for c in range(5):
+            # Variance per sub-grid cell
+            cell_seed = (seed + r * 7 + c * 13) % 100
+            var = (cell_seed - 50) / 300.0  # -0.16 to +0.16
+            cell_ndvi = round(clamp(base_ndvi + var, 0.15, 0.95), 2)
+
+            if cell_ndvi >= 0.65:
+                status = "Optimal"
+                color = "#2e7d32"  # deep green
+            elif cell_ndvi >= 0.45:
+                status = "Mild Stress"
+                color = "#f57c00"  # orange
+            else:
+                status = "High Stress"
+                color = "#d32f2f"  # red
+
+            grid.append({
+                "row": r,
+                "col": c,
+                "sub_cell_id": f"Grid-{r+1}x{c+1}",
+                "ndvi": cell_ndvi,
+                "status": status,
+                "color": color,
+            })
+
+    return {
+        "lat": round(lat, 5),
+        "lon": round(lon, 5),
+        "crop_id": crop_id,
+        "area_acres": area_acres,
+        "mean_ndvi": round(base_ndvi, 2),
+        "health_status": health_status,
+        "canopy_cover_pct": round(canopy_cover_pct, 1),
+        "satellite_source": "Sentinel-2 L2A (10m Resolution)",
+        "last_updated": "2026-08-10T10:00:00Z",
+        "sub_field_grid": grid,
+    }

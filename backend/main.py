@@ -25,6 +25,7 @@ except Exception:
     pass
 
 from utils.csv_cache import load as _csv_load, index_by as _csv_index, first_by as _csv_first
+from utils.calculations import calculate_ndvi_and_field_health
 from engine.simulator import simulate
 from backend.chatbot import answer as chatbot_answer
 from ml.predict import recommend_crops, location_based_insights, mandi_price_analytics, rotation_planner
@@ -45,9 +46,15 @@ from engine.features import (
     log_expense,
     get_expense_summary,
     match_government_schemes,
+    calculate_disease_outbreak_risk,
+    calculate_carbon_credits,
 )
 
+
+from backend.routers.data import router as data_router
+
 app = FastAPI(title="AgriSim - Farm Intelligence Platform")
+app.include_router(data_router, prefix="/api")
 
 # Allow CORS for local dev.
 # NOTE: Browsers reject "Access-Control-Allow-Origin: *" together with
@@ -89,126 +96,35 @@ class StaticCacheHeaders(BaseHTTPMiddleware):
 
 app.add_middleware(StaticCacheHeaders)
 
-# --- Models ---
-class SimulationRequest(BaseModel):
-    crop_id: str
-    area_acres: float
-    region_id: str
-    mandi_price_per_kg: float
-    irrigation_level: Optional[float] = 0.5
-    seed_variety: Optional[str] = "standard"
-    sowing_date: Optional[str] = "2024-06-15"
-    soil: Dict[str, Any]
-    weather: Dict[str, Any]
-    input_plan: Optional[Dict[str, float]] = Field(default_factory=dict)
+from backend.models import (
+    SimulationRequest,
+    RecommendationRequest,
+    CompareRequest,
+    RotationRequest,
+    BatchSimRequest,
+    CropMixRequest,
+    LoanRequest,
+    DiseasePredictQuery,
+    SoilProjectionRequest,
+    ExpenseLogRequest,
+    BenchmarkRequest,
+    CropRecQuery,
+    YieldPredQuery,
+    ProfitEstRequest,
+    IrrigationQuery,
+    FertilizerQuery,
+    NDVIQuery,
+    ClimateAlertQuery,
+    CarbonCreditQuery,
+    IoTTelemetryQuery,
+    IoTTriggerRequest,
+)
 
-    @field_validator("area_acres")
-    @classmethod
-    def area_must_be_positive(cls, v: float) -> float:
-        if v <= 0:
-            raise ValueError("area_acres must be greater than 0")
-        return v
 
-    @field_validator("mandi_price_per_kg")
-    @classmethod
-    def price_must_be_positive(cls, v: float) -> float:
-        if v <= 0:
-            raise ValueError("mandi_price_per_kg must be greater than 0")
-        return v
 
-    @field_validator("irrigation_level")
-    @classmethod
-    def irrigation_in_range(cls, v: float | None) -> float | None:
-        if v is not None and not (0.0 <= v <= 1.0):
-            raise ValueError("irrigation_level must be between 0 and 1")
-        return v
-
-class RecommendationRequest(BaseModel):
-    region_id: str
-    season: str
-    budget_per_acre: float
-    area_acres: float
-
-    @field_validator("budget_per_acre", "area_acres")
-    @classmethod
-    def must_be_positive(cls, v: float) -> float:
-        if v <= 0:
-            raise ValueError("Value must be greater than 0")
-        return v
-
-class CompareRequest(BaseModel):
-    strategies: List[SimulationRequest]
-
-class RotationRequest(BaseModel):
-    region_id: str
-    budget_per_acre: float
-    area_acres: float
-
-    @field_validator("budget_per_acre", "area_acres")
-    @classmethod
-    def must_be_positive_rot(cls, v: float) -> float:
-        if v <= 0:
-            raise ValueError("Value must be greater than 0")
-        return v
-
-class BatchSimRequest(BaseModel):
-    crop_ids: List[str]
-    area_acres: float
-    region_id: str
-    budget_per_acre: float
-    irrigation_level: Optional[float] = 0.5
-    seed_variety: Optional[str] = "standard"
-    sowing_date: Optional[str] = "2024-06-15"
-    soil: Dict[str, Any]
-    weather: Dict[str, Any]
-
-class CropMixRequest(BaseModel):
-    region_id: str
-    season: str
-    total_area_acres: float
-    total_budget: float
-    soil: Dict[str, Any]
-    weather: Dict[str, Any]
-
-    @field_validator("total_area_acres", "total_budget")
-    @classmethod
-    def must_be_positive_mix(cls, v: float) -> float:
-        if v <= 0:
-            raise ValueError("Value must be greater than 0")
-        return v
-
-class LoanRequest(BaseModel):
-    total_cost: float
-    expected_profit: float
-    loan_amount: Optional[float] = None
-    interest_rate_annual: Optional[float] = 4.0
-    tenure_months: Optional[int] = 12
-
-class DiseasePredictQuery(BaseModel):
-    image_b64: str = Field(..., description="Base64 encoded crop leaf image (JPEG or PNG)")
-    crop_id: Optional[str] = Field(None, description="Crop identifier, e.g., 'tomato'")
-    region_id: Optional[str] = Field(None, description="Region identifier, e.g., 'up_lucknow'")
-
-class SoilProjectionRequest(BaseModel):
-    current_soil: Dict[str, Any]
-    rotation: List[Dict[str, str]]
-    years: Optional[int] = 5
-    apply_fertilizer: Optional[bool] = True
-
-class ExpenseLogRequest(BaseModel):
-    farm_id: str
-    category: str
-    amount: float
-    date: Optional[str] = None
-    note: Optional[str] = ""
-
-class BenchmarkRequest(BaseModel):
-    region_id: str
-    crop_id: str
-    user_yield_kg_per_acre: float
-    user_profit_per_acre: float
 
 # --- Helper functions ---
+
 # All dataset reads go through the shared mtime-aware CSV cache. Hot endpoints
 # below use index_by() to skip full-table scans entirely.
 def read_csv(filename: str) -> List[Dict[str, str]]:
@@ -227,75 +143,16 @@ async def cache_stats():
     from utils.csv_cache import stats as _stats
     return _stats()
 
-@app.get("/api/crops")
-async def get_crops():
-    return read_csv("crop_parameters.csv")
-
-@app.get("/api/crops/{crop_id}")
-async def get_crop(crop_id: str):
-    crop = _csv_first("crop_parameters.csv", "crop_id", crop_id)
-    if crop:
-        return crop
-    raise HTTPException(status_code=404, detail="Crop not found")
-
-@app.get("/api/regions")
-async def get_regions():
-    soil_data = read_csv("soil.csv")
-    regions = []
-    seen = set()
-    # Known state abbreviations that should stay uppercase
-    STATE_ABBR = {"mp", "up", "tn", "mh", "kar", "guj", "pb", "ap", "tg", "ka", "wb", "or", "jk", "hp", "uk"}
-    for row in soil_data:
-        rid = row["region_id"]
-        if rid not in seen:
-            # Clean region id for display: "telangana_medak" -> "Telangana · Medak", "mp_sehore" -> "MP · Sehore"
-            parts = rid.split('_')
-            display_parts = [p.upper() if p.lower() in STATE_ABBR else p.capitalize() for p in parts]
-            name = " · ".join(display_parts)
-            regions.append({"id": rid, "name": name})
-            seen.add(rid)
-    return regions
-
-@app.get("/api/weather/{region_id}")
-async def get_weather(region_id: str, season: Optional[str] = None):
-    results = _csv_index("weather.csv", "region_id").get(region_id, [])
-    if season:
-        results = [row for row in results if row["season"] == season]
-    if not results:
-        raise HTTPException(status_code=404, detail="Weather data not found for region")
-    # Return the most recent year's data or average
-    return results[-1]
-
-@app.get("/api/soil/{region_id}")
-async def get_soil(region_id: str):
-    row = _csv_first("soil.csv", "region_id", region_id)
-    if row:
-        return row
-    raise HTTPException(status_code=404, detail="Soil data not found for region")
-
-@app.get("/api/mandi-prices/{region_id}")
-async def get_mandi_prices(region_id: str, crop_id: Optional[str] = None):
-    results = _csv_index("mandi_prices.csv", "region_id").get(region_id, [])
-    if crop_id:
-        results = [row for row in results if row["crop_id"] == crop_id]
-    return results
-
-@app.get("/api/yield-history/{region_id}")
-async def get_yield_history(region_id: str, crop_id: Optional[str] = None):
-    results = _csv_index("yield_history.csv", "region_id").get(region_id, [])
-    if crop_id:
-        results = [row for row in results if row["crop_id"] == crop_id]
-    return results
 
 @app.get("/api/location-insights/{region_id}")
-async def get_location_insights(region_id: str, season: str = "kharif"):
+def get_location_insights(region_id: str, season: str = "kharif"):
     try:
         return location_based_insights(region_id, season)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.post("/api/recommend")
-async def get_recommendations(req: RecommendationRequest):
+def get_recommendations(req: RecommendationRequest):
     try:
         return recommend_crops(
             region_id=req.region_id,
@@ -307,7 +164,7 @@ async def get_recommendations(req: RecommendationRequest):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.post("/api/simulate")
-async def run_simulation(request: SimulationRequest):
+def run_simulation(request: SimulationRequest):
     try:
         strategy = request.model_dump()
         result = simulate(strategy)
@@ -316,7 +173,7 @@ async def run_simulation(request: SimulationRequest):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.post("/api/compare-strategies")
-async def compare_strategies(req: CompareRequest):
+def compare_strategies(req: CompareRequest):
     try:
         results = []
         for strategy in req.strategies:
@@ -331,7 +188,7 @@ async def compare_strategies(req: CompareRequest):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/api/price-analytics/{region_id}/{crop_id}")
-async def get_price_analytics(region_id: str, crop_id: str):
+def get_price_analytics(region_id: str, crop_id: str):
     """Returns mandi price analytics: trend, volatility, seasonal pattern, moving averages."""
     try:
         return mandi_price_analytics(region_id, crop_id)
@@ -339,7 +196,7 @@ async def get_price_analytics(region_id: str, crop_id: str):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.post("/api/rotation-plan")
-async def get_rotation_plan(req: RotationRequest):
+def get_rotation_plan(req: RotationRequest):
     """Returns optimal kharif→rabi crop rotation plans."""
     try:
         return rotation_planner(req.region_id, req.budget_per_acre, req.area_acres)
@@ -347,7 +204,7 @@ async def get_rotation_plan(req: RotationRequest):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/api/crop-comparison/{region_id}/{season}")
-async def get_crop_comparison(region_id: str, season: str, budget_per_acre: float = 15000, area_acres: float = 3):
+def get_crop_comparison(region_id: str, season: str, budget_per_acre: float = 15000, area_acres: float = 3):
     """Returns all crops compared for a region/season with full metrics."""
     try:
         return recommend_crops(region_id, season, budget_per_acre, area_acres, top_k=50)
@@ -355,7 +212,7 @@ async def get_crop_comparison(region_id: str, season: str, budget_per_acre: floa
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.post("/api/batch-simulate")
-async def batch_simulate(req: BatchSimRequest):
+def batch_simulate(req: BatchSimRequest):
     """Simulate multiple crops in one call, returning ranked results."""
     # Pre-filter to the region once so each crop lookup is O(k) not O(n).
     region_rows = _csv_index("mandi_prices.csv", "region_id").get(req.region_id, [])
@@ -392,8 +249,100 @@ async def batch_simulate(req: BatchSimRequest):
     results.sort(key=lambda x: x["profit"], reverse=True)
     return {"results": results, "errors": errors, "total_simulated": len(results)}
 
+# --- Flagship Feature REST API Endpoints ---
+@app.post("/api/field/ndvi")
+def get_field_ndvi(req: NDVIQuery):
+    """Returns Sentinel-2 satellite NDVI index, canopy cover %, and sub-field health grid."""
+    try:
+        return calculate_ndvi_and_field_health(
+            lat=req.lat,
+            lon=req.lon,
+            crop_id=req.crop_id or "wheat",
+            area_acres=req.area_acres or 4.0
+        )
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.post("/api/climate/alerts")
+def get_climate_alerts(req: ClimateAlertQuery):
+    """Returns micro-climate pest and fungal disease outbreak risk alerts."""
+    try:
+        return calculate_disease_outbreak_risk(
+            crop_id=req.crop_id,
+            region_id=req.region_id or "mp_sehore",
+            weather=req.weather
+        )
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.post("/api/carbon-credits")
+def get_carbon_credits(req: CarbonCreditQuery):
+    """Calculates soil carbon sequestration and carbon credit earnings."""
+    try:
+        return calculate_carbon_credits(
+            crop_id=req.crop_id,
+            area_acres=req.area_acres,
+            tillage_practice=req.tillage_practice or "no_till",
+            cover_crop=req.cover_crop if req.cover_crop is not None else True,
+            biochar_application=req.biochar_application or False
+        )
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.post("/api/iot/telemetry")
+def get_iot_telemetry(req: Optional[IoTTelemetryQuery] = None):
+    """Returns live simulated IoT telemetry stream for soil probes & weather station."""
+    try:
+        from datetime import datetime, timezone
+        farm_id = (req and req.farm_id) or "farm_01"
+        return {
+            "farm_id": farm_id,
+            "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "soil_moisture_pct": 38.5,
+            "soil_temp_c": 24.2,
+            "soil_ph": 6.8,
+            "npk_nitrogen_ppm": 42.0,
+            "npk_phosphorus_ppm": 22.0,
+            "npk_potassium_ppm": 18.0,
+            "ambient_temp_c": 29.4,
+            "relative_humidity_pct": 64.0,
+            "solar_radiation_wm2": 720.0,
+            "battery_level_pct": 94,
+            "sensor_status": "ONLINE_NORMAL",
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.post("/api/iot/pump-trigger")
+def trigger_smart_pump(req: IoTTriggerRequest):
+    """Calculates exact water volume and smart pump runtime to restore target moisture."""
+    try:
+        deficit_pct = max(0.0, (req.target_moisture_pct or 65.0) - (req.current_moisture_pct or 40.0))
+        area = req.area_acres or 4.0
+        flow = req.flow_rate_lpm or 120.0
+
+        # ~10,000 liters per acre per 10% moisture deficit
+        water_volume_liters = round(deficit_pct * 1000.0 * area, 1)
+        runtime_minutes = round(water_volume_liters / max(flow, 1.0), 1)
+
+        return {
+            "farm_id": req.farm_id,
+            "current_moisture_pct": req.current_moisture_pct,
+            "target_moisture_pct": req.target_moisture_pct,
+            "moisture_deficit_pct": round(deficit_pct, 1),
+            "required_water_liters": water_volume_liters,
+            "flow_rate_lpm": flow,
+            "recommended_pump_runtime_minutes": runtime_minutes,
+            "pump_command": "TRIGGER_PUMP_ON" if deficit_pct > 5 else "OPTIMAL_NO_ACTION",
+            "estimated_electricity_kwh": round(runtime_minutes * 0.08, 2),
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
 @app.post("/api/optimal-mix")
-async def optimal_crop_mix(req: CropMixRequest):
+def optimal_crop_mix(req: CropMixRequest):
     """Find optimal multi-crop allocation for given land and budget."""
     try:
         all_crops = recommend_crops(req.region_id, req.season, req.total_budget / req.total_area_acres, req.total_area_acres, top_k=50)
@@ -408,15 +357,19 @@ async def optimal_crop_mix(req: CropMixRequest):
     if total_score == 0:
         raise HTTPException(status_code=400, detail="All crops scored 0")
 
+    min_area_per_crop = min(0.5, req.total_area_acres)
     allocations = []
     remaining_area = req.total_area_acres
     remaining_budget = req.total_budget
     for crop in all_crops:
-        if remaining_area < 0.5:
+        if remaining_area < 0.05:
             break
         share = crop["smart_score"] / total_score
-        area = round(max(share * req.total_area_acres, 0.5), 2)
+        target_area = share * req.total_area_acres
+        area = round(max(target_area, min_area_per_crop), 2)
         area = min(area, remaining_area)
+        if area <= 0:
+            continue
         budget_for_crop = round(area / req.total_area_acres * req.total_budget, 2)
         allocations.append({
             "crop_id": crop["crop_id"],
@@ -444,43 +397,12 @@ async def optimal_crop_mix(req: CropMixRequest):
         "num_crops": len(allocations),
     }
 
-@app.get("/api/yield-trend/{region_id}/{crop_id}")
-async def get_yield_trend(region_id: str, crop_id: str):
-    """Returns historical yield trend with year-over-year growth rate."""
-    region_rows = _csv_index("yield_history.csv", "region_id").get(region_id, [])
-    results = [row for row in region_rows if row["crop_id"] == crop_id]
-    if not results:
-        raise HTTPException(status_code=404, detail="No yield history found")
-    results = sorted(results, key=lambda x: int(x["year"]))
-    trend = []
-    for i, row in enumerate(results):
-        entry = {
-            "year": int(row["year"]),
-            "season": row["season"],
-            "yield_kg_per_acre": float(row["yield_kg_per_acre"]),
-            "yoy_change_percent": None
-        }
-        if i > 0:
-            prev = float(results[i-1]["yield_kg_per_acre"])
-            curr = float(row["yield_kg_per_acre"])
-            entry["yoy_change_percent"] = round((curr - prev) / max(prev, 1.0) * 100.0, 2)
-        trend.append(entry)
-    yields = [float(r["yield_kg_per_acre"]) for r in results]
-    return {
-        "region_id": region_id,
-        "crop_id": crop_id,
-        "trend": trend,
-        "avg_yield": round(mean(yields), 2),
-        "min_yield": round(min(yields), 2),
-        "max_yield": round(max(yields), 2),
-    }
-
 # ---------------------------------------------------------------------------
 # Feature Endpoints (14 new features)
 # ---------------------------------------------------------------------------
 
 @app.get("/api/fertilizer-recommendation/{crop_id}")
-async def get_fertilizer_rec(crop_id: str, n: float = 40, p: float = 20, k: float = 20):
+def get_fertilizer_rec(crop_id: str, n: float = 40, p: float = 20, k: float = 20):
     """Get specific fertilizer recommendations based on soil NPK and crop needs."""
     try:
         return fertilizer_recommendation(crop_id, {"n_kg_per_acre": n, "p_kg_per_acre": p, "k_kg_per_acre": k})
@@ -493,7 +415,7 @@ async def get_msp(crop_id: Optional[str] = None, year: Optional[int] = None):
     return get_msp_data(crop_id, year)
 
 @app.get("/api/msp-vs-market/{region_id}/{crop_id}")
-async def get_msp_comparison(region_id: str, crop_id: str):
+def get_msp_comparison(region_id: str, crop_id: str):
     """Compare MSP with current mandi prices."""
     try:
         return msp_vs_market(region_id, crop_id)
@@ -501,7 +423,7 @@ async def get_msp_comparison(region_id: str, crop_id: str):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/api/sell-advisor/{region_id}/{crop_id}")
-async def get_sell_advice(region_id: str, crop_id: str):
+def get_sell_advice(region_id: str, crop_id: str):
     """Get best time to sell recommendation."""
     try:
         return best_time_to_sell(region_id, crop_id)
@@ -509,7 +431,7 @@ async def get_sell_advice(region_id: str, crop_id: str):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/api/irrigation-schedule/{crop_id}")
-async def get_irrigation_schedule(crop_id: str, sowing_date: str = "2025-06-15", rainfall_mm: float = 800, irrigation_level: float = 0.5):
+def get_irrigation_schedule(crop_id: str, sowing_date: str = "2025-06-15", rainfall_mm: float = 800, irrigation_level: float = 0.5):
     """Get week-by-week irrigation schedule."""
     try:
         return irrigation_schedule(crop_id, sowing_date, rainfall_mm, irrigation_level)
@@ -517,7 +439,7 @@ async def get_irrigation_schedule(crop_id: str, sowing_date: str = "2025-06-15",
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/api/crop-calendar/{crop_id}")
-async def get_calendar(crop_id: str, season: Optional[str] = None):
+def get_calendar(crop_id: str, season: Optional[str] = None):
     """Get crop calendar with key activity dates."""
     try:
         return get_crop_calendar(crop_id, season)
@@ -525,7 +447,7 @@ async def get_calendar(crop_id: str, season: Optional[str] = None):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/api/pest-alerts/{crop_id}")
-async def get_pest_alerts(crop_id: str, avg_temp_c: float = 28, rainfall_mm: float = 800):
+def get_pest_alerts(crop_id: str, avg_temp_c: float = 28, rainfall_mm: float = 800):
     """Get pest and disease risk alerts based on weather conditions."""
     try:
         return pest_disease_alerts(crop_id, {"avg_temp_c": avg_temp_c, "rainfall_mm": rainfall_mm})
@@ -533,7 +455,7 @@ async def get_pest_alerts(crop_id: str, avg_temp_c: float = 28, rainfall_mm: flo
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.post("/api/loan-calculator")
-async def calculate_loan(req: LoanRequest):
+def calculate_loan(req: LoanRequest):
     """Calculate loan feasibility and EMI."""
     try:
         return loan_calculator(
@@ -547,7 +469,7 @@ async def calculate_loan(req: LoanRequest):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.post("/api/soil-projection")
-async def project_soil_health(req: SoilProjectionRequest):
+def project_soil_health(req: SoilProjectionRequest):
     """Project soil NPK health over multiple years of crop rotation."""
     try:
         return soil_health_projection(
@@ -560,7 +482,7 @@ async def project_soil_health(req: SoilProjectionRequest):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/api/price-forecast/{region_id}/{crop_id}")
-async def get_price_forecast(region_id: str, crop_id: str, months_ahead: int = 6):
+def get_price_forecast(region_id: str, crop_id: str, months_ahead: int = 6):
     """Forecast mandi prices for next N months."""
     try:
         return price_forecast(region_id, crop_id, months_ahead)
@@ -568,7 +490,7 @@ async def get_price_forecast(region_id: str, crop_id: str, months_ahead: int = 6
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/api/arbitrage/{crop_id}")
-async def get_arbitrage(crop_id: str):
+def get_arbitrage(crop_id: str):
     """Find cross-mandi price arbitrage opportunities."""
     try:
         return cross_mandi_arbitrage(crop_id)
@@ -581,7 +503,7 @@ async def get_templates(profile: Optional[str] = None):
     return get_strategy_templates(profile)
 
 @app.post("/api/benchmark")
-async def get_benchmark(req: BenchmarkRequest):
+def get_benchmark(req: BenchmarkRequest):
     """Compare user results against regional benchmarks."""
     try:
         return region_benchmark(
@@ -594,45 +516,21 @@ async def get_benchmark(req: BenchmarkRequest):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.post("/api/expense/log")
-async def post_expense(req: ExpenseLogRequest):
+def post_expense(req: ExpenseLogRequest):
     """Log an actual expense."""
     return log_expense(req.farm_id, req.category, req.amount, req.date, req.note)
 
 @app.get("/api/expense/{farm_id}")
-async def get_expenses(farm_id: str, planned_budget: Optional[float] = None):
+def get_expenses(farm_id: str, planned_budget: Optional[float] = None):
     """Get expense summary with optional variance analysis."""
     return get_expense_summary(farm_id, planned_budget)
 
 @app.get("/api/government-schemes")
-async def get_schemes(crop_id: str = "all", region_id: str = "all", area_acres: float = 3, season: str = "all"):
+def get_schemes(crop_id: str = "all", region_id: str = "all", area_acres: float = 3, season: str = "all"):
     """Match eligible government schemes for farmer profile."""
     return match_government_schemes(crop_id, region_id, area_acres, season)
 
 
-@app.get("/api/satellite")
-async def get_satellite_data(lat: float, lon: float):
-    """Retrieve satellite telemetry data (NDVI, soil moisture, canopy) from Earth Engine."""
-    from data_ingestion.fetchers.google_earth_engine import get_satellite_ndvi
-    from datetime import date, timedelta
-    today = date.today()
-    start_date = today - timedelta(days=30)
-    
-    try:
-        ndvi = get_satellite_ndvi(lat, lon, start_date, today)
-        if ndvi is None:
-            ndvi = 0.62
-    except Exception:
-        ndvi = 0.62
-        
-    seed = int(abs(lat * 100) + abs(lon * 100)) % 100
-    moisture = 0.35 + (seed % 40) / 100
-    canopy = "Excellent" if ndvi > 0.6 else "Good" if ndvi > 0.4 else "Fair" if ndvi > 0.2 else "Poor"
-    
-    return {
-        "ndvi": round(float(ndvi), 2),
-        "moisture": round(float(moisture), 2),
-        "canopy": canopy
-    }
 
 
 # ---------------------------------------------------------------------------
@@ -640,7 +538,7 @@ async def get_satellite_data(lat: float, lon: float):
 # ---------------------------------------------------------------------------
 
 @app.post("/api/ml/train")
-async def train_models():
+def train_models():
     """Train all 3 ML models (yield, price, crop recommendation)."""
     try:
         from ml.train_models import train_all as ml_train_all
@@ -650,7 +548,7 @@ async def train_models():
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/ml/status")
-async def model_status():
+def model_status():
     """Check which ML models are loaded and available, merging detailed audit benchmarks."""
     import ml.predict as pred
     pred._load_ml_models()
@@ -1158,69 +1056,42 @@ async def predict_disease_api(req: DiseasePredictQuery):
 # ---------------------------------------------------------------------------
 import time
 import logging
+import threading
 
 logger = logging.getLogger("FastAPIIntegration")
 
 # Thread-safe in-memory cache with 30s TTL
+_route_cache_lock = threading.Lock()
 ROUTE_CACHE = {}
 
 def get_cached_response(key: str, ttl: int = 30):
     now = time.time()
-    if key in ROUTE_CACHE:
-        entry, timestamp = ROUTE_CACHE[key]
-        if now - timestamp < ttl:
-            return entry
-        else:
-            ROUTE_CACHE.pop(key, None)  # Clean up expired key on read
+    with _route_cache_lock:
+        if key in ROUTE_CACHE:
+            entry, timestamp = ROUTE_CACHE[key]
+            if now - timestamp < ttl:
+                return entry
+            else:
+                ROUTE_CACHE.pop(key, None)  # Clean up expired key on read
     return None
 
 def set_cached_response(key: str, data: Any):
     now = time.time()
-    # Cap size at 1000 to prevent memory leaks
-    if len(ROUTE_CACHE) >= 1000:
-        # First try to clear expired entries
-        expired_keys = [k for k, (_, ts) in ROUTE_CACHE.items() if now - ts >= 30]
-        for k in expired_keys:
-            ROUTE_CACHE.pop(k, None)
-        # If still over limit, evict the oldest entry
+    with _route_cache_lock:
+        # Cap size at 1000 to prevent memory leaks
         if len(ROUTE_CACHE) >= 1000:
-            oldest_key = min(ROUTE_CACHE.keys(), key=lambda k: ROUTE_CACHE[k][1])
-            ROUTE_CACHE.pop(oldest_key, None)
-    ROUTE_CACHE[key] = (data, now)
-
-# --- Validation Models ---
-class CropRecQuery(BaseModel):
-    region_id: str
-    season: str
-    budget_per_acre: float = Field(..., gt=0, description="Financial budget constraint per acre in INR")
-    area_acres: float = Field(..., gt=0, description="Total farm area size in acres")
-
-class YieldPredQuery(BaseModel):
-    crop_id: str
-    region_id: str
-    season: str
-    irrigation_level: Optional[float] = Field(0.5, ge=0.0, le=1.0, description="Irrigation level multiplier (0.0 to 1.0)")
-
-class ProfitEstRequest(BaseModel):
-    crop_id: str
-    predicted_yield_kg_per_acre: float = Field(..., ge=0, description="Predicted yield volume in kg per acre")
-    area_acres: float = Field(..., gt=0, description="Total farm area size in acres")
-    budget_per_acre: float = Field(..., gt=0, description="Allocated budget limit per acre in INR")
-    mandi_price_per_kg: Optional[float] = Field(None, ge=0, description="Current market price per kg in INR")
-
-class IrrigationQuery(BaseModel):
-    crop_id: str
-    sowing_date: Optional[str] = Field("2025-06-15", description="Estimated sowing date in YYYY-MM-DD format")
-    rainfall_mm: Optional[float] = Field(800, ge=0, description="Seasonal cumulative rainfall in mm")
-    irrigation_level: Optional[float] = Field(0.5, ge=0.0, le=1.0, description="Irrigation level multiplier (0.0 to 1.0)")
-
-class FertilizerQuery(BaseModel):
-    crop_id: str
-    n_kg_per_acre: float = Field(..., ge=0, description="Current soil Nitrogen content in kg per acre")
-    p_kg_per_acre: float = Field(..., ge=0, description="Current soil Phosphorus content in kg per acre")
-    k_kg_per_acre: float = Field(..., ge=0, description="Current soil Potassium content in kg per acre")
+            # First try to clear expired entries
+            expired_keys = [k for k, (_, ts) in ROUTE_CACHE.items() if now - ts >= 30]
+            for k in expired_keys:
+                ROUTE_CACHE.pop(k, None)
+            # If still over limit, evict the oldest entry
+            if len(ROUTE_CACHE) >= 1000:
+                oldest_key = min(ROUTE_CACHE.keys(), key=lambda k: ROUTE_CACHE[k][1])
+                ROUTE_CACHE.pop(oldest_key, None)
+        ROUTE_CACHE[key] = (data, now)
 
 # --- Async & Cached REST API Routes ---
+
 @app.get("/api/crop")
 async def get_crop_recommendations_api(region_id: str, season: str, budget_per_acre: float, area_acres: float):
     """Retrieves ranked crop suggestions with expected profits, risk scores, and ML confidence."""

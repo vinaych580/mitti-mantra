@@ -307,24 +307,25 @@ def _intent_sell_advice(crop: Dict[str, str], region: Optional[str]) -> Reply:
     rtxt = region.replace("_", " · ").title()
     lines = [f"### Sell advice — {crop['crop_name']} @ {rtxt}\n"]
     if isinstance(res, dict):
-        if "recommendation" in res:
-            lines.append(f"**Recommendation:** {res['recommendation']}\n")
+        if "advice" in res:
+            lines.append(f"**Advice:** {res['advice']}\n")
         if "best_month" in res:
-            lines.append(f"- **Best month to sell:** {res['best_month']}")
-        if "best_price" in res:
-            lines.append(f"- **Expected price:** ₹{res['best_price']:.2f}/kg")
+            lines.append(f"- **Best month to sell:** Month {res['best_month']}")
+        if "best_month_avg_price" in res:
+            lines.append(f"- **Expected peak price:** ₹{res['best_month_avg_price']:.2f}/kg")
         if "current_price" in res:
             lines.append(f"- **Current price:** ₹{res['current_price']:.2f}/kg")
-        if "price_uplift_percent" in res:
-            lines.append(f"- **Uplift vs today:** {res['price_uplift_percent']:+.1f}%")
-        if "reasoning" in res:
-            lines.append(f"\n_{res['reasoning']}_")
+        if "potential_gain_pct" in res:
+            lines.append(f"- **Uplift vs today:** {res['potential_gain_pct']:+.1f}%")
+        if "recent_trend" in res:
+            lines.append(f"- **Recent trend:** {res['recent_trend']}")
     else:
         lines.append(str(res))
     return "\n".join(lines), [
         f"Price forecast for {crop['crop_id']}",
         f"MSP vs market for {crop['crop_id']}",
     ]
+
 
 
 def _intent_pest(crop: Dict[str, str]) -> Reply:

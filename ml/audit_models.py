@@ -27,10 +27,17 @@ class ModelAuditor:
         logger.info("Initializing model audit on corrected schemas...")
         
         # Load models
-        rec_model = joblib.load(MODEL_DIR / "recommend_model.joblib")
-        yield_model = joblib.load(MODEL_DIR / "yield_model.joblib")
+        rec_model_path = MODEL_DIR / "recommend_model.joblib"
+        yield_model_path = MODEL_DIR / "yield_model.joblib"
+        if not rec_model_path.exists() or not yield_model_path.exists():
+            logger.error("Model files missing. Please run model training/evaluation first.")
+            return
+
+        rec_model = joblib.load(rec_model_path)
+        yield_model = joblib.load(yield_model_path)
         rec_encoders = joblib.load(MODEL_DIR / "recommend_encoders.joblib")
         yield_encoders = joblib.load(MODEL_DIR / "yield_encoders.joblib")
+
         
         # 1. Auditing Crop Recommendation
         X_rec, y_rec, crop_le_rec, region_le_rec, season_le_rec = _build_recommendation_dataset()

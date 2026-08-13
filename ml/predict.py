@@ -520,9 +520,15 @@ def rotation_planner(
     budget_per_acre = _validate_non_negative(budget_per_acre, "budget_per_acre")
     area_acres = _validate_non_negative(area_acres, "area_acres")
 
-    kharif_recs = recommend_crops(region_id, "kharif", budget_per_acre, area_acres, top_k=5)
-    rabi_recs = recommend_crops(region_id, "rabi", budget_per_acre, area_acres, top_k=5)
-
+    try:
+        kharif_recs = recommend_crops(region_id, "kharif", budget_per_acre, area_acres, top_k=5)
+    except ValueError:
+        kharif_recs = []
+    
+    try:
+        rabi_recs = recommend_crops(region_id, "rabi", budget_per_acre, area_acres, top_k=5)
+    except ValueError:
+        rabi_recs = []
     if not kharif_recs and not rabi_recs:
         raise ValueError(f"No crop recommendations available for {region_id}")
 

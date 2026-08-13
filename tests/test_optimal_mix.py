@@ -65,3 +65,13 @@ def test_optimal_mix_small_area_scaling():
         # Check that allocated_acres is non-zero
         assert alloc["allocated_acres"] > 0
         assert alloc["expected_profit"] is not None
+
+def test_optimal_mix_micro_farm_area():
+    # Test a micro-farm area (< 0.5 acres, e.g., 0.3 acres)
+    payload = _base_mix_payload(total_area_acres=0.3, total_budget=15000.0)
+    response = client.post("/api/optimal-mix", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data["allocations"]) > 0
+    assert data["allocations"][0]["allocated_acres"] > 0
+

@@ -85,15 +85,25 @@ class FeatureEngineeringPipeline:
         # Impute missing weather (mean by region/season)
         weather_cols = ["rainfall_mm", "avg_temp_c", "min_temp_c", "max_temp_c"]
         for col in weather_cols:
-            df[col] = df.groupby(["region_id", "season"])[col].transform(lambda x: x.fillna(x.mean()))
+            if col in df.columns:
+                df[col] = df.groupby(["region_id", "season"])[col].transform(lambda x: x.fillna(x.mean()))
             
         # Impute missing market indicators
-        df["market_price_avg"] = df.groupby("crop_id")["market_price_avg"].transform(lambda x: x.fillna(x.mean()))
-        df["market_price_volatility"] = df.groupby("crop_id")["market_price_volatility"].transform(lambda x: x.fillna(x.mean()))
+        if "market_price_avg" in df.columns:
+            df["market_price_avg"] = df.groupby("crop_id")["market_price_avg"].transform(lambda x: x.fillna(x.mean()))
+        if "market_price_volatility" in df.columns:
+            df["market_price_volatility"] = df.groupby("crop_id")["market_price_volatility"].transform(lambda x: x.fillna(x.mean()))
         
+        # Impute missing soil properties if any left after join
+        soil_defaults = {"ph": 7.0, "n_kg_per_acre": 40.0, "p_kg_per_acre": 20.0, "k_kg_per_acre": 40.0, "organic_carbon_percent": 0.5}
+        for s_col, def_val in soil_defaults.items():
+            if s_col in df.columns:
+                df[s_col] = df[s_col].fillna(def_val)
+
         # Safe default fallback for remaining missing cells
         df = df.bfill().ffill()
         return df
+
 
     def detect_outliers(self, df: pd.DataFrame) -> pd.DataFrame:
         logger.info("Detecting outliers via IQR check...")

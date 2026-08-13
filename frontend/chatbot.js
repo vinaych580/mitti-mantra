@@ -309,16 +309,38 @@
     }
   }
 
+  function speakText(text) {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const cleanText = text.replace(/[*_#`|[\]()]/g, ' ').replace(/\s+/g, ' ').trim();
+    const utt = new SpeechSynthesisUtterance(cleanText);
+    const docLang = document.documentElement.getAttribute('lang') || 'en';
+    utt.lang = { en: 'en-IN', hi: 'hi-IN', te: 'te-IN', kn: 'kn-IN' }[docLang] || 'en-IN';
+    utt.rate = 0.95;
+    window.speechSynthesis.speak(utt);
+  }
+
   function addMsg(role, text) {
     const div = document.createElement("div");
     div.className = "mm-msg " + role;
-    div.innerHTML = role === "user"
-      ? text.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]))
-      : renderMarkdown(text);
+    if (role === "user") {
+      div.innerHTML = text.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+    } else {
+      div.innerHTML = renderMarkdown(text);
+      // Append TTS Audio Speaker Icon
+      const ttsBtn = document.createElement("button");
+      ttsBtn.type = "button";
+      ttsBtn.title = "Listen to answer";
+      ttsBtn.style.cssText = "background:none;border:none;color:#2e7d32;cursor:pointer;font-size:12px;margin-top:6px;display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border-radius:4px;border:1px solid #c8dcc8;";
+      ttsBtn.innerHTML = `🔊 Listen`;
+      ttsBtn.addEventListener("click", () => speakText(text));
+      div.appendChild(ttsBtn);
+    }
     body.appendChild(div);
     body.scrollTop = body.scrollHeight;
     return div;
   }
+
 
   function setSuggestions(list) {
     sug.innerHTML = "";

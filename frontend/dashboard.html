@@ -181,7 +181,27 @@
             </svg>
             Govt. schemes
           </button>
+          <button class="sidebar__btn" data-tool="ndvi">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 3a9 9 0 0 0 0 18" />
+            </svg>
+            Satellite NDVI
+          </button>
+          <button class="sidebar__btn" data-tool="carbon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+            </svg>
+            Carbon credits
+          </button>
+          <button class="sidebar__btn" data-tool="iot">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M12 2v6M12 17v6M1 12h6M17 12h6" />
+            </svg>
+            Smart IoT Pump
+          </button>
         </div>
+
 
         <div class="sidebar__group">
           <div class="sidebar__label">System</div>
@@ -835,6 +855,90 @@
           </form>
           <div class="output" data-out="schemes"></div>
         </section>
+
+        <!-- 14. SATELLITE NDVI -->
+        <section class="tool" data-tool="ndvi">
+          <div class="tool__head">
+            <div class="tool__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="9" />
+                <path d="M12 3a9 9 0 0 0 0 18" />
+              </svg></div>
+            <div>
+              <h2>Satellite NDVI & Sub-Field Health</h2>
+              <p>Sentinel-2 L2A satellite remote sensing. Monitor canopy vigor and 5x5 sub-field stress grid.</p>
+            </div>
+          </div>
+          <form data-form="ndvi">
+            <div class="form-row form-row--3">
+              <div class="field"><label>Latitude (°N)</label><input name="lat" type="number" step="0.0001" value="23.2032"></div>
+              <div class="field"><label>Longitude (°E)</label><input name="lon" type="number" step="0.0001" value="77.0844"></div>
+              <div class="field"><label>Crop</label><select name="crop_id" data-crops></select></div>
+            </div>
+            <button class="btn btn-primary" type="submit">Scan Satellite NDVI</button>
+          </form>
+          <div class="output" data-out="ndvi"></div>
+        </section>
+
+        <!-- 15. CARBON CREDITS -->
+        <section class="tool" data-tool="carbon">
+          <div class="tool__head">
+            <div class="tool__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+              </svg></div>
+            <div>
+              <h2>Soil Carbon Credits Estimator</h2>
+              <p>Quantify CO2e tons sequestered per year and project carbon credit income (INR).</p>
+            </div>
+          </div>
+          <form data-form="carbon">
+            <div class="form-row form-row--3">
+              <div class="field"><label>Tillage Practice</label>
+                <select name="tillage_practice">
+                  <option value="no_till">No-Till (Regenerative)</option>
+                  <option value="reduced_till">Reduced Tillage</option>
+                  <option value="conventional">Conventional Tillage</option>
+                </select>
+              </div>
+              <div class="field"><label>Cover Crop</label>
+                <select name="cover_crop">
+                  <option value="true">Yes (Enabled)</option>
+                  <option value="false">No</option>
+                </select>
+              </div>
+              <div class="field"><label>Biochar Application</label>
+                <select name="biochar_application">
+                  <option value="false">No</option>
+                  <option value="true">Yes (Applied)</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn btn-primary" type="submit">Calculate Carbon Credits</button>
+          </form>
+          <div class="output" data-out="carbon"></div>
+        </section>
+
+        <!-- 16. SMART IOT PUMP -->
+        <section class="tool" data-tool="iot">
+          <div class="tool__head">
+            <div class="tool__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2v6M12 17v6M1 12h6M17 12h6" />
+              </svg></div>
+            <div>
+              <h2>Smart IoT Sensors & Pump Controller</h2>
+              <p>Live soil telemetry, moisture deficit calculation, and automated fertigation pump trigger.</p>
+            </div>
+          </div>
+          <form data-form="iot">
+            <div class="form-row form-row--3">
+              <div class="field"><label>Current Moisture (%)</label><input name="current_moisture_pct" type="number" value="38"></div>
+              <div class="field"><label>Target Moisture (%)</label><input name="target_moisture_pct" type="number" value="65"></div>
+              <div class="field"><label>Pump Flow Rate (L/min)</label><input name="flow_rate_lpm" type="number" value="120"></div>
+            </div>
+            <button class="btn btn-primary" type="submit">Trigger Smart Fertigation</button>
+          </form>
+          <div class="output" data-out="iot"></div>
+        </section>
+
 
         <!-- 14. ML STATUS -->
         <section class="tool" data-tool="ml">

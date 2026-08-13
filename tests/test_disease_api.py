@@ -98,3 +98,14 @@ def test_static_model_serving():
     res_bin = client.get("/models/disease/group1-shard1of1.bin")
     assert res_bin.status_code == 200
     assert len(res_bin.content) == 386 * 4  # 386 float32 values = 1544 bytes
+
+def test_disease_predict_max_length_rejection():
+    """Verify that oversized image payload (>10MB) is rejected with 422 Unprocessable Entity."""
+    oversized_b64 = "a" * 10_000_001
+    payload = {
+        "image_b64": oversized_b64,
+        "crop_id": "tomato"
+    }
+    response = client.post("/api/disease/predict", json=payload)
+    assert response.status_code == 422
+

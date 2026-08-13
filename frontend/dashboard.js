@@ -152,9 +152,17 @@
       const res = await fetch(url, { headers: { 'Content-Type': 'application/json' }, ...opts });
       if (!res.ok) {
         let msg;
-        try { msg = (await res.json()).detail || res.statusText; } catch { msg = res.statusText; }
+        try {
+          const errData = await res.json();
+          const d = errData && errData.detail;
+          if (typeof d === 'string') msg = d;
+          else if (Array.isArray(d)) msg = d.map(e => (e && (e.msg || e.message)) || JSON.stringify(e)).join('; ');
+          else if (d && typeof d === 'object') msg = JSON.stringify(d);
+          else msg = res.statusText;
+        } catch { msg = res.statusText; }
         throw new Error(`${res.status} · ${msg}`);
       }
+
       const data = await res.json();
       // Auto-save logic hooks into this event
       window.dispatchEvent(new CustomEvent('mitti-api-success', { detail: { url, opts, data } }));

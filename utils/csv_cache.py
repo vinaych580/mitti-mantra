@@ -44,13 +44,14 @@ def load(name: str) -> List[Dict[str, str]]:
     shared reference — callers must NOT mutate it.
     """
     path = _resolve(name)
+    cache_key = str(path)
     try:
         mtime = path.stat().st_mtime_ns
     except FileNotFoundError:
         return []
 
     with _lock:
-        cached = _row_cache.get(path.name)
+        cached = _row_cache.get(cache_key)
         if cached and cached[0] == mtime:
             return cached[1]
 
@@ -59,16 +60,18 @@ def load(name: str) -> List[Dict[str, str]]:
         rows = list(csv.DictReader(f))
 
     with _lock:
-        _row_cache[path.name] = (mtime, rows)
-        _idx_cache.pop(path.name, None)  # invalidate derived indexes
+        _row_cache[cache_key] = (mtime, rows)
+        _idx_cache.pop(cache_key, None)  # invalidate derived indexes
     return rows
 
 
 def index_by(name: str, key: str) -> Dict[str, List[Dict[str, str]]]:
     """Return rows of `name` grouped by the given column. Cached per (file, key)."""
+    path = _resolve(name)
+    cache_key = str(path)
     rows = load(name)
     with _lock:
-        buckets = _idx_cache.setdefault(name, {})
+        buckets = _idx_cache.setdefault(cache_key, {})
         idx = buckets.get(f"by:{key}")
         if idx is None:
             idx = {}
@@ -86,9 +89,11 @@ def first_by(name: str, key: str, value: str) -> Optional[Dict[str, str]]:
 
 def dict_by(name: str, key: str) -> Dict[str, Dict[str, str]]:
     """Map key -> row (last-wins). Cached per (file, key)."""
+    path = _resolve(name)
+    cache_key = str(path)
     rows = load(name)
     with _lock:
-        buckets = _idx_cache.setdefault(name, {})
+        buckets = _idx_cache.setdefault(cache_key, {})
         idx = buckets.get(f"dict:{key}")
         if idx is not None:
             return idx
@@ -111,3 +116,4 @@ def stats() -> dict:
             "files": {k: {"rows": len(v[1]), "mtime_ns": v[0]} for k, v in _row_cache.items()},
             "indexes": {k: list(v.keys()) for k, v in _idx_cache.items()},
         }
+

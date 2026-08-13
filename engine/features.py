@@ -93,13 +93,19 @@ def fertilizer_recommendation(
     recommendations = []
     total_cost = 0.0
 
+    FERTILIZER_PRICES = {
+        "DAP": next((f["cost_per_kg"] for f in FERTILIZER_DB if "DAP" in f["name"]), 27.0),
+        "Urea": next((f["cost_per_kg"] for f in FERTILIZER_DB if "Urea" in f["name"]), 5.36),
+        "MOP": next((f["cost_per_kg"] for f in FERTILIZER_DB if "MOP" in f["name"]), 17.0),
+    }
+
     # P first via DAP (also supplies some N)
     n_remaining = n_deficit
     if p_deficit > 0:
         dap_kg = p_deficit / 0.46  # 46% P2O5
         dap_n_supplied = dap_kg * 0.18
         n_remaining = max(n_remaining - dap_n_supplied, 0)
-        cost = round(dap_kg * 27.0, 2)
+        cost = round(dap_kg * FERTILIZER_PRICES["DAP"], 2)
         total_cost += cost
         recommendations.append({
             "fertilizer": "DAP (Di-Ammonium Phosphate)",
@@ -113,7 +119,7 @@ def fertilizer_recommendation(
     # N via Urea
     if n_remaining > 0:
         urea_kg = n_remaining / 0.46
-        cost = round(urea_kg * 5.36, 2)
+        cost = round(urea_kg * FERTILIZER_PRICES["Urea"], 2)
         total_cost += cost
         split_1 = round(urea_kg * 0.5, 2)
         split_2 = round(urea_kg * 0.3, 2)
@@ -130,7 +136,7 @@ def fertilizer_recommendation(
     # K via MOP
     if k_deficit > 0:
         mop_kg = k_deficit / 0.60
-        cost = round(mop_kg * 17.0, 2)
+        cost = round(mop_kg * FERTILIZER_PRICES["MOP"], 2)
         total_cost += cost
         recommendations.append({
             "fertilizer": "MOP (Muriate of Potash)",
@@ -798,10 +804,12 @@ def price_forecast(region_id: str, crop_id: str, months_ahead: int = 6) -> dict[
     rolling_prices = list(price_vals)  # mutable copy for iterative ML prediction
 
     for i in range(1, months_ahead + 1):
-        forecast_dt = last_dt + timedelta(days=30 * i)
-        month = forecast_dt.month
-        year = forecast_dt.year
+        target_month = (last_dt.month - 1 + i) % 12 + 1
+        target_year = last_dt.year + (last_dt.month - 1 + i) // 12
+        month = target_month
+        year = target_year
         seasonal_factor = seasonal_idx.get(month, 1.0)
+
 
         ml_price = None
         if _ml_predict_price is not None:
@@ -816,12 +824,13 @@ def price_forecast(region_id: str, crop_id: str, months_ahead: int = 6) -> dict[
             forecast_price = max(trend_value * seasonal_factor, 0.5)
 
         forecasts.append({
-            "month": forecast_dt.strftime("%Y-%m"),
+            "month": f"{target_year}-{target_month:02d}",
             "month_num": month,
             "forecast_price": round(forecast_price, 2),
             "seasonal_factor": round(seasonal_factor, 3),
             "confidence": "high" if (using_ml and i <= 2) else ("medium" if i <= 3 else "low"),
         })
+
 
     return {
         "region_id": region_id,
@@ -837,6 +846,112 @@ def price_forecast(region_id: str, crop_id: str, months_ahead: int = 6) -> dict[
             "Seasonal decomposition with linear trend extrapolation on last 12 months."
         ),
     }
+
+
+def calculate_disease_outbreak_risk(
+    crop_id: str = "wheat",
+    region_id: str = "mp_sehore",
+    weather: dict | None = None,
+) -> dict[str, Any]:
+    """Calculate micro-climate pest and fungal disease outbreak risk scores."""
+    if weather is None:
+        weather = {"rainfall_mm": 850.0, "avg_temp_c": 27.5, "humidity_pct": 78.0}
+
+    temp = float(weather.get("avg_temp_c", 27.5))
+    humidity = float(weather.get("humidity_pct", weather.get("rainfall_mm", 800) / 12.0))
+    humidity = max(30.0, min(95.0, humidity))
+
+    # Disease risk algorithms
+    # 1. Late Blight (High humidity > 80% and temp between 15-24 C)
+    if 15 <= temp <= 24 and humidity >= 75:
+        late_blight_risk = min(98.0, (humidity - 70) * 3.0 + (24 - abs(temp - 20)) * 2.0)
+    else:
+        late_blight_risk = max(10.0, (humidity / 100.0) * 35.0)
+
+    # 2. Rust (Temp 18-28 C, humidity > 65%)
+    if 18 <= temp <= 28 and humidity >= 65:
+        rust_risk = min(95.0, 40.0 + (humidity - 65) * 1.5 + (28 - temp) * 1.2)
+    else:
+        rust_risk = max(12.0, (temp / 40.0) * 30.0)
+
+    # 3. Whitefly / Aphids (Warm dry/humid 25-34 C)
+    if 25 <= temp <= 34:
+        whitefly_risk = min(92.0, 50.0 + (temp - 25) * 4.0)
+    else:
+        whitefly_risk = max(15.0, (temp / 35.0) * 40.0)
+
+    overall_pest_threat = round((late_blight_risk * 0.35 + rust_risk * 0.35 + whitefly_risk * 0.30), 1)
+
+    return {
+        "crop_id": crop_id,
+        "region_id": region_id,
+        "avg_temp_c": round(temp, 1),
+        "humidity_pct": round(humidity, 1),
+        "overall_threat_level": "CRITICAL" if overall_pest_threat >= 70 else ("ELEVATED" if overall_pest_threat >= 45 else "LOW"),
+        "overall_pest_score": overall_pest_threat,
+        "diseases": [
+            {
+                "name": "Fungal Late Blight",
+                "risk_score": round(late_blight_risk, 1),
+                "status": "High Alert" if late_blight_risk >= 65 else "Normal",
+                "recommendation": "Apply copper oxychloride or Mancozeb preventative spray.",
+            },
+            {
+                "name": "Leaf Rust / Stripe Rust",
+                "risk_score": round(rust_risk, 1),
+                "status": "High Alert" if rust_risk >= 65 else "Normal",
+                "recommendation": "Monitor lower canopy. Spray Propiconazole if pustules appear.",
+            },
+            {
+                "name": "Whitefly & Sucking Pests",
+                "risk_score": round(whitefly_risk, 1),
+                "status": "High Alert" if whitefly_risk >= 65 else "Normal",
+                "recommendation": "Install yellow sticky traps (10/acre) or spray Neem oil extract.",
+            },
+        ],
+    }
+
+
+def calculate_carbon_credits(
+    crop_id: str = "wheat",
+    area_acres: float = 4.0,
+    tillage_practice: str = "no_till",
+    cover_crop: bool = True,
+    biochar_application: bool = False,
+) -> dict[str, Any]:
+    """Calculate annual soil carbon sequestration in CO2e tons and monetary value."""
+    base_sequestration = 0.4  # baseline tons CO2e / acre / year
+
+    if tillage_practice == "no_till":
+        tillage_mult = 1.6
+    elif tillage_practice == "reduced_till":
+        tillage_mult = 1.25
+    else:
+        tillage_mult = 0.9
+
+    cover_bonus = 0.35 if cover_crop else 0.0
+    biochar_bonus = 0.50 if biochar_application else 0.0
+
+    seq_per_acre = (base_sequestration * tillage_mult) + cover_bonus + biochar_bonus
+    total_co2e_tons = seq_per_acre * area_acres
+
+    # Global/Indian carbon credit market price (~$15 / ₹1250 per ton CO2e)
+    inr_per_ton = 1250.0
+    annual_earning_inr = total_co2e_tons * inr_per_ton
+
+    return {
+        "crop_id": crop_id,
+        "area_acres": area_acres,
+        "tillage_practice": tillage_practice,
+        "cover_crop_enabled": cover_crop,
+        "biochar_applied": biochar_application,
+        "co2e_sequestered_tons_per_acre": round(seq_per_acre, 2),
+        "total_co2e_sequestered_tons": round(total_co2e_tons, 2),
+        "credit_rate_inr_per_ton": inr_per_ton,
+        "estimated_annual_earning_inr": round(annual_earning_inr, 2),
+        "environmental_impact": f"Equivalent to removing {round(total_co2e_tons * 0.22, 1)} petrol cars off the road for a year.",
+    }
+
 
 
 # ===========================================================================

@@ -763,10 +763,11 @@
 
     const stateVal = stateSelect.value || "Not specified";
     const districtVal = districtSelect.value || "Not specified";
-    const villageVal = document.getElementById("farmerVillage").value || "";
-    const focusVal = topicSelect.value || "General Guidance";
-    const farmSizeVal = document.getElementById("farmSize").value || "2.0";
-    const probCategoryVal = categorySelect.value || "General Query";
+    const villageVal = document.getElementById("farmerVillage")?.value || "";
+    const focusVal = topicSelect?.value || "General Guidance";
+    const farmSizeVal = document.getElementById("farmSize")?.value || "2.0";
+    const probCategoryVal = categorySelect?.value || "General Query";
+
 
     let arrivalDate = "Tomorrow";
     let arrivalTime = "10:30 AM";
@@ -879,8 +880,9 @@
     });
   });
 
-  // Run initialization on load
-  document.addEventListener("DOMContentLoaded", () => {
+  // Run initialization on load (guard against DOMContentLoaded having
+  // already fired when loaded via `defer`)
+  function init() {
     initializeStatesDropdown();
     
     // Fill initial values from form to trigger update
@@ -891,6 +893,12 @@
     state.consultationTopic = topicSelect?.value || "";
     
     updateResults();
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 
 })();

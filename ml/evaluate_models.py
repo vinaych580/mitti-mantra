@@ -50,11 +50,9 @@ MODEL_DIR.mkdir(parents=True, exist_ok=True)
 # CSV Helper
 # ---------------------------------------------------------------------------
 def _load_csv(name: str) -> list[dict[str, str]]:
-    path = DATASET_DIR / name
-    if not path.exists():
-        return []
-    with path.open("r", newline="", encoding="utf-8") as f:
-        return list(csv.DictReader(f))
+    from utils.csv_cache import load as _cached_load
+    return _cached_load(name)
+
 
 def _fit_label_encoders(crops: list[str], regions: list[str], seasons: list[str]):
     crop_le = LabelEncoder().fit(sorted(set(crops)))

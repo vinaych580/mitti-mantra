@@ -1,5 +1,6 @@
 import logging
 from typing import Dict, Any, List
+from utils.calculations import CROP_OPTIMAL_PH
 
 logger = logging.getLogger("IntelligenceLayer")
 
@@ -24,7 +25,6 @@ def explain_crop_recommendation(
     water_req = float(cp.get("water_requirement_mm", 600.0))
     cost = float(cp.get("avg_input_cost_inr_per_acre", 15000.0))
     
-    from utils.calculations import CROP_OPTIMAL_PH
     ph_min, ph_max = CROP_OPTIMAL_PH.get(crop_id.lower(), (6.0, 7.5))
     if ph_min <= ph <= ph_max:
         reasons.append(f"✓ Soil pH ({ph}) is optimal for {crop_name} (prefers {ph_min}--{ph_max}).")
@@ -44,7 +44,8 @@ def explain_crop_recommendation(
         reasons.append(f"✓ Rainfall ({rain}mm) fully covers crop water requirement ({water_req}mm).")
     else:
         deficit = round(water_req - rain, 1)
-        reasons.append(f"✓ Irrigation required: supplemental {deficit}mm needed (rainfall is {rain}mm vs requirement of {water_req}mm).")
+        reasons.append(f"⚠ Supplemental irrigation required: {deficit}mm needed (rainfall is {rain}mm vs requirement of {water_req}mm).")
+
         
     # 4. Budget check
     if budget >= cost:

@@ -88,7 +88,7 @@ class ETLPipeline:
         
         # Core checks
         coord = raw_payload.get("coordinate", {})
-        if not coord.get("lat") or not coord.get("lon"):
+        if coord.get("lat") is None or coord.get("lon") is None:
             logger.error("Validation failed: Missing coordinate values.")
             return False
             
@@ -137,15 +137,17 @@ class ETLPipeline:
         rainfall = round(precip_sum, 1)
 
         # Normalise Mandi price: extract modal price and convert quintal to kg (divide by 100)
-        modal_price_kg = 0.0
-        if mandi_records:
-            matching_mandi = [r for r in mandi_records if r.get("district", "").lower() == coord["district"].lower()]
-            record = matching_mandi[0] if matching_mandi else mandi_records[0]
+        modal_price_kg = 24.50  # Fallback baseline modal price in INR per kg
+        if mandi_records and isinstance(mandi_records, list):
+            matching_mandi = [r for r in mandi_records if isinstance(r, dict) and r.get("district", "").lower() == coord["district"].lower()]
+            record = matching_mandi[0] if matching_mandi else (mandi_records[0] if isinstance(mandi_records[0], dict) else {})
             raw_modal = record.get("modal_price")
-            if raw_modal and str(raw_modal).isdigit():
-                modal_price_kg = round(float(raw_modal) / 100.0, 2)
-            else:
-                modal_price_kg = 24.50 # Fallback baseline modal price in INR per kg
+            if raw_modal is not None:
+                try:
+                    modal_price_kg = round(float(raw_modal) / 100.0, 2)
+                except (ValueError, TypeError):
+                    modal_price_kg = 24.50
+
 
         cleaned = {
             "lat": coord["lat"],

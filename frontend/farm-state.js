@@ -152,9 +152,10 @@
     try {
       const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=14&addressdetails=1`;
       const res = await fetch(url, {
-        headers: { 'Accept-Language': 'en', 'User-Agent': 'MittiMantra/1.0' },
+        headers: { 'Accept-Language': 'en' },
         signal: AbortSignal.timeout ? AbortSignal.timeout(6000) : undefined,
       });
+
       if (!res.ok) return empty;
       const data = await res.json();
       const a = data.address || {};

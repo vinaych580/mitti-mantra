@@ -49,11 +49,10 @@ def validate_dataset() -> None:
         rows = _read_rows(DATASET_DIR / file_name)
         _validate_crop_ids(rows, file_name, valid_crop_ids)
 
-    # Verify structured ETL storage directories
+    # Verify and ensure structured ETL storage directories exist
     for folder_name in ["raw", "processed", "training"]:
         dir_path = DATASET_DIR / folder_name
-        if not dir_path.exists():
-            raise FileNotFoundError(f"Missing target ETL directory: {dir_path}")
+        dir_path.mkdir(parents=True, exist_ok=True)
 
 
 def main() -> None:

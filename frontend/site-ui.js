@@ -86,13 +86,19 @@
     a.addEventListener('click', (e) => {
       const id = a.getAttribute('href');
       if (id === '#' || id.length < 2) return;
-      const el = document.querySelector(id);
+      let el = null;
+      try {
+        el = document.querySelector(id);
+      } catch (_) {
+        return;
+      }
       if (!el) return;
       e.preventDefault();
       const navH = 72;
       window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - navH + 1, behavior: 'smooth' });
     });
   });
+
 
   /* ---------- PWA: manifest + service worker registration ---------- */
   if (!document.querySelector('link[rel="manifest"]')) {

@@ -31,15 +31,18 @@ def refresh_datasets(force_clear_cache: bool = False):
     
     for idx, coord in enumerate(PILOT_COORDINATES, start=1):
         logger.info(f"[{idx}/{total_count}] Refreshing: {coord['crop']} in {coord['district']}, {coord['state']}")
-        result = pipeline.run_etl(
-            lat=coord["lat"],
-            lon=coord["lon"],
-            state=coord["state"],
-            district=coord["district"],
-            crop=coord["crop"]
-        )
-        if result:
-            success_count += 1
+        try:
+            result = pipeline.run_etl(
+                lat=coord["lat"],
+                lon=coord["lon"],
+                state=coord["state"],
+                district=coord["district"],
+                crop=coord["crop"]
+            )
+            if result:
+                success_count += 1
+        except Exception as e:
+            logger.error(f"ETL run failed for {coord['crop']} in {coord['district']}: {e}", exc_info=True)
             
     logger.info(f"Pipeline refresh completed: {success_count}/{total_count} datasets updated successfully.")
 

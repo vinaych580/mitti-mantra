@@ -18,13 +18,8 @@ _crop_params_cache: dict[str, CropParameter] | None = None
 
 
 def _load_crop_parameters() -> dict[str, CropParameter]:
-    global _crop_params_cache
-    if _crop_params_cache is not None:
-        return _crop_params_cache
-
-    file_path = DATASET_DIR / "crop_parameters.csv"
-    with file_path.open("r", newline="", encoding="utf-8") as handle:
-        rows = list(csv.DictReader(handle))
+    from utils.csv_cache import load as _cached_load
+    rows = _cached_load("crop_parameters.csv")
 
     data: dict[str, CropParameter] = {}
     for row in rows:
@@ -44,8 +39,8 @@ def _load_crop_parameters() -> dict[str, CropParameter]:
             npk_p_kg_per_acre=float(row["npk_p_kg_per_acre"]),
             npk_k_kg_per_acre=float(row["npk_k_kg_per_acre"]),
         )
-    _crop_params_cache = data
     return data
+
 
 
 def estimate_yield_kg_per_acre(strategy: dict[str, Any]) -> float:

@@ -18,6 +18,8 @@ import json
 import os
 import time
 import hashlib
+import collections
+import threading
 from functools import wraps
 from typing import Any, Callable, Optional
 
@@ -26,7 +28,9 @@ _DEFAULT_DIR = os.path.join(
     ".cache",
 )
 
-_memory: dict[str, tuple[float, Any]] = {}
+MAX_CACHE_SIZE = 1000
+_memory: collections.OrderedDict[str, tuple[float, Any]] = collections.OrderedDict()
+_memory_lock = threading.Lock()
 
 
 def _cache_dir() -> str:
@@ -86,11 +90,15 @@ def cached(
             now = time.time()
 
             # Memory first
-            entry = _memory.get(tag)
-            if entry is not None:
-                ts, value = entry
-                if ttl_seconds <= 0 or (now - ts) < ttl_seconds:
-                    return value
+            with _memory_lock:
+                entry = _memory.get(tag)
+                if entry is not None:
+                    ts, value = entry
+                    if ttl_seconds <= 0 or (now - ts) < ttl_seconds:
+                        _memory.move_to_end(tag)
+                        return value
+                    else:
+                        _memory.pop(tag, None)
 
             # Disk next
             if serializable:
@@ -99,20 +107,27 @@ def cached(
                 if disk is not None:
                     ts, value = disk
                     if ttl_seconds <= 0 or (now - ts) < ttl_seconds:
-                        _memory[tag] = (ts, value)
+                        with _memory_lock:
+                            _memory[tag] = (ts, value)
+                            if len(_memory) > MAX_CACHE_SIZE:
+                                _memory.popitem(last=False)
                         return value
 
             # Miss — compute
             value = fn(*args, **kwargs)
-            _memory[tag] = (now, value)
+            with _memory_lock:
+                _memory[tag] = (now, value)
+                if len(_memory) > MAX_CACHE_SIZE:
+                    _memory.popitem(last=False)
             if serializable:
                 _write_disk(os.path.join(_cache_dir(), tag + ".json"), value)
             return value
 
         def clear_bucket() -> None:
-            for k in list(_memory.keys()):
-                if k == bucket or k.startswith(f"{bucket}__"):
-                    _memory.pop(k, None)
+            with _memory_lock:
+                for k in list(_memory.keys()):
+                    if k == bucket or k.startswith(f"{bucket}__"):
+                        _memory.pop(k, None)
             if serializable:
                 d = _cache_dir()
                 try:
@@ -132,11 +147,16 @@ def cached(
 
 def clear_all() -> None:
     """Drop every in-memory and on-disk cache entry."""
-    _memory.clear()
+    with _memory_lock:
+        _memory.clear()
     d = _cache_dir()
-    for name in os.listdir(d):
-        if name.endswith(".json"):
-            try:
-                os.remove(os.path.join(d, name))
-            except OSError:
-                pass
+    try:
+        for name in os.listdir(d):
+            if name.endswith(".json"):
+                try:
+                    os.remove(os.path.join(d, name))
+                except OSError:
+                    pass
+    except OSError:
+        pass
+

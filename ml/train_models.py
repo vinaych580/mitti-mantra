@@ -70,14 +70,12 @@ ALL_SEASONS = sorted({"kharif", "rabi", "annual", "perennial", "perenn"})
 
 # FIX (1.6): Added `required` parameter to fail fast on missing critical datasets
 def _load_csv(name: str, required: bool = False) -> list[dict[str, str]]:
-    path = DATASET_DIR / name
-    if not path.exists():
-        if required:
-            raise FileNotFoundError(f"Required dataset missing: {path}")
-        logger.warning("Dataset file not found, returning empty: %s", path)
-        return []
-    with path.open("r", newline="", encoding="utf-8") as f:
-        return list(csv.DictReader(f))
+    from utils.csv_cache import load as _cached_load
+    rows = _cached_load(name)
+    if not rows and required:
+        raise FileNotFoundError(f"Required dataset missing or empty: {DATASET_DIR / name}")
+    return rows
+
 
 
 # ---------------------------------------------------------------------------
