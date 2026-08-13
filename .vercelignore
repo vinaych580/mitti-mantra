@@ -53,6 +53,7 @@ ml/train_models.py
 ml/audit_models.py
 *.pt
 ml/models/*.bin
+frontend/models/disease/
 
 # Dataset bulk (only keep the root CSVs)
 dataset/plantvillage/
