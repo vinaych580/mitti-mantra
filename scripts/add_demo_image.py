@@ -6,8 +6,8 @@ import os
 
 def main():
     if len(sys.argv) < 4:
-        print("Usage: python add_demo_image.py <path_to_image> <disease_id> <severity>")
-        print("Example: python add_demo_image.py my_rice_leaf.jpg rice_neck_blast moderate")
+        print("Usage: python scripts/add_demo_image.py <path_to_image> <disease_id> <severity>")
+        print("Example: python scripts/add_demo_image.py my_rice_leaf.jpg rice_neck_blast moderate")
         sys.exit(1)
 
     image_path = sys.argv[1]

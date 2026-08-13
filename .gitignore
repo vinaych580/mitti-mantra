@@ -40,3 +40,19 @@ urllib3-2.6.3.dist-info/
 
 .vercel
 .cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# AI tooling config (local, not project source)
+.claude/
+.cursor/
+.agents/
+
+# ML training run artifacts
+catboost_info/
+
+# Stray archives / node artifacts (no package.json/npm tooling in this repo)
+*.zip
+package-lock.json

@@ -20,10 +20,7 @@ __pycache__
 .pytest_cache
 
 # Root files not needed
-frontend.zip
-PROJECT_OVERVIEW.txt
 README.md
-phase breakdown.txt
 
 # Virtual environment / root installs
 certifi/
