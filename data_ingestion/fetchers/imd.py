@@ -1,6 +1,4 @@
 import logging
-import random
-from datetime import date
 from typing import Dict, List, Optional
 from data_ingestion.cache import cached
 
@@ -18,20 +16,14 @@ class IMDClient:
         Retrieves active weather alerts for a district.
         In production, parses the NDMA/IMD CAP alert feed.
         """
-        # Under normal conditions, alert is Green (No Warning)
-        # Randomly generate weather warnings for simulation if precipitation conditions look anomalous
-        # Warning codes: "Green", "Yellow", "Orange", "Red"
-        # Alert reasons: "Heavy Rainfall", "Heat Wave", "Thundery Activities", "None"
-        seed_val = hash(state + district + date.today().isoformat()) % 100
-        
-        if seed_val > 95:
-            return {"alert_level": "Red", "description": "Extreme Heavy Rainfall warning. Sowing operations should be delayed."}
-        elif seed_val > 88:
-            return {"alert_level": "Orange", "description": "Severe Thunderstorms and heavy showers expected."}
-        elif seed_val > 80:
-            return {"alert_level": "Yellow", "description": "Light to moderate showers with gusty winds. Monitor irrigation channels."}
-            
-        return {"alert_level": "Green", "description": "Normal weather conditions. Safe to execute sowing and spraying."}
+        # Do not fabricate public safety alerts. This connector has no active
+        # IMD/CAP feed integration yet, so callers must treat the status as
+        # unavailable and consult official IMD advisories.
+        return {
+            "alert_level": "Unavailable",
+            "description": "Live IMD alerts are not configured. Check the official IMD warning feed before field operations.",
+            "source": "not_configured",
+        }
 
 _client = IMDClient()
 

@@ -588,9 +588,12 @@ def train_recommendation_model() -> dict[str, Any]:
 # Master training function
 # ===================================================================
 
-# FIX (1.5): Corrected docstring — 3 core + 1 optional disease model
 def train_all() -> dict[str, Any]:
-    """Train all ML models (3 core + 1 optional disease detection) and return combined report."""
+    """Train the 3 ML models (yield, price, recommendation) and return a combined report.
+
+    Also refreshes the crop-disease status entry in the manifests (there is no
+    trained disease model — see ml/training/disease_model.py).
+    """
     print("=" * 60)
     print("Training Yield Prediction Model...")
     yield_report = train_yield_model()
@@ -604,19 +607,17 @@ def train_all() -> dict[str, Any]:
     rec_report = train_recommendation_model()
     print(f"  Accuracy = {rec_report['metrics']['accuracy']}")
 
-    print("Training Crop Disease Detection Model...")
+    print("Crop Disease Detection: heuristic screening, not a trained model.")
     try:
         from ml.training.disease_model import train_disease_model
         disease_report = train_disease_model()
-        print(f"  Accuracy = {disease_report['metrics']['accuracy']}")
+        print(f"  {disease_report['note']}")
     except Exception as e:
-        # FIX (1.4): Report real failure status instead of hardcoded fake metrics
-        logger.warning("Disease model training failed: %s", e)
-        print(f"  Failed to train disease model: {e}")
+        logger.warning("Disease model status update failed: %s", e)
+        print(f"  Failed to update disease model status: {e}")
         disease_report = {
             "model": "crop_disease",
-            "algorithm": "MobileNetV2 (Transfer Learning)",
-            "status": "TRAINING_FAILED",
+            "status": "STATUS_UPDATE_FAILED",
             "error": str(e),
             "metrics": None,
         }

@@ -183,7 +183,12 @@ def calculate_ndvi_and_field_health(
     crop_id: str = "wheat",
     area_acres: float = 4.0,
 ) -> dict[str, Any]:
-    """Simulate Sentinel-2 satellite NDVI and sub-field health grid for coordinates."""
+    """Return a deterministic planning estimate when imagery is unavailable.
+
+    This is deliberately not presented as a satellite observation. A real
+    imagery integration must replace this estimator before it is used for
+    agronomic decisions.
+    """
     # Deterministic pseudo-random seed based on lat/lon
     seed = int(abs(lat * 1000 + lon * 100)) % 1000
     base_ndvi = 0.52 + ((seed % 35) / 100.0)  # 0.52 - 0.87
@@ -233,7 +238,8 @@ def calculate_ndvi_and_field_health(
         "mean_ndvi": round(base_ndvi, 2),
         "health_status": health_status,
         "canopy_cover_pct": round(canopy_cover_pct, 1),
-        "satellite_source": "Sentinel-2 L2A (10m Resolution)",
-        "last_updated": "2026-08-10T10:00:00Z",
+        "satellite_source": "Coordinate-based planning estimate (not satellite imagery)",
+        "is_estimate": True,
+        "last_updated": None,
         "sub_field_grid": grid,
     }

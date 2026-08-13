@@ -110,16 +110,17 @@ class CropMixRequest(BaseModel):
         return v
 
 class LoanRequest(BaseModel):
-    total_cost: float
+    total_cost: float = Field(gt=0)
     expected_profit: float
-    loan_amount: Optional[float] = None
-    interest_rate_annual: Optional[float] = 4.0
-    tenure_months: Optional[int] = 12
+    loan_amount: Optional[float] = Field(None, gt=0)
+    interest_rate_annual: Optional[float] = Field(4.0, ge=0, le=100)
+    tenure_months: Optional[int] = Field(12, ge=1, le=360)
 
 class DiseasePredictQuery(BaseModel):
     image_b64: str = Field(..., max_length=10_000_000, description="Base64 encoded crop leaf image (JPEG or PNG, max 10MB)")
     crop_id: Optional[str] = Field(None, description="Crop identifier, e.g., 'tomato'")
     region_id: Optional[str] = Field(None, description="Region identifier, e.g., 'up_lucknow'")
+    area_acres: Optional[float] = Field(1.0, gt=0, le=100_000, description="Affected plot area, used to scale treatment quantity and cost")
 
 
 class SoilProjectionRequest(BaseModel):
@@ -129,11 +130,11 @@ class SoilProjectionRequest(BaseModel):
     apply_fertilizer: Optional[bool] = True
 
 class ExpenseLogRequest(BaseModel):
-    farm_id: str
-    category: str
-    amount: float
-    date: Optional[str] = None
-    note: Optional[str] = ""
+    farm_id: str = Field(min_length=1, max_length=100)
+    category: str = Field(min_length=1, max_length=100)
+    amount: float = Field(gt=0, le=10_000_000)
+    date: Optional[str] = Field(None, max_length=10)
+    note: Optional[str] = Field("", max_length=1_000)
 
 class BenchmarkRequest(BaseModel):
     region_id: str
@@ -143,10 +144,10 @@ class BenchmarkRequest(BaseModel):
 
 # --- New Flagship Feature Request Models ---
 class NDVIQuery(BaseModel):
-    lat: float
-    lon: float
+    lat: float = Field(ge=-90, le=90)
+    lon: float = Field(ge=-180, le=180)
     crop_id: Optional[str] = "wheat"
-    area_acres: Optional[float] = 4.0
+    area_acres: Optional[float] = Field(4.0, gt=0, le=100_000)
 
 class ClimateAlertQuery(BaseModel):
     crop_id: str = "wheat"
@@ -155,20 +156,20 @@ class ClimateAlertQuery(BaseModel):
 
 class CarbonCreditQuery(BaseModel):
     crop_id: str = "wheat"
-    area_acres: float = 4.0
+    area_acres: float = Field(4.0, gt=0, le=100_000)
     tillage_practice: Optional[str] = "no_till"  # 'conventional', 'reduced_till', 'no_till'
     cover_crop: Optional[bool] = True
     biochar_application: Optional[bool] = False
 
 class IoTTelemetryQuery(BaseModel):
-    farm_id: Optional[str] = "farm_01"
+    farm_id: Optional[str] = Field("farm_01", min_length=1, max_length=100)
 
 class IoTTriggerRequest(BaseModel):
-    farm_id: Optional[str] = "farm_01"
-    target_moisture_pct: Optional[float] = 65.0
-    current_moisture_pct: Optional[float] = 40.0
-    area_acres: Optional[float] = 4.0
-    flow_rate_lpm: Optional[float] = 120.0
+    farm_id: Optional[str] = Field("farm_01", min_length=1, max_length=100)
+    target_moisture_pct: Optional[float] = Field(65.0, ge=0, le=100)
+    current_moisture_pct: Optional[float] = Field(40.0, ge=0, le=100)
+    area_acres: Optional[float] = Field(4.0, gt=0, le=100_000)
+    flow_rate_lpm: Optional[float] = Field(120.0, gt=0, le=100_000)
 
 
 class CropRecQuery(BaseModel):
@@ -201,4 +202,14 @@ class FertilizerQuery(BaseModel):
     n_kg_per_acre: float = Field(..., ge=0, description="Current soil Nitrogen content in kg per acre")
     p_kg_per_acre: float = Field(..., ge=0, description="Current soil Phosphorus content in kg per acre")
     k_kg_per_acre: float = Field(..., ge=0, description="Current soil Potassium content in kg per acre")
+
+
+class UsageCollectRequest(BaseModel):
+    """Anonymous event counts, e.g. {"tool_open_recommend": 3}.
+
+    Deliberately has no identifier field of any kind — no user id, session id or
+    timestamp — so two submissions can never be tied to the same person.
+    Event names are validated against a strict pattern in utils/usage_store.
+    """
+    counts: Dict[str, int] = Field(default_factory=dict, max_length=60)
 

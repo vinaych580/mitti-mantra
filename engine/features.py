@@ -815,9 +815,10 @@ def price_forecast(region_id: str, crop_id: str, months_ahead: int = 6) -> dict[
         if _ml_predict_price is not None:
             ml_price = _ml_predict_price(region_id, crop_id, rolling_prices, month, year)
 
-        if ml_price is not None and ml_price > 0:
+        used_ml_this_step = ml_price is not None and ml_price > 0
+        if used_ml_this_step:
             forecast_price = ml_price
-            using_ml = True
+            using_ml = True  # at least one step used the ML model
             rolling_prices.append(forecast_price)  # feed prediction back for next step
         else:
             trend_value = intercept + slope * (len(recent) - 1 + i)
@@ -828,7 +829,7 @@ def price_forecast(region_id: str, crop_id: str, months_ahead: int = 6) -> dict[
             "month_num": month,
             "forecast_price": round(forecast_price, 2),
             "seasonal_factor": round(seasonal_factor, 3),
-            "confidence": "high" if (using_ml and i <= 2) else ("medium" if i <= 3 else "low"),
+            "confidence": "high" if (used_ml_this_step and i <= 2) else ("medium" if i <= 3 else "low"),
         })
 
 
@@ -919,7 +920,7 @@ def calculate_carbon_credits(
     cover_crop: bool = True,
     biochar_application: bool = False,
 ) -> dict[str, Any]:
-    """Calculate annual soil carbon sequestration in CO2e tons and monetary value."""
+    """Return a transparent planning estimate, not verified carbon credits."""
     base_sequestration = 0.4  # baseline tons CO2e / acre / year
 
     if tillage_practice == "no_till":
@@ -949,6 +950,8 @@ def calculate_carbon_credits(
         "total_co2e_sequestered_tons": round(total_co2e_tons, 2),
         "credit_rate_inr_per_ton": inr_per_ton,
         "estimated_annual_earning_inr": round(annual_earning_inr, 2),
+        "is_verified_credit": False,
+        "disclaimer": "Estimate only. Soil sampling, an approved methodology, and registry verification are required before any credit can be issued or sold.",
         "environmental_impact": f"Equivalent to removing {round(total_co2e_tons * 0.22, 1)} petrol cars off the road for a year.",
     }
 

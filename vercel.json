@@ -25,6 +25,30 @@
       "destination": "/frontend/gyan-seva.html"
     },
     {
+      "source": "/book-a-consultation",
+      "destination": "/frontend/gyan-seva.html"
+    },
+    {
+      "source": "/book-consultation",
+      "destination": "/frontend/gyan-seva.html"
+    },
+    {
+      "source": "/book-a-tractor",
+      "destination": "/frontend/book-a-tractor.html"
+    },
+    {
+      "source": "/dashboard",
+      "destination": "/frontend/dashboard.html"
+    },
+    {
+      "source": "/login",
+      "destination": "/frontend/login.html"
+    },
+    {
+      "source": "/farm-boundary",
+      "destination": "/frontend/farm-boundary.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/frontend/$1"
     }

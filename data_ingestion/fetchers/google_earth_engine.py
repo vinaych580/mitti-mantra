@@ -1,6 +1,5 @@
 import logging
 import os
-import random
 from datetime import date
 from typing import Dict, Optional
 from data_ingestion.cache import cached
@@ -83,13 +82,8 @@ class GoogleEarthEngineClient:
             except Exception as e:
                 logger.error(f"Error computing GEE NDVI: {e}")
         
-        # Self-healing fallback: Estimate expected seasonal NDVI based on location and crop schedule
-        logger.info("Using crop-rainfall proxy estimator for GEE NDVI.")
-        # Peak NDVI usually lands around 0.55 to 0.75 for healthy vegetative crops in wet seasons
-        # Standard baseline for typical soil:
-        base_ndvi = 0.35 + (random.random() * 0.15)
-        # Wet weather increases index slightly
-        return round(min(0.85, base_ndvi + 0.15), 3)
+        logger.info("Earth Engine imagery is unavailable; returning no observation.")
+        return None
 
 _client = GoogleEarthEngineClient()
 

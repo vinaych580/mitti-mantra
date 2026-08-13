@@ -105,7 +105,7 @@ def get_yield_trend(region_id: str, crop_id: str):
 
 @router.get("/satellite")
 async def get_satellite_data(lat: float, lon: float):
-    """Retrieve satellite telemetry data (NDVI, soil moisture, canopy) from Earth Engine."""
+    """Retrieve satellite telemetry when Earth Engine is configured."""
     from data_ingestion.fetchers.google_earth_engine import get_satellite_ndvi
     from datetime import date, timedelta
     today = date.today()
@@ -114,16 +114,15 @@ async def get_satellite_data(lat: float, lon: float):
     try:
         ndvi = get_satellite_ndvi(lat, lon, start_date, today)
         if ndvi is None:
-            ndvi = 0.62
+            return {"available": False, "source": "not_configured", "message": "Live satellite imagery is not configured."}
     except Exception:
-        ndvi = 0.62
-        
-    seed = int(abs(lat * 100) + abs(lon * 100)) % 100
-    moisture = 0.35 + (seed % 40) / 100
+        return {"available": False, "source": "unavailable", "message": "Live satellite imagery could not be retrieved."}
+
     canopy = "Excellent" if ndvi > 0.6 else "Good" if ndvi > 0.4 else "Fair" if ndvi > 0.2 else "Poor"
     
     return {
+        "available": True,
+        "source": "Google Earth Engine / Sentinel-2",
         "ndvi": round(float(ndvi), 2),
-        "moisture": round(float(moisture), 2),
         "canopy": canopy
     }

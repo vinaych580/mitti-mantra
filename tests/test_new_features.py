@@ -53,7 +53,8 @@ def test_iot_telemetry_and_pump_trigger():
     res_tel = client.post("/api/iot/telemetry?farm_id=test_farm")
     assert res_tel.status_code == 200
     data_tel = res_tel.json()
-    assert data_tel["sensor_status"] == "ONLINE_NORMAL"
+    assert data_tel["source"] == "sample_data"
+    assert data_tel["is_live"] is False
     assert "soil_moisture_pct" in data_tel
 
     # Pump trigger
@@ -68,4 +69,5 @@ def test_iot_telemetry_and_pump_trigger():
     assert res_pump.status_code == 200
     data_pump = res_pump.json()
     assert data_pump["recommended_pump_runtime_minutes"] > 0
-    assert data_pump["pump_command"] == "TRIGGER_PUMP_ON"
+    assert data_pump["control_action"] == "RECOMMEND_IRRIGATION"
+    assert data_pump["is_controlled"] is False

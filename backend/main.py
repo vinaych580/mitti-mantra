@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, Header, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -8,6 +8,7 @@ from typing import Dict, Any, List, Optional
 from statistics import mean
 import sys
 import os
+import secrets
 import numpy as np
 
 # Add project root to path to import engine and utils
@@ -49,6 +50,7 @@ from engine.features import (
     calculate_disease_outbreak_risk,
     calculate_carbon_credits,
 )
+from engine.disease_actions import build_action_plan
 
 
 from backend.routers.data import router as data_router
@@ -56,12 +58,18 @@ from backend.routers.data import router as data_router
 app = FastAPI(title="AgriSim - Farm Intelligence Platform")
 app.include_router(data_router, prefix="/api")
 
-# Allow CORS for local dev.
-# NOTE: Browsers reject "Access-Control-Allow-Origin: *" together with
-# Access-Control-Allow-Credentials: true, so we disable credentials here.
+# Cross-origin access is only needed during local development or when the
+# static frontend is hosted separately. Same-origin production deployments do
+# not need CORS at all. Configure additional origins with CORS_ORIGINS.
+_default_cors_origins = "http://localhost:8000,http://127.0.0.1:8000"
+_cors_origins = [
+    origin.strip().rstrip("/")
+    for origin in os.getenv("CORS_ORIGINS", _default_cors_origins).split(",")
+    if origin.strip()
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=_cors_origins,
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -118,6 +126,7 @@ from backend.models import (
     CarbonCreditQuery,
     IoTTelemetryQuery,
     IoTTriggerRequest,
+    UsageCollectRequest,
 )
 
 
@@ -129,6 +138,22 @@ from backend.models import (
 # below use index_by() to skip full-table scans entirely.
 def read_csv(filename: str) -> List[Dict[str, str]]:
     return _csv_load(filename)
+
+_DEFAULT_YIELD_RMSE = 950.0  # fallback if the audit report is unavailable
+
+def _yield_model_rmse() -> float:
+    """Read the yield model's RMSE from ml/models/audit_metrics.json."""
+    import json
+    audit_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ml", "models", "audit_metrics.json")
+    try:
+        with open(audit_path, "r") as f:
+            audit = json.load(f)
+        rmse = audit.get("yield_prediction", {}).get("rmse")
+        if rmse is not None:
+            return float(rmse)
+    except (OSError, ValueError, KeyError):
+        pass
+    return _DEFAULT_YIELD_RMSE
 
 # --- API Endpoints ---
 
@@ -142,6 +167,17 @@ async def cache_stats():
     """Diagnostic: current CSV cache state (rows per file + indexes)."""
     from utils.csv_cache import stats as _stats
     return _stats()
+
+
+@app.get("/api/data-freshness")
+def data_freshness():
+    """Provenance + age of every dataset behind the numbers shown to the user.
+
+    Lets the frontend badge whether mandi prices are live from data.gov.in or a
+    fallback to the seed CSV, which is otherwise a silent downgrade.
+    """
+    from utils.provenance import describe_sources
+    return describe_sources()
 
 
 @app.get("/api/location-insights/{region_id}")
@@ -277,7 +313,7 @@ def get_climate_alerts(req: ClimateAlertQuery):
 
 @app.post("/api/carbon-credits")
 def get_carbon_credits(req: CarbonCreditQuery):
-    """Calculates soil carbon sequestration and carbon credit earnings."""
+    """Returns an unverified carbon-planning estimate, not saleable credits."""
     try:
         return calculate_carbon_credits(
             crop_id=req.crop_id,
@@ -291,11 +327,13 @@ def get_carbon_credits(req: CarbonCreditQuery):
 
 @app.post("/api/iot/telemetry")
 def get_iot_telemetry(req: Optional[IoTTelemetryQuery] = None):
-    """Returns live simulated IoT telemetry stream for soil probes & weather station."""
+    """Returns a clearly labelled sample payload until a sensor integration exists."""
     try:
         from datetime import datetime, timezone
         farm_id = (req and req.farm_id) or "farm_01"
         return {
+            "source": "sample_data",
+            "is_live": False,
             "farm_id": farm_id,
             "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
             "soil_moisture_pct": 38.5,
@@ -316,7 +354,7 @@ def get_iot_telemetry(req: Optional[IoTTelemetryQuery] = None):
 
 @app.post("/api/iot/pump-trigger")
 def trigger_smart_pump(req: IoTTriggerRequest):
-    """Calculates exact water volume and smart pump runtime to restore target moisture."""
+    """Calculates a pump-runtime recommendation; it never controls equipment."""
     try:
         deficit_pct = max(0.0, (req.target_moisture_pct or 65.0) - (req.current_moisture_pct or 40.0))
         area = req.area_acres or 4.0
@@ -334,7 +372,8 @@ def trigger_smart_pump(req: IoTTriggerRequest):
             "required_water_liters": water_volume_liters,
             "flow_rate_lpm": flow,
             "recommended_pump_runtime_minutes": runtime_minutes,
-            "pump_command": "TRIGGER_PUMP_ON" if deficit_pct > 5 else "OPTIMAL_NO_ACTION",
+            "control_action": "RECOMMEND_IRRIGATION" if deficit_pct > 5 else "NO_ACTION_RECOMMENDED",
+            "is_controlled": False,
             "estimated_electricity_kwh": round(runtime_minutes * 0.08, 2),
         }
     except Exception as e:
@@ -395,6 +434,8 @@ def optimal_crop_mix(req: CropMixRequest):
         "total_expected_profit": round(total_profit, 2),
         "avg_risk_score": round(avg_risk, 2),
         "num_crops": len(allocations),
+        "unallocated_budget": round(max(0.0, remaining_budget), 2),
+        "unallocated_area_acres": round(max(0.0, remaining_area), 2),
     }
 
 # ---------------------------------------------------------------------------
@@ -517,18 +558,64 @@ def get_benchmark(req: BenchmarkRequest):
 
 @app.post("/api/expense/log")
 def post_expense(req: ExpenseLogRequest):
-    """Log an actual expense."""
-    return log_expense(req.farm_id, req.category, req.amount, req.date, req.note)
+    """Expense persistence requires authenticated, tenant-scoped storage."""
+    raise HTTPException(status_code=503, detail="Expense storage is disabled until authenticated storage is configured.")
 
 @app.get("/api/expense/{farm_id}")
 def get_expenses(farm_id: str, planned_budget: Optional[float] = None):
-    """Get expense summary with optional variance analysis."""
-    return get_expense_summary(farm_id, planned_budget)
+    """Expense persistence requires authenticated, tenant-scoped storage."""
+    raise HTTPException(status_code=503, detail="Expense storage is disabled until authenticated storage is configured.")
 
 @app.get("/api/government-schemes")
 def get_schemes(crop_id: str = "all", region_id: str = "all", area_acres: float = 3, season: str = "all"):
     """Match eligible government schemes for farmer profile."""
     return match_government_schemes(crop_id, region_id, area_acres, season)
+
+
+# ---------------------------------------------------------------------------
+# Usage instrumentation
+#
+# Accepts anonymous event *counts* only — see utils/usage_store for the privacy
+# constraints. Disabled unless the operator sets ENABLE_USAGE_COLLECTION=true,
+# and the browser only sends anything after an explicit opt-in.
+# ---------------------------------------------------------------------------
+
+@app.get("/api/usage/config")
+def usage_config():
+    """Lets the frontend show or hide the sharing opt-in."""
+    from utils.usage_store import collection_enabled
+    return {"collection_enabled": collection_enabled()}
+
+
+@app.post("/api/usage/collect")
+def usage_collect(req: UsageCollectRequest):
+    from utils.usage_store import collection_enabled, record
+    if not collection_enabled():
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Usage collection is disabled on this server.",
+        )
+    return record(req.counts)
+
+
+@app.get("/api/usage/summary")
+def usage_summary(days: int = 30, x_admin_key: Optional[str] = Header(default=None)):
+    """Aggregate counts. Admin-gated: operational data, not a public endpoint."""
+    from utils.usage_store import collection_enabled, summary
+    if not collection_enabled():
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Usage collection is disabled on this server.",
+        )
+    expected_key = os.getenv("ADMIN_API_KEY")
+    if not expected_key:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Usage reporting requires ADMIN_API_KEY to be configured.",
+        )
+    if not x_admin_key or not secrets.compare_digest(x_admin_key, expected_key):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid admin key.")
+    return summary(days)
 
 
 
@@ -538,8 +625,21 @@ def get_schemes(crop_id: str = "all", region_id: str = "all", area_acres: float 
 # ---------------------------------------------------------------------------
 
 @app.post("/api/ml/train")
-def train_models():
-    """Train all 3 ML models (yield, price, crop recommendation)."""
+def train_models(x_admin_key: Optional[str] = Header(default=None)):
+    """Train models only when an administrator explicitly enables the job."""
+    if os.getenv("ENABLE_MODEL_TRAINING", "false").lower() != "true":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Model training is disabled. Enable it only for an admin-controlled job.",
+        )
+    expected_key = os.getenv("ADMIN_API_KEY")
+    if not expected_key:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Model-training administration is not configured.",
+        )
+    if not x_admin_key or not secrets.compare_digest(x_admin_key, expected_key):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid admin key.")
     try:
         from ml.train_models import train_all as ml_train_all
         report = ml_train_all()
@@ -568,16 +668,16 @@ def model_status():
         with open(audit_path, "r") as f:
             audit = json.load(f)
             
-    disease_model_dir = os.path.join(model_dir, "disease")
-    disease_model_loaded = os.path.exists(os.path.join(disease_model_dir, "model.json"))
-            
     return {
         "yield_model_loaded": pred._ml_yield_model is not None,
         "price_model_loaded": pred._ml_price_model is not None,
         "recommend_model_loaded": pred._ml_recommend_model is not None,
-        "disease_model_loaded": disease_model_loaded,
+        "disease_model_loaded": False,
+        "disease_screening_available": True,
         "model_dir": "ml/models",
+        "model_provenance": "Development planning artifacts trained from the repository seed data and synthetic augmentation; not independently validated field models.",
         "models_exist": os.path.exists(os.path.join(model_dir, "yield_model.joblib")),
+        "training_enabled": os.getenv("ENABLE_MODEL_TRAINING", "false").lower() == "true",
         "training_report": manifest,
         "audit_metrics": audit
     }
@@ -819,10 +919,9 @@ DISEASE_METADATA = {
 @app.post("/api/disease/predict")
 async def predict_disease_api(req: DiseasePredictQuery):
     """
-    Server-side crop disease prediction using HSV colour analysis + texture.
-    Converts each image to HSV space and computes per-channel histograms plus
-    texture variance. A rule-based decision tree classifies across 18 disease
-    classes. Each unique image produces a different result.
+    Preliminary visual screening using HSV colour and texture heuristics.
+    This is not a validated diagnostic model and must not be used as a basis
+    for pesticide use or other irreversible farm decisions.
     """
     import base64
     import io
@@ -846,13 +945,51 @@ async def predict_disease_api(req: DiseasePredictQuery):
                 dm = demo_data[img_hash]
                 class_name = dm["class_name"]
                 meta = DISEASE_METADATA.get(class_name, DISEASE_METADATA["tomato_healthy"])
+                matched_crop = class_name.split("_")[0]
+
+                matched_schemes: list[str] = []
+                if req.region_id:
+                    try:
+                        schemes_res = match_government_schemes(matched_crop, req.region_id)
+                        for esc in schemes_res.get("eligible_schemes", []):
+                            if esc["scheme_id"] in meta["schemes"] or (
+                                esc["scheme_id"] == "pkvy" and len(meta.get("organic", [])) > 0
+                            ):
+                                matched_schemes.append(
+                                    f"{esc['scheme_name']} ({esc['description']}) — URL: {esc['url']}"
+                                )
+                    except Exception:
+                        pass
+                if not matched_schemes:
+                    for sid in meta.get("schemes", []):
+                        if sid == "pmfby":
+                            matched_schemes.append("PMFBY (Crop Insurance) — URL: https://pmfby.gov.in")
+                        elif sid == "kkc":
+                            matched_schemes.append("Kisan Credit Card — URL: https://www.nabard.org")
+                        elif sid == "pkvy":
+                            matched_schemes.append("PKVY (Organic Cluster Subsidy) — URL: https://pgsindia-ncof.gov.in")
+
+                treatments = (
+                    [f"Organic: {o}" for o in meta.get("organic", [])]
+                    + [f"Chemical Escalation: {c}" for c in meta.get("chemical", [])]
+                )
+
                 return {
+                    "analysis_type": "heuristic_screening",
+                    "disclaimer": "This is not a diagnosis. Confirm symptoms with a qualified agronomist before treatment.",
                     "disease": meta["disease"],
                     "confidence": dm["confidence"],
                     "severity": dm["severity"],
+                    "treatment": treatments,
                     "organic_treatment": meta.get("organic", []),
                     "chemical_treatment": meta.get("chemical", []),
-                    "eligible_schemes": meta.get("schemes", []),
+                    "crop_matched": matched_crop,
+                    "region_context": req.region_id or "all",
+                    "lesion_area_pct": None,
+                    "subsidy_eligible_schemes": matched_schemes,
+                    "action_plan": build_action_plan(
+                        class_name, req.area_acres or 1.0, dm["severity"]
+                    ),
                     "is_demo_mode": True,
                 }
 
@@ -959,8 +1096,12 @@ async def predict_disease_api(req: DiseasePredictQuery):
                     return ("maize_healthy", min(0.97, 0.85 + hue_green * 0.12))
 
             elif c == "soybean":
-                # Currently only healthy soybean is defined in our ALL_CLASSES
-                return ("soybean_healthy", min(0.97, 0.87 + hue_green * 0.10))
+                # Only a healthy baseline exists for soybean in DISEASE_METADATA
+                # (no soybean disease classes are defined), so this heuristic
+                # cannot actually detect a soybean disease. Return the floor
+                # confidence rather than a confident "healthy" verdict so the
+                # caller can flag the coverage gap instead of asserting health.
+                return ("soybean_healthy", 0.45)
 
             else:
                 # Default to Tomato (c == "tomato" or c == "")
@@ -1034,7 +1175,9 @@ async def predict_disease_api(req: DiseasePredictQuery):
             + [f"Chemical Escalation: {c}" for c in meta.get("chemical", [])]
         )
 
-        return {
+        response = {
+            "analysis_type": "heuristic_screening",
+            "disclaimer": "This is not a diagnosis. Confirm symptoms with a qualified agronomist before treatment.",
             "disease": meta["disease"],
             "confidence": confidence,
             "severity": severity,
@@ -1045,7 +1188,14 @@ async def predict_disease_api(req: DiseasePredictQuery):
             "region_context": req.region_id or "all",
             "lesion_area_pct": round(float(lesion_frac * 100), 2),
             "subsidy_eligible_schemes": matched_schemes,
+            "action_plan": build_action_plan(best_class, req.area_acres or 1.0, severity),
         }
+        if crop == "soybean":
+            response["coverage_note"] = (
+                "Soybean disease classes are not covered by this heuristic — only a "
+                "healthy baseline exists, so a disease cannot be ruled out from this result."
+            )
+        return response
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Inference failure: {str(e)}")
@@ -1173,10 +1323,14 @@ async def get_yield_prediction_api(crop_id: str, region_id: str, season: str, ir
             "organic_carbon_percent": float(soil_data.get(region_id, {}).get("organic_carbon_percent", 0.5))
         }
         yld = predict_yield_kg_per_acre(crop_id, region_id, season, weather, soil, irrigation_level)
-        
-        # 95% confidence interval using residual std error from audit report
-        lower_bound = max(0.0, yld - 1979)
-        upper_bound = yld + 1979
+
+        # 95% confidence interval: ±1.96 * RMSE, RMSE read live from the
+        # yield model's audit report so the band tracks whatever model is
+        # actually loaded rather than a number from a past training run.
+        rmse = _yield_model_rmse()
+        margin = round(1.96 * rmse, 2)
+        lower_bound = max(0.0, yld - margin)
+        upper_bound = yld + margin
         
         from engine.intelligence_layer import explain_yield_prediction
         explanation = explain_yield_prediction(crop_id, yld, round(lower_bound, 2), round(upper_bound, 2), soil, weather)
@@ -1374,34 +1528,25 @@ frontend_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 if os.path.exists(frontend_dir):
     from fastapi.responses import FileResponse
     
-    # Mount disease model static files
-    disease_model_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ml", "models", "disease")
-    try:
-        os.makedirs(disease_model_dir, exist_ok=True)
-    except OSError:
-        pass
-    if os.path.exists(disease_model_dir):
-        app.mount("/models/disease", StaticFiles(directory=disease_model_dir), name="disease_model_static")
-
-    @app.api_route("/gyan-seva", methods=["GET", "HEAD"])
-    @app.api_route("/book-a-consultation", methods=["GET", "HEAD"])
-    @app.api_route("/book-consultation", methods=["GET", "HEAD"])
+    @app.api_route("/gyan-seva", methods=["GET"])
+    @app.api_route("/book-a-consultation", methods=["GET"])
+    @app.api_route("/book-consultation", methods=["GET"])
     async def gyan_seva_route(request: Request):
         return FileResponse(os.path.join(frontend_dir, "gyan-seva.html"))
 
-    @app.api_route("/book-a-tractor", methods=["GET", "HEAD"])
+    @app.api_route("/book-a-tractor", methods=["GET"])
     async def book_a_tractor_route(request: Request):
         return FileResponse(os.path.join(frontend_dir, "book-a-tractor.html"))
 
-    @app.api_route("/dashboard", methods=["GET", "HEAD"])
+    @app.api_route("/dashboard", methods=["GET"])
     async def dashboard_route(request: Request):
         return FileResponse(os.path.join(frontend_dir, "dashboard.html"))
 
-    @app.api_route("/login", methods=["GET", "HEAD"])
+    @app.api_route("/login", methods=["GET"])
     async def login_route(request: Request):
         return FileResponse(os.path.join(frontend_dir, "login.html"))
 
-    @app.api_route("/farm-boundary", methods=["GET", "HEAD"])
+    @app.api_route("/farm-boundary", methods=["GET"])
     async def farm_boundary_route(request: Request):
         return FileResponse(os.path.join(frontend_dir, "farm-boundary.html"))
 
