@@ -153,6 +153,19 @@
     padding:7px 14px;font-weight:600;font-size:12.5px;cursor:pointer;}
   .mm-farm-bar__save:hover{background:#1b5e20;}
   .mm-farm-bar__hint{font-size:.7rem;color:#5b6b5b;margin-left:6px;}
+  /* On phones the four fields wrap to ~290px tall. Sticky, that plus the
+     72px fixed nav held 45% of the viewport permanently — so unpin it and
+     pack the fields two-up instead. */
+  @media (max-width:860px){
+    .mm-farm-bar{position:static;}
+  }
+  @media (max-width:620px){
+    .mm-farm-bar{gap:8px;padding:10px 12px;}
+    .mm-farm-bar__field{min-width:0;flex:1 1 calc(50% - 4px);}
+    .mm-farm-bar select,.mm-farm-bar input{min-width:0;width:100%;}
+    .mm-farm-bar__hint{display:none;}
+    .mm-farm-bar__save{margin-left:0;flex:1 1 100%;}
+  }
 
   /* ---- Tools floating menu (share / a11y / install) ---- */
   .mm-tools-fab{position:fixed;left:18px;bottom:22px;width:44px;height:44px;border-radius:50%;
@@ -365,6 +378,62 @@
     pop.appendChild(h2);
     addToggleRow("Large text", "🅰️", "largeText");
     addToggleRow("High contrast", "🌓", "highContrast");
+
+    // Privacy — usage counting is local-only by default; sharing is opt-in and
+    // additionally requires ENABLE_USAGE_COLLECTION on the server.
+    const analytics = () => window.MM && window.MM.analytics;
+    if (analytics()) {
+      pop.appendChild(document.createElement("hr"));
+      const h3 = header.cloneNode(true);
+      h3.textContent = "Privacy";
+      pop.appendChild(h3);
+
+      const addAnalyticsToggle = (label, icon, read, write) => {
+        const b = row(label, icon);
+        const chk = document.createElement("span");
+        chk.className = "mm-chk";
+        b.appendChild(chk);
+        const refresh = () => { chk.textContent = read() ? "✓" : ""; };
+        refresh();
+        b.addEventListener("click", () => { write(!read()); refresh(); });
+        pop.appendChild(b);
+        return b;
+      };
+
+      addAnalyticsToggle(
+        "Count my tool usage", "📊",
+        () => analytics().isEnabled(),
+        (on) => {
+          analytics().setEnabled(on);
+          toast(on ? "Counting tool usage on this device" : "Usage counting off — history cleared");
+        }
+      );
+
+      const shareRow = addAnalyticsToggle(
+        "Share anonymous counts", "📮",
+        () => analytics().isSharing(),
+        (on) => {
+          analytics().setSharing(on);
+          toast(on ? "Sharing anonymous tool counts" : "Sharing off");
+        }
+      );
+      // Hide the sharing option entirely when the server does not accept it.
+      shareRow.style.display = "none";
+      analytics().serverAcceptsUploads().then((ok) => {
+        if (ok) shareRow.style.display = "";
+      });
+
+      const statsBtn = row("My most used tools", "🏅");
+      statsBtn.addEventListener("click", () => {
+        const s = analytics().summary();
+        if (!s.total) { toast("No usage recorded yet"); return; }
+        const top = s.events.slice(0, 3)
+          .map((e) => e.event.replace(/^(tool_open_|api_)/, "").replace(/_/g, " "))
+          .join(", ");
+        toast(`${s.total} actions since ${s.since} · top: ${top}`, 4000);
+      });
+      pop.appendChild(statsBtn);
+    }
 
     // Install (PWA) — row is hidden until beforeinstallprompt fires
     pop.appendChild(document.createElement("hr"));

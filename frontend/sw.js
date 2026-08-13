@@ -6,7 +6,7 @@
      • Network-only for API calls to the backend.
 */
 
-const VERSION = 'mittimantra-v25';
+const VERSION = 'mittimantra-v26';
 const CORE = [
   './',
   './index.html',
@@ -26,14 +26,17 @@ const CORE = [
   './dashboard.js',
   './offline-simulator.js',
   './farm-boundary.js',
+  './farm-state.js',
+  './i18n-data.js',
   './i18n.js',
   './toolbar.js',
   './mm-core.js',
+  './mm-analytics.js',
+  './mm-freshness.js',
+  './mm-plots.js',
   './mm-enhance.js',
   './chatbot.js',
   './manifest.webmanifest',
-  './models/disease/model.json',
-  './models/disease/group1-shard1of1.bin'
 ];
 
 self.addEventListener('install', (event) => {

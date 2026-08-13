@@ -57,8 +57,11 @@
 
         <div class="farmmap__actions" id="farmActions" style="display:none;">
           <button class="btn btn-ghost" id="farmClear" type="button">Clear</button>
+          <button class="btn btn-ghost" id="farmAddPlot" type="button" style="display:none;">Save as new plot</button>
           <button class="btn btn-primary" id="farmUse" type="button">Use in dashboard →</button>
         </div>
+
+        <div class="farmmap__plots" id="farmPlots" style="display:none;"></div>
       </aside>
 
       <div class="farmmap__map" id="farmMap"></div>
@@ -72,6 +75,7 @@
   <script src="site-ui.js"></script>
   <script src="farm-state.js"></script>
   <script src="farm-boundary.js"></script>
+  <script src="i18n-data.js"></script>
   <script src="i18n.js"></script>
   <script src="toolbar.js"></script>
 </body>

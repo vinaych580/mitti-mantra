@@ -1,12 +1,19 @@
 /* =========================================================
    AgriSim — lightweight i18n
    Supports English (en), Hindi (hi), Telugu (te), Kannada (kn).
-   Strategy:
-     • Walk all visible text nodes + translatable attributes.
-     • Translate via free MyMemory API (no API key required).
-     • Cache per-string in localStorage so subsequent loads are
-       instant and offline-safe.
-     • A floating language-switcher pill is auto-injected.
+
+   Strategy (rewritten — see i18n-data.js for the "why"):
+     • Walk all visible text nodes + translatable attributes, exactly as
+       before.
+     • Look each trimmed string up in the hand-written catalog
+       (window.MM_I18N_CATALOG) loaded from i18n-data.js. No network call,
+       no rate limit, no waiting — the lookup is synchronous.
+     • Glossary terms (window.MM_I18N_GLOSSARY — brand name, acronyms like
+       MSP/PMFBY, units) are never altered, even mid-sentence.
+     • A string with no catalog entry is left in English rather than guessed.
+       Coverage is intentionally scoped to the site chrome a farmer sees
+       every visit; see i18n-data.js for what's in and why.
+     • A floating language-switcher pill is auto-injected, same as before.
    ========================================================= */
 
 (() => {
@@ -17,25 +24,17 @@
     { code: 'kn', label: 'ಕ',  name: 'ಕನ್ನಡ' }
   ];
 
-  const LANG_KEY  = 'agrisim_lang';
-  const CACHE_KEY = 'agrisim_i18n_cache_v1';
+  const LANG_KEY = 'agrisim_lang';
 
   const SKIP_TAGS = new Set(['SCRIPT', 'STYLE', 'CODE', 'PRE', 'NOSCRIPT', 'SVG', 'CANVAS']);
   const TRANSLATABLE_ATTRS = ['placeholder', 'title', 'alt', 'aria-label'];
 
-  // Strings like "25.4", "78%" — don't translate pure numbers/symbols.
-  const NUMERIC_ONLY = /^[\s\d.,:;%°\-+/\\()\[\]<>!?&*@#$]+$/;
-
-  let cache = {};
-  try { cache = JSON.parse(localStorage.getItem(CACHE_KEY) || '{}'); } catch (_) { cache = {}; }
+  const CATALOG = window.MM_I18N_CATALOG || {};
+  const GLOSSARY = new Set((window.MM_I18N_GLOSSARY || []).map((g) => g.toLowerCase()));
 
   // Store originals so we can restore English or re-translate.
   const nodeOriginals = new WeakMap();   // textNode -> original string
   const attrOriginals = new WeakMap();   // element  -> { attr: originalValue }
-
-  function saveCache() {
-    try { localStorage.setItem(CACHE_KEY, JSON.stringify(cache)); } catch (_) {}
-  }
 
   /* ---------- DOM collection ---------- */
   function collectTextNodes(root) {
@@ -43,7 +42,6 @@
       acceptNode(n) {
         const v = n.nodeValue;
         if (!v || !v.trim()) return NodeFilter.FILTER_REJECT;
-        if (NUMERIC_ONLY.test(v)) return NodeFilter.FILTER_REJECT;
         let p = n.parentElement;
         while (p) {
           if (SKIP_TAGS.has(p.tagName)) return NodeFilter.FILTER_REJECT;
@@ -66,63 +64,35 @@
       if (SKIP_TAGS.has(el.tagName)) return;
       TRANSLATABLE_ATTRS.forEach(a => {
         const v = el.getAttribute(a);
-        if (v && v.trim() && !NUMERIC_ONLY.test(v)) out.push({ el, attr: a });
+        if (v && v.trim()) out.push({ el, attr: a });
       });
     });
     return out;
   }
 
-  /* ---------- Translation (MyMemory free API) ---------- */
-  async function translateOne(text, target) {
-    if (target === 'en') return text;
+  /* ---------- Catalog lookup ---------- */
+
+  /**
+   * Translate one string via the static catalog. Glossary terms are matched
+   * whole (case-insensitively) and passed through unchanged; anything not in
+   * the catalog is returned as-is rather than guessed.
+   */
+  function lookup(text, lang) {
+    if (lang === 'en') return text;
     const trimmed = text.trim();
     if (!trimmed) return text;
-    const key = target + '|' + trimmed;
-    if (cache[key]) return text.replace(trimmed, cache[key]);
-
-    // Throttle / add delay to avoid MyMemory rate limits
-    await new Promise(r => setTimeout(r, 150));
-
-    try {
-      const url = 'https://api.mymemory.translated.net/get?q=' +
-                  encodeURIComponent(trimmed) +
-                  '&langpair=en|' + target;
-      const res = await fetch(url);
-      const data = await res.json();
-      let out = (data && data.responseData && data.responseData.translatedText) || trimmed;
-      // Strip MyMemory quota warnings if any
-      if (/MYMEMORY WARNING|QUERY LENGTH LIMIT/i.test(out)) out = trimmed;
-      cache[key] = out;
-      return text.replace(trimmed, out);
-    } catch (e) {
-      return text;
-    }
-  }
-
-  async function runQueue(jobs, concurrency = 6, onProgress) {
-    let done = 0;
-    const total = jobs.length;
-    const queue = jobs.slice();
-    async function worker() {
-      while (queue.length) {
-        const job = queue.shift();
-        try { await job(); } catch (_) {}
-        done++;
-        if (onProgress) onProgress(done, total);
-      }
-    }
-    await Promise.all(Array.from({ length: concurrency }, worker));
+    if (GLOSSARY.has(trimmed.toLowerCase())) return text;
+    const dict = CATALOG[lang];
+    if (!dict) return text;
+    const hit = dict[trimmed];
+    if (!hit) return text;
+    return text.replace(trimmed, hit);
   }
 
   /* ---------- Apply a language ---------- */
   let currentLang = localStorage.getItem(LANG_KEY) || 'en';
-  let busy = false;
 
-  async function applyLanguage(lang) {
-    if (busy) return;
-    busy = true;
-    setBadgeBusy(true);
-
+  function applyLanguage(lang) {
     const textNodes = collectTextNodes(document.body);
     const attrTargets = collectAttrTargets(document.body);
 
@@ -143,45 +113,30 @@
         const bag = attrOriginals.get(el) || {};
         if (bag[attr] != null) el.setAttribute(attr, bag[attr]);
       });
-      currentLang = 'en';
-      localStorage.setItem(LANG_KEY, 'en');
-      document.documentElement.setAttribute('lang', 'en');
-      busy = false;
-      setBadgeBusy(false);
-      updateSwitcher();
-      return;
-    }
-
-    const jobs = [];
-    textNodes.forEach(n => {
-      jobs.push(async () => {
+    } else {
+      textNodes.forEach(n => {
         const orig = nodeOriginals.get(n);
-        n.nodeValue = await translateOne(orig, lang);
+        n.nodeValue = lookup(orig, lang);
       });
-    });
-    attrTargets.forEach(({ el, attr }) => {
-      jobs.push(async () => {
+      attrTargets.forEach(({ el, attr }) => {
         const bag = attrOriginals.get(el) || {};
         const orig = bag[attr];
         if (orig == null) return;
-        el.setAttribute(attr, await translateOne(orig, lang));
+        el.setAttribute(attr, lookup(orig, lang));
       });
-    });
-
-    await runQueue(jobs, 6, (d, t) => setBadgeProgress(d, t));
-    saveCache();
+    }
 
     currentLang = lang;
     localStorage.setItem(LANG_KEY, lang);
     document.documentElement.setAttribute('lang', lang);
-    busy = false;
-    setBadgeBusy(false);
     updateSwitcher();
+    try {
+      document.dispatchEvent(new CustomEvent('mm:lang-changed', { detail: { lang } }));
+    } catch (_) {}
   }
 
   /* ---------- UI: floating switcher pill ---------- */
   let switcherEl = null;
-  let badgeEl = null;
 
   function injectStyles() {
     if (document.getElementById('i18n-styles')) return;
@@ -206,17 +161,6 @@
       .i18n-switcher button.active {
         background: #2f6b3a; color: #fff;
       }
-      .i18n-switcher button:disabled { opacity: 0.55; cursor: wait; }
-      .i18n-badge {
-        position: fixed; right: 18px; bottom: 68px; z-index: 9999;
-        padding: 6px 12px; border-radius: 999px;
-        background: rgba(47,107,58,0.95); color: #fff;
-        font: 500 0.78rem 'Inter', system-ui, sans-serif;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.18);
-        opacity: 0; transform: translateY(8px); transition: all .25s;
-        pointer-events: none;
-      }
-      .i18n-badge.show { opacity: 1; transform: translateY(0); }
       @media (max-width: 640px) {
         .i18n-switcher { right: 10px; bottom: 10px; padding: 4px; }
         .i18n-switcher button { padding: 6px 10px; font-size: 0.8rem; }
@@ -237,18 +181,12 @@
       b.textContent = l.label;
       b.title = l.name;
       b.addEventListener('click', () => {
-        if (currentLang === l.code || busy) return;
+        if (currentLang === l.code) return;
         applyLanguage(l.code);
       });
       switcherEl.appendChild(b);
     });
     document.body.appendChild(switcherEl);
-
-    badgeEl = document.createElement('div');
-    badgeEl.className = 'i18n-badge';
-    badgeEl.setAttribute('data-no-translate', '');
-    document.body.appendChild(badgeEl);
-
     updateSwitcher();
   }
 
@@ -259,29 +197,11 @@
     });
   }
 
-  function setBadgeBusy(on) {
-    if (!badgeEl) return;
-    if (on) {
-      badgeEl.textContent = 'Translating…';
-      badgeEl.classList.add('show');
-    } else {
-      badgeEl.classList.remove('show');
-    }
-    if (switcherEl) {
-      switcherEl.querySelectorAll('button').forEach(b => { b.disabled = on; });
-    }
-  }
-
-  function setBadgeProgress(done, total) {
-    if (!badgeEl || !total) return;
-    badgeEl.textContent = `Translating… ${Math.round((done / total) * 100)}%`;
-  }
-
   /* ---------- Init ---------- */
   function init() {
     buildSwitcher();
     if (currentLang && currentLang !== 'en') {
-      // Defer so any late-rendered content (e.g. charts labels) is included
+      // Defer so any late-rendered content (e.g. chart labels) is included.
       setTimeout(() => applyLanguage(currentLang), 400);
     }
   }
@@ -292,7 +212,10 @@
     init();
   }
 
-  // Expose for manual re-translation after dynamic DOM changes.
+  // Expose for manual re-translation after dynamic DOM changes (e.g. a tool
+  // panel that just rendered new results while a non-English language is
+  // active). Synchronous now, so callers can invoke it right after mutating
+  // the DOM with no debounce needed.
   window.AgriSimI18n = {
     setLanguage: applyLanguage,
     getLanguage: () => currentLang,

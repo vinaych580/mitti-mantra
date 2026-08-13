@@ -178,7 +178,7 @@
           window.dispatchEvent(new CustomEvent('mitti-api-success', { detail: { url, opts, data } }));
           return data;
         }
-        if (url.includes('/api/recommend') && body) {
+        if (url === '/api/crop' && body) {
           flashOfflineBanner();
           const data = offline.recommend(body);
           window.dispatchEvent(new CustomEvent('mitti-api-success', { detail: { url, opts, data } }));
@@ -204,6 +204,18 @@
   function showLoading(el, text = 'Working…') {
     el.innerHTML = `<div class="loading"><div class="spinner"></div><span>${text}</span></div>`;
   }
+  /* Telemetry panels sit above the fold, so a backend hiccup was the
+     first thing a user read — as raw HTTP text ("404 · File not found").
+     Keep the failure honest but calm, and never leak the status line. */
+  function telemetryUnavailable(el, what) {
+    if (!el) return;
+    el.innerHTML =
+      `<div class="telemetry-na">
+         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+         <span>${what} unavailable right now.</span>
+       </div>`;
+  }
+
   function showError(el, err) {
     el.innerHTML = `<div class="alert alert--red"><svg class="alert__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
       <div class="alert__body"><strong>Request failed</strong><p>${err.message}</p></div></div>`;
@@ -223,6 +235,110 @@
     tools.forEach(t => t.classList.toggle('active', t.dataset.tool === target));
     if (window.innerWidth < 860) tools.find(t => t.dataset.tool === target)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }));
+
+  /* ---------- Tool empty states ----------
+     Each .output starts empty, so a freshly-opened tool was just a form
+     with dead space under it. Describe what the tool actually returns.
+     showLoading/showError/results all overwrite innerHTML, so these
+     disappear on their own the moment a tool is run. */
+  const TOOL_OUTPUTS = {
+    recommend: ['Ranked crop shortlist', 'Expected ROI per crop', 'Risk & soil-health score', 'ML model confidence'],
+    simulate: ['Yield in kg/acre', 'Full cost breakdown', 'Profit & ROI', 'Water efficiency & nutrient gap'],
+    rotation: ['Kharif × rabi pairings', 'Combined two-season profit', 'Soil nitrogen impact', 'Ranked rotation options'],
+    templates: ['Preset farming strategies', 'Expected return per template', 'Risk profile', 'Best-fit match for your plot'],
+    compare: ['Side-by-side metrics', 'Winner per category', 'Profit difference', 'Water & input demand'],
+    mix: ['Optimal acre allocation', 'Blended profit estimate', 'Diversification benefit', 'Per-crop share'],
+    forecast: ['Six-month price curve', 'Confidence range', 'Sell-or-hold signal', 'Historical trend'],
+    msp: ['MSP vs live mandi price', 'Gap per quintal', 'Whether MSP beats market', 'Procurement guidance'],
+    sell: ['Best selling window', 'Expected price gain', 'Month-by-month outlook', 'Holding-cost trade-off'],
+    arbitrage: ['Price gaps across mandis', 'Transport-adjusted margin', 'Best destination mandi', 'Net gain per quintal'],
+    calendar: ['Sowing-to-harvest timeline', 'Stage-wise field tasks', 'Critical care windows', 'Days to maturity'],
+    irrigation: ['Week-by-week water plan', 'Critical stress stages', 'Total season water need', 'Rainfall offset'],
+    fertilizer: ['Urea / DAP / MOP in kg/acre', 'Nutrient gap vs target', 'Split application timing', 'Estimated input cost'],
+    pest: ['Triggered risk alerts', 'Organic & chemical treatments', 'Weather rationale per alert', 'Preventive actions'],
+    loan: ['EMI & total interest', 'DSCR coverage ratio', 'Feasibility verdict', 'Repayment schedule'],
+    schemes: ['Matched central & state schemes', 'Eligibility per scheme', 'Benefit amount', 'How to apply'],
+    ndvi: ['Sub-field health zones', 'NDVI vegetation index', 'Stress hotspots', 'Zone-wise action list'],
+    carbon: ['Estimated carbon credits', 'Revenue potential', 'Qualifying practices', 'Sequestration per acre'],
+    iot: ['Live sensor readings', 'Pump control state', 'Irrigation trigger thresholds', 'Moisture history'],
+    ml: ['Model versions & status', 'Training accuracy', 'Last retrain date', 'Feature counts']
+  };
+
+  const CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  const SPARK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-6 4 3 5-8"/></svg>';
+
+  function renderEmptyStates() {
+    Object.keys(TOOL_OUTPUTS).forEach(tool => {
+      const out = document.querySelector(`[data-out="${tool}"]`);
+      if (!out || out.innerHTML.trim() !== '') return;
+      const items = TOOL_OUTPUTS[tool].map(t => `<li>${CHECK_SVG}<span>${t}</span></li>`).join('');
+      out.innerHTML =
+        `<div class="tool__empty">
+           <div class="tool__empty__ico">${SPARK_SVG}</div>
+           <div>
+             <div class="tool__empty__label">What you'll get</div>
+             <ul>${items}</ul>
+             <p class="tool__empty__hint">Fill in the fields above and run the tool to see your results here.</p>
+           </div>
+         </div>`;
+    });
+  }
+  renderEmptyStates();
+
+  /* ---------- Sidebar tool filter ----------
+     21 tools in a list that overflows the viewport by ~400px, with no
+     way to jump to one by name. */
+  (function initSidebarFilter() {
+    const sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+
+    const wrap = document.createElement('div');
+    wrap.className = 'sidebar__search';
+    wrap.innerHTML =
+      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+       <input type="search" id="toolFilter" placeholder="Find a tool…" aria-label="Filter tools" autocomplete="off">`;
+    sidebar.prepend(wrap);
+
+    const empty = document.createElement('div');
+    empty.className = 'sidebar__empty';
+    empty.textContent = 'No tools match.';
+    empty.hidden = true;
+    empty.setAttribute('role', 'status');
+    sidebar.appendChild(empty);
+
+    const input = wrap.querySelector('input');
+    const groups = $$('.sidebar__group');
+
+    input.addEventListener('input', () => {
+      const q = input.value.trim().toLowerCase();
+      let anyVisible = false;
+
+      groups.forEach(group => {
+        let groupHas = false;
+        group.querySelectorAll('.sidebar__btn').forEach(btn => {
+          const match = !q || btn.textContent.toLowerCase().includes(q);
+          btn.hidden = !match;
+          if (match) groupHas = true;
+        });
+        group.hidden = !groupHas;
+        if (groupHas) anyVisible = true;
+      });
+
+      empty.hidden = anyVisible;
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        input.value = '';
+        input.dispatchEvent(new Event('input'));
+      }
+      // Enter opens the only remaining match
+      if (e.key === 'Enter') {
+        const visible = $$('.sidebar__btn').filter(b => !b.hidden);
+        if (visible.length === 1) visible[0].click();
+      }
+    });
+  })();
 
   /* ---------- Populate region & crop selects ---------- */
   Promise.all([
@@ -418,7 +534,7 @@
         drawPestRiskOverlay(coords, w);
       })
       .catch(err => {
-        if (wBody) wBody.innerHTML = `<div style="font-size: 0.78rem; color: var(--clay);">Failed: ${err.message || err}</div>`;
+        telemetryUnavailable(wBody, 'Weather');
       });
 
     // Fetch soil info asynchronously
@@ -442,7 +558,7 @@
         }
       })
       .catch(err => {
-        if (sBody) sBody.innerHTML = `<div style="font-size: 0.78rem; color: var(--clay);">Failed to load soil.</div>`;
+        telemetryUnavailable(sBody, 'Soil data');
       });
 
     // Fetch market price data asynchronously
@@ -456,23 +572,25 @@
         `;
       })
       .catch(err => {
-        if (mBody) mBody.innerHTML = `<div style="font-size: 0.78rem; color: var(--clay);">Failed to load mandi prices.</div>`;
+        telemetryUnavailable(mBody, 'Mandi prices');
       });
 
     // Fetch satellite vegetation telemetry from the backend API
     api(`/api/satellite?lat=${coords[0]}&lon=${coords[1]}`)
       .then(sat => {
         if (activeTelemetryRegionId !== regionId) return;
-        if (satBody) {
+        if (satBody && !sat.available) {
+          satBody.innerHTML = `<div style="font-size: 0.78rem; color: var(--ink-soft);">${sat.message || 'Live satellite imagery is unavailable.'}</div>`;
+        } else if (satBody) {
           satBody.innerHTML = `
             <div style="font-size: 1.15rem; font-weight: 600; color: var(--brand-deep);">NDVI ${sat.ndvi.toFixed(2)}</div>
-            <div style="font-size: 0.8rem; color: var(--ink-soft);">Moisture: ${sat.moisture.toFixed(2)}</div>
+            <div style="font-size: 0.8rem; color: var(--ink-soft);">${sat.source}</div>
             <div style="font-size: 0.78rem; color: var(--sky); font-weight: 600;">Canopy: ${sat.canopy}</div>
           `;
         }
       })
       .catch(err => {
-        if (satBody) satBody.innerHTML = `<div style="font-size: 0.78rem; color: var(--clay);">Failed to load satellite telemetry.</div>`;
+        telemetryUnavailable(satBody, 'Satellite telemetry');
       });
 
     // FIX-5 & FIX-6: Leaflet GIS mapping
@@ -1882,7 +2000,65 @@
   });
 
   /* ==========================================================
-     TOOL 14: ML status / retrain
+     TOOL 14: planning estimates (NDVI, carbon, and pump runtime)
+     ========================================================== */
+  const ndviForm = $('[data-form="ndvi"]');
+  if (ndviForm) ndviForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    const out = $('[data-out="ndvi"]');
+    showLoading(out, 'Calculating planning estimate...');
+    try {
+      const f = formToObj(e.target);
+      const r = await api('/api/field/ndvi', {
+        method: 'POST', body: JSON.stringify({ lat: +f.lat, lon: +f.lon, crop_id: f.crop_id })
+      });
+      out.innerHTML = `<div class="alert alert--gold"><div class="alert__body"><strong>Planning estimate, not satellite imagery</strong><p>${r.satellite_source}</p></div></div>
+        <div class="kpi-grid"><div class="kpi kpi--info"><div class="kpi__lbl">Estimated vegetation index</div><div class="kpi__val">${r.mean_ndvi}</div></div><div class="kpi"><div class="kpi__lbl">Estimated canopy cover</div><div class="kpi__val">${r.canopy_cover_pct}%</div></div><div class="kpi"><div class="kpi__lbl">Planning status</div><div class="kpi__val" style="font-size:1rem">${r.health_status}</div></div></div>`;
+    } catch (err) { showError(out, err); }
+  });
+
+  const carbonForm = $('[data-form="carbon"]');
+  if (carbonForm) carbonForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    const out = $('[data-out="carbon"]');
+    showLoading(out, 'Calculating planning estimate...');
+    try {
+      const f = formToObj(e.target);
+      const profile = window.MM?.profile?.get?.() || {};
+      const r = await api('/api/carbon-credits', {
+        method: 'POST', body: JSON.stringify({
+          crop_id: profile.crop_id || 'wheat', area_acres: +(profile.area_acres || 1),
+          tillage_practice: f.tillage_practice, cover_crop: f.cover_crop === 'true',
+          biochar_application: f.biochar_application === 'true'
+        })
+      });
+      out.innerHTML = `<div class="alert alert--gold"><div class="alert__body"><strong>Not a verified carbon credit</strong><p>${r.disclaimer}</p></div></div>
+        <div class="kpi-grid"><div class="kpi kpi--info"><div class="kpi__lbl">Estimated CO2e / year</div><div class="kpi__val">${r.total_co2e_sequestered_tons} t</div></div><div class="kpi"><div class="kpi__lbl">Illustrative value</div><div class="kpi__val">${INR(r.estimated_annual_earning_inr)}</div></div></div>`;
+    } catch (err) { showError(out, err); }
+  });
+
+  const iotForm = $('[data-form="iot"]');
+  if (iotForm) iotForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    const out = $('[data-out="iot"]');
+    showLoading(out, 'Calculating irrigation recommendation...');
+    try {
+      const f = formToObj(e.target);
+      const profile = window.MM?.profile?.get?.() || {};
+      const r = await api('/api/iot/pump-trigger', {
+        method: 'POST', body: JSON.stringify({
+          farm_id: profile.farm_id || 'local_plan', area_acres: +(profile.area_acres || 1),
+          current_moisture_pct: +f.current_moisture_pct, target_moisture_pct: +f.target_moisture_pct,
+          flow_rate_lpm: +f.flow_rate_lpm
+        })
+      });
+      out.innerHTML = `<div class="alert alert--gold"><div class="alert__body"><strong>Recommendation only</strong><p>No physical pump was controlled.</p></div></div>
+        <div class="kpi-grid"><div class="kpi kpi--info"><div class="kpi__lbl">Recommended runtime</div><div class="kpi__val">${r.recommended_pump_runtime_minutes} min</div></div><div class="kpi"><div class="kpi__lbl">Estimated water</div><div class="kpi__val">${r.required_water_liters.toLocaleString()} L</div></div><div class="kpi"><div class="kpi__lbl">Action</div><div class="kpi__val" style="font-size:1rem">${r.control_action}</div></div></div>`;
+    } catch (err) { showError(out, err); }
+  });
+
+  /* ==========================================================
+     TOOL 17: ML status
      ========================================================== */
   $('[data-action="ml-status"]').addEventListener('click', async () => {
     const out = $('[data-out="ml"]');
@@ -1961,6 +2137,7 @@
         <div class="alert"><div class="alert__body">
           <strong>Production Model Directory</strong>
           <p style="font-family:monospace;font-size:.82rem;word-break:break-all;">${r.model_dir}</p>
+          <p style="font-size:.82rem;">${r.model_provenance || 'Model provenance was not supplied.'}</p>
         </div></div>`;
     } catch (err) { showError(out, err); }
   });
@@ -1996,16 +2173,19 @@
 
 
   function mapBoundarySoilToSimulator(src) {
-    // farm-boundary stores raw SoilGrids layers. The simulator wants
-    // {ph, n_kg_per_acre, p_kg_per_acre, k_kg_per_acre}. Best-effort mapping.
+    // farm-boundary.js's fetchSoil() already divides every SoilGrids layer
+    // by its d_factor, so src.phh2o/nitrogen/soc arrive here in real-world
+    // units (pH, g/kg N, g/kg SOC) — do not re-apply SoilGrids scaling.
+    // The simulator wants {ph, n_kg_per_acre, p_kg_per_acre, k_kg_per_acre}.
+    // Best-effort mapping.
     if (!src) return null;
-    const ph = src.phh2o != null ? +src.phh2o / 10 : undefined; // cg→pH
-    const n_raw = src.nitrogen;                                 // cg/kg
-    const soc = src.soc;                                      // dg/kg
-    const fertility = soc != null ? Math.max(0.5, Math.min(1.5, soc / 200)) : 1;
+    const ph = src.phh2o != null ? +src.phh2o : undefined;
+    const n_raw = src.nitrogen;                               // g/kg
+    const soc = src.soc;                                      // g/kg
+    const fertility = soc != null ? Math.max(0.5, Math.min(1.5, soc / 20)) : 1;
     const out = {};
     if (ph != null && !isNaN(ph)) out.ph = +ph.toFixed(2);
-    if (n_raw != null) out.n_kg_per_acre = +((n_raw / 100) * 4.047).toFixed(1);
+    if (n_raw != null) out.n_kg_per_acre = +(n_raw * 4.047).toFixed(1);
     out.p_kg_per_acre = +(25 * fertility).toFixed(1);
     out.k_kg_per_acre = +(120 * fertility).toFixed(1);
     return out;
@@ -2174,259 +2354,15 @@
   /* ==========================================================
      TOOL 11b: Crop Disease Detection Flagship Feature
      ========================================================== */
-  const DISEASE_CLASSES = [
-    "maize_common_rust", "maize_gray_leaf_spot", "maize_northern_leaf_blight", "maize_healthy",
-    "potato_early_blight", "potato_late_blight", "potato_healthy",
-    "soybean_healthy",
-    "tomato_bacterial_spot", "tomato_early_blight", "tomato_late_blight", "tomato_leaf_mold",
-    "tomato_septoria_leaf_spot", "tomato_spider_mites", "tomato_target_spot",
-    "tomato_yellow_leaf_curl_virus", "tomato_mosaic_virus", "tomato_healthy"
-  ];
 
-  const DISEASE_METADATA = {
-    "maize_common_rust": {
-      "name": "Maize Common Rust",
-      "organic": [
-        "Destroy infected crop debris after harvest to prevent winter survival.",
-        "Plant resistant maize hybrids.",
-        "Apply organic copper-based fungicides if caught in very early stages."
-      ],
-      "chemical": [
-        "Spray Mancozeb 75 WP at 2g/L or Propiconazole 25 EC at 1ml/L of water."
-      ],
-      "schemes": ["pmfby", "kkc"]
-    },
-    "maize_gray_leaf_spot": {
-      "name": "Maize Gray Leaf Spot",
-      "organic": [
-        "Rotate crops for 2 or more years with non-host crops (e.g. pulses, soybean).",
-        "Deep tillage to bury infected plant residues in the soil."
-      ],
-      "chemical": [
-        "Spray Pyraclostrobin or Azoxystrobin based fungicides at recommended intervals."
-      ],
-      "schemes": ["pmfby", "kkc"]
-    },
-    "maize_northern_leaf_blight": {
-      "name": "Maize Northern Leaf Blight",
-      "organic": [
-        "Select resistant cultivars.",
-        "Bury crop residues with deep tillage after harvest."
-      ],
-      "chemical": [
-        "Apply foliar spray of Mancozeb or Zineb when lesions are first observed."
-      ],
-      "schemes": ["pmfby"]
-    },
-    "maize_healthy": {
-      "name": "Maize Healthy Leaf",
-      "organic": [
-        "Continue standard crop rotation.",
-        "Ensure balanced fertilization according to soil tests."
-      ],
-      "chemical": [
-        "No chemical inputs are required."
-      ],
-      "schemes": []
-    },
-    "potato_early_blight": {
-      "name": "Potato Early Blight",
-      "organic": [
-        "Prune lower infected leaves.",
-        "Avoid overhead irrigation to keep leaves dry.",
-        "Apply neem oil spray (0.5%) as a biological preventative."
-      ],
-      "chemical": [
-        "Spray Chlorothalonil or Mancozeb (2g/L) at 10-14 day intervals."
-      ],
-      "schemes": ["pmfby", "kkc"]
-    },
-    "potato_late_blight": {
-      "name": "Potato Late Blight",
-      "organic": [
-        "Plant certified disease-free seed tubers.",
-        "Destroy all cull piles and volunteers immediately.",
-        "Apply Trichoderma-based bio-fungicides."
-      ],
-      "chemical": [
-        "Foliar application of Metalaxyl-M (8%) + Mancozeb (64%) WP (Ridomil Gold) at 2.5g/L."
-      ],
-      "schemes": ["pmfby", "kkc"]
-    },
-    "potato_healthy": {
-      "name": "Potato Healthy Leaf",
-      "organic": [
-        "Monitor weather patterns (humidity) and spray preventive bio-agents."
-      ],
-      "chemical": [
-        "No chemical fungicide is required."
-      ],
-      "schemes": []
-    },
-    "soybean_healthy": {
-      "name": "Soybean Healthy Leaf",
-      "organic": [
-        "Practice crop rotation.",
-        "Ensure proper drainage in fields."
-      ],
-      "chemical": [
-        "No chemical fungicide is required."
-      ],
-      "schemes": []
-    },
-    "tomato_bacterial_spot": {
-      "name": "Tomato Bacterial Spot",
-      "organic": [
-        "Use certified pathogen-free seeds.",
-        "Avoid working in fields when foliage is wet.",
-        "Apply copper hydroxide bio-blends."
-      ],
-      "chemical": [
-        "Apply Copper Hydroxide (2g/L) mixed with Streptocycline (0.1g/L) at weekly intervals."
-      ],
-      "schemes": ["pmfby"]
-    },
-    "tomato_early_blight": {
-      "name": "Tomato Early Blight",
-      "organic": [
-        "Prune lower branches to improve airflow and reduce soil splash.",
-        "Apply organic straw mulch to create a barrier over soil.",
-        "Foliar spray of Bacillus subtilis biological agent."
-      ],
-      "chemical": [
-        "Foliar spray of Azoxystrobin 23% SC (1ml/L) or Mancozeb 75 WP (2g/L)."
-      ],
-      "schemes": ["pmfby", "kkc"]
-    },
-    "tomato_late_blight": {
-      "name": "Tomato Late Blight",
-      "organic": [
-        "Remove and burn infected plants immediately.",
-        "Avoid overhead irrigation.",
-        "Spray copper-based organic fungicides at first sign of rain/fog."
-      ],
-      "chemical": [
-        "Apply Cymoxanil + Mancozeb (Curzate) or Metalaxyl + Mancozeb (Ridomil Gold) immediately."
-      ],
-      "schemes": ["pmfby", "kkc"]
-    },
-    "tomato_leaf_mold": {
-      "name": "Tomato Leaf Mold",
-      "organic": [
-        "Increase spacing and ventilation.",
-        "Avoid overhead watering and keep humidity below 85%."
-      ],
-      "chemical": [
-        "Spray Chlorothalonil or Difenoconazole if infection becomes severe."
-      ],
-      "schemes": []
-    },
-    "tomato_septoria_leaf_spot": {
-      "name": "Tomato Septoria Leaf Spot",
-      "organic": [
-        "Remove and destroy lower infected leaves.",
-        "Mulch the soil base and water at ground level."
-      ],
-      "chemical": [
-        "Apply Chlorothalonil or Mancozeb sprays at first sign of leaf spots."
-      ],
-      "schemes": []
-    },
-    "tomato_spider_mites": {
-      "name": "Tomato Spider Mite Infestation",
-      "organic": [
-        "Spray neem oil (1-2%) or insecticidal soaps.",
-        "Release phytoseiid predatory mites.",
-        "Keep plants well irrigated (dry dust promotes mite breeding)."
-      ],
-      "chemical": [
-        "Apply Abamectin or Spiromesifen acaricides."
-      ],
-      "schemes": []
-    },
-    "tomato_target_spot": {
-      "name": "Tomato Target Spot",
-      "organic": [
-        "Improve air circulation through staking and pruning.",
-        "Bury or burn crop residues."
-      ],
-      "chemical": [
-        "Spray Azoxystrobin or Chlorothalonil."
-      ],
-      "schemes": []
-    },
-    "tomato_yellow_leaf_curl_virus": {
-      "name": "Tomato Yellow Leaf Curl Virus (TYLCV)",
-      "organic": [
-        "Place yellow sticky traps to catch whitefly vectors.",
-        "Use insect netting on nursery beds.",
-        "Spray neem seed kernel extract (NSKE) to deter pests."
-      ],
-      "chemical": [
-        "Spray systemic insecticides like Imidacloprid (0.5ml/L) or Thiamethoxam to control whiteflies."
-      ],
-      "schemes": ["pmfby"]
-    },
-    "tomato_mosaic_virus": {
-      "name": "Tomato Mosaic Virus (ToMV)",
-      "organic": [
-        "Drench tools and hands in 10% trisodium phosphate.",
-        "Promptly pull out and destroy infected plants."
-      ],
-      "chemical": [
-        "No chemical cure is available for viral infections. Manage vector insects chemically if needed."
-      ],
-      "schemes": []
-    },
-    "tomato_healthy": {
-      "name": "Tomato Healthy Leaf",
-      "organic": [
-        "Maintain clean hygiene and baseline soil care and clean field hygiene."
-      ],
-      "chemical": [
-        "No chemical inputs are required."
-      ],
-      "schemes": []
-    }
-  };
-
-  let tfjsModel = null;
-  let tfjsLoaded = false;
-  let isModelLoading = false;
-
-  // Function to dynamically load TFJS CDN
+  // Screening always runs via the backend heuristic endpoint — the checked-in
+  // TF.js artefact has placeholder weights and cannot produce a real
+  // prediction, so there is no in-browser model path to load.
   function loadTFJS() {
-    if (tfjsLoaded || isModelLoading) return;
-    isModelLoading = true;
-    const statusEl = $('#modelLoadStatus');
-    statusEl.innerHTML = `<span class="spinner" style="border: 2px solid rgba(0,0,0,0.1); border-left-color: var(--brand); border-radius: 50%; width: 14px; height: 14px; animation: spin 1s linear infinite; display: inline-block;"></span> Loading TensorFlow.js client library…`;
-
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js';
-    script.onload = async () => {
-      tfjsLoaded = true;
-      try {
-        statusEl.innerHTML = `<span class="spinner" style="border: 2px solid rgba(0,0,0,0.1); border-left-color: var(--brand); border-radius: 50%; width: 14px; height: 14px; animation: spin 1s linear infinite; display: inline-block;"></span> Loading exported disease model offline…`;
-        tfjsModel = await tf.loadLayersModel('/models/disease/model.json');
-        statusEl.innerHTML = `✓ TF.js Disease Model loaded and active offline`;
-        statusEl.style.color = 'var(--brand)';
-        $('#runDiseaseScanBtn').disabled = false;
-      } catch (err) {
-        console.error("TF.js Model Load failed:", err);
-        statusEl.innerHTML = `⚠ Model unavailable. Will run via fallback cloud API`;
-        statusEl.style.color = '#c88a3a';
-        $('#runDiseaseScanBtn').disabled = false;
-      } finally {
-        isModelLoading = false;
-      }
-    };
-    script.onerror = () => {
-      isModelLoading = false;
-      statusEl.innerHTML = `⚠ Library offline. Falling back to backend cloud diagnostics`;
-      statusEl.style.color = '#c88a3a';
-      $('#runDiseaseScanBtn').disabled = false;
-    };
-    document.head.appendChild(script);
+    const screeningStatus = $('#modelLoadStatus');
+    screeningStatus.textContent = 'Preliminary visual screening uses the backend; it is not a diagnostic model.';
+    screeningStatus.style.color = '#c88a3a';
+    $('#runDiseaseScanBtn').disabled = false;
   }
 
   // Bind to disease scan tab click
@@ -2527,11 +2463,74 @@
   }
   window.addEventListener('online', syncOfflineLogs);
 
+  // Render the costed, area-scaled treatment plan from /api/disease/predict's
+  // action_plan field. Falls back to the plain treatment list (see call site)
+  // when a class has no rows in dataset/disease_treatments.csv.
+  function renderActionPlan(plan) {
+    const optionCard = (o) => {
+      const isSpray = o.applications > 0 && o.quantity_per_application;
+      const qty = o.total_quantity ? `${o.total_quantity.value} ${o.total_quantity.unit}` : null;
+      const modeTag = o.mode === 'organic' ? '🍃 Organic' : '🧪 Chemical';
+      return `
+        <div class="chart-box" style="border-left:3px solid ${o.mode === 'organic' ? 'var(--brand)' : 'var(--accent)'};">
+          <div class="chart-box__title" style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;">
+            <span>${modeTag} · ${o.product}</span>
+            ${o.approx_cost_inr ? `<span style="font-size:.85rem;font-weight:700;color:var(--ink);">₹${o.approx_cost_inr.toLocaleString('en-IN')}</span>` : ''}
+          </div>
+          <div style="font-size:.82rem;color:var(--ink-soft);line-height:1.6;padding-top:4px;">
+            ${isSpray ? `
+              <div><b>Dose:</b> ${o.dose}${qty ? ` — <b>${qty} total</b> for ${plan.area_acres} acre${plan.area_acres != 1 ? 's' : ''}` : ''}</div>
+              <div><b>Applications:</b> ${o.applications}${o.interval_days ? `, ${o.interval_days} days apart` : ''}</div>
+              <div><b>Pre-harvest interval:</b> ${o.pre_harvest_interval_days ? `${o.pre_harvest_interval_days} days — do not harvest sooner` : 'none'}</div>
+              <div><b>Re-entry:</b> ${o.reentry_hours ? `wait ${o.reentry_hours}h before re-entering the field` : 'no restriction'}</div>
+            ` : `<div>${o.dose}</div>`}
+            ${o.notes ? `<div style="margin-top:6px;font-style:italic;color:var(--ink-faint);">${o.notes}</div>` : ''}
+          </div>
+        </div>`;
+    };
+
+    const scheduleRows = (plan.recommended_first && plan.recommended_first.schedule || []).map(s => `
+      <div style="display:flex;justify-content:space-between;padding:6px 0;border-top:1px solid rgba(29,26,21,.07);font-size:.82rem;${s.is_harvest_gate ? 'color:var(--clay);font-weight:600;' : 'color:var(--ink-soft);'}">
+        <span>${s.is_harvest_gate ? '🚫 ' : ''}${s.label}</span>
+        <span>${s.date}</span>
+      </div>`).join('');
+
+    return `
+      <div class="alert alert--green" style="margin-top:20px;border-left:4px solid var(--brand);background:var(--brand-soft);">
+        <div class="alert__body" style="color:var(--brand-deep);">
+          <strong>${plan.headline}</strong>
+        </div>
+      </div>
+
+      <div class="chart-grid" style="margin-top:16px;">
+        ${plan.options.map(optionCard).join('')}
+      </div>
+
+      ${scheduleRows ? `
+      <div class="chart-box" style="margin-top:16px;">
+        <div class="chart-box__title">📅 Schedule for the first option</div>
+        ${scheduleRows}
+      </div>` : ''}
+
+      <div class="alert alert--gold" style="margin-top:16px;">
+        <div class="alert__body">
+          <strong>Before you spray</strong>
+          <ul style="margin:8px 0 0 16px;padding:0;font-size:.82rem;line-height:1.6;">
+            ${plan.safety.map(s => `<li>${s}</li>`).join('')}
+          </ul>
+        </div>
+      </div>
+
+      <div style="margin-top:10px;font-size:.76rem;color:var(--ink-faint);font-style:italic;">
+        ${plan.disclaimer}
+      </div>`;
+  }
+
   // Run Disease Scan inference
   if (runScanBtn) {
     runScanBtn.addEventListener('click', async () => {
       const resultsBox = $('#diseaseResultsBox');
-      showLoading(resultsBox, 'Analyzing leaf pixels and executing neural network...');
+      showLoading(resultsBox, 'Running preliminary visual screening...');
       resultsBox.style.display = 'block';
 
       const cropCtx = $('#diseaseCropSelect').value;
@@ -2563,96 +2562,34 @@
         const lesionPct = totalLeaf > 0 ? (lesionCount / totalLeaf) * 100.0 : 5.0;
         const severity = lesionPct < 5.0 ? 'early' : lesionPct <= 20.0 ? 'moderate' : 'severe';
 
-        // 2. Decide Primary Inference Source (In-browser TF.js or API Fallback)
+        // 2. Run the backend heuristic screen (there is no real in-browser
+        // model to fall back from — see loadTFJS above).
         let diseaseName = "";
         let confidence = 0.0;
         let matchedCrop = cropCtx || "tomato";
         let treatments = [];
         let subsidySchemes = [];
 
-        // Always use backend API: the TF.js model.json is a placeholder with
-        // random weights and cannot produce meaningful predictions.
-        const useFallback = true;
+        const planAreaAcres = +((window.MM && window.MM.profile && window.MM.profile.get().area_acres) || (savedFarm && savedFarm.acres) || 1);
 
-        if (useFallback) {
-          // Cloud API Fallback
-          const b64Data = resizeCanvas.toDataURL('image/jpeg');
-          const payload = {
-            image_b64: b64Data,
-            crop_id: cropCtx || null,
-            region_id: regionId || null
-          };
-          const r = await api('/api/disease/predict', {
-            method: 'POST',
-            body: JSON.stringify(payload)
-          });
+        const b64Data = resizeCanvas.toDataURL('image/jpeg');
+        const payload = {
+          image_b64: b64Data,
+          crop_id: cropCtx || null,
+          region_id: regionId || null,
+          area_acres: planAreaAcres
+        };
+        const r = await api('/api/disease/predict', {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
 
-          diseaseName = r.disease;
-          confidence = r.confidence;
-          matchedCrop = r.crop_matched;
-          treatments = r.treatment;
-          subsidySchemes = r.subsidy_eligible_schemes;
-        } else {
-          // Client-Side Offline Inference
-          const predictions = tf.tidy(() => {
-            const tensor = tf.browser.fromPixels(resizeCanvas)
-              .toFloat()
-              .div(tf.scalar(255.0))
-              .expandDims(0);
-            return tfjsModel.predict(tensor);
-          });
-
-          const probs = await predictions.data();
-          predictions.dispose();
-
-          // Apply crop filtering to remove false positives and narrow candidates
-          let bestIdx = 0;
-          let bestProb = -1.0;
-          for (let i = 0; i < probs.length; i++) {
-            const cls = DISEASE_CLASSES[i];
-            let score = probs[i];
-            if (cropCtx) {
-              score = cls.startsWith(cropCtx) ? score * 2.0 : score * 0.05; // heavily filter to selected crop context
-            }
-            if (score > bestProb) {
-              bestProb = score;
-              bestIdx = i;
-            }
-          }
-
-          const finalClass = DISEASE_CLASSES[bestIdx];
-          confidence = Math.min(0.99, Math.max(0.40, probs[bestIdx]));
-
-          // Look up metadata offline
-          const meta = DISEASE_METADATA[finalClass] || DISEASE_METADATA["tomato_healthy"];
-          diseaseName = meta.name;
-          matchedCrop = finalClass.split('_')[0];
-
-          meta.organic.forEach(o => treatments.push("Organic: " + o));
-          meta.chemical.forEach(c => treatments.push("Chemical Escalation: " + c));
-
-          // Fetch local government schemes for subsidy matching (if online)
-          if (navigator.onLine && regionId) {
-            try {
-              const sRes = await api(`/api/government-schemes?crop_id=${matchedCrop}&region_id=${regionId}`);
-              const eligible = sRes.eligible_schemes || [];
-              eligible.forEach(s => {
-                if (meta.schemes.includes(s.scheme_id) || (s.scheme_id === 'pkvy' && meta.organic.length)) {
-                  subsidySchemes.push(`${s.scheme_name} (${s.description}) — URL: ${s.url}`);
-                }
-              });
-            } catch (_) { }
-          }
-
-          // Offline schemes fallback
-          if (!subsidySchemes.length) {
-            meta.schemes.forEach(sid => {
-              if (sid === 'pmfby') subsidySchemes.push("PMFBY (Crop Insurance) — URL: https://pmfby.gov.in");
-              if (sid === 'kkc') subsidySchemes.push("Kisan Credit Card — URL: https://www.nabard.org");
-              if (sid === 'pkvy') subsidySchemes.push("PKVY (Organic Cluster Subsidy) — URL: https://pgsindia-ncof.gov.in");
-            });
-          }
-        }
+        diseaseName = r.disease;
+        confidence = r.confidence;
+        matchedCrop = r.crop_matched;
+        treatments = r.treatment;
+        subsidySchemes = r.subsidy_eligible_schemes;
+        const plan = r.action_plan || null;
 
         // 3. Queue Analytics Log
         queueOfflineLog(matchedCrop, diseaseName, confidence, severity, regionId);
@@ -2668,14 +2605,14 @@
         resultsBox.innerHTML = `
           <div class="kpi-grid">
             <div class="kpi kpi--info">
-              <div class="kpi__lbl">Diagnosis</div>
+              <div class="kpi__lbl">Screening result</div>
               <div class="kpi__val" style="font-size: 1.15rem; font-weight: 600;">${diseaseName}</div>
               <div class="kpi__sub">Class matched: ${matchedCrop}</div>
             </div>
             <div class="kpi kpi--info">
-              <div class="kpi__lbl">Inference Confidence</div>
+              <div class="kpi__lbl">Heuristic score</div>
               <div class="kpi__val">${formattedConf}</div>
-              <div class="kpi__sub">${useFallback ? 'Cloud Fallback API' : 'TF.js Offline In-Browser'}</div>
+              <div class="kpi__sub">Not a clinical or agronomic confidence value</div>
             </div>
             <div class="kpi kpi--${sevClass === 'red' ? 'red' : sevClass === 'warn' ? 'warn' : 'good'}">
               <div class="kpi__lbl">Severity (Lesion Area)</div>
@@ -2684,6 +2621,9 @@
             </div>
           </div>
 
+          <div class="alert alert--gold" style="margin-top: 20px;"><div class="alert__body"><strong>Do not treat this as a diagnosis.</strong><p>Confirm symptoms with a qualified agronomist before applying any treatment.</p></div></div>
+
+          ${plan && plan.options && plan.options.length ? renderActionPlan(plan) : `
           <div class="chart-grid" style="margin-top: 20px;">
             <div class="chart-box">
               <div class="chart-box__title">🍃 Organic & Low-Cost Treatments</div>
@@ -2697,7 +2637,7 @@
                 ${chemicalTreatments.map(t => `<li style="margin-bottom: 8px;">${t.replace('Chemical Escalation: ', '')}</li>`).join('')}
               </ul>
             </div>
-          </div>
+          </div>`}
 
           ${subsidySchemes.length ? `
           <div class="alert alert--green" style="margin-top: 20px; border-left: 4px solid var(--brand); background: var(--brand-soft);">

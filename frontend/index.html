@@ -216,6 +216,7 @@
 
   <!-- ============= FEATURES ============= -->
   <section class="features" id="features">
+    <div class="features__ambient" aria-hidden="true"></div>
     <div class="container">
       <div class="section-head reveal">
         <span class="eyebrow">Built for real farms</span>
@@ -223,68 +224,200 @@
         <p>Thirty-two endpoints. Three ML models. One simple goal — help kisans make the right decision at the right time.</p>
       </div>
 
-      <div class="features__grid reveal-stagger">
-        <article class="feature">
-          <div class="feature__ico">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 C9 8 7 12 7 15 a5 5 0 0 0 10 0 c0-3-2-7-5-13z"/><path d="M12 12 L12 22"/></svg>
+      <ul class="features__badges reveal">
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12" y2="20"/></svg>
+          Works offline
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18z"/></svg>
+          Hindi · Telugu · Kannada
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          Free to use
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>
+          Runs in any browser
+        </li>
+      </ul>
+
+      <div class="features__bento reveal-stagger" id="featuresBento">
+        <!-- Hero card: crop recommendation -->
+        <article class="feature feature--hero">
+          <div class="feature__head">
+            <div class="feature__ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 C9 8 7 12 7 15 a5 5 0 0 0 10 0 c0-3-2-7-5-13z"/><path d="M12 12 L12 22"/></svg>
+            </div>
+            <div>
+              <h3>Smart Crop Picks</h3>
+              <p>Trained on 45,000 soil-climate combinations. Enter your NPK, pH and rainfall — get a ranked shortlist scored for your land and your budget.</p>
+            </div>
           </div>
-          <h3>Smart Crop Picks</h3>
-          <p>ML model trained on 45,000 soil-climate combinations ranks the best crops for your land and budget.</p>
-          <span class="feature__tag">RandomForest · 98% accuracy</span>
+
+          <div class="feature__preview">
+            <div class="preview__label">Top matches · Sehore, MP · kharif</div>
+            <ul class="rankbars">
+              <li style="--v:94%"><span class="rankbars__name">Soybean</span><span class="rankbars__track"><i></i></span><span class="rankbars__val">94%</span></li>
+              <li style="--v:76%"><span class="rankbars__name">Cotton</span><span class="rankbars__track"><i></i></span><span class="rankbars__val">76%</span></li>
+              <li style="--v:61%"><span class="rankbars__name">Maize</span><span class="rankbars__track"><i></i></span><span class="rankbars__val">61%</span></li>
+            </ul>
+          </div>
+
+          <div class="feature__chips">
+            <span class="chip">RandomForest</span>
+            <span class="chip">98% accuracy</span>
+            <span class="chip">45K samples</span>
+          </div>
         </article>
 
+        <!-- Disease scan -->
         <article class="feature feature--sky">
           <div class="feature__ico">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
           </div>
           <h3>Intelligent Disease Scan</h3>
-          <p>Diagnose crop diseases instantly and offline. Get organic and chemical treatment advice matched with local subsidies.</p>
-          <span class="feature__tag">Disease detection for 4 crops · 88.7% accuracy</span>
+          <p>Photograph a leaf and diagnose it on the spot — no signal needed. Treatment advice comes matched to local subsidies.</p>
+
+          <div class="feature__preview">
+            <div class="diagnosis">
+              <span class="diagnosis__dot" aria-hidden="true"></span>
+              <span class="diagnosis__name">Leaf blight</span>
+              <span class="diagnosis__conf">88.7%</span>
+            </div>
+            <div class="feature__chips feature__chips--tight">
+              <span class="chip chip--leaf">Organic plan</span>
+              <span class="chip">Chemical plan</span>
+            </div>
+          </div>
         </article>
 
+        <!-- Yield & profit -->
         <article class="feature feature--gold">
           <div class="feature__ico">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-6 4 3 5-8"/></svg>
           </div>
-          <h3>Yield & Profit Forecast</h3>
-          <p>Predict yield in kg/acre and profit in rupees. Compare scenarios with a 25-cell sensitivity matrix.</p>
-          <span class="feature__tag">R² 0.99 · ± 358 kg</span>
-        </article>
+          <h3>Yield &amp; Profit Forecast</h3>
+          <p>Yield in kg/acre, profit in rupees. Compare scenarios across a 25-cell sensitivity matrix before you commit.</p>
 
-        <article class="feature feature--sky">
-          <div class="feature__ico">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>
+          <div class="feature__preview">
+            <div class="metric">
+              <span class="metric__val">1,820</span>
+              <span class="metric__unit">kg/acre</span>
+              <span class="metric__delta">↑ 18%</span>
+            </div>
+            <div class="minibars" aria-hidden="true">
+              <span style="--h:34%"></span><span style="--h:48%"></span><span style="--h:42%"></span>
+              <span style="--h:63%"></span><span style="--h:57%"></span><span style="--h:78%"></span>
+              <span style="--h:71%"></span><span style="--h:92%"></span>
+            </div>
           </div>
-          <h3>Mandi Price Forecasts</h3>
-          <p>GradientBoosting model forecasts prices 1–6 months ahead. Know when to sell and when to hold.</p>
-          <span class="feature__tag">6-month horizon</span>
         </article>
 
+        <!-- Hero card: mandi prices -->
+        <article class="feature feature--hero feature--sky">
+          <div class="feature__head">
+            <div class="feature__ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>
+            </div>
+            <div>
+              <h3>Mandi Price Forecasts</h3>
+              <p>A GradientBoosting model projects mandi rates up to six months out, so you know whether to sell at harvest or hold for the turn.</p>
+            </div>
+          </div>
+
+          <div class="feature__preview">
+            <div class="preview__label">Soybean · ₹/quintal · next 6 months</div>
+            <svg class="spark" viewBox="0 0 320 84" preserveAspectRatio="none" role="img" aria-label="Soybean price trend rising from ₹4,600 to a forecast peak of ₹5,400 per quintal, with the best selling window in month five.">
+              <rect class="spark__band" x="232" y="4" width="80" height="76" rx="4"/>
+              <path class="spark__area" d="M10,68 L48,60 L86,64 L124,48 L162,52 L162,80 L10,80 Z"/>
+              <path class="spark__line" d="M10,68 L48,60 L86,64 L124,48 L162,52" vector-effect="non-scaling-stroke"/>
+              <path class="spark__line spark__line--fc" d="M162,52 L200,38 L238,28 L276,14 L310,20" vector-effect="non-scaling-stroke"/>
+              <circle class="spark__dot" cx="276" cy="14" r="4.5"/>
+            </svg>
+            <div class="spark__legend">
+              <span><i class="swatch swatch--solid"></i>Actual</span>
+              <span><i class="swatch swatch--dash"></i>Forecast</span>
+              <span><i class="swatch swatch--band"></i>Best sell window</span>
+            </div>
+          </div>
+
+          <div class="feature__chips">
+            <span class="chip">GradientBoosting</span>
+            <span class="chip">6-month horizon</span>
+          </div>
+        </article>
+
+        <!-- Calendar -->
         <article class="feature feature--clay">
           <div class="feature__ico">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg>
           </div>
-          <h3>Crop Calendar & Irrigation</h3>
-          <p>Week-by-week water plan, critical stress windows, and sowing-to-harvest timeline for every crop.</p>
-          <span class="feature__tag">8 crops supported</span>
+          <h3>Crop Calendar &amp; Irrigation</h3>
+          <p>A week-by-week water plan with the critical stress windows flagged, from sowing right through to harvest.</p>
+
+          <div class="feature__preview">
+            <ol class="stages">
+              <li>Sowing</li>
+              <li>Vegetative</li>
+              <li class="is-critical">Flowering</li>
+              <li>Harvest</li>
+            </ol>
+            <div class="stages__note">Flowering is the critical irrigation window</div>
+          </div>
         </article>
 
+        <!-- Pest alerts -->
         <article class="feature">
           <div class="feature__ico">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 5-4 9-9 9s-9-4-9-9 4-9 9-9c2 0 4 1 5.5 2.5"/></svg>
           </div>
-          <h3>Pest & Disease Alerts</h3>
-          <p>Weather-triggered alerts from 18 rules. Specific treatment plans — chemical or organic, your choice.</p>
-          <span class="feature__tag">Real-time matching</span>
+          <h3>Pest &amp; Disease Alerts</h3>
+          <p>Eighteen weather rules watch your plot and fire the moment conditions turn — each with a specific treatment plan.</p>
+
+          <div class="feature__preview">
+            <div class="alert">
+              <span class="alert__pulse" aria-hidden="true"></span>
+              <div class="alert__body">
+                <strong>Bollworm risk · high</strong>
+                <span>Triggered at 32°C + 70% humidity</span>
+              </div>
+            </div>
+          </div>
         </article>
 
+        <!-- Loans -->
         <article class="feature feature--gold">
           <div class="feature__ico">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="6" width="16" height="14" rx="2"/><path d="M4 10h16M9 14h6"/></svg>
           </div>
-          <h3>Loans & Govt. Schemes</h3>
-          <p>EMI, DSCR, feasibility verdict. Auto-match 12 central and state schemes by your eligibility.</p>
-          <span class="feature__tag">12 schemes</span>
+          <h3>Loans &amp; Govt. Schemes</h3>
+          <p>EMI, DSCR and a plain feasibility verdict — then twelve central and state schemes auto-matched to your eligibility.</p>
+
+          <div class="feature__preview">
+            <div class="metric">
+              <span class="metric__val">₹4,820</span>
+              <span class="metric__unit">/month EMI</span>
+              <span class="metric__delta">DSCR 1.8</span>
+            </div>
+            <div class="stages__note">12 schemes matched to your profile</div>
+          </div>
+        </article>
+
+        <!-- Closing CTA tile -->
+        <article class="feature feature--cta">
+          <div class="feature-cta__text">
+            <h3>Try it on your own plot</h3>
+            <p>No install, no signup wall. Enter one field of soil data and see all of the above run against your land in under a minute.</p>
+          </div>
+          <div class="feature-cta__actions">
+            <a href="dashboard.html" class="btn btn-primary">
+              Open the dashboard
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </a>
+            <a href="/docs" class="btn btn-ghost">Read the API docs</a>
+          </div>
         </article>
       </div>
     </div>
@@ -676,10 +809,13 @@
   <script defer src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 
   <script defer src="mm-core.js"></script>
+  <script defer src="mm-analytics.js"></script>
+  <script defer src="mm-freshness.js"></script>
   <script defer src="site-ui.js"></script>
   <script defer src="state-data.js"></script>
   <script defer src="india-globe.js"></script>
   <script defer src="demo-recommender.js"></script>
+  <script defer src="i18n-data.js"></script>
   <script defer src="i18n.js"></script>
   <script defer src="toolbar.js"></script>
   <script defer src="chatbot.js"></script>

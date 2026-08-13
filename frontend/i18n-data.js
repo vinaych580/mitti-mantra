@@ -1,0 +1,807 @@
+/* =========================================================
+   i18n-data.js — hand-written translation catalog + glossary.
+
+   Loaded before i18n.js. i18n.js used to send every visible string on the
+   page to a free machine-translation API (MyMemory) at runtime: no key
+   required, but agronomy terms came back wrong ("Kharif" translated as a
+   random transliteration, "MSP" expanded incorrectly), it needed a network
+   round trip per string before the page felt "done" in Hindi/Telugu/Kannada,
+   and results were only as good as a general-purpose translator guessing at
+   Indian-agriculture vocabulary it was never tuned on.
+
+   This file is the fix: a static dictionary of the site's actual UI strings,
+   translated once by hand, looked up offline and instantly. Anything not in
+   the catalog is simply left in English rather than guessed — a visible gap
+   is safer than a wrong agronomy term.
+
+   Structure
+   ─────────
+   window.MM_I18N_CATALOG = {
+     hi: { "English source string": "Translated string", ... },
+     te: { ... },
+     kn: { ... },
+   }
+   window.MM_I18N_GLOSSARY = ["MSP", "PM-KISAN", ...]
+     Brand names, acronyms and codes that must never be translated even if
+     they appear inside an otherwise-translated sentence. i18n.js skips these
+     outright and never looks them up in the catalog.
+
+   Coverage is deliberately scoped to the site chrome a farmer sees on every
+   visit and on every tool — nav, dashboard sidebar, the 21 tool headers,
+   the form field labels shared across all 14 tools, common buttons, and the
+   cross-page menus (share / accessibility / install / privacy / toolbar).
+   Long marketing prose on the landing page and the free-form JSON the ML
+   tools render are out of scope: getting a handful of high-traffic phrases
+   right beats a large catalog of shaky ones.
+   ========================================================= */
+
+(function (global) {
+  'use strict';
+
+  var GLOSSARY = [
+    // Brand
+    'Mitti Mantra', 'AgriSim',
+    // Acronyms & program names — translating these creates a term a farmer
+    // won't recognise from the scheme's own paperwork or the mandi board.
+    'MSP', 'PM-KISAN', 'PMFBY', 'KCC', 'NPK', 'NDVI', 'GPS', 'API', 'PDF',
+    'IoT', 'ML', 'ROI', 'EMI', 'DSCR', 'DAP', 'MOP', 'KVK', 'ICAR',
+    'SoilGrids', 'Open-Meteo', 'WhatsApp',
+    // Units the CSVs and forms already show in Latin numerals/abbreviations.
+    'kg', 'kg/ha', 'kg/acre', 'INR', '₹',
+  ];
+
+  var CATALOG = {
+
+    /* ---------------- Hindi ---------------- */
+    hi: {
+      // Top nav
+      'Home': 'होम',
+      'Features': 'सुविधाएं',
+      'How it works': 'यह कैसे काम करता है',
+      'Draw farm': 'खेत बनाएं',
+      'Demo': 'डेमो',
+      'API Docs': 'API दस्तावेज़',
+      'Back to site': 'साइट पर वापस',
+      'Try it free': 'मुफ़्त आज़माएं',
+      'Book a Tractor': 'ट्रैक्टर बुक करें',
+      'Upcoming': 'जल्द आ रहा है',
+
+      // Hero (index.html)
+      'AI-Powered Farm Intelligence': 'AI-संचालित कृषि बुद्धिमत्ता',
+      'Explore your land': 'अपनी ज़मीन देखें',
+      'Try demo': 'डेमो आज़माएं',
+      'Trusted by 12,000+ kisans': '12,000+ किसानों का भरोसा',
+
+      // Dashboard nav
+      'Dashboard': 'डैशबोर्ड',
+
+      // Sidebar group labels
+      'Plan': 'योजना',
+      'Strategies': 'रणनीतियां',
+      'Market': 'बाज़ार',
+      'Field': 'खेत',
+      'Finance': 'वित्त',
+      'System': 'सिस्टम',
+
+      // Sidebar tool names
+      'Smart recommend': 'स्मार्ट सिफ़ारिश',
+      'Yield & profit': 'उपज और मुनाफ़ा',
+      'Rotation planner': 'फ़सल चक्र योजना',
+      'Strategy templates': 'रणनीति टेम्पलेट',
+      'Compare crops': 'फ़सलों की तुलना',
+      'Optimal mix': 'सर्वोत्तम मिश्रण',
+      'Price forecast': 'मूल्य पूर्वानुमान',
+      'MSP vs market': 'MSP बनाम बाज़ार भाव',
+      'Best time to sell': 'बेचने का सही समय',
+      'Arbitrage': 'मंडी अंतर लाभ',
+      'Crop calendar': 'फ़सल कैलेंडर',
+      'Irrigation plan': 'सिंचाई योजना',
+      'Fertilizer mix': 'उर्वरक मिश्रण',
+      'Pest alerts': 'कीट चेतावनी',
+      'Disease scan': 'रोग जांच',
+      'Loan feasibility': 'ऋण व्यवहार्यता',
+      'Govt. schemes': 'सरकारी योजनाएं',
+      'Satellite NDVI': 'सैटेलाइट NDVI',
+      'Carbon credits': 'कार्बन क्रेडिट',
+      'Smart IoT Pump': 'स्मार्ट IoT पंप',
+      'ML status': 'ML स्थिति',
+
+      // Tool titles + descriptions
+      'Smart crop recommendations': 'स्मार्ट फ़सल सिफ़ारिशें',
+      'ML model ranks the best crops for your land and budget. Blends ROI, risk, soil health, and model confidence.':
+        'ML मॉडल आपकी ज़मीन और बजट के लिए सर्वश्रेष्ठ फ़सलों को क्रम देता है। ROI, जोखिम, मिट्टी स्वास्थ्य और मॉडल विश्वास को मिलाकर।',
+      'Yield & profit simulation': 'उपज और मुनाफ़ा अनुकरण',
+      'Full simulation: yield, cost breakdown, profit, ROI, risk score, water efficiency, nutrient gap.':
+        'पूरा अनुकरण: उपज, लागत विवरण, मुनाफ़ा, ROI, जोखिम स्कोर, जल दक्षता, पोषक तत्व अंतर।',
+      'Rotation planner': 'फ़सल चक्र योजना',
+      'Best kharif → rabi pairs for the whole year, ranked by profit, risk, and diversity bonus.':
+        'पूरे साल के लिए सर्वश्रेष्ठ खरीफ़ → रबी जोड़े, मुनाफ़े, जोखिम और विविधता बोनस के अनुसार क्रमबद्ध।',
+      'Strategy templates': 'रणनीति टेम्पलेट',
+      'Pre-built farming strategies: conservative, aggressive, organic, water-saver, and more. Pick one and simulate instantly.':
+        'पहले से बनी कृषि रणनीतियां: सुरक्षित, आक्रामक, जैविक, जल-बचत और अधिक। एक चुनें और तुरंत अनुकरण करें।',
+      'Compare crops head-to-head': 'फ़सलों की सीधी तुलना',
+      'Simulate 2–6 crops on the same land and budget. See them ranked by profit, with ROI & risk side-by-side.':
+        'एक ही ज़मीन और बजट पर 2–6 फ़सलों का अनुकरण करें। मुनाफ़े के अनुसार क्रम, ROI और जोखिम साथ-साथ देखें।',
+      'Optimal crop mix': 'सर्वोत्तम फ़सल मिश्रण',
+      'Given total land and budget, allocate across multiple crops to maximise profit. Auto-diversified by smart-score weighting.':
+        'कुल ज़मीन और बजट के आधार पर, मुनाफ़ा अधिकतम करने के लिए कई फ़सलों में बांटें। स्मार्ट-स्कोर द्वारा स्वतः विविधीकृत।',
+      'Price forecast': 'मूल्य पूर्वानुमान',
+      'GradientBoosting model forecasts mandi prices up to 6 months ahead using lag features.':
+        'GradientBoosting मॉडल पिछले रुझानों का उपयोग कर 6 महीने आगे तक मंडी भाव का पूर्वानुमान करता है।',
+      'MSP vs market': 'MSP बनाम बाज़ार भाव',
+      'Compare current mandi price with Minimum Support Price. Get a sell recommendation.':
+        'वर्तमान मंडी भाव की न्यूनतम समर्थन मूल्य (MSP) से तुलना करें। बिक्री सिफ़ारिश पाएं।',
+      'Best time to sell': 'बेचने का सही समय',
+      'Seasonal price analysis. Hold, sell now, or sell partial — with expected gain.':
+        'मौसमी मूल्य विश्लेषण। रोकें, अभी बेचें, या आंशिक बेचें — अपेक्षित लाभ सहित।',
+      'Cross-mandi arbitrage': 'मंडी अंतर लाभ',
+      'Compare latest prices for a crop across all regions. Spot the best mandi instantly.':
+        'सभी क्षेत्रों में किसी फ़सल के नवीनतम भावों की तुलना करें। सबसे अच्छी मंडी तुरंत पहचानें।',
+      'Crop calendar': 'फ़सल कैलेंडर',
+      'Sowing → harvest timeline: land prep, fertilizer dates, irrigation windows, pest watch.':
+        'बुवाई → कटाई समयरेखा: भूमि तैयारी, उर्वरक तिथियां, सिंचाई अवधि, कीट निगरानी।',
+      'Irrigation schedule': 'सिंचाई कार्यक्रम',
+      'Week-by-week water plan for the full crop duration. Adjusted for rainfall and irrigation level.':
+        'पूरी फ़सल अवधि के लिए साप्ताहिक जल योजना। वर्षा और सिंचाई स्तर के अनुसार समायोजित।',
+      'Fertilizer recommendation': 'उर्वरक सिफ़ारिश',
+      "How much Urea, DAP, MOP to apply — based on your soil NPK vs crop's requirement.":
+        'कितना यूरिया, DAP, MOP डालें — आपकी मिट्टी के NPK और फ़सल की ज़रूरत के आधार पर।',
+      'Pest & disease alerts': 'कीट और रोग चेतावनी',
+      'Weather-triggered risk from 18 pest rules. Management plans included.':
+        '18 कीट नियमों से मौसम-आधारित जोखिम। प्रबंधन योजना शामिल।',
+      'Crop Symptom Screening': 'फ़सल लक्षण जांच',
+      'Upload a leaf photo for a preliminary visual screen. Confirm symptoms with a qualified agronomist before treatment.':
+        'प्रारंभिक जांच के लिए पत्ती की फ़ोटो अपलोड करें। उपचार से पहले किसी योग्य कृषि विशेषज्ञ से लक्षणों की पुष्टि करें।',
+      'Loan & credit calculator': 'ऋण और साख कैलकुलेटर',
+      'EMI, total repayment, DSCR, and feasibility verdict (safe / moderate / risky).':
+        'EMI, कुल चुकौती, DSCR, और व्यवहार्यता निर्णय (सुरक्षित / मध्यम / जोखिमपूर्ण)।',
+      'Government schemes': 'सरकारी योजनाएं',
+      'Match your profile against 12 central/state schemes. Get eligibility, benefits, links.':
+        'अपनी प्रोफ़ाइल को 12 केंद्रीय/राज्य योजनाओं से मिलाएं। पात्रता, लाभ, लिंक पाएं।',
+      'Satellite NDVI & Sub-Field Health': 'सैटेलाइट NDVI और उप-क्षेत्र स्वास्थ्य',
+      'Coordinate-based planning estimate. Connect a validated imagery provider before using this for field decisions.':
+        'निर्देशांक-आधारित योजना अनुमान। खेत संबंधी निर्णयों के लिए उपयोग से पहले सत्यापित इमेजरी प्रदाता जोड़ें।',
+      'Soil Carbon Credits Estimator': 'मृदा कार्बन क्रेडिट अनुमानक',
+      'Planning estimate only. Verification and registry approval are required before carbon credits can be sold.':
+        'केवल योजना अनुमान। कार्बन क्रेडिट बेचने से पहले सत्यापन और रजिस्ट्री अनुमोदन आवश्यक है।',
+      'Smart IoT Sensors & Pump Controller': 'स्मार्ट IoT सेंसर और पंप नियंत्रक',
+      'Planning calculator for connected sensors and pumps. It does not control physical equipment.':
+        'जुड़े हुए सेंसर और पंपों के लिए योजना कैलकुलेटर। यह भौतिक उपकरण नियंत्रित नहीं करता।',
+      'ML model status': 'ML मॉडल स्थिति',
+      'Live status of the 3 ML models. Retraining is restricted to an administrator-controlled job.':
+        '3 ML मॉडलों की लाइव स्थिति। पुनः प्रशिक्षण केवल प्रशासक-नियंत्रित कार्य तक सीमित है।',
+
+      // Common form field labels (shared across many tools)
+      'Region': 'क्षेत्र',
+      'Season': 'मौसम',
+      'Area (acres)': 'क्षेत्रफल (एकड़)',
+      'Total area (acres)': 'कुल क्षेत्रफल (एकड़)',
+      'Budget / acre (₹)': 'बजट / एकड़ (₹)',
+      'Total budget (₹)': 'कुल बजट (₹)',
+      'Crop': 'फ़सल',
+      'Crop (optional)': 'फ़सल (वैकल्पिक)',
+      'Crops to compare (hold Ctrl/Cmd to select multiple)': 'तुलना के लिए फ़सलें (कई चुनने हेतु Ctrl/Cmd दबाए रखें)',
+      'Sowing date': 'बुवाई की तारीख़',
+      'Irrigation (0–1)': 'सिंचाई (0–1)',
+      'Rainfall (mm)': 'वर्षा (मिमी)',
+      'Avg temp (°C)': 'औसत तापमान (°C)',
+      'Soil N (kg/ha)': 'मिट्टी N (किग्रा/हेक्टेयर)',
+      'Soil P (kg/ha)': 'मिट्टी P (किग्रा/हेक्टेयर)',
+      'Soil K (kg/ha)': 'मिट्टी K (किग्रा/हेक्टेयर)',
+      'Mandi price (₹/kg)': 'मंडी भाव (₹/किग्रा)',
+      'Months ahead': 'आगामी महीने',
+      'Total cost (₹)': 'कुल लागत (₹)',
+      'Expected profit (₹)': 'अपेक्षित मुनाफ़ा (₹)',
+      'Loan amount (₹)': 'ऋण राशि (₹)',
+      'Interest rate % /yr': 'ब्याज दर % /वर्ष',
+      'Tenure (months)': 'अवधि (महीने)',
+      'Seed (₹)': 'बीज (₹)',
+      'Fertilizer (₹)': 'उर्वरक (₹)',
+      'Labour (₹)': 'श्रम (₹)',
+      'Other costs (₹)': 'अन्य लागत (₹)',
+      'Latitude (°N)': 'अक्षांश (°N)',
+      'Longitude (°E)': 'देशांतर (°E)',
+      'Target Moisture (%)': 'लक्ष्य नमी (%)',
+      'Current Moisture (%)': 'वर्तमान नमी (%)',
+      'Pump Flow Rate (L/min)': 'पंप प्रवाह दर (लीटर/मिनट)',
+      'Tillage Practice': 'जुताई पद्धति',
+      'Cover Crop': 'आवरण फ़सल',
+      'Biochar Application': 'बायोचार अनुप्रयोग',
+      'Farmer profile': 'किसान प्रोफ़ाइल',
+
+      // Option values
+      'Kharif': 'खरीफ़',
+      'Rabi': 'रबी',
+      'Zaid': 'ज़ायद',
+      'Yes': 'हां',
+      'No': 'नहीं',
+      'Yes (Applied)': 'हां (लागू)',
+      'Yes (Enabled)': 'हां (सक्षम)',
+      'Small / marginal': 'छोटा / सीमांत',
+      'Medium': 'मध्यम',
+      'Large': 'बड़ा',
+      'Conventional Tillage': 'पारंपरिक जुताई',
+      'Reduced Tillage': 'कम जुताई',
+      'No-Till (Regenerative)': 'बिना जुताई (पुनर्योजी)',
+
+      // Buttons
+      'Run recommendation': 'सिफ़ारिश चलाएं',
+      'Simulate': 'अनुकरण करें',
+      'Plan rotation': 'चक्र योजना बनाएं',
+      'Load templates': 'टेम्पलेट लोड करें',
+      'Compare selected crops': 'चयनित फ़सलों की तुलना करें',
+      'Optimise mix': 'मिश्रण अनुकूलित करें',
+      'Forecast': 'पूर्वानुमान',
+      'Compare': 'तुलना करें',
+      'Find spread': 'अंतर खोजें',
+      'Build calendar': 'कैलेंडर बनाएं',
+      'Build schedule': 'कार्यक्रम बनाएं',
+      'Recommend': 'सिफ़ारिश करें',
+      'Scan risk': 'जोखिम जांचें',
+      'Check feasibility': 'व्यवहार्यता जांचें',
+      'Find schemes': 'योजनाएं खोजें',
+      'Scan Satellite NDVI': 'सैटेलाइट NDVI जांचें',
+      'Calculate Carbon Credits': 'कार्बन क्रेडिट गणना करें',
+      'Trigger Smart Fertigation': 'स्मार्ट फर्टिगेशन चालू करें',
+      'Analyse': 'विश्लेषण करें',
+      'Save': 'सहेजें',
+      'Cancel': 'रद्द करें',
+      'Close': 'बंद करें',
+      'Clear': 'साफ़ करें',
+      'Search': 'खोजें',
+
+      // Farm bar
+      'My farm': 'मेरा खेत',
+      'Plot': 'प्लॉट',
+      'Used by every tool & the chatbot': 'हर टूल और चैटबॉट द्वारा उपयोग होता है',
+      'Draw your farm →': 'अपना खेत बनाएं →',
+      'Draw another plot': 'एक और प्लॉट बनाएं',
+
+      // mm-core.js Tools menu
+      'Share this page': 'यह पेज साझा करें',
+      'Share on WhatsApp': 'WhatsApp पर साझा करें',
+      'Print / Save as PDF': 'प्रिंट करें / PDF सहेजें',
+      'Copy link': 'लिंक कॉपी करें',
+      'Accessibility': 'सुगम्यता',
+      'Large text': 'बड़ा टेक्स्ट',
+      'High contrast': 'उच्च कंट्रास्ट',
+      'Privacy': 'गोपनीयता',
+      'Count my tool usage': 'मेरे टूल उपयोग की गिनती करें',
+      'Share anonymous counts': 'अज्ञात गणना साझा करें',
+      'My most used tools': 'मेरे सबसे अधिक उपयोग किए टूल',
+      'Install app': 'ऐप इंस्टॉल करें',
+
+      // Toolbar widget
+      'Language': 'भाषा',
+      'Tools': 'टूल',
+      'Dark mode': 'डार्क मोड',
+      'Voice': 'आवाज़',
+      'Read aloud': 'ज़ोर से पढ़ें',
+      'Save PDF': 'PDF सहेजें',
+      'Open tools': 'टूल खोलें',
+      'Close tools': 'टूल बंद करें',
+      'Stop': 'रोकें',
+      'Copy': 'कॉपी करें',
+      'OK': 'ठीक है',
+
+      // Chatbot widget
+      'Mitti Mantra Assistant': 'मिट्टी मंत्र सहायक',
+      'Ask or try /recommend, /msp, /pest…': 'पूछें या /recommend, /msp, /pest आज़माएं…',
+      'Send': 'भेजें',
+      'Voice input': 'आवाज़ इनपुट',
+
+      // Data freshness pill
+      'Live data': 'लाइव डेटा',
+      'Aging data': 'पुराना होता डेटा',
+      'Stale data': 'पुराना डेटा',
+      'Data status': 'डेटा स्थिति',
+      'Where these numbers come from': 'ये आंकड़े कहां से आते हैं',
+
+      // Farm-boundary page
+      'Draw your farm': 'अपना खेत बनाएं',
+      'Search a place in India…': 'भारत में कोई स्थान खोजें…',
+      'Search': 'खोजें',
+      'No farm drawn yet.': 'अभी तक कोई खेत नहीं बनाया गया।',
+      'Use in dashboard →': 'डैशबोर्ड में उपयोग करें →',
+      'Save as new plot': 'नए प्लॉट के रूप में सहेजें',
+
+      // Generic status
+      'Working…': 'काम जारी है…',
+      'Loading…': 'लोड हो रहा है…',
+      'Request failed': 'अनुरोध विफल',
+      'Find a tool…': 'टूल खोजें…',
+      'Filter tools': 'टूल फ़िल्टर करें',
+    },
+
+    /* ---------------- Telugu ---------------- */
+    te: {
+      'Home': 'హోమ్',
+      'Features': 'ఫీచర్లు',
+      'How it works': 'ఇది ఎలా పనిచేస్తుంది',
+      'Draw farm': 'పొలం గీయండి',
+      'Demo': 'డెమో',
+      'API Docs': 'API డాక్స్',
+      'Back to site': 'సైట్‌కు తిరిగి వెళ్ళండి',
+      'Try it free': 'ఉచితంగా ప్రయత్నించండి',
+      'Book a Tractor': 'ట్రాక్టర్ బుక్ చేయండి',
+      'Upcoming': 'త్వరలో',
+
+      'AI-Powered Farm Intelligence': 'AI-ఆధారిత వ్యవసాయ బుద్ధి',
+      'Explore your land': 'మీ భూమిని అన్వేషించండి',
+      'Try demo': 'డెమో ప్రయత్నించండి',
+      'Trusted by 12,000+ kisans': '12,000+ రైతుల నమ్మకం',
+
+      'Dashboard': 'డాష్‌బోర్డ్',
+
+      'Plan': 'ప్రణాళిక',
+      'Strategies': 'వ్యూహాలు',
+      'Market': 'మార్కెట్',
+      'Field': 'పొలం',
+      'Finance': 'ఆర్థికం',
+      'System': 'సిస్టమ్',
+
+      'Smart recommend': 'స్మార్ట్ సిఫారసు',
+      'Yield & profit': 'దిగుబడి & లాభం',
+      'Rotation planner': 'పంట మార్పిడి ప్రణాళిక',
+      'Strategy templates': 'వ్యూహ మూసలు',
+      'Compare crops': 'పంటల పోలిక',
+      'Optimal mix': 'ఉత్తమ మిశ్రమం',
+      'Price forecast': 'ధర అంచనా',
+      'MSP vs market': 'MSP vs మార్కెట్ ధర',
+      'Best time to sell': 'అమ్మడానికి సరైన సమయం',
+      'Arbitrage': 'మండీల మధ్య వ్యత్యాసం',
+      'Crop calendar': 'పంట క్యాలెండర్',
+      'Irrigation plan': 'నీటిపారుదల ప్రణాళిక',
+      'Fertilizer mix': 'ఎరువుల మిశ్రమం',
+      'Pest alerts': 'పురుగుల హెచ్చరికలు',
+      'Disease scan': 'వ్యాధి పరీక్ష',
+      'Loan feasibility': 'రుణ సాధ్యత',
+      'Govt. schemes': 'ప్రభుత్వ పథకాలు',
+      'Satellite NDVI': 'ఉపగ్రహ NDVI',
+      'Carbon credits': 'కార్బన్ క్రెడిట్లు',
+      'Smart IoT Pump': 'స్మార్ట్ IoT పంపు',
+      'ML status': 'ML స్థితి',
+
+      'Smart crop recommendations': 'స్మార్ట్ పంట సిఫారసులు',
+      'ML model ranks the best crops for your land and budget. Blends ROI, risk, soil health, and model confidence.':
+        'మీ భూమి మరియు బడ్జెట్ కోసం ML మోడల్ ఉత్తమ పంటలను ర్యాంక్ చేస్తుంది. ROI, రిస్క్, నేల ఆరోగ్యం, మోడల్ నమ్మకాన్ని కలుపుతుంది.',
+      'Yield & profit simulation': 'దిగుబడి & లాభం అనుకరణ',
+      'Full simulation: yield, cost breakdown, profit, ROI, risk score, water efficiency, nutrient gap.':
+        'పూర్తి అనుకరణ: దిగుబడి, ఖర్చు వివరాలు, లాభం, ROI, రిస్క్ స్కోర్, నీటి సామర్థ్యం, పోషక లోటు.',
+      'Rotation planner': 'పంట మార్పిడి ప్రణాళిక',
+      'Best kharif → rabi pairs for the whole year, ranked by profit, risk, and diversity bonus.':
+        'ఏడాది మొత్తానికి ఉత్తమ ఖరీఫ్ → రబీ జోడీలు, లాభం, రిస్క్, వైవిధ్య బోనస్ ప్రకారం ర్యాంక్ చేయబడ్డాయి.',
+      'Strategy templates': 'వ్యూహ మూసలు',
+      'Pre-built farming strategies: conservative, aggressive, organic, water-saver, and more. Pick one and simulate instantly.':
+        'ముందుగా తయారు చేసిన వ్యవసాయ వ్యూహాలు: జాగ్రత్తైన, దూకుడైన, సేంద్రియ, నీటి-పొదుపు మరియు మరిన్ని. ఒకటి ఎంచుకుని వెంటనే అనుకరించండి.',
+      'Compare crops head-to-head': 'పంటల నేరుగా పోలిక',
+      'Simulate 2–6 crops on the same land and budget. See them ranked by profit, with ROI & risk side-by-side.':
+        'ఒకే భూమి, బడ్జెట్‌పై 2–6 పంటలను అనుకరించండి. లాభం ప్రకారం ర్యాంక్, ROI & రిస్క్‌తో పాటు చూడండి.',
+      'Optimal crop mix': 'ఉత్తమ పంట మిశ్రమం',
+      'Given total land and budget, allocate across multiple crops to maximise profit. Auto-diversified by smart-score weighting.':
+        'మొత్తం భూమి, బడ్జెట్ ఆధారంగా, లాభాన్ని పెంచడానికి బహుళ పంటలకు కేటాయించండి. స్మార్ట్-స్కోర్ ద్వారా స్వయంచాలకంగా వైవిధ్యీకరించబడింది.',
+      'Price forecast': 'ధర అంచనా',
+      'GradientBoosting model forecasts mandi prices up to 6 months ahead using lag features.':
+        'GradientBoosting మోడల్ మునుపటి ధోరణులను ఉపయోగించి 6 నెలల వరకు మండీ ధరలను అంచనా వేస్తుంది.',
+      'MSP vs market': 'MSP vs మార్కెట్ ధర',
+      'Compare current mandi price with Minimum Support Price. Get a sell recommendation.':
+        'ప్రస్తుత మండీ ధరను కనీస మద్దతు ధర (MSP)తో పోల్చండి. అమ్మకం సిఫారసు పొందండి.',
+      'Best time to sell': 'అమ్మడానికి సరైన సమయం',
+      'Seasonal price analysis. Hold, sell now, or sell partial — with expected gain.':
+        'కాలానుగుణ ధర విశ్లేషణ. ఆపండి, ఇప్పుడే అమ్మండి, లేదా పాక్షికంగా అమ్మండి — అంచనా లాభంతో.',
+      'Cross-mandi arbitrage': 'మండీల మధ్య వ్యత్యాసం',
+      'Compare latest prices for a crop across all regions. Spot the best mandi instantly.':
+        'అన్ని ప్రాంతాలలో ఒక పంట తాజా ధరలను పోల్చండి. ఉత్తమ మండీని వెంటనే గుర్తించండి.',
+      'Crop calendar': 'పంట క్యాలెండర్',
+      'Sowing → harvest timeline: land prep, fertilizer dates, irrigation windows, pest watch.':
+        'విత్తనం → కోత కాలక్రమం: భూమి తయారీ, ఎరువుల తేదీలు, నీటిపారుదల సమయాలు, పురుగుల నిఘా.',
+      'Irrigation schedule': 'నీటిపారుదల షెడ్యూల్',
+      'Week-by-week water plan for the full crop duration. Adjusted for rainfall and irrigation level.':
+        'పూర్తి పంట కాలానికి వారానికి-వారం నీటి ప్రణాళిక. వర్షపాతం, నీటిపారుదల స్థాయికి అనుగుణంగా.',
+      'Fertilizer recommendation': 'ఎరువుల సిఫారసు',
+      "How much Urea, DAP, MOP to apply — based on your soil NPK vs crop's requirement.":
+        'ఎంత యూరియా, DAP, MOP వేయాలి — మీ నేల NPK, పంట అవసరం ఆధారంగా.',
+      'Pest & disease alerts': 'పురుగులు & వ్యాధి హెచ్చరికలు',
+      'Weather-triggered risk from 18 pest rules. Management plans included.':
+        '18 పురుగు నియమాల నుండి వాతావరణ-ఆధారిత రిస్క్. నిర్వహణ ప్రణాళికలు చేర్చబడ్డాయి.',
+      'Crop Symptom Screening': 'పంట లక్షణాల పరీక్ష',
+      'Upload a leaf photo for a preliminary visual screen. Confirm symptoms with a qualified agronomist before treatment.':
+        'ప్రాథమిక పరీక్ష కోసం ఆకు ఫోటో అప్‌లోడ్ చేయండి. చికిత్సకు ముందు అర్హత గల వ్యవసాయ నిపుణుడితో లక్షణాలను నిర్ధారించండి.',
+      'Loan & credit calculator': 'రుణం & క్రెడిట్ కాలిక్యులేటర్',
+      'EMI, total repayment, DSCR, and feasibility verdict (safe / moderate / risky).':
+        'EMI, మొత్తం తిరిగి చెల్లింపు, DSCR, మరియు సాధ్యత తీర్పు (సురక్షితం / మధ్యస్థం / రిస్క్‌తో కూడినది).',
+      'Government schemes': 'ప్రభుత్వ పథకాలు',
+      'Match your profile against 12 central/state schemes. Get eligibility, benefits, links.':
+        'మీ ప్రొఫైల్‌ను 12 కేంద్ర/రాష్ట్ర పథకాలతో సరిపోల్చండి. అర్హత, ప్రయోజనాలు, లింక్‌లు పొందండి.',
+      'Satellite NDVI & Sub-Field Health': 'ఉపగ్రహ NDVI & ఉప-పొలం ఆరోగ్యం',
+      'Coordinate-based planning estimate. Connect a validated imagery provider before using this for field decisions.':
+        'కోఆర్డినేట్-ఆధారిత ప్రణాళిక అంచనా. పొలం నిర్ణయాలకు ఉపయోగించే ముందు ధృవీకరించిన ఇమేజరీ ప్రొవైడర్‌ను జోడించండి.',
+      'Soil Carbon Credits Estimator': 'నేల కార్బన్ క్రెడిట్ అంచనా',
+      'Planning estimate only. Verification and registry approval are required before carbon credits can be sold.':
+        'ప్రణాళిక అంచనా మాత్రమే. కార్బన్ క్రెడిట్లు అమ్మడానికి ముందు ధృవీకరణ, రిజిస్ట్రీ ఆమోదం అవసరం.',
+      'Smart IoT Sensors & Pump Controller': 'స్మార్ట్ IoT సెన్సార్లు & పంపు నియంత్రిక',
+      'Planning calculator for connected sensors and pumps. It does not control physical equipment.':
+        'అనుసంధానిత సెన్సార్లు, పంపుల కోసం ప్రణాళిక కాలిక్యులేటర్. ఇది భౌతిక పరికరాలను నియంత్రించదు.',
+      'ML model status': 'ML మోడల్ స్థితి',
+      'Live status of the 3 ML models. Retraining is restricted to an administrator-controlled job.':
+        '3 ML మోడళ్ల ప్రత్యక్ష స్థితి. తిరిగి శిక్షణ నిర్వాహక-నియంత్రిత పనికే పరిమితం.',
+
+      'Region': 'ప్రాంతం',
+      'Season': 'సీజన్',
+      'Area (acres)': 'విస్తీర్ణం (ఎకరాలు)',
+      'Total area (acres)': 'మొత్తం విస్తీర్ణం (ఎకరాలు)',
+      'Budget / acre (₹)': 'బడ్జెట్ / ఎకరం (₹)',
+      'Total budget (₹)': 'మొత్తం బడ్జెట్ (₹)',
+      'Crop': 'పంట',
+      'Crop (optional)': 'పంట (ఐచ్ఛికం)',
+      'Crops to compare (hold Ctrl/Cmd to select multiple)': 'పోల్చవలసిన పంటలు (బహుళ ఎంపిక కోసం Ctrl/Cmd నొక్కి ఉంచండి)',
+      'Sowing date': 'విత్తిన తేదీ',
+      'Irrigation (0–1)': 'నీటిపారుదల (0–1)',
+      'Rainfall (mm)': 'వర్షపాతం (మిమీ)',
+      'Avg temp (°C)': 'సగటు ఉష్ణోగ్రత (°C)',
+      'Soil N (kg/ha)': 'నేల N (కిలో/హెక్టారు)',
+      'Soil P (kg/ha)': 'నేల P (కిలో/హెక్టారు)',
+      'Soil K (kg/ha)': 'నేల K (కిలో/హెక్టారు)',
+      'Mandi price (₹/kg)': 'మండీ ధర (₹/కిలో)',
+      'Months ahead': 'ముందు నెలలు',
+      'Total cost (₹)': 'మొత్తం ఖర్చు (₹)',
+      'Expected profit (₹)': 'అంచనా లాభం (₹)',
+      'Loan amount (₹)': 'రుణం మొత్తం (₹)',
+      'Interest rate % /yr': 'వడ్డీ రేటు % /సం.',
+      'Tenure (months)': 'కాలవ్యవధి (నెలలు)',
+      'Seed (₹)': 'విత్తనం (₹)',
+      'Fertilizer (₹)': 'ఎరువు (₹)',
+      'Labour (₹)': 'కూలీ (₹)',
+      'Other costs (₹)': 'ఇతర ఖర్చులు (₹)',
+      'Latitude (°N)': 'అక్షాంశం (°N)',
+      'Longitude (°E)': 'రేఖాంశం (°E)',
+      'Target Moisture (%)': 'లక్ష్య తేమ (%)',
+      'Current Moisture (%)': 'ప్రస్తుత తేమ (%)',
+      'Pump Flow Rate (L/min)': 'పంపు ప్రవాహ రేటు (లీ/నిమి)',
+      'Tillage Practice': 'దుక్కి పద్ధతి',
+      'Cover Crop': 'కవర్ పంట',
+      'Biochar Application': 'బయోచార్ వినియోగం',
+      'Farmer profile': 'రైతు ప్రొఫైల్',
+
+      'Kharif': 'ఖరీఫ్',
+      'Rabi': 'రబీ',
+      'Zaid': 'జాయద్',
+      'Yes': 'అవును',
+      'No': 'లేదు',
+      'Yes (Applied)': 'అవును (వర్తింపజేయబడింది)',
+      'Yes (Enabled)': 'అవును (ప్రారంభించబడింది)',
+      'Small / marginal': 'చిన్న / అట్టడుగు',
+      'Medium': 'మధ్యస్థం',
+      'Large': 'పెద్ద',
+      'Conventional Tillage': 'సాంప్రదాయ దుక్కి',
+      'Reduced Tillage': 'తగ్గిన దుక్కి',
+      'No-Till (Regenerative)': 'దుక్కి లేని (పునరుత్పత్తి)',
+
+      'Run recommendation': 'సిఫారసు అమలు చేయండి',
+      'Simulate': 'అనుకరించండి',
+      'Plan rotation': 'మార్పిడి ప్రణాళిక',
+      'Load templates': 'మూసలు లోడ్ చేయండి',
+      'Compare selected crops': 'ఎంచుకున్న పంటలను పోల్చండి',
+      'Optimise mix': 'మిశ్రమాన్ని మెరుగుపరచండి',
+      'Forecast': 'అంచనా',
+      'Compare': 'పోల్చండి',
+      'Find spread': 'వ్యత్యాసం కనుగొనండి',
+      'Build calendar': 'క్యాలెండర్ తయారు చేయండి',
+      'Build schedule': 'షెడ్యూల్ తయారు చేయండి',
+      'Recommend': 'సిఫారసు చేయండి',
+      'Scan risk': 'రిస్క్ పరీక్షించండి',
+      'Check feasibility': 'సాధ్యతను తనిఖీ చేయండి',
+      'Find schemes': 'పథకాలు కనుగొనండి',
+      'Scan Satellite NDVI': 'ఉపగ్రహ NDVI పరీక్షించండి',
+      'Calculate Carbon Credits': 'కార్బన్ క్రెడిట్లు లెక్కించండి',
+      'Trigger Smart Fertigation': 'స్మార్ట్ ఫర్టిగేషన్ ప్రారంభించండి',
+      'Analyse': 'విశ్లేషించండి',
+      'Save': 'సేవ్ చేయండి',
+      'Cancel': 'రద్దు చేయండి',
+      'Close': 'మూసివేయండి',
+      'Clear': 'తుడిచివేయండి',
+      'Search': 'వెతకండి',
+
+      'My farm': 'నా పొలం',
+      'Plot': 'ప్లాట్',
+      'Used by every tool & the chatbot': 'ప్రతి టూల్ & చాట్‌బాట్ దీన్ని ఉపయోగిస్తాయి',
+      'Draw your farm →': 'మీ పొలం గీయండి →',
+      'Draw another plot': 'మరో ప్లాట్ గీయండి',
+
+      'Share this page': 'ఈ పేజీని షేర్ చేయండి',
+      'Share on WhatsApp': 'WhatsAppలో షేర్ చేయండి',
+      'Print / Save as PDF': 'ప్రింట్ / PDFగా సేవ్ చేయండి',
+      'Copy link': 'లింక్ కాపీ చేయండి',
+      'Accessibility': 'అందుబాటు',
+      'Large text': 'పెద్ద అక్షరాలు',
+      'High contrast': 'అధిక కాంట్రాస్ట్',
+      'Privacy': 'గోప్యత',
+      'Count my tool usage': 'నా టూల్ వినియోగాన్ని లెక్కించండి',
+      'Share anonymous counts': 'అనామక గణాంకాలు షేర్ చేయండి',
+      'My most used tools': 'నేను ఎక్కువగా వాడే టూల్స్',
+      'Install app': 'యాప్ ఇన్‌స్టాల్ చేయండి',
+
+      'Language': 'భాష',
+      'Tools': 'టూల్స్',
+      'Dark mode': 'డార్క్ మోడ్',
+      'Voice': 'వాయిస్',
+      'Read aloud': 'బిగ్గరగా చదవండి',
+      'Save PDF': 'PDF సేవ్ చేయండి',
+      'Open tools': 'టూల్స్ తెరవండి',
+      'Close tools': 'టూల్స్ మూసివేయండి',
+      'Stop': 'ఆపండి',
+      'Copy': 'కాపీ చేయండి',
+      'OK': 'సరే',
+
+      'Mitti Mantra Assistant': 'మిట్టి మంత్ర సహాయకుడు',
+      'Ask or try /recommend, /msp, /pest…': 'అడగండి లేదా /recommend, /msp, /pest ప్రయత్నించండి…',
+      'Send': 'పంపండి',
+      'Voice input': 'వాయిస్ ఇన్‌పుట్',
+
+      'Live data': 'ప్రత్యక్ష డేటా',
+      'Aging data': 'పాతబడుతున్న డేటా',
+      'Stale data': 'పాత డేటా',
+      'Data status': 'డేటా స్థితి',
+      'Where these numbers come from': 'ఈ సంఖ్యలు ఎక్కడ నుండి వచ్చాయి',
+
+      'Draw your farm': 'మీ పొలం గీయండి',
+      'Search a place in India…': 'భారతదేశంలో ఒక ప్రదేశం వెతకండి…',
+      'No farm drawn yet.': 'ఇంకా పొలం గీయలేదు.',
+      'Use in dashboard →': 'డాష్‌బోర్డ్‌లో వాడండి →',
+      'Save as new plot': 'కొత్త ప్లాట్‌గా సేవ్ చేయండి',
+
+      'Working…': 'పని జరుగుతోంది…',
+      'Loading…': 'లోడ్ అవుతోంది…',
+      'Request failed': 'అభ్యర్థన విఫలమైంది',
+      'Find a tool…': 'టూల్ వెతకండి…',
+      'Filter tools': 'టూల్స్ ఫిల్టర్ చేయండి',
+    },
+
+    /* ---------------- Kannada ---------------- */
+    kn: {
+      'Home': 'ಮುಖಪುಟ',
+      'Features': 'ವೈಶಿಷ್ಟ್ಯಗಳು',
+      'How it works': 'ಇದು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ',
+      'Draw farm': 'ಜಮೀನು ಬರೆಯಿರಿ',
+      'Demo': 'ಡೆಮೊ',
+      'API Docs': 'API ದಸ್ತಾವೇಜು',
+      'Back to site': 'ಸೈಟ್‌ಗೆ ಹಿಂತಿರುಗಿ',
+      'Try it free': 'ಉಚಿತವಾಗಿ ಪ್ರಯತ್ನಿಸಿ',
+      'Book a Tractor': 'ಟ್ರ್ಯಾಕ್ಟರ್ ಬುಕ್ ಮಾಡಿ',
+      'Upcoming': 'ಶೀಘ್ರದಲ್ಲೇ',
+
+      'AI-Powered Farm Intelligence': 'AI-ಆಧಾರಿತ ಕೃಷಿ ಬುದ್ಧಿಮತ್ತೆ',
+      'Explore your land': 'ನಿಮ್ಮ ಭೂಮಿಯನ್ನು ಅನ್ವೇಷಿಸಿ',
+      'Try demo': 'ಡೆಮೊ ಪ್ರಯತ್ನಿಸಿ',
+      'Trusted by 12,000+ kisans': '12,000+ ರೈತರ ನಂಬಿಕೆ',
+
+      'Dashboard': 'ಡ್ಯಾಶ್‌ಬೋರ್ಡ್',
+
+      'Plan': 'ಯೋಜನೆ',
+      'Strategies': 'ತಂತ್ರಗಳು',
+      'Market': 'ಮಾರುಕಟ್ಟೆ',
+      'Field': 'ಹೊಲ',
+      'Finance': 'ಹಣಕಾಸು',
+      'System': 'ವ್ಯವಸ್ಥೆ',
+
+      'Smart recommend': 'ಸ್ಮಾರ್ಟ್ ಶಿಫಾರಸು',
+      'Yield & profit': 'ಇಳುವರಿ & ಲಾಭ',
+      'Rotation planner': 'ಬೆಳೆ ಸರದಿ ಯೋಜನೆ',
+      'Strategy templates': 'ತಂತ್ರ ಟೆಂಪ್ಲೇಟ್‌ಗಳು',
+      'Compare crops': 'ಬೆಳೆಗಳ ಹೋಲಿಕೆ',
+      'Optimal mix': 'ಸೂಕ್ತ ಮಿಶ್ರಣ',
+      'Price forecast': 'ಬೆಲೆ ಮುನ್ಸೂಚನೆ',
+      'MSP vs market': 'MSP vs ಮಾರುಕಟ್ಟೆ ಬೆಲೆ',
+      'Best time to sell': 'ಮಾರಾಟಕ್ಕೆ ಸೂಕ್ತ ಸಮಯ',
+      'Arbitrage': 'ಮಂಡಿಗಳ ನಡುವಿನ ವ್ಯತ್ಯಾಸ',
+      'Crop calendar': 'ಬೆಳೆ ಕ್ಯಾಲೆಂಡರ್',
+      'Irrigation plan': 'ನೀರಾವರಿ ಯೋಜನೆ',
+      'Fertilizer mix': 'ಗೊಬ್ಬರ ಮಿಶ್ರಣ',
+      'Pest alerts': 'ಕೀಟ ಎಚ್ಚರಿಕೆಗಳು',
+      'Disease scan': 'ರೋಗ ಪರೀಕ್ಷೆ',
+      'Loan feasibility': 'ಸಾಲ ಸಾಧ್ಯತೆ',
+      'Govt. schemes': 'ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು',
+      'Satellite NDVI': 'ಉಪಗ್ರಹ NDVI',
+      'Carbon credits': 'ಕಾರ್ಬನ್ ಕ್ರೆಡಿಟ್‌ಗಳು',
+      'Smart IoT Pump': 'ಸ್ಮಾರ್ಟ್ IoT ಪಂಪ್',
+      'ML status': 'ML ಸ್ಥಿತಿ',
+
+      'Smart crop recommendations': 'ಸ್ಮಾರ್ಟ್ ಬೆಳೆ ಶಿಫಾರಸುಗಳು',
+      'ML model ranks the best crops for your land and budget. Blends ROI, risk, soil health, and model confidence.':
+        'ML ಮಾದರಿ ನಿಮ್ಮ ಭೂಮಿ ಮತ್ತು ಬಜೆಟ್‌ಗೆ ಉತ್ತಮ ಬೆಳೆಗಳನ್ನು ಶ್ರೇಣೀಕರಿಸುತ್ತದೆ. ROI, ಅಪಾಯ, ಮಣ್ಣಿನ ಆರೋಗ್ಯ, ಮಾದರಿ ವಿಶ್ವಾಸವನ್ನು ಸಂಯೋಜಿಸುತ್ತದೆ.',
+      'Yield & profit simulation': 'ಇಳುವರಿ & ಲಾಭ ಸಿಮ್ಯುಲೇಶನ್',
+      'Full simulation: yield, cost breakdown, profit, ROI, risk score, water efficiency, nutrient gap.':
+        'ಪೂರ್ಣ ಸಿಮ್ಯುಲೇಶನ್: ಇಳುವರಿ, ವೆಚ್ಚ ವಿವರ, ಲಾಭ, ROI, ಅಪಾಯ ಅಂಕ, ನೀರಿನ ದಕ್ಷತೆ, ಪೋಷಕಾಂಶ ಕೊರತೆ.',
+      'Rotation planner': 'ಬೆಳೆ ಸರದಿ ಯೋಜನೆ',
+      'Best kharif → rabi pairs for the whole year, ranked by profit, risk, and diversity bonus.':
+        'ಇಡೀ ವರ್ಷಕ್ಕೆ ಉತ್ತಮ ಖಾರಿಫ್ → ರಬಿ ಜೋಡಿಗಳು, ಲಾಭ, ಅಪಾಯ, ವೈವಿಧ್ಯ ಬೋನಸ್ ಪ್ರಕಾರ ಶ್ರೇಣೀಕರಿಸಲಾಗಿದೆ.',
+      'Strategy templates': 'ತಂತ್ರ ಟೆಂಪ್ಲೇಟ್‌ಗಳು',
+      'Pre-built farming strategies: conservative, aggressive, organic, water-saver, and more. Pick one and simulate instantly.':
+        'ಮೊದಲೇ ನಿರ್ಮಿಸಿದ ಕೃಷಿ ತಂತ್ರಗಳು: ಜಾಗರೂಕ, ಆಕ್ರಮಣಕಾರಿ, ಸಾವಯವ, ನೀರು-ಉಳಿತಾಯ ಮತ್ತು ಇನ್ನಷ್ಟು. ಒಂದನ್ನು ಆಯ್ಕೆ ಮಾಡಿ ತಕ್ಷಣ ಸಿಮ್ಯುಲೇಟ್ ಮಾಡಿ.',
+      'Compare crops head-to-head': 'ಬೆಳೆಗಳ ನೇರ ಹೋಲಿಕೆ',
+      'Simulate 2–6 crops on the same land and budget. See them ranked by profit, with ROI & risk side-by-side.':
+        'ಒಂದೇ ಭೂಮಿ, ಬಜೆಟ್‌ನಲ್ಲಿ 2–6 ಬೆಳೆಗಳನ್ನು ಸಿಮ್ಯುಲೇಟ್ ಮಾಡಿ. ಲಾಭದ ಪ್ರಕಾರ ಶ್ರೇಣಿ, ROI & ಅಪಾಯವನ್ನು ಒಟ್ಟಿಗೆ ನೋಡಿ.',
+      'Optimal crop mix': 'ಸೂಕ್ತ ಬೆಳೆ ಮಿಶ್ರಣ',
+      'Given total land and budget, allocate across multiple crops to maximise profit. Auto-diversified by smart-score weighting.':
+        'ಒಟ್ಟು ಭೂಮಿ, ಬಜೆಟ್ ಆಧಾರದ ಮೇಲೆ, ಲಾಭ ಗರಿಷ್ಠಗೊಳಿಸಲು ಹಲವಾರು ಬೆಳೆಗಳಿಗೆ ಹಂಚಿಕೆ ಮಾಡಿ. ಸ್ಮಾರ್ಟ್-ಸ್ಕೋರ್‌ನಿಂದ ಸ್ವಯಂ-ವೈವಿಧ್ಯಗೊಂಡಿದೆ.',
+      'Price forecast': 'ಬೆಲೆ ಮುನ್ಸೂಚನೆ',
+      'GradientBoosting model forecasts mandi prices up to 6 months ahead using lag features.':
+        'GradientBoosting ಮಾದರಿ ಹಿಂದಿನ ಪ್ರವೃತ್ತಿಗಳನ್ನು ಬಳಸಿ 6 ತಿಂಗಳವರೆಗೆ ಮಂಡಿ ಬೆಲೆಗಳನ್ನು ಮುನ್ಸೂಚಿಸುತ್ತದೆ.',
+      'MSP vs market': 'MSP vs ಮಾರುಕಟ್ಟೆ ಬೆಲೆ',
+      'Compare current mandi price with Minimum Support Price. Get a sell recommendation.':
+        'ಪ್ರಸ್ತುತ ಮಂಡಿ ಬೆಲೆಯನ್ನು ಕನಿಷ್ಠ ಬೆಂಬಲ ಬೆಲೆ (MSP) ಜೊತೆ ಹೋಲಿಸಿ. ಮಾರಾಟ ಶಿಫಾರಸು ಪಡೆಯಿರಿ.',
+      'Best time to sell': 'ಮಾರಾಟಕ್ಕೆ ಸೂಕ್ತ ಸಮಯ',
+      'Seasonal price analysis. Hold, sell now, or sell partial — with expected gain.':
+        'ಋತುಮಾನ ಬೆಲೆ ವಿಶ್ಲೇಷಣೆ. ಹಿಡಿದಿಟ್ಟುಕೊಳ್ಳಿ, ಈಗಲೇ ಮಾರಿ, ಅಥವಾ ಭಾಗಶಃ ಮಾರಿ — ನಿರೀಕ್ಷಿತ ಲಾಭದೊಂದಿಗೆ.',
+      'Cross-mandi arbitrage': 'ಮಂಡಿಗಳ ನಡುವಿನ ವ್ಯತ್ಯಾಸ',
+      'Compare latest prices for a crop across all regions. Spot the best mandi instantly.':
+        'ಎಲ್ಲಾ ಪ್ರದೇಶಗಳಲ್ಲಿ ಒಂದು ಬೆಳೆಯ ಇತ್ತೀಚಿನ ಬೆಲೆಗಳನ್ನು ಹೋಲಿಸಿ. ಉತ್ತಮ ಮಂಡಿಯನ್ನು ತಕ್ಷಣ ಗುರುತಿಸಿ.',
+      'Crop calendar': 'ಬೆಳೆ ಕ್ಯಾಲೆಂಡರ್',
+      'Sowing → harvest timeline: land prep, fertilizer dates, irrigation windows, pest watch.':
+        'ಬಿತ್ತನೆ → ಕೊಯ್ಲು ಕಾಲಸೂಚಿ: ಭೂಮಿ ಸಿದ್ಧತೆ, ಗೊಬ್ಬರ ದಿನಾಂಕಗಳು, ನೀರಾವರಿ ಅವಧಿಗಳು, ಕೀಟ ನಿಗಾ.',
+      'Irrigation schedule': 'ನೀರಾವರಿ ವೇಳಾಪಟ್ಟಿ',
+      'Week-by-week water plan for the full crop duration. Adjusted for rainfall and irrigation level.':
+        'ಪೂರ್ಣ ಬೆಳೆ ಅವಧಿಗೆ ವಾರ-ವಾರದ ನೀರಿನ ಯೋಜನೆ. ಮಳೆ ಮತ್ತು ನೀರಾವರಿ ಮಟ್ಟಕ್ಕೆ ಹೊಂದಿಸಲಾಗಿದೆ.',
+      'Fertilizer recommendation': 'ಗೊಬ್ಬರ ಶಿಫಾರಸು',
+      "How much Urea, DAP, MOP to apply — based on your soil NPK vs crop's requirement.":
+        'ಎಷ್ಟು ಯೂರಿಯಾ, DAP, MOP ಹಾಕಬೇಕು — ನಿಮ್ಮ ಮಣ್ಣಿನ NPK ಮತ್ತು ಬೆಳೆಯ ಅಗತ್ಯದ ಆಧಾರದ ಮೇಲೆ.',
+      'Pest & disease alerts': 'ಕೀಟ & ರೋಗ ಎಚ್ಚರಿಕೆಗಳು',
+      'Weather-triggered risk from 18 pest rules. Management plans included.':
+        '18 ಕೀಟ ನಿಯಮಗಳಿಂದ ಹವಾಮಾನ-ಆಧಾರಿತ ಅಪಾಯ. ನಿರ್ವಹಣಾ ಯೋಜನೆಗಳು ಸೇರಿವೆ.',
+      'Crop Symptom Screening': 'ಬೆಳೆ ಲಕ್ಷಣ ಪರೀಕ್ಷೆ',
+      'Upload a leaf photo for a preliminary visual screen. Confirm symptoms with a qualified agronomist before treatment.':
+        'ಪ್ರಾಥಮಿಕ ಪರೀಕ್ಷೆಗಾಗಿ ಎಲೆಯ ಫೋಟೋ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ. ಚಿಕಿತ್ಸೆಗೂ ಮೊದಲು ಅರ್ಹ ಕೃಷಿ ತಜ್ಞರೊಂದಿಗೆ ಲಕ್ಷಣಗಳನ್ನು ಖಚಿತಪಡಿಸಿ.',
+      'Loan & credit calculator': 'ಸಾಲ & ಕ್ರೆಡಿಟ್ ಕ್ಯಾಲ್ಕುಲೇಟರ್',
+      'EMI, total repayment, DSCR, and feasibility verdict (safe / moderate / risky).':
+        'EMI, ಒಟ್ಟು ಮರುಪಾವತಿ, DSCR, ಮತ್ತು ಸಾಧ್ಯತೆಯ ತೀರ್ಪು (ಸುರಕ್ಷಿತ / ಮಧ್ಯಮ / ಅಪಾಯಕಾರಿ).',
+      'Government schemes': 'ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು',
+      'Match your profile against 12 central/state schemes. Get eligibility, benefits, links.':
+        'ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಅನ್ನು 12 ಕೇಂದ್ರ/ರಾಜ್ಯ ಯೋಜನೆಗಳೊಂದಿಗೆ ಹೊಂದಿಸಿ. ಅರ್ಹತೆ, ಪ್ರಯೋಜನಗಳು, ಲಿಂಕ್‌ಗಳನ್ನು ಪಡೆಯಿರಿ.',
+      'Satellite NDVI & Sub-Field Health': 'ಉಪಗ್ರಹ NDVI & ಉಪ-ಹೊಲ ಆರೋಗ್ಯ',
+      'Coordinate-based planning estimate. Connect a validated imagery provider before using this for field decisions.':
+        'ನಿರ್ದೇಶಾಂಕ-ಆಧಾರಿತ ಯೋಜನಾ ಅಂದಾಜು. ಹೊಲ ನಿರ್ಧಾರಗಳಿಗೆ ಬಳಸುವ ಮೊದಲು ಮಾನ್ಯೀಕೃತ ಇಮೇಜರಿ ಪೂರೈಕೆದಾರರನ್ನು ಸಂಪರ್ಕಿಸಿ.',
+      'Soil Carbon Credits Estimator': 'ಮಣ್ಣಿನ ಕಾರ್ಬನ್ ಕ್ರೆಡಿಟ್ ಅಂದಾಜುಗಾರ',
+      'Planning estimate only. Verification and registry approval are required before carbon credits can be sold.':
+        'ಯೋಜನಾ ಅಂದಾಜು ಮಾತ್ರ. ಕಾರ್ಬನ್ ಕ್ರೆಡಿಟ್‌ಗಳನ್ನು ಮಾರಾಟ ಮಾಡುವ ಮೊದಲು ಪರಿಶೀಲನೆ, ನೋಂದಣಿ ಅನುಮೋದನೆ ಅಗತ್ಯವಿದೆ.',
+      'Smart IoT Sensors & Pump Controller': 'ಸ್ಮಾರ್ಟ್ IoT ಸೆನ್ಸಾರ್‌ಗಳು & ಪಂಪ್ ನಿಯಂತ್ರಕ',
+      'Planning calculator for connected sensors and pumps. It does not control physical equipment.':
+        'ಸಂಪರ್ಕಿತ ಸೆನ್ಸಾರ್‌ಗಳು, ಪಂಪ್‌ಗಳಿಗಾಗಿ ಯೋಜನಾ ಕ್ಯಾಲ್ಕುಲೇಟರ್. ಇದು ಭೌತಿಕ ಸಾಧನಗಳನ್ನು ನಿಯಂತ್ರಿಸುವುದಿಲ್ಲ.',
+      'ML model status': 'ML ಮಾದರಿ ಸ್ಥಿತಿ',
+      'Live status of the 3 ML models. Retraining is restricted to an administrator-controlled job.':
+        '3 ML ಮಾದರಿಗಳ ನೇರ ಸ್ಥಿತಿ. ಮರುತರಬೇತಿ ನಿರ್ವಾಹಕ-ನಿಯಂತ್ರಿತ ಕೆಲಸಕ್ಕೆ ಸೀಮಿತವಾಗಿದೆ.',
+
+      'Region': 'ಪ್ರದೇಶ',
+      'Season': 'ಋತು',
+      'Area (acres)': 'ವಿಸ್ತೀರ್ಣ (ಎಕರೆ)',
+      'Total area (acres)': 'ಒಟ್ಟು ವಿಸ್ತೀರ್ಣ (ಎಕರೆ)',
+      'Budget / acre (₹)': 'ಬಜೆಟ್ / ಎಕರೆ (₹)',
+      'Total budget (₹)': 'ಒಟ್ಟು ಬಜೆಟ್ (₹)',
+      'Crop': 'ಬೆಳೆ',
+      'Crop (optional)': 'ಬೆಳೆ (ಐಚ್ಛಿಕ)',
+      'Crops to compare (hold Ctrl/Cmd to select multiple)': 'ಹೋಲಿಸಬೇಕಾದ ಬೆಳೆಗಳು (ಬಹು ಆಯ್ಕೆಗೆ Ctrl/Cmd ಒತ್ತಿಹಿಡಿಯಿರಿ)',
+      'Sowing date': 'ಬಿತ್ತನೆ ದಿನಾಂಕ',
+      'Irrigation (0–1)': 'ನೀರಾವರಿ (0–1)',
+      'Rainfall (mm)': 'ಮಳೆ (ಮಿಮೀ)',
+      'Avg temp (°C)': 'ಸರಾಸರಿ ತಾಪಮಾನ (°C)',
+      'Soil N (kg/ha)': 'ಮಣ್ಣಿನ N (ಕೆಜಿ/ಹೆಕ್ಟೇರ್)',
+      'Soil P (kg/ha)': 'ಮಣ್ಣಿನ P (ಕೆಜಿ/ಹೆಕ್ಟೇರ್)',
+      'Soil K (kg/ha)': 'ಮಣ್ಣಿನ K (ಕೆಜಿ/ಹೆಕ್ಟೇರ್)',
+      'Mandi price (₹/kg)': 'ಮಂಡಿ ಬೆಲೆ (₹/ಕೆಜಿ)',
+      'Months ahead': 'ಮುಂದಿನ ತಿಂಗಳುಗಳು',
+      'Total cost (₹)': 'ಒಟ್ಟು ವೆಚ್ಚ (₹)',
+      'Expected profit (₹)': 'ನಿರೀಕ್ಷಿತ ಲಾಭ (₹)',
+      'Loan amount (₹)': 'ಸಾಲದ ಮೊತ್ತ (₹)',
+      'Interest rate % /yr': 'ಬಡ್ಡಿ ದರ % /ವರ್ಷ',
+      'Tenure (months)': 'ಅವಧಿ (ತಿಂಗಳುಗಳು)',
+      'Seed (₹)': 'ಬೀಜ (₹)',
+      'Fertilizer (₹)': 'ಗೊಬ್ಬರ (₹)',
+      'Labour (₹)': 'ಕೂಲಿ (₹)',
+      'Other costs (₹)': 'ಇತರ ವೆಚ್ಚಗಳು (₹)',
+      'Latitude (°N)': 'ಅಕ್ಷಾಂಶ (°N)',
+      'Longitude (°E)': 'ರೇಖಾಂಶ (°E)',
+      'Target Moisture (%)': 'ಗುರಿ ತೇವಾಂಶ (%)',
+      'Current Moisture (%)': 'ಪ್ರಸ್ತುತ ತೇವಾಂಶ (%)',
+      'Pump Flow Rate (L/min)': 'ಪಂಪ್ ಹರಿವಿನ ದರ (ಲೀ/ನಿಮಿ)',
+      'Tillage Practice': 'ಉಳುಮೆ ಪದ್ಧತಿ',
+      'Cover Crop': 'ಕವರ್ ಬೆಳೆ',
+      'Biochar Application': 'ಬಯೋಚಾರ್ ಬಳಕೆ',
+      'Farmer profile': 'ರೈತ ಪ್ರೊಫೈಲ್',
+
+      'Kharif': 'ಖರೀಫ್',
+      'Rabi': 'ರಬಿ',
+      'Zaid': 'ಜಾಯಿದ್',
+      'Yes': 'ಹೌದು',
+      'No': 'ಇಲ್ಲ',
+      'Yes (Applied)': 'ಹೌದು (ಅನ್ವಯಿಸಲಾಗಿದೆ)',
+      'Yes (Enabled)': 'ಹೌದು (ಸಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ)',
+      'Small / marginal': 'ಸಣ್ಣ / ಅತಿಸಣ್ಣ',
+      'Medium': 'ಮಧ್ಯಮ',
+      'Large': 'ದೊಡ್ಡ',
+      'Conventional Tillage': 'ಸಾಂಪ್ರದಾಯಿಕ ಉಳುಮೆ',
+      'Reduced Tillage': 'ಕಡಿಮೆ ಉಳುಮೆ',
+      'No-Till (Regenerative)': 'ಉಳುಮೆ ಇಲ್ಲದ (ಪುನರುತ್ಪಾದಕ)',
+
+      'Run recommendation': 'ಶಿಫಾರಸು ಚಲಾಯಿಸಿ',
+      'Simulate': 'ಸಿಮ್ಯುಲೇಟ್ ಮಾಡಿ',
+      'Plan rotation': 'ಸರದಿ ಯೋಜನೆ ಮಾಡಿ',
+      'Load templates': 'ಟೆಂಪ್ಲೇಟ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡಿ',
+      'Compare selected crops': 'ಆಯ್ಕೆಮಾಡಿದ ಬೆಳೆಗಳನ್ನು ಹೋಲಿಸಿ',
+      'Optimise mix': 'ಮಿಶ್ರಣವನ್ನು ಉತ್ತಮಗೊಳಿಸಿ',
+      'Forecast': 'ಮುನ್ಸೂಚನೆ',
+      'Compare': 'ಹೋಲಿಸಿ',
+      'Find spread': 'ವ್ಯತ್ಯಾಸ ಹುಡುಕಿ',
+      'Build calendar': 'ಕ್ಯಾಲೆಂಡರ್ ರಚಿಸಿ',
+      'Build schedule': 'ವೇಳಾಪಟ್ಟಿ ರಚಿಸಿ',
+      'Recommend': 'ಶಿಫಾರಸು ಮಾಡಿ',
+      'Scan risk': 'ಅಪಾಯ ಪರೀಕ್ಷಿಸಿ',
+      'Check feasibility': 'ಸಾಧ್ಯತೆ ಪರಿಶೀಲಿಸಿ',
+      'Find schemes': 'ಯೋಜನೆಗಳನ್ನು ಹುಡುಕಿ',
+      'Scan Satellite NDVI': 'ಉಪಗ್ರಹ NDVI ಪರೀಕ್ಷಿಸಿ',
+      'Calculate Carbon Credits': 'ಕಾರ್ಬನ್ ಕ್ರೆಡಿಟ್‌ಗಳನ್ನು ಲೆಕ್ಕಹಾಕಿ',
+      'Trigger Smart Fertigation': 'ಸ್ಮಾರ್ಟ್ ಫರ್ಟಿಗೇಶನ್ ಪ್ರಾರಂಭಿಸಿ',
+      'Analyse': 'ವಿಶ್ಲೇಷಿಸಿ',
+      'Save': 'ಉಳಿಸಿ',
+      'Cancel': 'ರದ್ದುಮಾಡಿ',
+      'Close': 'ಮುಚ್ಚಿ',
+      'Clear': 'ಅಳಿಸಿ',
+      'Search': 'ಹುಡುಕಿ',
+
+      'My farm': 'ನನ್ನ ಹೊಲ',
+      'Plot': 'ಪ್ಲಾಟ್',
+      'Used by every tool & the chatbot': 'ಪ್ರತಿ ಟೂಲ್ ಮತ್ತು ಚಾಟ್‌ಬಾಟ್‌ನಿಂದ ಬಳಸಲ್ಪಡುತ್ತದೆ',
+      'Draw your farm →': 'ನಿಮ್ಮ ಹೊಲ ಬರೆಯಿರಿ →',
+      'Draw another plot': 'ಇನ್ನೊಂದು ಪ್ಲಾಟ್ ಬರೆಯಿರಿ',
+
+      'Share this page': 'ಈ ಪುಟವನ್ನು ಹಂಚಿಕೊಳ್ಳಿ',
+      'Share on WhatsApp': 'WhatsAppನಲ್ಲಿ ಹಂಚಿಕೊಳ್ಳಿ',
+      'Print / Save as PDF': 'ಮುದ್ರಿಸಿ / PDF ಆಗಿ ಉಳಿಸಿ',
+      'Copy link': 'ಲಿಂಕ್ ನಕಲಿಸಿ',
+      'Accessibility': 'ಪ್ರವೇಶಿಸುವಿಕೆ',
+      'Large text': 'ದೊಡ್ಡ ಪಠ್ಯ',
+      'High contrast': 'ಹೆಚ್ಚಿನ ಕಾಂಟ್ರಾಸ್ಟ್',
+      'Privacy': 'ಗೌಪ್ಯತೆ',
+      'Count my tool usage': 'ನನ್ನ ಟೂಲ್ ಬಳಕೆಯನ್ನು ಎಣಿಸಿ',
+      'Share anonymous counts': 'ಅನಾಮಧೇಯ ಎಣಿಕೆಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳಿ',
+      'My most used tools': 'ನಾನು ಹೆಚ್ಚು ಬಳಸುವ ಟೂಲ್‌ಗಳು',
+      'Install app': 'ಆ್ಯಪ್ ಸ್ಥಾಪಿಸಿ',
+
+      'Language': 'ಭಾಷೆ',
+      'Tools': 'ಟೂಲ್‌ಗಳು',
+      'Dark mode': 'ಡಾರ್ಕ್ ಮೋಡ್',
+      'Voice': 'ಧ್ವನಿ',
+      'Read aloud': 'ಜೋರಾಗಿ ಓದಿ',
+      'Save PDF': 'PDF ಉಳಿಸಿ',
+      'Open tools': 'ಟೂಲ್‌ಗಳನ್ನು ತೆರೆಯಿರಿ',
+      'Close tools': 'ಟೂಲ್‌ಗಳನ್ನು ಮುಚ್ಚಿ',
+      'Stop': 'ನಿಲ್ಲಿಸಿ',
+      'Copy': 'ನಕಲಿಸಿ',
+      'OK': 'ಸರಿ',
+
+      'Mitti Mantra Assistant': 'ಮಿಟ್ಟಿ ಮಂತ್ರ ಸಹಾಯಕ',
+      'Ask or try /recommend, /msp, /pest…': 'ಕೇಳಿ ಅಥವಾ /recommend, /msp, /pest ಪ್ರಯತ್ನಿಸಿ…',
+      'Send': 'ಕಳುಹಿಸಿ',
+      'Voice input': 'ಧ್ವನಿ ಇನ್‌ಪುಟ್',
+
+      'Live data': 'ನೇರ ಡೇಟಾ',
+      'Aging data': 'ಹಳೆಯದಾಗುತ್ತಿರುವ ಡೇಟಾ',
+      'Stale data': 'ಹಳೆಯ ಡೇಟಾ',
+      'Data status': 'ಡೇಟಾ ಸ್ಥಿತಿ',
+      'Where these numbers come from': 'ಈ ಸಂಖ್ಯೆಗಳು ಎಲ್ಲಿಂದ ಬರುತ್ತವೆ',
+
+      'Draw your farm': 'ನಿಮ್ಮ ಹೊಲ ಬರೆಯಿರಿ',
+      'Search a place in India…': 'ಭಾರತದಲ್ಲಿ ಒಂದು ಸ್ಥಳ ಹುಡುಕಿ…',
+      'No farm drawn yet.': 'ಇನ್ನೂ ಹೊಲ ಬರೆದಿಲ್ಲ.',
+      'Use in dashboard →': 'ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ನಲ್ಲಿ ಬಳಸಿ →',
+      'Save as new plot': 'ಹೊಸ ಪ್ಲಾಟ್ ಆಗಿ ಉಳಿಸಿ',
+
+      'Working…': 'ಕೆಲಸ ನಡೆಯುತ್ತಿದೆ…',
+      'Loading…': 'ಲೋಡ್ ಆಗುತ್ತಿದೆ…',
+      'Request failed': 'ವಿನಂತಿ ವಿಫಲವಾಗಿದೆ',
+      'Find a tool…': 'ಟೂಲ್ ಹುಡುಕಿ…',
+      'Filter tools': 'ಟೂಲ್‌ಗಳನ್ನು ಫಿಲ್ಟರ್ ಮಾಡಿ',
+    },
+  };
+
+  global.MM_I18N_CATALOG = CATALOG;
+  global.MM_I18N_GLOSSARY = GLOSSARY;
+})(window);

@@ -214,7 +214,7 @@
       html[data-theme="dark"] .list-row,
       html[data-theme="dark"] .chart,
       html[data-theme="dark"] .chart-box,
-      html[data-theme="dark"] .feature__tag,
+      html[data-theme="dark"] .feature__preview,
       html[data-theme="dark"] .farmmap__grid > div,
       html[data-theme="dark"] .livedemo__summary > div,
       html[data-theme="dark"] .scene3d-stats > div {
@@ -231,6 +231,36 @@
       html[data-theme="dark"] .kpi--info .kpi__val { color: #8ec2de; }
       html[data-theme="dark"] .chip--green { background: rgba(47,107,58,0.22) !important; color: #9ed2a7; }
       html[data-theme="dark"] .chip--gold  { background: rgba(200,138,58,0.22) !important; color: #e4b87c; }
+
+      /* Features bento — the preview widgets use light-mode hairlines
+         and pastels that vanish or glare on dark. */
+      html[data-theme="dark"] .features__badges li {
+        background: rgba(255,255,255,0.05);
+        border-color: rgba(255,255,255,0.08);
+        color: var(--ink-soft);
+      }
+      html[data-theme="dark"] .feature__preview,
+      html[data-theme="dark"] .chip { border-color: rgba(255,255,255,0.08); }
+      html[data-theme="dark"] .rankbars__track,
+      html[data-theme="dark"] .stages li::before { background: rgba(255,255,255,0.1); }
+      html[data-theme="dark"] .feature--sky  .feature__ico { background: rgba(110,167,199,0.18); }
+      html[data-theme="dark"] .feature--clay .feature__ico { background: rgba(165,86,42,0.24); }
+      /* --brand on --brand-soft is dark-green-on-dark-green once the
+         tokens flip; lift both to the dark-mode green. */
+      html[data-theme="dark"] .chip--leaf,
+      html[data-theme="dark"] .metric__delta {
+        background: rgba(47,107,58,0.22) !important;
+        color: #9ed2a7;
+        border-color: rgba(47,107,58,0.35);
+      }
+      html[data-theme="dark"] .feature--cta {
+        background: linear-gradient(135deg, var(--brand-soft), var(--surface) 70%) !important;
+      }
+      html[data-theme="dark"] .features__ambient { opacity: 0.45; }
+
+      /* Dashboard empty states — dark-ink hairlines vanish on dark. */
+      html[data-theme="dark"] .tool__empty { border-color: rgba(255,255,255,0.14); }
+      html[data-theme="dark"] .tool__empty__ico { border-color: rgba(255,255,255,0.08); }
 
       /* Livedemo ranked cards had gradients ending in #fff — override */
       html[data-theme="dark"] .livedemo__card--1 {
@@ -452,10 +482,12 @@
   function build() {
     injectStyles();
 
-    // The popover panel
+    // The popover panel. Its labels (Language, Tools, Dark mode, Voice, Read
+    // aloud, WhatsApp, Save PDF) are hand-translated in i18n-data.js, so this
+    // no longer opts out of translation the way it did when i18n.js machine-
+    // translated arbitrary text and risked mangling short button labels.
     const panel = document.createElement('div');
     panel.className = 'qw-panel';
-    panel.setAttribute('data-no-translate', '');
 
     // Language section — the i18n switcher is reparented here (if present).
     const langLabel = document.createElement('div');

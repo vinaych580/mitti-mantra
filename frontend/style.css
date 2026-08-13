@@ -800,27 +800,107 @@ section {
   display: none;
 }
 
-/* ---------- Features ---------- */
+/* ================================================================
+   Features — bento grid
+   Two hero cards carry inline data previews; compact cards carry a
+   single proof element each; a full-width tile closes the section.
+   All previews are CSS + inline SVG (no images, no extra requests).
+   ================================================================ */
 .features {
   background: var(--bg);
-}
-
-.features__grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-}
-
-.feature {
-  background: var(--surface);
-  padding: 32px;
-  border-radius: var(--r-lg);
-  border: 1px solid rgba(29, 26, 21, .05);
-  transition: transform .5s var(--ease), box-shadow .5s var(--ease), border-color .5s var(--ease);
   position: relative;
+  isolation: isolate;
   overflow: hidden;
 }
 
+/* Ambient wash — separates the section from the --bg-soft bands
+   above and below without introducing another flat colour block. */
+.features__ambient {
+  position: absolute;
+  inset: -20% -10% auto;
+  height: 120%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 42% at 18% 8%, rgba(47, 107, 58, .10), transparent 70%),
+    radial-gradient(52% 38% at 88% 32%, rgba(200, 138, 58, .10), transparent 70%),
+    radial-gradient(46% 34% at 50% 100%, rgba(110, 167, 199, .09), transparent 70%);
+}
+
+/* ---- Capability badge rail ---- */
+.features__badges {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 12px;
+  margin: -40px auto 56px;
+  max-width: 860px;
+}
+
+.features__badges li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .72);
+  border: 1px solid rgba(29, 26, 21, .07);
+  backdrop-filter: blur(6px);
+  font-size: .85rem;
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+
+.features__badges svg {
+  width: 15px;
+  height: 15px;
+  color: var(--brand);
+  flex-shrink: 0;
+}
+
+/* ---- Bento grid ---- */
+.features__bento {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 20px;
+}
+
+/* ---- Card shell ---- */
+.feature {
+  --f-accent: var(--brand);
+  --f-soft: var(--brand-soft);
+  --mx: 50%;
+  --my: 0%;
+  grid-column: span 2;
+  background: var(--surface);
+  padding: 28px;
+  border-radius: var(--r-lg);
+  border: 1px solid rgba(29, 26, 21, .06);
+  box-shadow: var(--shadow-sm);
+  transition: transform .5s var(--ease), box-shadow .5s var(--ease), border-color .5s var(--ease);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.feature--gold {
+  --f-accent: var(--accent);
+  --f-soft: var(--accent-soft);
+}
+
+.feature--sky {
+  --f-accent: var(--sky);
+  --f-soft: #dfeef8;
+}
+
+.feature--clay {
+  --f-accent: var(--clay);
+  --f-soft: #f7e4d5;
+}
+
+/* Top accent bar */
 .feature::before {
   content: '';
   position: absolute;
@@ -828,32 +908,54 @@ section {
   left: 0;
   right: 0;
   height: 3px;
-  background: var(--brand);
+  background: var(--f-accent);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform .5s var(--ease);
+  z-index: 2;
+}
+
+/* Pointer-tracked spotlight. Driven by --mx/--my set in site-ui.js,
+   and only ever enabled on real hover devices. */
+.feature::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .4s var(--ease);
+  background: radial-gradient(240px circle at var(--mx) var(--my),
+      color-mix(in srgb, var(--f-accent) 12%, transparent), transparent 68%);
 }
 
 .feature:hover {
-  transform: translateY(-6px);
+  transform: translateY(-4px);
   box-shadow: var(--shadow-lg);
-  border-color: transparent;
+  border-color: color-mix(in srgb, var(--f-accent) 22%, transparent);
 }
 
 .feature:hover::before {
   transform: scaleX(1);
 }
 
+@media (hover: hover) and (pointer: fine) {
+  .feature:hover::after {
+    opacity: 1;
+  }
+}
+
+/* ---- Card content ---- */
 .feature__ico {
-  width: 56px;
-  height: 56px;
+  width: 52px;
+  height: 52px;
   border-radius: 14px;
-  background: var(--brand-soft);
-  color: var(--brand);
+  background: var(--f-soft);
+  color: var(--f-accent);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
+  flex-shrink: 0;
   transition: transform .5s var(--ease);
 }
 
@@ -862,23 +964,8 @@ section {
 }
 
 .feature__ico svg {
-  width: 26px;
-  height: 26px;
-}
-
-.feature--gold .feature__ico {
-  background: var(--accent-soft);
-  color: var(--accent);
-}
-
-.feature--sky .feature__ico {
-  background: #dfeef8;
-  color: var(--sky);
-}
-
-.feature--clay .feature__ico {
-  background: #f7e4d5;
-  color: var(--clay);
+  width: 25px;
+  height: 25px;
 }
 
 .feature h3 {
@@ -886,31 +973,533 @@ section {
 }
 
 .feature p {
-  font-size: .96rem;
+  font-size: .95rem;
 }
 
-.feature__tag {
-  display: inline-block;
-  margin-top: 16px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: var(--bg-soft);
+/* Hero cards: wider, icon sits beside the copy */
+.feature--hero {
+  grid-column: span 4;
+  padding: 32px;
+}
+
+.feature__head {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.feature__head .feature__ico {
+  margin-bottom: 0;
+}
+
+.feature--hero .feature__head p {
+  max-width: 46ch;
+}
+
+/* ---- Inset preview panel ---- */
+.feature__preview {
+  margin-top: 18px;
+  padding: 16px;
+  border-radius: var(--r-md);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .5), transparent),
+    var(--bg);
+  border: 1px solid rgba(29, 26, 21, .06);
+}
+
+.feature--hero .feature__preview {
+  margin-top: 24px;
+}
+
+/* Small supporting text uses --ink-soft rather than --ink-faint:
+   at these sizes --ink-faint only reaches 3.5:1 on --bg. */
+.preview__label {
   font-size: .72rem;
   font-weight: 600;
-  letter-spacing: .08em;
+  letter-spacing: .06em;
   text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 12px;
+}
+
+/* ---- Ranked confidence bars ---- */
+.rankbars {
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.rankbars li {
+  display: grid;
+  grid-template-columns: 72px 1fr 40px;
+  align-items: center;
+  gap: 12px;
+  font-size: .85rem;
+}
+
+.rankbars__name {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.rankbars__track {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(29, 26, 21, .07);
+  overflow: hidden;
+}
+
+.rankbars__track i {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--f-accent), color-mix(in srgb, var(--f-accent) 55%, var(--accent)));
+  transition: width 1.1s var(--ease);
+}
+
+.features__bento.in-view .rankbars__track i {
+  width: var(--v);
+}
+
+.rankbars li:nth-child(2) .rankbars__track i {
+  transition-delay: .12s;
+}
+
+.rankbars li:nth-child(3) .rankbars__track i {
+  transition-delay: .24s;
+}
+
+.rankbars__val {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
   color: var(--ink-soft);
 }
 
-@media (max-width: 860px) {
-  .features__grid {
-    grid-template-columns: 1fr;
+/* ---- Sparkline ---- */
+.spark {
+  width: 100%;
+  height: 84px;
+  display: block;
+}
+
+.spark__band {
+  fill: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.spark__area {
+  fill: color-mix(in srgb, var(--f-accent) 12%, transparent);
+}
+
+.spark__line {
+  fill: none;
+  stroke: var(--f-accent);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.spark__line--fc {
+  stroke-dasharray: 5 5;
+  opacity: .85;
+}
+
+.spark__dot {
+  fill: var(--accent);
+  stroke: var(--surface);
+  stroke-width: 2.5;
+}
+
+.spark__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin-top: 10px;
+  font-size: .74rem;
+  color: var(--ink-soft);
+}
+
+.spark__legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.swatch {
+  width: 14px;
+  height: 3px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.swatch--solid {
+  background: var(--f-accent);
+}
+
+.swatch--dash {
+  background: repeating-linear-gradient(90deg, var(--f-accent) 0 4px, transparent 4px 7px);
+}
+
+.swatch--band {
+  height: 10px;
+  width: 10px;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+/* ---- Chips ---- */
+.feature__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.feature__chips--tight {
+  margin-top: 12px;
+}
+
+.chip {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--bg-soft);
+  border: 1px solid rgba(29, 26, 21, .06);
+  font-size: .76rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.chip--leaf {
+  background: var(--brand-soft);
+  border-color: color-mix(in srgb, var(--brand) 18%, transparent);
+  color: var(--brand-deep);
+}
+
+/* ---- Diagnosis row ---- */
+.diagnosis {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: .92rem;
+}
+
+.diagnosis__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--clay);
+  flex-shrink: 0;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--clay) 16%, transparent);
+}
+
+.diagnosis__name {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.diagnosis__conf {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  /* Not --f-accent: --sky on --bg is only 2.4:1. The dot already
+     carries the colour signal, so the number stays high-contrast. */
+  color: var(--ink);
+}
+
+/* ---- Metric readout ---- */
+.metric {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.metric__val {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 1.85rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.metric__unit {
+  font-size: .82rem;
+  color: var(--ink-soft);
+}
+
+.metric__delta {
+  margin-left: auto;
+  font-size: .76rem;
+  font-weight: 700;
+  color: var(--brand);
+  background: var(--brand-soft);
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+
+/* ---- Mini bar chart ---- */
+.minibars {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 40px;
+  margin-top: 14px;
+}
+
+.minibars span {
+  flex: 1;
+  height: 0;
+  border-radius: 3px 3px 0 0;
+  background: linear-gradient(180deg, var(--f-accent), color-mix(in srgb, var(--f-accent) 45%, transparent));
+  transition: height .9s var(--ease);
+}
+
+.features__bento.in-view .minibars span {
+  height: var(--h);
+}
+
+.minibars span:nth-child(2) { transition-delay: .05s; }
+.minibars span:nth-child(3) { transition-delay: .1s; }
+.minibars span:nth-child(4) { transition-delay: .15s; }
+.minibars span:nth-child(5) { transition-delay: .2s; }
+.minibars span:nth-child(6) { transition-delay: .25s; }
+.minibars span:nth-child(7) { transition-delay: .3s; }
+.minibars span:nth-child(8) { transition-delay: .35s; }
+
+/* ---- Stage timeline ---- */
+.stages {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+  counter-reset: stage;
+}
+
+.stages li {
+  position: relative;
+  padding-top: 14px;
+  font-size: .72rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  text-align: center;
+}
+
+.stages li::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(29, 26, 21, .1);
+}
+
+.stages li.is-critical {
+  color: var(--clay);
+}
+
+.stages li.is-critical::before {
+  background: var(--clay);
+}
+
+.stages__note {
+  margin-top: 12px;
+  font-size: .78rem;
+  color: var(--ink-soft);
+}
+
+/* ---- Alert row ---- */
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.alert__pulse {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  margin-top: 5px;
+  flex-shrink: 0;
+  animation: alertPulse 2.4s var(--ease) infinite;
+}
+
+@keyframes alertPulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+
+  50% {
+    box-shadow: 0 0 0 7px color-mix(in srgb, var(--accent) 0%, transparent);
   }
 }
 
-@media (min-width: 861px) and (max-width: 1080px) {
-  .features__grid {
-    grid-template-columns: repeat(2, 1fr);
+.alert__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: .85rem;
+}
+
+.alert__body strong {
+  color: var(--ink);
+}
+
+.alert__body span {
+  color: var(--ink-soft);
+  font-size: .8rem;
+}
+
+/* ---- Closing CTA tile ---- */
+.feature--cta {
+  grid-column: span 6;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  padding: 36px 40px;
+  background:
+    radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--brand) 10%, transparent), transparent 60%),
+    linear-gradient(135deg, var(--brand-soft), var(--surface) 60%);
+  border-color: color-mix(in srgb, var(--brand) 16%, transparent);
+}
+
+.feature--cta:hover {
+  transform: none;
+  box-shadow: var(--shadow-md);
+}
+
+.feature-cta__text h3 {
+  margin-bottom: 6px;
+}
+
+.feature-cta__text p {
+  max-width: 52ch;
+  font-size: .95rem;
+}
+
+.feature-cta__actions {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+/* ---- Tablet: 4 columns ---- */
+@media (max-width: 1080px) {
+  .features__bento {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .feature--hero,
+  .feature--cta {
+    grid-column: span 4;
+  }
+
+  /* Five compact cards would otherwise leave a half-empty row —
+     the last one stretches to close it. */
+  .feature:nth-last-of-type(2) {
+    grid-column: span 4;
+  }
+}
+
+/* ---- Mobile: single column ---- */
+@media (max-width: 720px) {
+  .features__bento {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .feature,
+  .feature--hero,
+  .feature--cta,
+  .feature:nth-last-of-type(2) {
+    grid-column: 1 / -1;
+  }
+
+  .feature,
+  .feature--hero {
+    padding: 24px;
+  }
+
+  .feature--cta {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 28px 24px;
+  }
+
+  /* Both labels are white-space:nowrap, so side-by-side they overflow
+     (and the card's overflow:hidden would silently clip them). Stack. */
+  .feature-cta__actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .feature-cta__actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Stack the hero head so the icon doesn't squeeze the copy */
+  .feature__head {
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .features__badges {
+    margin: -24px auto 40px;
+    gap: 8px;
+  }
+
+  .features__badges li {
+    font-size: .8rem;
+    padding: 7px 13px;
+  }
+
+  .rankbars li {
+    grid-template-columns: 64px 1fr 36px;
+    gap: 8px;
+    font-size: .8rem;
+  }
+}
+
+/* Fallback for browsers without color-mix() support */
+@supports not (color: color-mix(in srgb, red 50%, blue)) {
+  .feature:hover {
+    border-color: rgba(29, 26, 21, .16);
+  }
+
+  .feature::after {
+    display: none;
+  }
+
+  .rankbars__track i,
+  .minibars span {
+    background: var(--f-accent);
+  }
+
+  .spark__band {
+    fill: rgba(200, 138, 58, .16);
+  }
+
+  .spark__area {
+    fill: rgba(47, 107, 58, .1);
+  }
+
+  .diagnosis__dot {
+    box-shadow: 0 0 0 4px rgba(165, 86, 42, .16);
+  }
+
+  .feature--cta {
+    background: linear-gradient(135deg, var(--brand-soft), var(--surface) 60%);
   }
 }
 
@@ -1504,6 +2093,20 @@ section {
   transition-delay: .5s;
 }
 
+.reveal-stagger.in-view>*:nth-child(7) {
+  transition-delay: .56s;
+}
+
+.reveal-stagger.in-view>*:nth-child(8) {
+  transition-delay: .62s;
+}
+
+/* Anything past the 8th shares the tail delay rather than falling
+   back to 0s and racing ahead of the cards before it. */
+.reveal-stagger.in-view>*:nth-child(n+9) {
+  transition-delay: .68s;
+}
+
 /* ---------- Mobile menu panel ---------- */
 .mobile-panel {
   position: fixed;
@@ -1974,6 +2577,167 @@ section {
 
 .output:empty {
   display: none;
+}
+
+/* ================================================================
+   Tool empty state
+   Before a tool has been run its .output is empty, which left the
+   panel as a bare form floating above the footer. This states what
+   the tool returns, so the first screen teaches instead of stalling.
+   ================================================================ */
+.tool__empty {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 18px;
+  padding: 22px;
+  border-radius: var(--r-md);
+  border: 1px dashed rgba(29, 26, 21, .16);
+  background:
+    radial-gradient(120% 140% at 0% 0%, var(--brand-soft), transparent 62%),
+    var(--bg);
+}
+
+.tool__empty__ico {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  border: 1px solid rgba(29, 26, 21, .07);
+  color: var(--brand);
+  flex-shrink: 0;
+}
+
+.tool__empty__ico svg {
+  width: 20px;
+  height: 20px;
+}
+
+.tool__empty__label {
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 10px;
+}
+
+.tool__empty ul {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 20px;
+  margin-bottom: 14px;
+}
+
+.tool__empty li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: .88rem;
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+.tool__empty li svg {
+  width: 14px;
+  height: 14px;
+  margin-top: 4px;
+  color: var(--brand);
+  flex-shrink: 0;
+}
+
+.tool__empty__hint {
+  font-size: .82rem;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+@media (max-width: 620px) {
+  .tool__empty {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 18px;
+  }
+
+  .tool__empty ul {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Sidebar tool filter ---------- */
+.sidebar__search {
+  position: relative;
+  margin-bottom: 18px;
+}
+
+.sidebar__search svg {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 15px;
+  height: 15px;
+  color: var(--ink-soft);
+  pointer-events: none;
+}
+
+.sidebar__search input {
+  width: 100%;
+  padding: 9px 12px 9px 34px;
+  border-radius: 10px;
+  border: 1px solid rgba(29, 26, 21, .12);
+  background: var(--bg);
+  font-family: inherit;
+  font-size: .88rem;
+  color: var(--ink);
+}
+
+.sidebar__search input::placeholder {
+  color: var(--ink-soft);
+}
+
+.sidebar__search input:focus {
+  outline: none;
+  border-color: var(--brand);
+  background: var(--surface);
+}
+
+/* Cancel button on type=search is invisible against the tinted field */
+.sidebar__search input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.sidebar__group[hidden],
+.sidebar__btn[hidden] {
+  display: none;
+}
+
+.sidebar__empty {
+  padding: 10px 12px;
+  font-size: .85rem;
+  color: var(--ink-soft);
+}
+
+/* ---------- Telemetry: unavailable state ---------- */
+.telemetry-na {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: .8rem;
+  color: var(--ink-soft);
+  line-height: 1.4;
+}
+
+.telemetry-na svg {
+  width: 14px;
+  height: 14px;
+  margin-top: 2px;
+  color: var(--ink-faint);
+  flex-shrink: 0;
 }
 
 .kpi-grid {
@@ -2803,11 +3567,86 @@ section {
   display: flex;
   gap: 10px;
   margin-top: 18px;
+  flex-wrap: wrap;
 }
 
 .farmmap__actions .btn {
   flex: 1;
   justify-content: center;
+  white-space: nowrap;
+}
+
+/* ---- Saved plots list (multi-plot support) ---- */
+.farmmap__plots {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(29, 26, 21, .08);
+}
+
+.fb-plotlist {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fb-plot {
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+  border: 1px solid rgba(29, 26, 21, .10);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.fb-plot--active {
+  border-color: var(--brand);
+  box-shadow: inset 3px 0 0 var(--brand);
+}
+
+.fb-plot__pick {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  align-items: flex-start;
+  padding: 8px 12px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+}
+
+.fb-plot__pick:hover {
+  background: var(--brand-soft);
+}
+
+.fb-plot__pick b {
+  font-size: .84rem;
+  color: var(--ink);
+}
+
+.fb-plot__pick em {
+  font-style: normal;
+  font-size: .74rem;
+  color: var(--ink-faint);
+}
+
+.fb-plot__x {
+  width: 34px;
+  border: 0;
+  border-left: 1px solid rgba(29, 26, 21, .08);
+  background: transparent;
+  color: var(--ink-faint);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.fb-plot__x:hover {
+  background: #fbeae2;
+  color: var(--clay);
 }
 
 .farmmap__map {

@@ -711,9 +711,8 @@
               </svg>
             </div>
             <div>
-              <h2>Intelligent Crop Disease Scan</h2>
-              <p>Snap or upload a leaf photo to diagnose diseases instantly and offline. Zero latency, client-side
-                inference.</p>
+              <h2>Crop Symptom Screening</h2>
+              <p>Upload a leaf photo for a preliminary visual screen. Confirm symptoms with a qualified agronomist before treatment.</p>
             </div>
           </div>
 
@@ -778,13 +777,13 @@
                   style="font-size: 0.85rem; color: var(--brand); font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 6px;">
                   <span class="spinner"
                     style="border: 2px solid rgba(0,0,0,0.1); border-left-color: var(--brand); border-radius: 50%; width: 14px; height: 14px; animation: spin 1s linear infinite; display: inline-block;"></span>
-                  Loading TF.js disease model offline...
+                  Preliminary visual screening requires the backend and is not a diagnostic model.
                 </p>
               </div>
 
               <div>
-                <button id="runDiseaseScanBtn" class="btn btn-primary" style="width: 100%;" disabled>Run Disease
-                  Diagnosis</button>
+                <button id="runDiseaseScanBtn" class="btn btn-primary" style="width: 100%;" disabled>Run Preliminary
+                  Screen</button>
               </div>
             </div>
           </div>
@@ -865,7 +864,7 @@
               </svg></div>
             <div>
               <h2>Satellite NDVI & Sub-Field Health</h2>
-              <p>Sentinel-2 L2A satellite remote sensing. Monitor canopy vigor and 5x5 sub-field stress grid.</p>
+              <p>Coordinate-based planning estimate. Connect a validated imagery provider before using this for field decisions.</p>
             </div>
           </div>
           <form data-form="ndvi">
@@ -887,7 +886,7 @@
               </svg></div>
             <div>
               <h2>Soil Carbon Credits Estimator</h2>
-              <p>Quantify CO2e tons sequestered per year and project carbon credit income (INR).</p>
+              <p>Planning estimate only. Verification and registry approval are required before carbon credits can be sold.</p>
             </div>
           </div>
           <form data-form="carbon">
@@ -925,7 +924,7 @@
               </svg></div>
             <div>
               <h2>Smart IoT Sensors & Pump Controller</h2>
-              <p>Live soil telemetry, moisture deficit calculation, and automated fertigation pump trigger.</p>
+              <p>Planning calculator for connected sensors and pumps. It does not control physical equipment.</p>
             </div>
           </div>
           <form data-form="iot">
@@ -949,12 +948,12 @@
               </svg></div>
             <div>
               <h2>ML model status</h2>
-              <p>Live status of the 3 ML models. Retrain on demand.</p>
+              <p>Live status of the 3 ML models. Retraining is restricted to an administrator-controlled job.</p>
             </div>
           </div>
           <div style="display:flex;gap:10px;flex-wrap:wrap;">
             <button class="btn btn-ghost" data-action="ml-status">Check status</button>
-            <button class="btn btn-primary" data-action="ml-train">Retrain all models</button>
+            <button class="btn btn-primary" data-action="ml-train" disabled title="Run model training through the administrator-controlled job.">Retraining restricted</button>
           </div>
           <div class="output" data-out="ml"></div>
         </section>
@@ -978,11 +977,15 @@
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
   <script defer src="mm-core.js"></script>
+  <script defer src="mm-analytics.js"></script>
+  <script defer src="mm-freshness.js"></script>
   <script defer src="site-ui.js"></script>
   <script defer src="offline-simulator.js"></script>
   <script defer src="farm-state.js"></script>
+  <script defer src="mm-plots.js"></script>
   <script defer src="dashboard.js"></script>
   <script defer src="mm-enhance.js"></script>
+  <script defer src="i18n-data.js"></script>
   <script defer src="i18n.js"></script>
   <script defer src="toolbar.js"></script>
   <script defer src="chatbot.js"></script>

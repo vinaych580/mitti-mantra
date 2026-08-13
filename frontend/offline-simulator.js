@@ -162,6 +162,11 @@
   }
 
   function recommend(body) {
+    // Field names below intentionally match the ML-backed /api/crop response
+    // shape (smart_score, predicted_yield_kg_per_acre, expected_profit,
+    // roi_percent, risk_score, ml_confidence) so the dashboard's renderer
+    // works unchanged whether the data came from the backend or this
+    // on-device fallback.
     const area = +body.area_acres || 1;
     const budget = +body.budget_per_acre || 15000;
     const season = (body.season || 'kharif').toLowerCase();
@@ -171,19 +176,21 @@
       .map(([id, crop]) => {
         // Without region/soil context, use season-average assumptions.
         const score = fitScore(crop, {});
-        const expectedProfit = crop.base_yield * 0.8 * 25 - budget;
+        const confidence = clamp(score + 0.1, 0, 1);
+        const expectedProfitPerAcre = crop.base_yield * 0.8 * 25 - budget;
         return {
           crop_id: id,
           crop_name: crop.name,
-          score: +score.toFixed(2),
-          fit_score: +score.toFixed(2),
-          expected_yield_kg_per_acre: Math.round(crop.base_yield * score),
-          expected_profit_per_acre: Math.round(expectedProfit),
-          expected_profit_total: Math.round(expectedProfit * area),
-          confidence: +clamp(score + 0.1, 0, 1).toFixed(2),
+          smart_score: +(score * 100).toFixed(1),
+          predicted_yield_kg_per_acre: Math.round(crop.base_yield * score),
+          expected_profit: Math.round(expectedProfitPerAcre * area),
+          roi_percent: budget > 0 ? +((expectedProfitPerAcre / budget) * 100).toFixed(1) : 0,
+          risk_score: Math.round((1 - confidence) * 100),
+          ml_confidence: +confidence.toFixed(2),
+          reasons: ['Estimated offline using season-average assumptions — reconnect for the full ML-backed ranking.'],
         };
       })
-      .sort((a, b) => b.score - a.score)
+      .sort((a, b) => b.smart_score - a.smart_score)
       .slice(0, 3);
 
     return candidates;

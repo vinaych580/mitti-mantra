@@ -105,7 +105,7 @@
         ? `
           <div class="farmmap__grid">
             <div><span>pH</span><b>${d.soil.phh2o != null ? (d.soil.phh2o).toFixed(1) : '—'}</b></div>
-            <div><span>Nitrogen</span><b>${d.soil.nitrogen != null ? d.soil.nitrogen.toFixed(0) : '—'} <small>cg/kg</small></b></div>
+            <div><span>Nitrogen</span><b>${d.soil.nitrogen != null ? d.soil.nitrogen.toFixed(1) : '—'} <small>g/kg</small></b></div>
             <div><span>Clay</span><b>${d.soil.clay != null ? d.soil.clay.toFixed(1) : '—'} <small>%</small></b></div>
             <div><span>Sand</span><b>${d.soil.sand != null ? d.soil.sand.toFixed(1) : '—'} <small>%</small></b></div>
             <div><span>Organic C</span><b>${d.soil.soc != null ? d.soil.soc.toFixed(0) : '—'} <small>g/kg</small></b></div>
@@ -118,7 +118,9 @@
       ? '<div class="farmmap__muted farmmap__muted--anim">🌐 Detecting location…</div>'
       : buildLocationHtml(d);
 
-    /* Satellite NDVI Section */
+    /* Vegetation index planning estimate — deterministic from coordinates,
+       NOT a satellite reading. Mirrors utils/calculations.py's
+       calculate_ndvi_and_field_health(), which documents the same caveat. */
     const seed = Math.abs(Math.round((d.lat * 1000 + d.lon * 100))) % 1000;
     const estNdvi = (0.52 + (seed % 35) / 100.0).toFixed(2);
     const ndviStatus = estNdvi >= 0.70 ? "Vibrant Healthy Canopy" : (estNdvi >= 0.50 ? "Normal Growth" : "Moisture Deficit");
@@ -139,9 +141,9 @@
         <b>${d.lat.toFixed(5)}°N, ${d.lon.toFixed(5)}°E</b>
       </div>
       <div class="farmmap__stat">
-        <span>Satellite NDVI</span>
+        <span>Vegetation index (estimate)</span>
         <b>${estNdvi} <small>index</small></b>
-        <em style="color:${ndviBadgeColor};font-weight:600;">📡 Sentinel-2 · ${ndviStatus}</em>
+        <em style="color:${ndviBadgeColor};font-weight:600;">${ndviStatus} · not satellite imagery</em>
       </div>
       ${geoHtml}
       <h4 class="farmmap__h">Soil at centroid <small>(SoilGrids v2, 0–5 cm)</small></h4>
@@ -288,14 +290,22 @@
     renderEmpty();
   });
 
-  /* ── "Use in dashboard" ────────────────────────────── */
+  /* ── Saving ────────────────────────────────────────── */
+
+  /** region_id may have been skipped on very fast clicks — backfill it. */
+  function ensureRegion() {
+    if (!currentData.region_id && currentData.centroid) {
+      currentData.region_id = FarmState.getNearestRegionId(currentData.centroid);
+    }
+  }
+
+  // "Use in dashboard" replaces the active plot; "Save as new plot" appends.
+  // With no plots saved yet the two are identical, so the second button stays
+  // hidden until there is something to distinguish it from.
   document.getElementById('farmUse').addEventListener('click', () => {
     if (!currentData) return;
     try {
-      // Ensure region_id is set (may have been skipped on very fast clicks)
-      if (!currentData.region_id && currentData.centroid) {
-        currentData.region_id = FarmState.getNearestRegionId(currentData.centroid);
-      }
+      ensureRegion();
       FarmState.save(currentData);
       window.location.href = 'dashboard.html?fromMap=1';
     } catch (e) {
@@ -303,18 +313,89 @@
     }
   });
 
-  /* ── Boot ──────────────────────────────────────────── */
-  renderEmpty();
-
-  // If there is already a saved farm, show its region on the map
-  const existing = FarmState.load();
-  if (existing && existing.geojson) {
+  const addPlotBtn = document.getElementById('farmAddPlot');
+  addPlotBtn.addEventListener('click', () => {
+    if (!currentData) return;
     try {
-      const layer = L.geoJSON(existing.geojson, {
+      ensureRegion();
+      const suggested = currentData.village || currentData.district || 'New plot';
+      const name = prompt('Name this plot:', suggested);
+      if (name === null) return;          // cancelled
+      FarmState.add(currentData, name.trim());
+      window.location.href = 'dashboard.html?fromMap=1';
+    } catch (e) {
+      alert(e.message);
+    }
+  });
+
+  /* ── Saved plots list ──────────────────────────────── */
+  const plotsEl = document.getElementById('farmPlots');
+
+  function renderPlots() {
+    const plots = FarmState.list();
+    addPlotBtn.style.display = plots.length ? '' : 'none';
+
+    if (!plots.length) {
+      plotsEl.style.display = 'none';
+      plotsEl.innerHTML = '';
+      return;
+    }
+
+    const activeId = FarmState.getActiveId();
+    plotsEl.style.display = '';
+    plotsEl.innerHTML = `
+      <h4 class="farmmap__h">Your plots <small>(${plots.length})</small></h4>
+      <div class="fb-plotlist">
+        ${plots.map(p => `
+          <div class="fb-plot${p.id === activeId ? ' fb-plot--active' : ''}" data-plot-id="${p.id}">
+            <button type="button" class="fb-plot__pick" data-act="pick" title="Show on map">
+              <b>${escapeHtml(p.name)}</b>
+              <em>${p.acres ? Number(p.acres).toFixed(2) + ' ac' : '—'}${p.district ? ' · ' + escapeHtml(p.district) : ''}</em>
+            </button>
+            <button type="button" class="fb-plot__x" data-act="remove" title="Remove plot" aria-label="Remove ${escapeHtml(p.name)}">×</button>
+          </div>`).join('')}
+      </div>`;
+  }
+
+  function escapeHtml(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c => (
+      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+    ));
+  }
+
+  function showPlotOnMap(plot) {
+    if (!plot || !plot.geojson) return;
+    try {
+      const layer = L.geoJSON(plot.geojson, {
         style: { color: STROKE, weight: 2, fillColor: STROKE, fillOpacity: 0.15, dashArray: '5 5' }
       });
       map.fitBounds(layer.getBounds(), { padding: [40, 40] });
       layer.addTo(map);
     } catch (_) {}
   }
+
+  plotsEl.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-act]');
+    if (!btn) return;
+    const id = btn.closest('[data-plot-id]').dataset.plotId;
+
+    if (btn.dataset.act === 'pick') {
+      const plot = FarmState.setActive(id);
+      showPlotOnMap(plot);
+    } else if (btn.dataset.act === 'remove') {
+      const plot = FarmState.list().find(p => p.id === id);
+      if (plot && confirm(`Remove "${plot.name}"? This cannot be undone.`)) {
+        FarmState.remove(id);
+      }
+    }
+  });
+
+  document.addEventListener('mm:plot-changed', renderPlots);
+
+  /* ── Boot ──────────────────────────────────────────── */
+  renderEmpty();
+  renderPlots();
+
+  // If there is already a saved farm, show its region on the map
+  showPlotOnMap(FarmState.load());
 })();

@@ -42,6 +42,39 @@
     revealEls.forEach(el => el.classList.add('in-view'));
   }
 
+  /* ---------- Feature cards: pointer-tracked spotlight ----------
+     One delegated listener for the whole grid, rAF-coalesced, and only
+     wired up on real hover devices with motion allowed. Writes two CSS
+     custom properties; all the painting is done by the stylesheet. */
+  const bento = document.getElementById('featuresBento');
+  const fineHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const noMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (bento && fineHover && !noMotion) {
+    let frame = 0;
+    let pending = null;
+
+    bento.addEventListener('pointermove', (e) => {
+      const card = e.target.closest('.feature');
+      if (!card) return;
+      pending = { card, x: e.clientX, y: e.clientY };
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        if (!pending) return;
+        const { card: c, x, y } = pending;
+        const r = c.getBoundingClientRect();
+        c.style.setProperty('--mx', (x - r.left) + 'px');
+        c.style.setProperty('--my', (y - r.top) + 'px');
+      });
+    }, { passive: true });
+
+    bento.addEventListener('pointerleave', () => {
+      if (frame) { cancelAnimationFrame(frame); frame = 0; }
+      pending = null;
+    }, { passive: true });
+  }
+
   /* ---------- Count-up numbers ---------- */
   const counters = document.querySelectorAll('[data-count]');
   if (counters.length) {

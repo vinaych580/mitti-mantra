@@ -13,15 +13,33 @@
      back to null fields on failure.
    • Migrate legacy key 'agrisim_farm' automatically on first load.
 
+   Multi-plot
+   ───────────
+   Most farmers work several scattered plots with different soil, so a single
+   stored farm was the wrong shape. Plots live under PLOTS_KEY as
+   { activeId, plots: [ {id, name, …farm} ] }; load()/save() continue to read
+   and write the *active* plot, so every existing caller keeps working
+   unchanged. A legacy single farm is migrated into plot #1 on first load.
+
    Public API (window.FarmState)
    ──────────────────────────────
-     FarmState.load()                → farm | null
-     FarmState.save(farm)            → void
-     FarmState.clear()               → void
+     FarmState.load()                → farm | null     (active plot)
+     FarmState.save(farm)            → farm            (updates active plot)
+     FarmState.clear()               → void            (removes every plot)
      FarmState.isActive()            → boolean
+     FarmState.list()                → [farm, …]
+     FarmState.add(farm, name)       → farm            (added AND made active)
+     FarmState.remove(id)            → boolean
+     FarmState.rename(id, name)      → boolean
+     FarmState.setActive(id)         → farm | null
+     FarmState.getActiveId()         → string | null
+     FarmState.count()               → number
      FarmState.getNearestRegionId(centroid[lon,lat]) → string
      FarmState.reverseGeocode(lat, lon)              → Promise<{state,district,village}>
      FarmState.REGION_CENTROIDS      → [{region_id, lat, lon, state, displayName}, …]
+
+   Every mutation dispatches `mm:plot-changed` on document with
+   { detail: { plot, plots, activeId, reason } }.
 
    Farm object schema (stored in localStorage)
    ─────────────────────────────────────────────
@@ -47,9 +65,13 @@
 ;(function (global) {
   'use strict';
 
-  /* ── Storage key ─────────────────────────────────────── */
+  /* ── Storage keys ────────────────────────────────────── */
+  // STORAGE_KEY still mirrors the active plot so that code reading
+  // localStorage directly (dashboard.js has a raw fallback read) keeps working.
   const STORAGE_KEY    = 'mittimantra_selectedFarm';
   const LEGACY_KEY     = 'agrisim_farm';
+  const PLOTS_KEY      = 'mittimantra_plots_v1';
+  const MAX_PLOTS      = 20;
 
   /* ── Region centroid table ────────────────────────────
      Approximate geographic centroids for every region_id
@@ -171,41 +193,133 @@
 
   /* ── Persistence ────────────────────────────────── */
 
-  function load() {
+  function _newId() {
+    if (global.crypto && typeof global.crypto.randomUUID === 'function') {
+      return global.crypto.randomUUID();
+    }
+    return 'plot_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
+  }
+
+  /** Normalise a legacy single-farm object into a plot. */
+  function _asPlot(farm, name) {
+    const plot = Object.assign({}, farm);
+    if (!plot.id) plot.id = _newId();
+    if (!plot.name) plot.name = name || _defaultName(plot);
+    if (!plot.region_id && plot.centroid) {
+      plot.region_id = getNearestRegionId(plot.centroid, plot.state || null);
+    }
+    if (plot.centroid && plot.lat == null) {
+      plot.lon = plot.centroid[0];
+      plot.lat = plot.centroid[1];
+    }
+    if (!plot.savedAt) plot.savedAt = new Date().toISOString();
+    return plot;
+  }
+
+  function _defaultName(farm) {
+    const where = farm.village || farm.district || farm.state;
+    const size = farm.acres ? `${Number(farm.acres).toFixed(1)} ac` : null;
+    if (where && size) return `${where} · ${size}`;
+    if (where) return where;
+    if (size) return `Plot · ${size}`;
+    return 'My plot';
+  }
+
+  /** Read the whole store, migrating a legacy single farm on first access. */
+  function _readStore() {
+    let store = null;
     try {
-      // Try new key first
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) return JSON.parse(raw);
-      // Migrate from legacy key
-      const legacy = localStorage.getItem(LEGACY_KEY);
-      if (legacy) {
-        const farm = JSON.parse(legacy);
-        // Enrich legacy farm with region_id if missing
-        if (!farm.region_id && farm.centroid) {
-          farm.region_id = getNearestRegionId(farm.centroid);
-        }
-        // Flatten centroid to lat/lon
-        if (farm.centroid && !farm.lat) {
-          farm.lon = farm.centroid[0];
-          farm.lat  = farm.centroid[1];
-        }
-        save(farm);
-        return farm;
-      }
-    } catch { /* corrupt storage — ignore */ }
-    return null;
+      const raw = localStorage.getItem(PLOTS_KEY);
+      if (raw) store = JSON.parse(raw);
+    } catch { /* corrupt — fall through to migration */ }
+
+    if (store && Array.isArray(store.plots)) {
+      if (!store.plots.length) return { activeId: null, plots: [] };
+      const known = store.plots.some(p => p.id === store.activeId);
+      if (!known) store.activeId = store.plots[0].id;
+      return store;
+    }
+
+    // Migration: fold any single stored farm into a one-plot collection.
+    let legacyFarm = null;
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_KEY);
+      if (raw) legacyFarm = JSON.parse(raw);
+    } catch { /* ignore */ }
+
+    if (!legacyFarm) return { activeId: null, plots: [] };
+
+    const plot = _asPlot(legacyFarm);
+    const migrated = { activeId: plot.id, plots: [plot] };
+    _writeStore(migrated, 'migrate');
+    return migrated;
+  }
+
+  function _writeStore(store, reason) {
+    try {
+      localStorage.setItem(PLOTS_KEY, JSON.stringify(store));
+    } catch { /* storage full — ignore */ }
+
+    // Mirror the active plot to the legacy key so direct readers stay correct.
+    const active = _activeOf(store);
+    try {
+      if (active) localStorage.setItem(STORAGE_KEY, JSON.stringify(active));
+      else localStorage.removeItem(STORAGE_KEY);
+    } catch { /* ignore */ }
+
+    try {
+      document.dispatchEvent(new CustomEvent('mm:plot-changed', {
+        detail: {
+          plot: active,
+          plots: store.plots.slice(),
+          activeId: store.activeId,
+          reason: reason || 'update',
+        },
+      }));
+    } catch { /* pre-DOM call — nothing is listening yet anyway */ }
+  }
+
+  function _activeOf(store) {
+    if (!store || !store.plots.length) return null;
+    return store.plots.find(p => p.id === store.activeId) || store.plots[0];
+  }
+
+  /* ── Single-farm API (unchanged semantics: operates on the active plot) ── */
+
+  function load() {
+    return _activeOf(_readStore());
   }
 
   function save(farm) {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(farm));
-    } catch { /* storage full — ignore */ }
+    if (!farm) return null;
+    const store = _readStore();
+    const active = _activeOf(store);
+
+    if (!active) return add(farm);
+
+    // Preserve the plot's identity — callers pass raw farm objects that know
+    // nothing about plots, so id/name must not be clobbered by the update.
+    const merged = Object.assign({}, active, farm, {
+      id: active.id,
+      name: farm.name || active.name,
+      savedAt: new Date().toISOString(),
+    });
+    store.plots = store.plots.map(p => (p.id === active.id ? merged : p));
+    store.activeId = merged.id;
+    _writeStore(store, 'save');
+    return merged;
   }
 
   function clear() {
     try {
+      localStorage.removeItem(PLOTS_KEY);
       localStorage.removeItem(STORAGE_KEY);
       localStorage.removeItem(LEGACY_KEY);
+    } catch {}
+    try {
+      document.dispatchEvent(new CustomEvent('mm:plot-changed', {
+        detail: { plot: null, plots: [], activeId: null, reason: 'clear' },
+      }));
     } catch {}
   }
 
@@ -213,14 +327,83 @@
     return load() !== null;
   }
 
+  /* ── Multi-plot API ─────────────────────────────── */
+
+  function list() {
+    return _readStore().plots.slice();
+  }
+
+  function count() {
+    return _readStore().plots.length;
+  }
+
+  function getActiveId() {
+    const store = _readStore();
+    const active = _activeOf(store);
+    return active ? active.id : null;
+  }
+
+  function add(farm, name) {
+    if (!farm) return null;
+    const store = _readStore();
+    if (store.plots.length >= MAX_PLOTS) {
+      throw new Error(`You can save up to ${MAX_PLOTS} plots. Remove one first.`);
+    }
+    const plot = _asPlot(farm, name);
+    store.plots.push(plot);
+    store.activeId = plot.id;
+    _writeStore(store, 'add');
+    return plot;
+  }
+
+  function remove(id) {
+    const store = _readStore();
+    const next = store.plots.filter(p => p.id !== id);
+    if (next.length === store.plots.length) return false;
+    store.plots = next;
+    if (store.activeId === id) {
+      store.activeId = next.length ? next[0].id : null;
+    }
+    _writeStore(store, 'remove');
+    return true;
+  }
+
+  function rename(id, name) {
+    const clean = String(name || '').trim().slice(0, 60);
+    if (!clean) return false;
+    const store = _readStore();
+    const plot = store.plots.find(p => p.id === id);
+    if (!plot) return false;
+    plot.name = clean;
+    _writeStore(store, 'rename');
+    return true;
+  }
+
+  function setActive(id) {
+    const store = _readStore();
+    if (!store.plots.some(p => p.id === id)) return null;
+    store.activeId = id;
+    _writeStore(store, 'activate');
+    return _activeOf(store);
+  }
+
   /* ── Export ─────────────────────────────────────── */
   global.FarmState = {
     STORAGE_KEY,
+    PLOTS_KEY,
+    MAX_PLOTS,
     REGION_CENTROIDS,
     load,
     save,
     clear,
     isActive,
+    list,
+    count,
+    add,
+    remove,
+    rename,
+    setActive,
+    getActiveId,
     getNearestRegionId,
     getRegionRecord,
     reverseGeocode,
