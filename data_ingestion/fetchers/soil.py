@@ -7,6 +7,7 @@ from pathlib import Path
 import requests
 
 from data_ingestion.cache import cached
+from utils.calculations import clamp
 
 _DATASET_DIR = Path(__file__).resolve().parents[2] / "dataset"
 _FALLBACK_CSV = _DATASET_DIR / "soil.csv"
@@ -130,7 +131,3 @@ def get_soil(region_id: str, lat: float | None = None, lon: float | None = None)
         logger.error(f"Error reading soil fallback CSV: {e}")
 
     raise ValueError(f"No soil data available for region='{region_id}'")
-
-
-def clamp(value: float, low: float, high: float) -> float:
-    return max(low, min(high, value))

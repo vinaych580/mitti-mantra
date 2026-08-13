@@ -97,14 +97,8 @@
       var size = p.acres ? ' · ' + Number(p.acres).toFixed(1) + ' ac' : '';
       var label = (p.name || 'Plot') + size;
       return '<option value="' + p.id + '"' + (p.id === activeId ? ' selected' : '') + '>' +
-        escapeHtml(label) + '</option>';
+        window.MM.escapeHtml(label) + '</option>';
     }).join('');
-  }
-
-  function escapeHtml(s) {
-    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-    });
   }
 
   /** Point the shared Farm Profile at the newly selected plot. */
