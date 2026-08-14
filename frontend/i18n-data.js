@@ -327,6 +327,21 @@
       'View Profile': 'प्रोफ़ाइल देखें',
       'Frequently Asked Questions': 'अक्सर पूछे जाने वाले प्रश्न',
       'Consultation Fee': 'परामर्श शुल्क',
+
+      // Book a Tractor — form + high-traffic labels
+      'Your Full Name': 'आपका पूरा नाम',
+      'Mobile Number': 'मोबाइल नंबर',
+      'Expected Date': 'अपेक्षित तारीख',
+      'Farm Area (Acres)': 'खेत का क्षेत्रफल (एकड़)',
+      'Rate Type': 'दर प्रकार',
+      'Book Tractor': 'ट्रैक्टर बुक करें',
+      'Confirm Booking Request': 'बुकिंग अनुरोध की पुष्टि करें',
+      'Per Hour': 'प्रति घंटा',
+      'Per Day': 'प्रति दिन',
+      'Horsepower': 'हॉर्सपावर',
+      'Best for': 'इसके लिए सर्वोत्तम',
+      'Compare the fleet': 'फ्लीट की तुलना करें',
+      'Find your machine': 'अपनी मशीन खोजें',
     },
 
     /* ---------------- Telugu ---------------- */
@@ -587,6 +602,21 @@
       'View Profile': 'ప్రొఫైల్ చూడండి',
       'Frequently Asked Questions': 'తరచుగా అడిగే ప్రశ్నలు',
       'Consultation Fee': 'సంప్రదింపు రుసుము',
+
+      // Book a Tractor — form + high-traffic labels
+      'Your Full Name': 'మీ పూర్తి పేరు',
+      'Mobile Number': 'మొబైల్ నంబర్',
+      'Expected Date': 'ఆశించిన తేదీ',
+      'Farm Area (Acres)': 'పొలం విస్తీర్ణం (ఎకరాలు)',
+      'Rate Type': 'రేటు రకం',
+      'Book Tractor': 'ట్రాక్టర్ బుక్ చేయండి',
+      'Confirm Booking Request': 'బుకింగ్ అభ్యర్థనను నిర్ధారించండి',
+      'Per Hour': 'గంటకు',
+      'Per Day': 'రోజుకు',
+      'Horsepower': 'హార్స్‌పవర్',
+      'Best for': 'దీనికి ఉత్తమం',
+      'Compare the fleet': 'ఫ్లీట్‌ను పోల్చండి',
+      'Find your machine': 'మీ మెషీన్‌ను కనుగొనండి',
     },
 
     /* ---------------- Kannada ---------------- */
@@ -847,6 +877,21 @@
       'View Profile': 'ಪ್ರೊಫೈಲ್ ವೀಕ್ಷಿಸಿ',
       'Frequently Asked Questions': 'ಪದೇ ಪದೇ ಕೇಳಲಾಗುವ ಪ್ರಶ್ನೆಗಳು',
       'Consultation Fee': 'ಸಮಾಲೋಚನಾ ಶುಲ್ಕ',
+
+      // Book a Tractor — form + high-traffic labels
+      'Your Full Name': 'ನಿಮ್ಮ ಪೂರ್ಣ ಹೆಸರು',
+      'Mobile Number': 'ಮೊಬೈಲ್ ಸಂಖ್ಯೆ',
+      'Expected Date': 'ನಿರೀಕ್ಷಿತ ದಿನಾಂಕ',
+      'Farm Area (Acres)': 'ಜಮೀನಿನ ವಿಸ್ತೀರ್ಣ (ಎಕರೆ)',
+      'Rate Type': 'ದರ ಪ್ರಕಾರ',
+      'Book Tractor': 'ಟ್ರಾಕ್ಟರ್ ಬುಕ್ ಮಾಡಿ',
+      'Confirm Booking Request': 'ಬುಕಿಂಗ್ ವಿನಂತಿಯನ್ನು ದೃಢೀಕರಿಸಿ',
+      'Per Hour': 'ಗಂಟೆಗೆ',
+      'Per Day': 'ದಿನಕ್ಕೆ',
+      'Horsepower': 'ಹಾರ್ಸ್‌ಪವರ್',
+      'Best for': 'ಇದಕ್ಕೆ ಉತ್ತಮ',
+      'Compare the fleet': 'ಫ್ಲೀಟ್ ಹೋಲಿಸಿ',
+      'Find your machine': 'ನಿಮ್ಮ ಯಂತ್ರವನ್ನು ಹುಡುಕಿ',
     },
   };
 

@@ -14,6 +14,7 @@
 
 (function () {
   const TRACTORS = window.TRACTORS_DATA || [];
+  const esc = (window.MM && window.MM.escapeHtml) ? window.MM.escapeHtml : (s) => String(s == null ? '' : s);
 
   // Fallback map centre (geographic center/Bhopal) if the user denies/doesn't have geolocation.
   const FALLBACK_ORIGIN = { lat: 23.2599, lng: 77.4126, label: "Bhopal (default)" };
@@ -66,13 +67,14 @@
   }
 
   function popupHtml(t) {
+    const isBooked = t.availability === 'Booked';
     return `
       <div class="map-popup">
-        <strong>${t.name}</strong>
+        <strong>${esc(t.name)}</strong>
         <div class="map-popup__row">${t._distanceKm.toFixed(1)} km away</div>
-        <div class="map-popup__row">Operator: ${t.operatorName || 'Partner'}</div>
-        <div class="map-popup__row">₹${t.pricePerHour.toLocaleString("en-IN")}/hr · <span class="map-popup__avail">${t.availability}</span></div>
-        <button class="map-popup__btn" onclick="window.openBookingModal(${t.id})">Book Now</button>
+        <div class="map-popup__row">Operator: ${esc(t.operatorName || 'Partner')}</div>
+        <div class="map-popup__row">₹${t.pricePerHour.toLocaleString("en-IN")}/hr · <span class="map-popup__avail">${esc(t.availability)}</span></div>
+        <button class="map-popup__btn"${isBooked ? ' disabled style="opacity:.6;cursor:not-allowed;"' : ''} onclick="window.openBookingModal(${t.id})">${isBooked ? 'Currently Booked' : 'Book Now'}</button>
       </div>
     `;
   }
@@ -138,26 +140,29 @@
 
     els.list.innerHTML = sorted
       .map(
-        (t) => `
+        (t) => {
+          const isBooked = t.availability === 'Booked';
+          return `
       <div class="nearby-item" data-id="${t.id}">
-        <img src="${t.image}" alt="${t.name}" loading="lazy" referrerpolicy="no-referrer">
+        <img src="${esc(t.image)}" alt="${esc(t.name)}" loading="lazy" referrerpolicy="no-referrer">
         <div class="nearby-item__body">
           <div class="nearby-item__head">
-            <h4>${t.name}</h4>
+            <h4>${esc(t.name)}</h4>
             <span class="nearby-item__dist">${t._distanceKm.toFixed(1)} km</span>
           </div>
           <div class="nearby-item__meta">
             <span>${t.hp} HP</span>
-            <span>${t.fuelType}</span>
-            <span class="nearby-item__avail nearby-item__avail--${t.availability.toLowerCase()}">${t.availability}</span>
+            <span>${esc(t.fuelType)}</span>
+            <span class="nearby-item__avail nearby-item__avail--${t.availability.toLowerCase()}">${esc(t.availability)}</span>
           </div>
           <div class="nearby-item__foot">
             <strong>₹${t.pricePerHour.toLocaleString("en-IN")}/hr</strong>
-            <button class="nearby-item__btn" onclick="event.stopPropagation(); window.openBookingModal(${t.id})">Book Now</button>
+            <button class="nearby-item__btn"${isBooked ? ' disabled style="opacity:.6;cursor:not-allowed;"' : ''} onclick="event.stopPropagation(); window.openBookingModal(${t.id})">${isBooked ? 'Booked' : 'Book Now'}</button>
           </div>
         </div>
       </div>
-    `
+    `;
+        }
       )
       .join("");
 

@@ -25,6 +25,14 @@ function seededRng(seed) {
 
 function pick(arr, rng) { return arr[Math.floor(rng() * arr.length)]; }
 
+// ── Deterministic 10-digit Indian mobile number (starts 6-9) ──────────────────
+function genPhone(rng) {
+  const first = 6 + Math.floor(rng() * 4); // 6,7,8,9
+  let rest = '';
+  for (let i = 0; i < 9; i++) rest += Math.floor(rng() * 10);
+  return `${first}${rest.slice(0, 4)} ${rest.slice(4)}`;
+}
+
 // ── District data: [districtName, lat, lng] ────────────────────────────────────
 // Covers ~200 major agricultural districts across India
 const DISTRICT_DATA = {
@@ -257,6 +265,126 @@ const TRACTOR_MODELS = [
     performance: { power: 74, fuelEfficiency: 85, loadCapacity: 70, comfort: 70 },
     maintenanceCost: "Low",
     description: "Compact, nimble and cheap to run — ideal for small landholders and tight field corners."
+  },
+  {
+    name: "Massey Ferguson 241 DI",
+    image: "https://assets.tractorjunction.com/tractor-junction/assets/images/tractor-images/tractor-image-0-1731603096.webp?width=538&height=320",
+    hp: 42, baseHourly: 400, baseDaily: 2500,
+    suitableLand: "2–14 acres", bestFor: "Ploughing & general tillage",
+    fuelType: "Diesel", fuelEfficiency: "3.5 L/hr", transmission: "8F + 2R, Dual Clutch",
+    performance: { power: 80, fuelEfficiency: 82, loadCapacity: 78, comfort: 74 },
+    maintenanceCost: "Low",
+    description: "India's favourite dual-clutch workhorse — simple, sturdy and cheap to keep running."
+  },
+  {
+    name: "Farmtrac 50 Powermaxx",
+    image: "https://assets.tractorjunction.com/tractor-junction/assets/images/images/oldTractor/50-powermaxx-216062-1763354782-0.webp?width=538&height=320",
+    hp: 50, baseHourly: 520, baseDaily: 3200,
+    suitableLand: "4–22 acres", bestFor: "Rotavator & heavy haulage",
+    fuelType: "Diesel (CRDe)", fuelEfficiency: "4.0 L/hr", transmission: "8F + 2R, Sliding Mesh",
+    performance: { power: 90, fuelEfficiency: 79, loadCapacity: 87, comfort: 82 },
+    maintenanceCost: "Medium",
+    description: "High torque back-up and a roomy cabin — built for long days of heavy-duty rotavator work."
+  },
+  {
+    name: "Powertrac Euro 50",
+    image: "https://assets.tractorjunction.com/tractor-junction/assets/images/tractor-images/tractor-image-0-1740036829.webp?width=538&height=320",
+    hp: 50, baseHourly: 480, baseDaily: 2950,
+    suitableLand: "4–20 acres", bestFor: "Ploughing, tilling & haulage",
+    fuelType: "Diesel", fuelEfficiency: "3.9 L/hr", transmission: "8F + 2R, Side-Shift",
+    performance: { power: 87, fuelEfficiency: 80, loadCapacity: 86, comfort: 76 },
+    maintenanceCost: "Low",
+    description: "A dependable Escorts-built powerhouse with strong pulling capacity for demanding implements."
+  },
+  {
+    name: "TAFE 4615",
+    image: "https://assets.tractorjunction.com/tractor-junction/assets/images/upload/tafe-4615-1766750032.webp?width=538&height=320",
+    hp: 47, baseHourly: 440, baseDaily: 2750,
+    suitableLand: "3–18 acres", bestFor: "Everyday tillage & trolley haulage",
+    fuelType: "Diesel", fuelEfficiency: "3.7 L/hr", transmission: "10F + 2R, Sliding Mesh",
+    performance: { power: 83, fuelEfficiency: 81, loadCapacity: 83, comfort: 75 },
+    maintenanceCost: "Low",
+    description: "TAFE's classic-series reliability — a steady performer trusted across generations of farmers."
+  },
+  {
+    name: "Kubota MU4501 2WD",
+    image: "https://assets.tractorjunction.com/tractor-junction/assets/images/images/oldTractor/mu4501-2wd-234346-1784208632-0.webp?width=538&height=320",
+    hp: 45, baseHourly: 470, baseDaily: 2900,
+    suitableLand: "3–16 acres", bestFor: "Precision tillage & orchard work",
+    fuelType: "Diesel", fuelEfficiency: "3.4 L/hr", transmission: "8F + 4R, Synchro Shuttle",
+    performance: { power: 82, fuelEfficiency: 88, loadCapacity: 80, comfort: 84 },
+    maintenanceCost: "Low",
+    description: "Japanese engineering that sips less fuel per acre — smooth, quiet and low on upkeep."
+  },
+  {
+    name: "VST Shakti 9054 DI Viraaj",
+    image: "https://assets.tractorjunction.com/tractor-junction/assets/images/upload/vst-9054-di-viraaj-1726905167.webp?width=538&height=320",
+    hp: 50, baseHourly: 460, baseDaily: 2850,
+    suitableLand: "3–20 acres", bestFor: "Ploughing & cultivator work",
+    fuelType: "Diesel", fuelEfficiency: "3.8 L/hr", transmission: "8F + 2R, Constant Mesh",
+    performance: { power: 86, fuelEfficiency: 79, loadCapacity: 84, comfort: 73 },
+    maintenanceCost: "Low",
+    description: "A value-for-money mid-range tractor with strong PTO output for cultivator and thresher jobs."
+  },
+  {
+    name: "New Holland 3630 TX Super",
+    image: "https://assets.tractorjunction.com/tractor-junction/assets/images/images/oldTractor/3630-tx-super-206710-1772883438-0.webp?width=538&height=320",
+    hp: 50, baseHourly: 540, baseDaily: 3300,
+    suitableLand: "5–24 acres", bestFor: "Heavy tillage & multi-implement work",
+    fuelType: "Diesel", fuelEfficiency: "4.0 L/hr", transmission: "8F + 2R, Sliding Mesh",
+    performance: { power: 89, fuelEfficiency: 77, loadCapacity: 89, comfort: 83 },
+    maintenanceCost: "Medium",
+    description: "The Super variant adds extra grunt over the base 3630 — a favourite for bigger, tougher plots."
+  },
+  {
+    name: "Swaraj 855 FE",
+    image: "https://assets.tractorjunction.com/tractor-junction/assets/images/images/oldTractor/855-fe-227924-1785920764-0.webp?width=538&height=320",
+    hp: 49, baseHourly: 500, baseDaily: 3050,
+    suitableLand: "4–20 acres", bestFor: "Rotavator & trailer haulage",
+    fuelType: "Diesel", fuelEfficiency: "3.9 L/hr", transmission: "8F + 2R, Constant Mesh",
+    performance: { power: 88, fuelEfficiency: 78, loadCapacity: 87, comfort: 77 },
+    maintenanceCost: "Low",
+    description: "Swaraj's heavier-duty FE sibling — extra muscle for rotavator work and full trolley loads."
+  },
+  {
+    name: "Sonalika Tiger DI 50",
+    image: "https://assets.tractorjunction.com/tractor-junction/assets/images/images/oldTractor/tiger-di-50-232375-1783754912-0.webp?width=538&height=320",
+    hp: 50, baseHourly: 480, baseDaily: 2950,
+    suitableLand: "3–20 acres", bestFor: "Ploughing & threshing",
+    fuelType: "Diesel", fuelEfficiency: "3.9 L/hr", transmission: "8F + 2R, Sliding Mesh",
+    performance: { power: 85, fuelEfficiency: 82, loadCapacity: 83, comfort: 77 },
+    maintenanceCost: "Low",
+    description: "The bigger Tiger sibling to the DI 745 III — extra power for larger plots without a big price jump."
+  },
+  {
+    name: "Force Balwan 450",
+    image: "https://images.tractorgyan.com/uploads/3109/614c34c6670b0_force-BALWAN-450-tractorgyan.jpg",
+    hp: 45, baseHourly: 420, baseDaily: 2600,
+    suitableLand: "2–15 acres", bestFor: "General-purpose farm work",
+    fuelType: "Diesel", fuelEfficiency: "3.6 L/hr", transmission: "8F + 4R, Dual Clutch",
+    performance: { power: 79, fuelEfficiency: 80, loadCapacity: 77, comfort: 72 },
+    maintenanceCost: "Low",
+    description: "A no-frills, budget-friendly Force Motors tractor built for everyday mixed farm chores."
+  },
+  {
+    name: "Standard DI 355",
+    image: "https://images.tractorgyan.com/uploads/3229/61518c3c2b254_standard-DI-355-tractorgyan.jpg",
+    hp: 55, baseHourly: 560, baseDaily: 3400,
+    suitableLand: "5–25 acres", bestFor: "Heavy tillage & haulage",
+    fuelType: "Diesel", fuelEfficiency: "4.2 L/hr", transmission: "8F + 2R, Sliding Mesh",
+    performance: { power: 90, fuelEfficiency: 75, loadCapacity: 90, comfort: 79 },
+    maintenanceCost: "Medium",
+    description: "One of the most fuel-efficient tractors in its 55 HP class — solid power for bigger holdings."
+  },
+  {
+    name: "Solis 4515 E",
+    image: "https://assets.tractorjunction.com/tractor-junction/assets/images/upload/solis-4515-e-1696501694.jpg",
+    hp: 48, baseHourly: 450, baseDaily: 2800,
+    suitableLand: "3–18 acres", bestFor: "Ploughing & rotavator work",
+    fuelType: "Diesel", fuelEfficiency: "3.7 L/hr", transmission: "8F + 2R, Sliding Mesh",
+    performance: { power: 84, fuelEfficiency: 81, loadCapacity: 82, comfort: 76 },
+    maintenanceCost: "Low",
+    description: "An export-grade International Tractors build — dependable power at a competitive price."
   }
 ];
 
@@ -299,8 +427,9 @@ for (const [state, districts] of Object.entries(DISTRICT_DATA)) {
       const seed = id * 6271 + state.charCodeAt(0) * 43 + district.charCodeAt(0) * 17 + i * 89;
       const rng = seededRng(seed);
 
-      const model = TRACTOR_MODELS[(id + i) % TRACTOR_MODELS.length];
+      const model = pick(TRACTOR_MODELS, rng);
       const operator = pick(OPERATOR_NAMES, rng);
+      const operatorPhone = genPhone(rng);
       const availability = AVAILABILITY_OPTIONS[Math.floor(rng() * AVAILABILITY_OPTIONS.length)];
 
       // Slight coordinate offset so two tractors in same district aren't identical
@@ -340,6 +469,7 @@ for (const [state, districts] of Object.entries(DISTRICT_DATA)) {
         performance: model.performance,
         maintenanceCost: model.maintenanceCost,
         operatorName: operator,
+        operatorPhone,
       });
 
       id++;
@@ -386,7 +516,8 @@ const lines = tractors.map(t => `  {
     description: ${JSON.stringify(t.description)},
     performance: { power: ${t.performance.power}, fuelEfficiency: ${t.performance.fuelEfficiency}, loadCapacity: ${t.performance.loadCapacity}, comfort: ${t.performance.comfort} },
     maintenanceCost: ${JSON.stringify(t.maintenanceCost)},
-    operatorName: ${JSON.stringify(t.operatorName)}
+    operatorName: ${JSON.stringify(t.operatorName)},
+    operatorPhone: ${JSON.stringify(t.operatorPhone)}
   }`);
 
 const output = `/* =========================================================================

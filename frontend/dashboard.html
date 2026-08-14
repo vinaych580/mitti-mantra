@@ -33,14 +33,38 @@
         <li><a href="index.html#features">Features</a></li>
         <li><a href="farm-boundary.html">Draw farm</a></li>
         <li><a href="marketplace.html">🌾 Marketplace</a></li>
+        <li><a href="book-a-tractor.html" class="nav__tractor-link">Book a Tractor</a></li>
+        <li><a href="gyan-seva.html" class="nav__gyanseva-link">🌱 Gyan Seva</a></li>
         <li><a href="index.html#demo">Demo</a></li>
       </ul>
       <div class="nav__cta">
         <a href="/docs" class="btn btn-ghost">API Docs</a>
         <a href="index.html" class="btn btn-primary">Back to site</a>
+        <button class="nav__burger" id="burger" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
       </div>
     </div>
   </nav>
+
+  <!-- Mobile panel -->
+  <div class="mobile-backdrop" id="mBackdrop"></div>
+  <aside class="mobile-panel" id="mPanel">
+    <button class="mobile-panel__close" id="mClose" aria-label="Close">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="index.html#features">Features</a></li>
+      <li><a href="farm-boundary.html">Draw farm</a></li>
+      <li><a href="marketplace.html">🌾 Marketplace</a></li>
+      <li><a href="book-a-tractor.html">Book a Tractor</a></li>
+      <li><a href="gyan-seva.html">🌱 Gyan Seva</a></li>
+      <li><a href="index.html#demo">Demo</a></li>
+      <li><a href="/docs">API Docs</a></li>
+    </ul>
+    <a href="index.html" class="btn btn-primary">Back to site</a>
+  </aside>
 
   <main class="dashx">
     <h1 class="visually-hidden">Farm Dashboard</h1>
