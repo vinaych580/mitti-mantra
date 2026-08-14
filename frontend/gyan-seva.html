@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Gyan Seva — Connect with verified agricultural experts for personalized guidance on soil, pests, irrigation, and crop health.">
+  <meta name="description" content="Gyan Seva — Explore local agricultural specialists for personalized guidance on soil, pests, irrigation, and crop health, backed by real farmer-logged outcomes.">
   <title>Gyan Seva — Expert Agricultural Consultation | Mitti Mantra</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -143,6 +143,17 @@
       position: sticky;
       top: 96px;
       z-index: 10;
+    }
+
+    /* On the single-column layout (below) the form and results stack
+       vertically instead of sitting side by side, so "sticky" here would
+       pin the entire (long) form over the results as the page scrolls,
+       blocking every card underneath it. Let it scroll normally instead. */
+    @media (max-width: 1024px) {
+      .gs-form-card {
+        position: static;
+        top: auto;
+      }
     }
 
     .gs-form-card h2 {
@@ -865,6 +876,237 @@
       border-top: 1px solid rgba(47, 107, 58, 0.05);
     }
 
+    /* =====================================================================
+       WOW-FACTOR FEATURES — motion, alert banners, AI scan, outcomes,
+       bookings panel, second-opinion compare tool
+       ===================================================================== */
+
+    @keyframes gsFadeInUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes gsPop {
+      0%   { transform: scale(0.94); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes gsShine {
+      0%   { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+    @keyframes gsShimmerMove {
+      0%   { background-position: -400px 0; }
+      100% { background-position: 400px 0; }
+    }
+    @keyframes gsBadgeBump {
+      0%   { transform: scale(1); }
+      40%  { transform: scale(1.18); }
+      100% { transform: scale(1); }
+    }
+
+    .gs-hero h1 em {
+      background: linear-gradient(90deg, var(--brand) 0%, var(--accent) 30%, var(--brand) 60%, var(--accent) 100%);
+      background-size: 220% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gsShine 6s linear infinite;
+    }
+
+    .gs-card, .gs-testimonial-card, .gs-alert-banner, .gs-scan-card, .gs-booking-row {
+      animation: gsFadeInUp 0.5s var(--ease) both;
+    }
+
+    .gs-shimmer {
+      background: linear-gradient(90deg, var(--gs-green-light) 0%, var(--gs-green-soft) 50%, var(--gs-green-light) 100%);
+      background-size: 800px 100%;
+      animation: gsShimmerMove 1.3s infinite linear;
+      border-radius: var(--r-md);
+      min-height: 60px;
+    }
+
+    /* ---- Proactive Field Health Alert banner ---- */
+    .gs-alert-banner {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 18px 22px;
+      border-radius: var(--r-lg);
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+      border: 1.5px solid;
+    }
+    .gs-alert-banner--good { background: #eafcf1; border-color: #86efac; }
+    .gs-alert-banner--moderate { background: #fff8e8; border-color: #fbbf24; }
+    .gs-alert-banner--poor { background: #fef2f2; border-color: #fca5a5; }
+    .gs-alert-banner--info { background: var(--gs-green-light); border-color: rgba(47,107,58,0.18); }
+    .gs-alert-banner__icon { font-size: 2rem; flex-shrink: 0; }
+    .gs-alert-banner__body { flex: 1; }
+    .gs-alert-banner__title { font-weight: 700; color: var(--brand-deep); font-size: 1rem; margin-bottom: 3px; }
+    .gs-alert-banner__text { font-size: 0.86rem; color: var(--ink-soft); line-height: 1.5; }
+    .gs-alert-banner__actions { display: flex; gap: 10px; flex-shrink: 0; flex-wrap: wrap; }
+    @media (max-width: 640px) {
+      .gs-alert-banner { flex-direction: column; align-items: flex-start; }
+      .gs-alert-banner__actions { width: 100%; }
+      .gs-alert-banner__actions .btn-gs-primary, .gs-alert-banner__actions .btn-gs-outline { flex: 1; text-align: center; }
+    }
+
+    /* ---- AI Photo Pre-Screen card ---- */
+    .gs-scan-card {
+      background: linear-gradient(150deg, var(--surface) 0%, var(--gs-green-light) 130%);
+      border-radius: var(--r-lg);
+      border: 1.5px dashed rgba(47, 107, 58, 0.3);
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+    .gs-scan-card__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; cursor: pointer; user-select: none; }
+    .gs-scan-card__title { font-size: 1.15rem; color: var(--brand-deep); font-weight: 700; display: flex; align-items: center; gap: 10px; }
+    .gs-scan-card__sub { font-size: 0.84rem; color: var(--ink-soft); margin-top: 4px; }
+    .gs-scan-card__toggle { font-size: 1.4rem; color: var(--brand); transition: transform 0.3s ease; font-family: monospace; }
+    .gs-scan-card.open .gs-scan-card__toggle { transform: rotate(45deg); }
+    .gs-scan-card__body { max-height: 0; overflow: hidden; transition: max-height 0.4s var(--ease); }
+    .gs-scan-card.open .gs-scan-card__body { max-height: 900px; }
+    .gs-scan-card__inner { padding-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 760px) { .gs-scan-card__inner { grid-template-columns: 1fr; } }
+
+    .gs-scan-drop {
+      position: relative;
+      border: 2px dashed #c8b9a6;
+      border-radius: var(--r-md);
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: var(--surface);
+      padding: 16px;
+      transition: var(--gs-transition);
+    }
+    .gs-scan-drop:hover { border-color: var(--brand); }
+    .gs-scan-drop input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer; z-index: 5;
+    }
+    .gs-scan-drop img { max-height: 170px; max-width: 100%; border-radius: var(--r-sm); object-fit: contain; }
+
+    .gs-scan-meta { display: flex; flex-direction: column; justify-content: space-between; gap: 14px; }
+    .gs-scan-result {
+      margin-top: 16px;
+      background: var(--surface);
+      border-radius: var(--r-md);
+      border: 1px solid rgba(47, 107, 58, 0.12);
+      padding: 16px 18px;
+      grid-column: 1 / -1;
+      animation: gsFadeInUp 0.4s var(--ease) both;
+    }
+    .gs-scan-result__row { display: flex; justify-content: space-between; align-items: baseline; padding: 6px 0; border-bottom: 1px dashed rgba(29,26,21,0.07); font-size: 0.88rem; }
+    .gs-scan-result__row:last-of-type { border-bottom: none; }
+    .gs-scan-result__label { color: var(--ink-faint); }
+    .gs-scan-result__val { font-weight: 700; color: var(--brand-deep); }
+    .gs-scan-disclaimer { font-size: 0.76rem; font-style: italic; color: var(--ink-faint); margin-top: 10px; }
+
+    /* ---- My Consultations panel ---- */
+    .gs-bookings-panel {
+      background: var(--surface);
+      border-radius: var(--r-lg);
+      border: 1px solid rgba(47, 107, 58, 0.1);
+      padding: 22px 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+    .gs-bookings-panel__head { font-size: 1.1rem; font-weight: 700; color: var(--brand-deep); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .gs-booking-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 0;
+      border-top: 1px solid rgba(29,26,21,0.06);
+      flex-wrap: wrap;
+    }
+    .gs-booking-row:first-of-type { border-top: none; }
+    .gs-booking-row__info { flex: 1; min-width: 200px; }
+    .gs-booking-row__expert { font-weight: 700; color: var(--ink); font-size: 0.92rem; }
+    .gs-booking-row__meta { font-size: 0.78rem; color: var(--ink-faint); margin-top: 2px; }
+    .gs-booking-row__tag {
+      font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+      padding: 2px 9px; border-radius: 999px; background: var(--gs-green-soft); color: var(--brand-deep);
+    }
+    .gs-booking-row__tag--stakes { background: #fff2e0; color: #b45309; }
+    .gs-booking-row__tag--done { background: #e8fcf0; color: #166534; }
+
+    .gs-outcome-inline { width: 100%; margin-top: 10px; background: var(--gs-green-light); border-radius: var(--r-md); padding: 14px; display: none; }
+    .gs-outcome-inline.open { display: block; animation: gsFadeInUp 0.3s var(--ease) both; }
+    .gs-outcome-inline__choices { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+    .gs-outcome-choice {
+      padding: 7px 14px; border-radius: 999px; border: 1.5px solid rgba(47,107,58,0.25);
+      background: var(--surface); font-size: 0.82rem; font-weight: 600; color: var(--ink-soft); cursor: pointer;
+      transition: var(--gs-transition);
+    }
+    .gs-outcome-choice.selected { background: var(--brand); border-color: var(--brand); color: #fff; }
+    .gs-outcome-inline textarea { margin-top: 8px; }
+    .gs-outcome-mic {
+      width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--brand);
+      background: var(--surface); color: var(--brand); font-size: .95rem; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; margin-left: 4px;
+      transition: var(--gs-transition); vertical-align: middle;
+    }
+    .gs-outcome-mic:hover { background: var(--gs-green-soft); }
+    .gs-outcome-mic.listening { background: #ef4444; border-color: #ef4444; color: #fff; animation: gs-pulse 1s infinite; }
+
+    /* ---- Verified Outcomes chip (on expert card) ---- */
+    .gs-outcome-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 0.72rem; font-weight: 700;
+      background: #e8fcf0; color: #166534; border: 1px solid #bbf7d0;
+      padding: 3px 10px; border-radius: 999px; width: fit-content;
+    }
+    .gs-outcome-chip--low { background: #fff8e8; color: #92620a; border-color: #fbbf24; }
+    .gs-outcome-chip.bump { animation: gsBadgeBump 0.5s var(--ease); }
+
+    /* ---- Second opinion / compare ---- */
+    .gs-highstakes-banner {
+      display: flex; align-items: center; gap: 12px; justify-content: space-between; flex-wrap: wrap;
+      background: #fff2e0; border: 1.5px solid #fbbf24; border-radius: var(--r-md);
+      padding: 12px 18px; margin-bottom: 16px; font-size: 0.86rem; color: #92400e;
+    }
+    .gs-compare-toggle {
+      display: inline-flex; align-items: center; gap: 5px; font-size: 0.76rem; font-weight: 700;
+      color: var(--brand); border: 1.5px solid var(--brand); background: transparent;
+      padding: 5px 12px; border-radius: 999px; cursor: pointer; transition: var(--gs-transition);
+    }
+    .gs-compare-toggle.selected { background: var(--brand); color: #fff; }
+    .gs-compare-bar {
+      position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 120%);
+      background: var(--brand-deep); color: #fff; padding: 14px 22px; border-radius: 999px;
+      box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 16px;
+      z-index: 900; transition: transform 0.35s var(--ease); font-size: 0.88rem; font-weight: 600;
+    }
+    .gs-compare-bar.open { transform: translate(-50%, 0); }
+    .gs-compare-bar button { font-weight: 700; }
+    .gs-compare-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    .gs-compare-table th, .gs-compare-table td { padding: 10px 12px; font-size: 0.86rem; border-bottom: 1px solid rgba(29,26,21,0.08); text-align: left; }
+    .gs-compare-table th { color: var(--ink-faint); font-weight: 600; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.04em; }
+    .gs-compare-table td { color: var(--ink); font-weight: 600; }
+    .gs-compare-table__photo { display: flex; align-items: center; gap: 10px; }
+    .gs-compare-table__photo img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+
+    /* ---- Testimonial verified-outcome ribbon ---- */
+    .gs-testimonial-card--verified { border: 1.5px solid #bbf7d0; position: relative; }
+    .gs-testimonial-ribbon {
+      position: absolute; top: -10px; right: 16px; background: #22c55e; color: #fff;
+      font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+      padding: 3px 10px; border-radius: 999px; box-shadow: var(--shadow-sm);
+    }
+    .gs-testimonial-ribbon--demo { background: #94a3b8; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .gs-hero h1 em { animation: none; }
+      .gs-card, .gs-testimonial-card, .gs-alert-banner, .gs-scan-card, .gs-booking-row, .gs-outcome-chip.bump, .gs-scan-result {
+        animation: none !important;
+      }
+      .gs-shimmer { animation: none; }
+    }
+
   </style>
 </head>
 <body>
@@ -922,11 +1164,11 @@
       <div>
         <div class="gs-hero__badge">
           <span class="gs-hero__badge-dot"></span>
-          Verified Experts
+          Farmer-Verified Outcomes
         </div>
         <h1>Expert Agricultural <em>Consultation</em></h1>
         <p class="gs-hero__sub">
-          Get personalized farming advice from verified agricultural experts near your location. Solve your crop, soil, and machinery concerns in real-time.
+          Explore local agricultural specialists near your location — backed by real, farmer-logged outcomes on this app, not a credential check we can't back up. Solve your crop, soil, and machinery concerns in real-time.
         </p>
       </div>
       <div class="gs-hero__ill">
@@ -952,6 +1194,54 @@
       
       <!-- Booking Summary (inserted dynamically when consultation is booked) -->
       <div id="bookingSummaryPlaceholder"></div>
+
+      <!-- Proactive Field Health Alert (real /api/field/ndvi on your saved farm) -->
+      <div id="gsFieldHealthBanner"></div>
+
+      <!-- My Consultations — bookings on this device + outcome logging -->
+      <div id="gsMyBookingsPanel"></div>
+
+      <!-- AI Photo Pre-Screen — real /api/disease/predict heuristic screen -->
+      <section class="gs-scan-card" id="gsScanCard">
+        <div class="gs-scan-card__head" id="gsScanCardHead">
+          <div>
+            <div class="gs-scan-card__title">📸 Scan a Leaf First <span style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--brand);background:var(--gs-green-soft);padding:2px 9px;border-radius:999px;">Optional · Free</span></div>
+            <div class="gs-scan-card__sub">Get a preliminary AI read before you book — then we'll point you to the right kind of expert.</div>
+          </div>
+          <span class="gs-scan-card__toggle" id="gsScanCardToggle">+</span>
+        </div>
+        <div class="gs-scan-card__body">
+          <div class="gs-scan-card__inner">
+            <div class="gs-scan-drop" id="gsScanDrop">
+              <input type="file" id="gsScanInput" accept="image/*">
+              <div id="gsScanPrompt">
+                <svg style="width:40px;height:40px;color:var(--brand);margin-bottom:10px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <div style="font-weight:600;color:var(--ink);font-size:.9rem;">Click or drag a leaf photo</div>
+                <div style="font-size:.78rem;color:var(--ink-soft);margin-top:4px;">JPEG or PNG</div>
+              </div>
+              <img id="gsScanPreview" style="display:none;" alt="Leaf preview">
+            </div>
+            <div class="gs-scan-meta">
+              <div class="gs-form-group" style="margin-bottom:10px;">
+                <label for="gsScanCrop">Crop (optional — narrows the match)</label>
+                <select id="gsScanCrop" class="gs-select">
+                  <option value="">Auto-detect from image</option>
+                  <option value="maize">Maize (Makka)</option>
+                  <option value="potato">Potato (Aloo)</option>
+                  <option value="soybean">Soybean</option>
+                  <option value="tomato">Tomato (Tamatar)</option>
+                </select>
+              </div>
+              <p style="font-size:.78rem;color:var(--ink-faint);line-height:1.5;">
+                This runs the same visual-screening model used elsewhere in MittiMantra. It is <strong>not a diagnosis</strong> — always confirm with a qualified agronomist before treatment.
+              </p>
+              <button type="button" id="gsScanRunBtn" class="btn-gs-primary" disabled style="width:100%;">🔬 Run Preliminary Screen</button>
+            </div>
+            <div id="gsScanResult"></div>
+          </div>
+        </div>
+        <canvas id="gsScanCanvas" width="224" height="224" style="display:none;"></canvas>
+      </section>
 
       <div class="gs-layout">
         
@@ -1063,6 +1353,8 @@
             <span class="gs-results-count" id="resultsCount">0 Experts</span>
           </div>
 
+          <div id="gsHighStakesBanner"></div>
+
           <div id="expertsContainer">
             <!-- Dynamic expert cards will render here -->
           </div>
@@ -1086,13 +1378,33 @@
     </div>
   </div>
 
+  <!-- ============= Second-Opinion Compare tool ============= -->
+  <div class="gs-compare-bar" id="gsCompareBar">
+    <span id="gsCompareBarText">Comparing 0 experts</span>
+    <button type="button" class="btn-gs-outline" id="gsCompareClearBtn" style="border-color:#fff;color:#fff;padding:6px 14px;">Clear</button>
+    <button type="button" class="btn-gs-primary" id="gsCompareViewBtn" style="padding:6px 16px;">⚖️ Compare Side-by-Side</button>
+  </div>
+
+  <div class="gs-modal" id="compareModal">
+    <div class="gs-modal__backdrop" id="compareModalBackdrop"></div>
+    <div class="gs-modal__content" style="max-width:820px;">
+      <div class="gs-modal__header">
+        <h2>⚖️ Second Opinion — Compare Experts</h2>
+        <span class="gs-modal__close" id="compareModalClose">&times;</span>
+      </div>
+      <div class="gs-modal__body" id="compareModalBody">
+        <!-- Dynamically rendered comparison table -->
+      </div>
+    </div>
+  </div>
+
   <!-- ============= Section 6: Previous Success Stories ============= -->
   <section class="gs-testimonials">
     <div class="container">
       <div class="section-head reveal" style="text-align: center;">
-        <span class="eyebrow">Consultation Impact</span>
-        <h2>Farmer Success Stories</h2>
-        <p>See how our verified experts helped kisans rescue crops and double their profits.</p>
+        <span class="eyebrow">Consultation Impact · Illustrative Examples</span>
+        <h2>What a Good Consultation Looks Like</h2>
+        <p>Illustrative examples of how a consultation can help — for the real thing, see "Verified Outcomes" below, logged by actual farmers using this app.</p>
       </div>
 
       <div class="gs-testimonials-grid reveal-stagger">
@@ -1182,6 +1494,18 @@
     </div>
   </section>
 
+  <!-- ============= Verified Outcomes — real, self-reported testimonials ============= -->
+  <section class="gs-testimonials" id="gsVerifiedSection" style="display:none; background: var(--surface); padding-top:0;">
+    <div class="container">
+      <div class="section-head reveal" style="text-align: center;">
+        <span class="eyebrow">Verified Outcomes</span>
+        <h2>What Actually Happened Next</h2>
+        <p>Unlike the stories above, these are logged by farmers using this app after their own consultation — worked, partially helped, or didn't. Nothing here is written by us.</p>
+      </div>
+      <div class="gs-testimonials-grid reveal-stagger" id="gsVerifiedTestimonials"></div>
+    </div>
+  </section>
+
   <!-- ============= Section 7: FAQs ============= -->
   <section class="gs-faqs">
     <div class="container">
@@ -1195,12 +1519,12 @@
         
         <div class="gs-faq-item">
           <div class="gs-faq-header">
-            <h3>How are experts verified?</h3>
+            <h3>Are these experts independently verified?</h3>
             <span class="gs-faq-icon">+</span>
           </div>
           <div class="gs-faq-body">
             <div class="gs-faq-content">
-              Every expert on Gyan Seva undergoes a strict verification process. We cross-verify their degrees (B.Sc./M.Sc./Ph.D. in agriculture from recognized universities), check certifications from bodies like ICAR and KVK, and conduct field background checks on their consulting track records.
+              Honestly — not yet. This directory is an illustrative catalog for exploring the kinds of local specialists available, not a credential-checked network; we don't want to claim a degree/certification verification process we don't actually run. What <em>is</em> real: every "Verified Outcome" badge you see is built from actual farmers who booked through this app and self-reported what happened — worked, partially helped, or didn't. For an independently verified expert, India's real <a href="https://www.data.gov.in/catalog/krishi-vigyan-kendra-kvk" target="_blank" rel="noopener">Krishi Vigyan Kendra (KVK) network</a> has a government agricultural scientist in nearly every district — a genuine, government-run alternative alongside this directory. (KVK links occasionally move — search "Krishi Vigyan Kendra [your district]" if this one has moved.)
             </div>
           </div>
         </div>
@@ -1302,7 +1626,10 @@
   <script defer src="mm-core.js"></script>
   <script defer src="site-ui.js"></script>
   <script defer src="state-data.js"></script>
+  <script defer src="farm-state.js"></script>
   <script defer src="Data/consultants.js"></script>
+  <script defer src="i18n-data.js"></script>
+  <script defer src="i18n.js"></script>
   <script defer src="gyan-seva.js"></script>
 </body>
 </html>

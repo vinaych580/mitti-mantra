@@ -6,7 +6,7 @@
      • Network-only for API calls to the backend.
 */
 
-const VERSION = 'mittimantra-v39';
+const VERSION = 'mittimantra-v40';
 const CORE = [
   './',
   './index.html',

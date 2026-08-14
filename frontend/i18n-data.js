@@ -311,6 +311,22 @@
       'Request failed': 'अनुरोध विफल',
       'Find a tool…': 'टूल खोजें…',
       'Filter tools': 'टूल फ़िल्टर करें',
+
+      // Gyan Seva — consultation form + high-traffic labels
+      'State': 'राज्य',
+      'District': 'ज़िला',
+      'Village (Optional)': 'गाँव (वैकल्पिक)',
+      'Farming Focus / Topic': 'खेती फोकस / विषय',
+      'Farm Size (acres)': 'खेत का आकार (एकड़)',
+      'Preferred Language': 'पसंदीदा भाषा',
+      'Problem Category': 'समस्या श्रेणी',
+      'Problem Description': 'समस्या का विवरण',
+      'Use Current Location': 'वर्तमान स्थान का उपयोग करें',
+      'Recommended Experts': 'अनुशंसित विशेषज्ञ',
+      'Book Consultation': 'परामर्श बुक करें',
+      'View Profile': 'प्रोफ़ाइल देखें',
+      'Frequently Asked Questions': 'अक्सर पूछे जाने वाले प्रश्न',
+      'Consultation Fee': 'परामर्श शुल्क',
     },
 
     /* ---------------- Telugu ---------------- */
@@ -555,6 +571,22 @@
       'Request failed': 'అభ్యర్థన విఫలమైంది',
       'Find a tool…': 'టూల్ వెతకండి…',
       'Filter tools': 'టూల్స్ ఫిల్టర్ చేయండి',
+
+      // Gyan Seva — consultation form + high-traffic labels
+      'State': 'రాష్ట్రం',
+      'District': 'జిల్లా',
+      'Village (Optional)': 'గ్రామం (ఐచ్ఛికం)',
+      'Farming Focus / Topic': 'వ్యవసాయ అంశం / విషయం',
+      'Farm Size (acres)': 'పొలం పరిమాణం (ఎకరాలు)',
+      'Preferred Language': 'ఇష్టమైన భాష',
+      'Problem Category': 'సమస్య వర్గం',
+      'Problem Description': 'సమస్య వివరణ',
+      'Use Current Location': 'ప్రస్తుత స్థానాన్ని ఉపయోగించండి',
+      'Recommended Experts': 'సిఫార్సు చేసిన నిపుణులు',
+      'Book Consultation': 'సంప్రదింపు బుక్ చేయండి',
+      'View Profile': 'ప్రొఫైల్ చూడండి',
+      'Frequently Asked Questions': 'తరచుగా అడిగే ప్రశ్నలు',
+      'Consultation Fee': 'సంప్రదింపు రుసుము',
     },
 
     /* ---------------- Kannada ---------------- */
@@ -799,6 +831,22 @@
       'Request failed': 'ವಿನಂತಿ ವಿಫಲವಾಗಿದೆ',
       'Find a tool…': 'ಟೂಲ್ ಹುಡುಕಿ…',
       'Filter tools': 'ಟೂಲ್‌ಗಳನ್ನು ಫಿಲ್ಟರ್ ಮಾಡಿ',
+
+      // Gyan Seva — consultation form + high-traffic labels
+      'State': 'ರಾಜ್ಯ',
+      'District': 'ಜಿಲ್ಲೆ',
+      'Village (Optional)': 'ಗ್ರಾಮ (ಐಚ್ಛಿಕ)',
+      'Farming Focus / Topic': 'ಕೃಷಿ ವಿಷಯ / ಗಮನ',
+      'Farm Size (acres)': 'ಜಮೀನಿನ ಗಾತ್ರ (ಎಕರೆ)',
+      'Preferred Language': 'ಆದ್ಯತೆಯ ಭಾಷೆ',
+      'Problem Category': 'ಸಮಸ್ಯೆ ವರ್ಗ',
+      'Problem Description': 'ಸಮಸ್ಯೆಯ ವಿವರಣೆ',
+      'Use Current Location': 'ಪ್ರಸ್ತುತ ಸ್ಥಳವನ್ನು ಬಳಸಿ',
+      'Recommended Experts': 'ಶಿಫಾರಸು ಮಾಡಿದ ತಜ್ಞರು',
+      'Book Consultation': 'ಸಮಾಲೋಚನೆ ಬುಕ್ ಮಾಡಿ',
+      'View Profile': 'ಪ್ರೊಫೈಲ್ ವೀಕ್ಷಿಸಿ',
+      'Frequently Asked Questions': 'ಪದೇ ಪದೇ ಕೇಳಲಾಗುವ ಪ್ರಶ್ನೆಗಳು',
+      'Consultation Fee': 'ಸಮಾಲೋಚನಾ ಶುಲ್ಕ',
     },
   };
 
