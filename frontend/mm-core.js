@@ -56,15 +56,58 @@
     budget_per_acre: 15000,
     crop_id: "",
   };
+  /**
+   * The drawn boundary is the single source of truth for region and area.
+   * Before this, the profile kept its own copy (defaulting to 4 acres) and the
+   * two silently diverged — the pickup banner could read "2.31 acres" while the
+   * farm bar read 4, and saving the bar pushed 4 into every tool.
+   * Returns null when farm-state.js is absent (index, marketplace, …).
+   */
+  function activePlot() {
+    try {
+      return (window.FarmState && typeof window.FarmState.load === "function")
+        ? window.FarmState.load()
+        : null;
+    } catch (_) { return null; }
+  }
+
+  const ACRE_M2 = 4046.8564224;
+
   const profile = {
     get() {
-      try {
-        const raw = JSON.parse(localStorage.getItem(LS.profile) || "null");
-        return Object.assign({}, DEFAULT_PROFILE, raw || {});
-      } catch (_) { return Object.assign({}, DEFAULT_PROFILE); }
+      let stored = null;
+      try { stored = JSON.parse(localStorage.getItem(LS.profile) || "null"); } catch (_) {}
+      const p = Object.assign({}, DEFAULT_PROFILE, stored || {});
+      const plot = activePlot();
+      if (plot) {
+        if (plot.region_id) p.region_id = plot.region_id;
+        if (plot.acres) p.area_acres = +Number(plot.acres).toFixed(2);
+      }
+      return p;
     },
     set(patch) {
       const next = Object.assign(this.get(), patch || {});
+
+      // Write region/area edits back to the active plot, so a farmer who types
+      // an area into the bar changes the farm itself rather than shadowing it.
+      const plot = activePlot();
+      if (plot) {
+        const upd = {};
+        if (next.region_id && next.region_id !== plot.region_id) {
+          upd.region_id = next.region_id;
+        }
+        const acres = Number(next.area_acres);
+        if (acres > 0 && Math.abs(acres - Number(plot.acres || 0)) > 0.005) {
+          upd.acres = acres;
+          upd.hectares = +(acres * ACRE_M2 / 10000).toFixed(4);
+          upd.sqm = Math.round(acres * ACRE_M2);
+          upd.areaSource = "manual";   // typed by the user, no longer the polygon's area
+        }
+        if (Object.keys(upd).length) {
+          try { window.FarmState.save(upd); } catch (_) {}
+        }
+      }
+
       try { localStorage.setItem(LS.profile, JSON.stringify(next)); } catch (_) {}
       // Keep the chatbot's legacy key in sync so the bot always knows the region.
       try { if (next.region_id) localStorage.setItem("mm_region_id", next.region_id); } catch (_) {}
@@ -286,10 +329,40 @@
     }
 
     // Load current profile into bar
-    const p = profile.get();
-    bar.querySelectorAll("[data-mm]").forEach((el) => {
-      const k = el.dataset.mm;
-      if (p[k] !== undefined && p[k] !== "") el.value = p[k];
+    function fillBar() {
+      const p = profile.get();
+      bar.querySelectorAll("[data-mm]").forEach((el) => {
+        const k = el.dataset.mm;
+        if (p[k] !== undefined && p[k] !== "") el.value = p[k];
+      });
+      const areaEl = bar.querySelector('[data-mm="area_acres"]');
+      const plot = activePlot();
+      if (areaEl) {
+        areaEl.title = plot && plot.areaSource !== "manual"
+          ? "Measured from the boundary you drew. Editing it here updates the plot."
+          : "Area used by every tool.";
+      }
+
+      // The region list comes from /api/regions; a plot matched offline (or while
+      // the API was unreachable) would otherwise select nothing and read as blank.
+      if (p.region_id && regSel && !regSel.querySelector(`option[value="${p.region_id}"]`)) {
+        const rec = window.FarmState && window.FarmState.getRegionRecord
+          ? window.FarmState.getRegionRecord(p.region_id)
+          : null;
+        const label = rec ? rec.displayName : p.region_id;
+        regSel.insertAdjacentHTML("afterbegin",
+          `<option value="${escapeHtml(p.region_id)}">${escapeHtml(label)}</option>`);
+        regSel.value = p.region_id;
+      }
+    }
+    fillBar();
+
+    // A plot drawn, switched, or removed on any page is the source of truth —
+    // pull its values into the bar AND into the tool forms, so a switch is not
+    // half-applied (bar updated, forms still showing the previous plot).
+    document.addEventListener("mm:plot-changed", () => {
+      fillBar();
+      profile.applyToForms();
     });
 
     // Save

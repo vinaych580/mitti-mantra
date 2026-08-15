@@ -66,25 +66,54 @@
         <h1>Draw your farm</h1>
         <p>Sketch the boundary of your plot on the satellite map. We'll auto-compute its area and fetch soil properties at the centroid — ready to feed straight into the recommender.</p>
 
-        <ol class="farmmap__steps">
-          <li><b>1</b> Search your village or pan / zoom the map.</li>
-          <li><b>2</b> Click the polygon tool (top-left) and tap each corner of your plot.</li>
-          <li><b>3</b> Double-click / close the shape to finish.</li>
-        </ol>
+        <!-- Collapsed by default on phones (see .farmmap__how in style.css) so the
+             map is the first thing a farmer sees; open on desktop. -->
+        <details class="farmmap__how" id="farmHow" open>
+          <summary>How to draw it</summary>
+          <ol class="farmmap__steps">
+            <li><b>1</b> Tap <em>Use my location</em>, or search your village.</li>
+            <li><b>2</b> Tap the polygon tool (top-left of the map), then tap each corner of your plot.</li>
+            <li><b>3</b> Tap the first corner again — or double-tap — to close the shape.</li>
+          </ol>
+        </details>
 
         <div class="farmmap__searchwrap">
           <input id="farmSearch" type="text" placeholder="Search a place in India…">
           <button id="farmSearchBtn" class="btn btn-ghost" type="button">Search</button>
         </div>
 
-        <div class="farmmap__summary" id="farmSummary">
-          <div class="farmmap__empty">No farm drawn yet.</div>
-        </div>
+        <button id="farmLocate" class="btn btn-ghost farmmap__locate" type="button">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="3" /><circle cx="12" cy="12" r="8" />
+            <path d="M12 1v3M12 20v3M1 12h3M20 12h3" />
+          </svg>
+          Use my location
+        </button>
 
-        <div class="farmmap__actions" id="farmActions" style="display:none;">
-          <button class="btn btn-ghost" id="farmClear" type="button">Clear</button>
-          <button class="btn btn-ghost" id="farmAddPlot" type="button" style="display:none;">Save as new plot</button>
-          <button class="btn btn-primary" id="farmUse" type="button">Use in dashboard →</button>
+        <p class="farmmap__status" id="farmStatus" role="status" aria-live="polite" hidden></p>
+
+        <div class="farmmap__result" id="farmResult">
+          <!-- Mobile only: the sheet's grab handle doubles as the always-visible
+               readout + save button, so drawing never feels like a no-op. -->
+          <div class="fb-sheet__head">
+            <button class="fb-sheet__grip" id="fbSheetToggle" type="button" aria-expanded="false"
+              aria-controls="farmSummary">
+              <span class="fb-sheet__bar" aria-hidden="true"></span>
+              <span class="fb-sheet__peek" id="fbPeek">Draw your plot to see its area</span>
+            </button>
+            <button class="btn btn-primary fb-sheet__cta" id="fbQuickSave" type="button" hidden>Save →</button>
+          </div>
+
+          <div class="farmmap__summary" id="farmSummary">
+            <div class="farmmap__empty">No farm drawn yet.</div>
+          </div>
+
+          <div class="farmmap__actions" id="farmActions" style="display:none;">
+            <button class="btn btn-ghost" id="farmClear" type="button">Clear</button>
+            <button class="btn btn-ghost" id="farmAddPlot" type="button" style="display:none;">Save as new plot</button>
+            <button class="btn btn-primary" id="farmUse" type="button">Use in dashboard →</button>
+          </div>
         </div>
 
         <div class="farmmap__plots" id="farmPlots" style="display:none;"></div>

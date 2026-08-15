@@ -23,20 +23,9 @@
       } catch { return null; }
     })();
 
-  // Synchronize savedFarm with the unified Farm Profile (window.MM.profile)
-  // so that mm-core's form auto-population does not overwrite the farm's region and area.
-  if (savedFarm) {
-    const patch = {};
-    if (savedFarm.region_id) patch.region_id = savedFarm.region_id;
-    if (savedFarm.acres) patch.area_acres = +savedFarm.acres.toFixed(2);
-    if (window.MM && window.MM.profile) {
-      const current = window.MM.profile.get();
-      if ((patch.region_id && current.region_id !== patch.region_id) ||
-        (patch.area_acres && current.area_acres !== patch.area_acres)) {
-        window.MM.profile.set(patch);
-      }
-    }
-  }
+  // No copy into MM.profile is needed any more: profile.get() reads region and
+  // area straight off the active plot (see mm-core.js), so the drawn farm is the
+  // one source of truth and the two can no longer drift apart.
 
   /* ---------- Helpers ---------- */
   const $ = (s, r = document) => r.querySelector(s);
@@ -2285,9 +2274,11 @@
     const lon = (savedFarm.lon || (savedFarm.centroid && savedFarm.centroid[0]) || 0).toFixed(5);
 
     // Location chips — show state, district, village (whatever is available)
+    // These come from Nominatim (third-party) — escape before injecting.
+    const esc = (window.MM && window.MM.escapeHtml) ? window.MM.escapeHtml : (s => String(s));
     const locParts = [savedFarm.state, savedFarm.district, savedFarm.village].filter(Boolean);
     const locChips = locParts.length
-      ? locParts.map(p => `<span class="fp-chip">${p}</span>`).join('')
+      ? locParts.map(p => `<span class="fp-chip">${esc(p)}</span>`).join('')
       : `<span class="fp-chip fp-chip--dim">${lat}°N, ${lon}°E</span>`;
 
     // Matched region display name
@@ -2315,7 +2306,7 @@
           </span>
           ${regionDisplay ? `<span class="fp-meta__item fp-meta__item--region" title="This matched backend dataset profile will be used for regional predictions.">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-            Dataset profile: ${regionDisplay}
+            Dataset profile: ${esc(regionDisplay)}
           </span>` : ''}
         </div>
         <div class="fp-chips">${locChips}</div>
@@ -2382,6 +2373,34 @@
 
   renderFarmPickup();
   applyFarmToForms();
+
+  /* ---------- Arrival from the map (?fromMap=1) ----------
+     farm-boundary.html has always appended this flag, but nothing read it, so
+     saving a boundary dropped the user at the top of a long dashboard with no
+     sign that anything had happened. Confirm the handoff, then drop the flag
+     so a reload or a shared link doesn't replay it. */
+  (function confirmMapHandoff() {
+    const params = new URLSearchParams(location.search);
+    if (params.get('fromMap') !== '1') return;
+
+    params.delete('fromMap');
+    const rest = params.toString();
+    history.replaceState({}, '', location.pathname + (rest ? '?' + rest : '') + location.hash);
+
+    if (!savedFarm) return;
+    const host = document.getElementById('farmPickup');
+    if (!host) return;
+
+    host.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    host.classList.add('farm-pickup--flash');
+    setTimeout(() => host.classList.remove('farm-pickup--flash'), 2600);
+
+    const where = [savedFarm.village, savedFarm.district, savedFarm.state].filter(Boolean)[0];
+    const acres = Number(savedFarm.acres || 0).toFixed(2);
+    if (window.MM && window.MM.toast) {
+      window.MM.toast(`Farm saved — ${acres} acres${where ? ' in ' + where : ''} is now used by every tool`, 4000);
+    }
+  })();
 
   /* ==========================================================
      WEATHER OVERRIDE — hooks into the Simulate tool.

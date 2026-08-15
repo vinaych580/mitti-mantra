@@ -46,6 +46,7 @@
   /* ── Drawing controls ──────────────────────────────── */
   const drawnItems = new L.FeatureGroup().addTo(map);
   const STROKE = '#2f6b3a'; // MittiMantra brand green
+  const SKY    = '#6ea7c7'; // design-system sky — GPS accuracy halo, distinct from the plot
 
   const drawControl = new L.Control.Draw({
     position: 'topleft',
@@ -67,8 +68,40 @@
   /* ── State ─────────────────────────────────────────── */
   const summaryEl  = document.getElementById('farmSummary');
   const actionsEl  = document.getElementById('farmActions');
+  const resultEl   = document.getElementById('farmResult');
+  const peekEl     = document.getElementById('fbPeek');
+  const sheetToggle = document.getElementById('fbSheetToggle');
+  const quickSaveBtn = document.getElementById('fbQuickSave');
+  const statusEl   = document.getElementById('farmStatus');
   let currentLayer = null;
   let currentData  = null;
+
+  /* ── Status line (replaces alert() — never blocks the map) ─── */
+  let statusTimer = null;
+  function setStatus(msg, kind) {
+    clearTimeout(statusTimer);
+    if (!msg) { statusEl.hidden = true; statusEl.textContent = ''; return; }
+    statusEl.hidden = false;
+    statusEl.textContent = msg;
+    statusEl.classList.toggle('farmmap__status--error', kind === 'error');
+    if (kind !== 'busy') statusTimer = setTimeout(() => { statusEl.hidden = true; }, 6000);
+  }
+
+  /* ── Mobile result sheet ───────────────────────────── */
+  // On desktop the sheet styles are inert, so these calls are harmless there.
+  function setSheetOpen(open) {
+    resultEl.classList.toggle('is-open', open);
+    sheetToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  function setPeek(text, canSave) {
+    peekEl.textContent = text;
+    quickSaveBtn.hidden = !canSave;
+  }
+
+  sheetToggle.addEventListener('click', () => {
+    setSheetOpen(!resultEl.classList.contains('is-open'));
+  });
 
   /* ── Event handlers ────────────────────────────────── */
   map.on(L.Draw.Event.CREATED, (e) => onShapeCreated(e.layer));
@@ -92,6 +125,8 @@
   function renderEmpty() {
     summaryEl.innerHTML = '<div class="farmmap__empty">No farm drawn yet.</div>';
     actionsEl.style.display = 'none';
+    setPeek('Draw your plot to see its area', false);
+    setSheetOpen(false);
   }
 
   /* ── Summary card ──────────────────────────────────── */
@@ -150,6 +185,13 @@
       ${soilHtml}
     `;
     actionsEl.style.display = '';
+
+    // Keep the sheet's peek row current — on a phone this is the only part of
+    // the result the user sees until they choose to expand it.
+    const where = [d.village, d.district, d.state].filter(Boolean)[0];
+    setPeek(`${d.acres.toFixed(2)} acres${where ? ' · ' + where : ''}`, true);
+    // Auto-expand on the first render for a shape, then leave it to the user.
+    if (geoState === 'geocoding') setSheetOpen(true);
   }
 
 
@@ -163,16 +205,17 @@
     const regionRec = FarmState.getRegionRecord(d.region_id);
     const regionDisplay = regionRec ? regionRec.displayName : d.region_id;
 
+    // Nominatim strings are third-party input — escape before injecting.
     const chips = [d.state, d.district, d.village]
       .filter(Boolean)
-      .map(t => `<span class="fb-chip">${t}</span>`)
+      .map(t => `<span class="fb-chip">${escapeHtml(t)}</span>`)
       .join('');
 
     return `
       <div class="farmmap__stat farmmap__stat--location">
         <span>Location</span>
         <div class="fb-chips">${chips || '<span class="farmmap__muted">India</span>'}</div>
-        <em class="fb-region">Matched region: <strong>${regionDisplay}</strong></em>
+        <em class="fb-region">Matched region: <strong>${escapeHtml(regionDisplay)}</strong></em>
       </div>`;
   }
 
@@ -265,22 +308,64 @@
   async function doSearch() {
     const q = (searchInput.value || '').trim();
     if (!q) return;
+    setStatus('Searching…', 'busy');
     try {
       const url  = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=in&limit=1&q=${encodeURIComponent(q)}`;
       const res  = await fetch(url, { headers: { 'Accept-Language': 'en' } });
       const data = await res.json();
       if (data && data[0]) {
         map.setView([+data[0].lat, +data[0].lon], 15);
+        setStatus(`Showing ${data[0].display_name.split(',').slice(0, 2).join(',')}. Zoom in, then draw your plot.`);
       } else {
-        alert('Place not found.');
+        setStatus('No place found by that name. Try the nearest town, or use your location.', 'error');
       }
     } catch (e) {
-      alert('Search failed: ' + e.message);
+      setStatus('Search needs a connection. Pan the map to your area instead.', 'error');
     }
   }
 
   searchBtn.addEventListener('click', doSearch);
   searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
+
+  /* ── "Use my location" ─────────────────────────────── */
+  // Standing in the field is the common case, so GPS beats searching by name.
+  const locateBtn = document.getElementById('farmLocate');
+  let accuracyLayer = null;
+
+  locateBtn.addEventListener('click', () => {
+    if (!navigator.geolocation) {
+      setStatus('This device cannot share its location. Search for your village instead.', 'error');
+      return;
+    }
+    locateBtn.disabled = true;
+    setStatus('Finding your location…', 'busy');
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        locateBtn.disabled = false;
+        const { latitude, longitude, accuracy } = pos.coords;
+        map.setView([latitude, longitude], 18);
+
+        if (accuracyLayer) map.removeLayer(accuracyLayer);
+        accuracyLayer = L.circle([latitude, longitude], {
+          radius: Math.max(accuracy || 0, 8),
+          color: SKY, weight: 1, fillColor: SKY, fillOpacity: 0.15,
+        }).addTo(map);
+
+        setStatus(`You are here (±${Math.round(accuracy || 0)} m). Now tap the polygon tool and trace your plot.`);
+      },
+      (err) => {
+        locateBtn.disabled = false;
+        const msg = err.code === err.PERMISSION_DENIED
+          ? 'Location permission denied. Allow it in your browser, or search for your village.'
+          : err.code === err.TIMEOUT
+          ? 'Could not get a GPS fix in time. Try again outdoors, or search for your village.'
+          : 'Location unavailable. Search for your village instead.';
+        setStatus(msg, 'error');
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+    );
+  });
 
   /* ── Clear ─────────────────────────────────────────── */
   document.getElementById('farmClear').addEventListener('click', () => {
@@ -302,16 +387,21 @@
   // "Use in dashboard" replaces the active plot; "Save as new plot" appends.
   // With no plots saved yet the two are identical, so the second button stays
   // hidden until there is something to distinguish it from.
-  document.getElementById('farmUse').addEventListener('click', () => {
+  function saveAndGo() {
     if (!currentData) return;
     try {
       ensureRegion();
       FarmState.save(currentData);
       window.location.href = 'dashboard.html?fromMap=1';
     } catch (e) {
-      alert('Could not save farm locally: ' + e.message);
+      setStatus('Could not save on this device: ' + e.message, 'error');
     }
-  });
+  }
+
+  // Two entry points, one action: the panel button on desktop, the sheet's
+  // always-visible button on mobile.
+  document.getElementById('farmUse').addEventListener('click', saveAndGo);
+  quickSaveBtn.addEventListener('click', saveAndGo);
 
   const addPlotBtn = document.getElementById('farmAddPlot');
   addPlotBtn.addEventListener('click', () => {
@@ -363,7 +453,13 @@
     ));
   }
 
+  // Only one saved plot is previewed at a time — the previous preview layer is
+  // dropped first, otherwise browsing the list stacks polygons that can never
+  // be removed (they don't belong to drawnItems, so the delete tool can't see them).
+  let previewLayer = null;
+
   function showPlotOnMap(plot) {
+    if (previewLayer) { map.removeLayer(previewLayer); previewLayer = null; }
     if (!plot || !plot.geojson) return;
     try {
       const layer = L.geoJSON(plot.geojson, {
@@ -371,6 +467,7 @@
       });
       map.fitBounds(layer.getBounds(), { padding: [40, 40] });
       layer.addTo(map);
+      previewLayer = layer;
     } catch (_) {}
   }
 
@@ -393,6 +490,11 @@
   document.addEventListener('mm:plot-changed', renderPlots);
 
   /* ── Boot ──────────────────────────────────────────── */
+  // The steps are open on desktop, where the panel has room, and collapsed on
+  // phones so they never push the map below the fold.
+  const howEl = document.getElementById('farmHow');
+  if (howEl && window.matchMedia('(max-width: 860px)').matches) howEl.open = false;
+
   renderEmpty();
   renderPlots();
 

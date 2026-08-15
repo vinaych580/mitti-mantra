@@ -95,7 +95,10 @@
     wrap.querySelector('small').textContent = 'Plot (' + plots.length + ')';
     select.innerHTML = plots.map(function (p) {
       var size = p.acres ? ' · ' + Number(p.acres).toFixed(1) + ' ac' : '';
-      var label = (p.name || 'Plot') + size;
+      // Auto-generated names already carry the area they had when saved. Strip it
+      // so an edited area doesn't render as "Nagar · 2.1 ac · 5.0 ac".
+      var base = String(p.name || 'Plot').replace(/\s*·\s*[\d.]+\s*ac\s*$/i, '');
+      var label = base + size;
       return '<option value="' + p.id + '"' + (p.id === activeId ? ' selected' : '') + '>' +
         window.MM.escapeHtml(label) + '</option>';
     }).join('');
