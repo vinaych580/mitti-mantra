@@ -7,20 +7,32 @@
 1. TECH STACK
 ================================================================================
 
-  Backend Framework     : FastAPI (Python) with Uvicorn ASGI server
+  Backend Framework     : FastAPI (>=0.110) with Uvicorn ASGI server
   Data Validation       : Pydantic v2 (request/response models with validators)
-  ML / AI               : scikit-learn 1.8.0
-                          - RandomForestRegressor   (yield prediction)
+  ML / AI               : scikit-learn (>=1.3.0)
+                          - RandomForestRegressor     (yield prediction)
                           - GradientBoostingRegressor (price forecasting)
-                          - RandomForestClassifier  (crop recommendation)
-  Numerical Computing   : NumPy 2.4.4
+                          - RandomForestClassifier    (crop recommendation)
+                          - RandomForestClassifier    (crop disease, on HSV +
+                            texture features extracted from leaf photos)
+  Numerical Computing   : NumPy (>=1.24,<2.5), pandas (>=2.0)
+  Image Handling        : Pillow (>=10.0) — leaf-photo feature extraction
   Model Serialization   : joblib (save/load .joblib model files)
   Data Storage          : CSV flat files (9 datasets in /dataset/)
-  Frontend              : Vanilla HTML + JavaScript (no framework)
+  Frontend              : Vanilla HTML + JavaScript (no framework, no build step)
+  Frontend Styling      : Hand-written design system in frontend/style.css
+                          (~110 KB plain CSS + custom properties).
+                          NOT Tailwind — there is no CSS framework and no CSS
+                          build. The only remote stylesheet is Google Fonts
+                          (Fraunces + Inter).
+  Frontend CDN libs     : Three.js 0.160 (globe), Chart.js 4.4 (charts),
+                          Leaflet 1.9 + leaflet-draw + Turf 7 (maps/polygons)
   API Protocol          : REST (JSON over HTTP)
-  CORS                  : FastAPI CORSMiddleware (open for local dev)
+  CORS                  : FastAPI CORSMiddleware, allow-list from CORS_ORIGINS
+                          (defaults to localhost:8000 / 127.0.0.1:8000 only)
   Static File Serving   : FastAPI StaticFiles (frontend mounted at /)
-  Python Version        : 3.13+
+  Python Version        : No minimum pinned in requirements.txt; the checked-in
+                          venv runs 3.12
   Package Management    : pip + requirements.txt
   Version Control       : Git
 
@@ -28,120 +40,246 @@
 2. PROJECT STRUCTURE
 ================================================================================
 
-  mvsr hackathon/
+  mitti-mantra / agrisim/
   |
   |-- backend/
-  |   |-- main.py              # FastAPI app, all 32+ API endpoints, Pydantic models
+  |   |-- main.py              # FastAPI app, 50 route handlers, all middleware,
+  |   |                          static mount, extensionless page routes
+  |   |-- chatbot.py           # Site-aware intent-based chatbot (POST /api/chat)
+  |   |-- models.py            # Pydantic v2 request/response models
+  |   |-- routers/
+  |       |-- data.py          # 9 read-only data routes mounted under /api
+  |                              (crops, regions, soil, weather, mandi-prices,
+  |                               yield-history, yield-trend, satellite)
   |
   |-- engine/
   |   |-- simulator.py         # Core simulation engine (yield, cost, profit, risk,
   |   |                          water efficiency, nutrient gap, sensitivity matrix)
-  |   |-- features.py          # 14 feature implementations (fertilizer, MSP, sell
-  |   |                          advisor, irrigation, crop calendar, pest alerts,
-  |   |                          loan calc, soil projection, price forecast,
-  |   |                          arbitrage, templates, benchmark, expenses, schemes)
-  |   |-- __init__.py
+  |   |-- features.py          # 18 public advisory functions (fertilizer, MSP,
+  |   |                          sell advisor, irrigation, crop calendar, pest
+  |   |                          alerts, loan calc, soil projection, price
+  |   |                          forecast, arbitrage, templates, benchmark,
+  |   |                          expenses, schemes, disease-outbreak risk,
+  |   |                          carbon credits)
+  |   |-- farm_score.py        # Composite 0-100 farm score
+  |   |-- disease_features.py  # HSV + texture feature extraction from leaf photos
+  |   |-- disease_actions.py   # Treatment/action plan builder for a diagnosis
+  |   |-- intelligence_layer.py
+  |   |-- chatbot_i18n.py      # Chatbot language handling
+  |   |-- example_usage.py
   |
   |-- ml/
   |   |-- predict.py           # ML-backed prediction functions (yield, risk, profit,
   |   |                          recommendations, price analytics, rotation planner)
-  |   |-- train_models.py      # Training pipeline for 3 ML models
+  |   |-- train_models.py      # Training pipeline for the 3 tabular models
+  |   |-- training/
+  |   |   |-- disease_model.py # Training pipeline for the leaf-disease classifier
+  |   |-- audit_models.py      # Permutation importance + robustness audit
+  |   |-- evaluate_models.py   # RandomForest vs CatBoost benchmark harness
   |   |-- models/              # Serialized model files (.joblib)
-  |   |   |-- yield_model.joblib          (~2 MB, RandomForest)
-  |   |   |-- price_model.joblib          (~1.3 MB, GradientBoosting)
-  |   |   |-- recommend_model.joblib      (~10 MB, RandomForest)
+  |   |   |-- yield_model.joblib          (~16 MB, RandomForestRegressor)
+  |   |   |-- price_model.joblib          (~1.3 MB, GradientBoostingRegressor)
+  |   |   |-- recommend_model.joblib      (~31 MB, RandomForestClassifier)
+  |   |   |-- disease_model.joblib        (~11 MB, RandomForestClassifier)
   |   |   |-- label_encoders.joblib       (LabelEncoders for yield model)
   |   |   |-- price_encoders.joblib       (LabelEncoders for price model)
   |   |   |-- recommend_encoders.joblib   (LabelEncoders for recommend model)
-  |   |   |-- manifest.json              (training metrics & feature importances)
-  |   |-- __init__.py
+  |   |   |-- recommend_target_encoder.joblib
+  |   |   |-- disease_label_encoder.joblib
+  |   |   |-- manifest.json               (training metrics & feature importances)
+  |   |   |-- validation_report.json      (end-to-end recommendation smoke tests)
+  |   |   |-- audit_metrics.json          (permutation importance, robustness)
+  |   |   |-- evaluation_manifest.json    (algorithm bake-off results)
+  |   |-- example_usage.py
   |
   |-- utils/
   |   |-- calculations.py      # Core math: soil factor, climate factor, yield
-  |                               estimation, risk scoring, CropParameter dataclass
+  |   |                          estimation, risk scoring, CropParameter dataclass
+  |   |-- csv_cache.py         # Shared mtime-aware CSV cache with indexes
+  |   |-- provenance.py        # Data-source / freshness metadata
+  |   |-- usage_store.py       # Anonymous usage-counter aggregation
   |
-  |-- dataset/
-  |   |-- crop_parameters.csv  # 8 crops: base yield, NPK needs, costs, price ranges
-  |   |-- mandi_prices.csv     # ~580 rows: region x crop x date price history
-  |   |-- yield_history.csv    # ~72 rows: historical yields by region/crop/year
-  |   |-- soil.csv             # 3 regions: NPK, pH, organic carbon, soil type
-  |   |-- weather.csv          # 3 regions x seasons: rainfall, temp ranges
-  |   |-- msp_prices.csv       # MSP data for 8 crops (2024-2025)
+  |-- dataset/                 # 9 CSVs, 32 crops x 30 regions (row counts below)
+  |   |-- crop_parameters.csv  # 32 crops: base yield, NPK needs, costs, price ranges
+  |   |-- mandi_prices.csv     # 2,868 rows: region x crop x date price history
+  |   |-- yield_history.csv    # 565 rows: historical yields by region/crop/year
+  |   |-- soil.csv             # 51 rows covering 30 regions: NPK, pH, OC, soil type
+  |   |-- weather.csv          # 180 rows: region x season rainfall + temp ranges
+  |   |-- msp_prices.csv       # 36 rows: MSP for 18 crops
   |   |-- government_schemes.csv  # 12 government schemes with eligibility rules
-  |   |-- pest_rules.csv       # 18 pest/disease rules with weather triggers
+  |   |-- pest_rules.csv       # 38 pest/disease rules with weather triggers
+  |   |-- disease_treatments.csv  # 36 treatment/action rows keyed by disease class
   |   |-- data_dictionary.md   # Column descriptions for all CSVs
+  |   |-- plantvillage/        # PlantVillage leaf-photo sample, 18 class folders
+  |   |-- training/            # Derived training CSV + per-site feature JSON
+  |   |-- raw/, processed/     # Fetcher output snapshots
   |
-  |-- frontend/
-  |   |-- index.html           # Dashboard
-  |   |-- landing.html         # Landing page
-  |   |-- farm-setup.html      # Farm setup wizard
-  |   |-- strategy-builder.html     # Strategy builder
-  |   |-- strategy-comparison.html  # Compare strategies
-  |   |-- simulation-results.html   # Results display
-  |   |-- app.js               # Frontend logic (API calls, charts, forms)
-  |   |-- DESIGN.md
+  |-- frontend/                # Zero-build static site, served by FastAPI
+  |   |-- index.html           # Landing page (hero, 3D India globe, live demo)
+  |   |-- dashboard.html       # 22-tool dashboard — the main application
+  |   |-- marketplace.html     # Buy/sell produce, pool orders, credit profile
+  |   |-- gyan-seva.html       # Expert consultation directory + booking
+  |   |-- book-a-tractor.html  # Tractor catalogue, comparison, nearby map
+  |   |-- farm-boundary.html   # Draw-a-polygon + SoilGrids centroid fetch
+  |   |-- login.html           # Sign-in shell; auth is REMOVED (see auth.js)
+  |   |-- style.css            # The whole design system (~110 KB, hand-written)
+  |   |-- mm-core.js           # window.MM: Farm Profile, share, a11y, deep-links
+  |   |-- mm-enhance.js        # Non-invasive dashboard augmentations
+  |   |-- mm-analytics.js      # Local-first, privacy-respecting usage counters
+  |   |-- mm-freshness.js      # Data-provenance pill from /api/data-freshness
+  |   |-- mm-plots.js          # Multi-plot switcher in the farm bar
+  |   |-- dashboard.js         # All 22 dashboard tools
+  |   |-- marketplace.js       # Marketplace app (8 views)
+  |   |-- gyan-seva.js         # Consultant matching + booking
+  |   |-- book-a-tractor.js    # Tractor cards, comparison, fleet performance
+  |   |-- map-tractors.js      # Geolocation + Leaflet nearby-tractor discovery
+  |   |-- farm-state.js        # window.FarmState — multi-plot store, offline
+  |   |                          nearest-region match against 30 centroids
+  |   |-- offline-simulator.js # JS port of engine/simulator.py for offline use
+  |   |-- auth.js              # No-op stub — authentication was removed
+  |   |-- i18n-data.js         # Hand-written offline translation catalog
+  |   |-- i18n.js              # EN / HI / TE / KN switcher
+  |   |-- chatbot.js           # Floating draggable chat widget
+  |   |-- india-globe.js       # Three.js globe with suitability overlays
+  |   |-- state-data.js        # 36 states + UTs reference data
+  |   |-- demo-recommender.js  # Client-side on-page recommender
+  |   |-- site-ui.js           # Nav, reveal animations, PWA register
+  |   |-- toolbar.js           # Dark mode / voice / TTS / WhatsApp / PDF
+  |   |-- sw.js                # Service worker (mittimantra-v39)
+  |   |-- Data/                # Static demo catalogs: 2,292 consultants,
+  |   |                          528 tractors, 37 marketplace listings
+  |   |-- assets/, models/, manifest.webmanifest
   |
-  |-- data_ingestion/          # Data loading utilities
-  |-- docs/                    # Documentation
+  |-- data_ingestion/          # @cached decorator, ETL, and live-API fetchers
+  |   |-- fetchers/              (SoilGrids, Open-Meteo, agmarknet/data.gov.in,
+  |                               NASA POWER, IMD, ISRO Bhuvan, Earth Engine)
+  |-- api/index.py             # Vercel serverless entrypoint
+  |-- scripts/                 # fetch_plantvillage_sample.py and friends
+  |-- tests/                   # Pytest suite (9 test modules)
+  |-- docs/                    # Documentation (this file, API, ARCHITECTURE, ...)
   |-- requirements.txt         # Python dependencies
-  |-- PROJECT_OVERVIEW.txt     # This file
+  |-- vercel.json              # Routing + serverless function config
 
 
 3. ML MODELS - DETAILS
 ================================================================================
 
+  All figures below are read from ml/models/manifest.json, which is rewritten
+  by ml/train_models.py (and ml/training/disease_model.py) on every training
+  run. Treat that file as the source of truth; the numbers here are a snapshot
+  of the currently shipped .joblib artifacts.
+
   3.1 Yield Prediction Model
   --------------------------
-  Algorithm   : RandomForestRegressor (200 trees, max_depth=12)
+  Algorithm   : RandomForestRegressor
+                (n_estimators=200, max_depth=12, min_samples_split=5,
+                 min_samples_leaf=3, random_state=42)
   Features    : crop_encoded, region_encoded, season_encoded, base_yield,
                 water_requirement, temp_min, temp_max, NPK requirements (N,P,K),
                 soil_pH, soil_N, soil_P, soil_K, organic_carbon,
                 rainfall, avg_temp, min_temp, max_temp, irrigation_level
   Total features : 20
-  Training data  : 504 samples (72 real yield_history rows augmented 6x with
-                   +/-10% gaussian noise on numeric features)
-  Train/Test     : 80/20 split
-  Metrics        : R^2 = 0.9914, MAE = 358 kg/acre, RMSE = 1001 kg/acre
-  Top features   : season (20.3%), NPK_N (18.9%), base_yield (16.7%),
-                   NPK_P (16.4%), NPK_K (15.9%), water_req (11.4%)
+  Training data  : 14,777 samples — yield_history x crop_parameters x soil x
+                   weather, plus synthetic severe-climate-mismatch rows, then
+                   6x augmentation with +/-10% uniform noise on numeric
+                   features (encoded indices left intact).
+  Train/Test     : 80/20 split — 11,821 train / 2,956 test
+  Metrics        : R^2 = 0.8115, MAE = 763.73 kg/acre, RMSE = 2407.44 kg/acre
+  Top features   : season (55.2%), rainfall (9.2%), base_yield (8.8%),
+                   NPK_P (4.2%), NPK_N (2.4%), avg_temp (2.0%)
   Fallback       : If model unavailable, uses heuristic formula from
                    utils/calculations.py (soil_factor * climate_factor * base_yield)
                    adjusted by historical yield averages.
 
   3.2 Price Forecasting Model
   ---------------------------
-  Algorithm   : GradientBoostingRegressor (300 trees, lr=0.05, max_depth=6)
+  Algorithm   : GradientBoostingRegressor
+                (n_estimators=300, max_depth=6, learning_rate=0.05,
+                 min_samples_split=5, random_state=42)
   Features    : crop_encoded, region_encoded, month, year_offset,
                 lag_1, lag_2, lag_3 (past 3 price points),
                 rolling_mean_3, rolling_std_3, price_range
   Total features : 10
-  Training data  : 504 samples (from ~580 mandi price rows, using sliding windows)
-  Train/Test     : 80/20 split
-  Metrics        : R^2 = 0.8929, MAE = Rs 6.2/kg, RMSE = Rs 8.55/kg
-  Top features   : rolling_mean_3 (33.6%), lag_2 (29.9%), lag_3 (21.0%),
-                   lag_1 (8.0%), price_range (4.2%)
+  Training data  : 2,223 samples — sliding windows over the 2,868 mandi price
+                   rows, grouped by region x crop.
+  Train/Test     : 80/20 split — 1,778 train / 445 test
+  Metrics        : R^2 = 0.9118, MAE = Rs 5.07/kg, RMSE = Rs 19.65/kg
+  Top features   : rolling_mean_3 (27.2%), rolling_std_3 (21.1%),
+                   lag_1 (18.5%), price_range (16.2%), lag_3 (11.8%),
+                   lag_2 (4.6%)
   Usage          : Iterative multi-step forecasting — each prediction is fed back
                    as a lag feature for the next month's prediction.
   Fallback       : Seasonal decomposition + linear trend extrapolation.
 
   3.3 Crop Recommendation Model
   -----------------------------
-  Algorithm   : RandomForestClassifier (200 trees, max_depth=10)
+  Algorithm   : RandomForestClassifier
+                (n_estimators=200, max_depth=10, min_samples_split=4,
+                 random_state=42)
   Features    : region_encoded, season_encoded, soil_pH, soil_N, soil_P,
                 soil_K, organic_carbon, rainfall, avg_temp, min_temp,
                 max_temp, budget, irrigation_level
   Total features : 13
-  Training data  : 45,000 samples (synthetic grid: 3 regions x 2 seasons x
-                   5 budgets x 5 irrigation x 6 pH x 5 rainfall x 5 temp
-                   combinations, each labelled with best crop by multi-factor
-                   scoring, then 1x augmentation with noise)
-  Train/Test     : 80/20 stratified split
-  Metrics        : Accuracy = 97.98%, 4 crop classes
-  Top features   : season (57.4%), budget (15.0%), soil_K (5.0%), soil_P (4.3%),
-                   soil_pH (3.9%), region (3.6%), soil_N (3.2%)
+  Training data  : 60,000 samples — a synthetic grid of 500 samples per
+                   region x season combination, each labelled with the best
+                   crop by multi-factor scoring, plus light noise augmentation.
+  Train/Test     : 80/20 stratified split — 48,000 train / 12,000 test
+  Metrics        : Accuracy = 92.59%, 12 crop classes
+  Top features   : rainfall (76.1%), season (13.5%), budget (4.2%),
+                   min_temp (0.8%), avg_temp (0.8%), max_temp (0.7%)
   Usage          : predict_proba gives per-crop confidence scores which are
                    blended into the smart_score ranking (15% weight).
   Fallback       : Heuristic scoring (ROI + risk + budget fit + soil health).
+
+  3.4 Crop Disease Classifier
+  ---------------------------
+  Algorithm   : RandomForestClassifier over 12 hand-engineered image features
+                (hue histogram buckets, saturation/value means, hue mean,
+                 texture score, lesion fraction) extracted by
+                 engine/disease_features.py — not a CNN.
+  Total features : 12
+  Training data  : 539 leaf photos — 404 train / 135 test, 18 classes across
+                   maize, potato, soybean and tomato.
+  Metrics        : Test accuracy = 71.85%, macro-F1 = 0.7038,
+                   5-fold CV mean accuracy = 67.71%
+  Top features   : hue_mean (14.3%), hue_dark (11.2%), texture_score (10.3%),
+                   hue_gray (9.3%), hue_brown (9.1%), val_mean (8.4%)
+  IMPORTANT      : Per the note recorded in manifest.json, this is trained on a
+                   small real-photo sample from the public PlantVillage research
+                   benchmark — a curated academic dataset shot under controlled
+                   conditions, NOT this platform's own field photos. Treat the
+                   accuracy as a lab-bench figure, not field performance.
+  Fallback       : The hand-tuned HSV heuristic remains the fallback whenever the
+                   model file is unavailable. Both paths carry the same
+                   "not a diagnosis" disclaimer at inference time.
+
+  3.5 End-to-end Validation
+  -------------------------
+  ml/models/validation_report.json records a recommendation smoke test across
+  five representative region/season pairs (punjab_ludhiana rabi, mh_nashik
+  kharif, tn_thanjavur kharif, up_lucknow rabi, guj_anand kharif).
+  Current status: 5/5 PASS, ml_used = true on every case, latency 132-269 ms.
+
+  3.6 A note on the other metric files
+  ------------------------------------
+  Two further files in ml/models/ are written by separate harnesses and will
+  NOT match manifest.json — they are different runs, not the shipped numbers:
+
+    - audit_metrics.json      (ml/audit_models.py) — permutation importances
+                              and robustness probes, e.g. yield R^2 holds at
+                              0.9896 under a drought perturbation and
+                              recommendation accuracy drops to 0.8299 under
+                              noisy weather.
+    - evaluation_manifest.json (ml/evaluate_models.py) — a RandomForest vs
+                              CatBoost bake-off. CatBoost wins the
+                              recommendation task there (0.9601 test accuracy
+                              vs 0.9375), but CatBoost is NOT in
+                              requirements.txt and the shipped
+                              recommend_model.joblib is the RandomForest
+                              recorded in manifest.json.
+
+  GET /api/ml/status merges these audit and evaluation files into its response,
+  so its output intentionally reports more than the training manifest alone.
 
 
 4. HOW ML IS APPLIED (INTEGRATION FLOW)
@@ -171,168 +309,279 @@
       -> Each crop entry includes ml_confidence and prediction_source fields
 
   4.4 Model Retraining
-      User calls POST /api/ml/train
+      An administrator calls POST /api/ml/train
+      -> Gated: requires ENABLE_MODEL_TRAINING=true AND a matching X-Admin-Key
+         header against ADMIN_API_KEY (403 / 503 / 401 respectively otherwise)
       -> Runs train_all() from ml/train_models.py
-      -> Rebuilds all 3 models from current CSV data
+      -> Rebuilds the 3 tabular models from current CSV data (the disease
+         classifier is trained separately via ml/training/disease_model.py)
       -> Saves new .joblib files + updates manifest.json
       -> Next request will load fresh models automatically
 
 
-5. COMPLETE FEATURE LIST (32+ API ENDPOINTS)
+5. COMPLETE FEATURE LIST (59 API ENDPOINTS)
 ================================================================================
+
+  59 route handlers in total: 50 declared in backend/main.py plus 9 in
+  backend/routers/data.py, which is mounted with prefix="/api". That is 58
+  distinct paths — /api/crop is registered for both GET and POST.
+
+  ---- Core Data (backend/routers/data.py) ----
+
+  5.1  List All Crops                GET  /api/crops
+       Returns all 32 crop parameter rows from crop_parameters.csv.
+
+  5.2  Single Crop Details           GET  /api/crops/{crop_id}
+       Returns detailed parameters for one crop. 404 if unknown.
+
+  5.3  List Regions                  GET  /api/regions
+       Returns the 30 distinct region_ids from soil.csv as {id, name}, with
+       the id prettified for display ("mp_sehore" -> "MP · Sehore").
+
+  5.4  Weather Data                  GET  /api/weather/{region_id}?season=kharif
+       Returns rainfall and temperature data for a region, optionally filtered
+       by season. Returns the most recent matching row.
+
+  5.5  Soil Data                     GET  /api/soil/{region_id}
+       Returns NPK levels, pH, organic carbon, soil type.
+
+  5.6  Mandi Prices                  GET  /api/mandi-prices/{region_id}?crop_id=rice
+       Returns raw mandi price history for a region (optionally filtered by crop).
+
+  5.7  Yield History                 GET  /api/yield-history/{region_id}?crop_id=rice
+       Returns historical yield data by crop and year.
+
+  5.8  Yield Trend                   GET  /api/yield-trend/{region_id}/{crop_id}
+       Historical yield sorted by year with year-over-year growth percentage,
+       plus avg / min / max.
+
+  5.9  Satellite Telemetry           GET  /api/satellite?lat=..&lon=..
+       30-day NDVI from Google Earth Engine / Sentinel-2 with a canopy grade.
+       Returns {available: false} when Earth Engine is not configured.
 
   ---- Core Simulation ----
 
-  5.1  Health Check                  GET  /api/health
+  5.10 Health Check                  GET  /api/health
        Returns server status.
 
-  5.2  List All Crops                GET  /api/crops
-       Returns all 8 crop parameters from crop_parameters.csv.
-
-  5.3  Single Crop Details           GET  /api/crops/{crop_id}
-       Returns detailed parameters for one crop.
-
-  5.4  List Regions                  GET  /api/regions
-       Returns all 3 regions with soil type and weather summary.
-
-  5.5  Weather Data                  GET  /api/weather/{region_id}?season=kharif
-       Returns rainfall, temperature data for a region+season.
-
-  5.6  Soil Data                     GET  /api/soil/{region_id}
-       Returns NPK levels, pH, organic carbon, soil type.
-
-  5.7  Mandi Prices                  GET  /api/mandi-prices/{region_id}?crop_id=rice
-       Returns raw mandi price history for a region (optionally filtered by crop).
-
-  5.8  Yield History                 GET  /api/yield-history/{region_id}
-       Returns historical yield data by crop and year.
-
-  5.9  Full Simulation               POST /api/simulate
+  5.11 Full Simulation               POST /api/simulate
        Accepts crop, area, soil, weather, input costs, irrigation.
        Returns: yield, cost breakdown, profit, ROI, risk score, water efficiency,
        nutrient gap analysis, sensitivity matrix (price x yield +-10/20%).
        Uses ML yield model internally.
 
-  5.10 Compare Strategies            POST /api/compare-strategies
+  5.12 Compare Strategies            POST /api/compare-strategies
        Accepts list of strategies, runs simulation on each, returns ranked results.
 
-  5.11 Smart Crop Recommendations    POST /api/recommend
+  5.13 Smart Crop Recommendations    POST /api/recommend
        ML-powered: returns top-K crops ranked by smart_score (blending ML
        confidence, ROI, risk, budget fit, soil health). Each entry shows
        prediction_source and ml_confidence.
 
-  5.12 Batch Simulation              POST /api/batch-simulate
+  5.14 Batch Simulation              POST /api/batch-simulate
        Simulate multiple crops simultaneously. Returns all results sorted by profit.
 
-  5.13 Optimal Crop Mix              POST /api/optimal-mix
+  5.15 Optimal Crop Mix              POST /api/optimal-mix
        Multi-crop allocation optimizer: given total area + budget, allocates
        across crops to maximize total profit.
 
+  5.16 Crop Comparison               GET  /api/crop-comparison/{region_id}/{season}
+       Compares every crop for one region/season with full metrics in one call.
+
+  5.17 Location Insights             GET  /api/location-insights/{region_id}
+       Region-level summary used to prime the dashboard for a chosen location.
+
   ---- Market Intelligence ----
 
-  5.14 Mandi Price Analytics         GET  /api/price-analytics/{region_id}/{crop_id}
+  5.18 Mandi Price Analytics         GET  /api/price-analytics/{region_id}/{crop_id}
        Computes: average price, volatility, trend (rising/falling/stable),
        3-month moving average, seasonal monthly pattern, best/worst selling month.
 
-  5.15 Yield Trend                   GET  /api/yield-trend/{region_id}/{crop_id}
-       Historical yield with year-over-year growth percentage.
+  5.19 MSP Database                  GET  /api/msp?crop_id=rice&year=2025
+       Returns Minimum Support Price data from msp_prices.csv (36 rows,
+       18 crops).
 
-  5.16 MSP Database                  GET  /api/msp?crop_id=rice&year=2025
-       Returns Minimum Support Price data from msp_prices.csv.
-
-  5.17 MSP vs Market Comparison      GET  /api/msp-vs-market/{region_id}/{crop_id}
+  5.20 MSP vs Market Comparison      GET  /api/msp-vs-market/{region_id}/{crop_id}
        Compares latest MSP with current mandi price. Shows premium/discount
        percentage and recommends sell at market or sell at MSP.
 
-  5.18 Best Time to Sell Advisor     GET  /api/sell-advisor/{region_id}/{crop_id}
+  5.21 Best Time to Sell Advisor     GET  /api/sell-advisor/{region_id}/{crop_id}
        Analyzes seasonal price patterns. Returns hold/sell/partial-sell advice
        with best month to sell, expected price gain if farmer holds.
 
-  5.19 Price Forecast (ML-powered)   GET  /api/price-forecast/{region_id}/{crop_id}?months_ahead=6
+  5.22 Price Forecast (ML-powered)   GET  /api/price-forecast/{region_id}/{crop_id}?months_ahead=6
        ML model (GradientBoosting) forecasts prices 1-6 months ahead using
        iterative autoregressive prediction with lag features.
        Falls back to seasonal + linear trend if model unavailable.
 
-  5.20 Cross-Mandi Arbitrage         GET  /api/arbitrage/{crop_id}
+  5.23 Cross-Mandi Arbitrage         GET  /api/arbitrage/{crop_id}
        Compares latest prices for a crop across all regions.
        Identifies highest/lowest price regions and arbitrage spread percentage.
 
   ---- Farm Advisory ----
 
-  5.21 Fertilizer Recommendation     GET  /api/fertilizer-recommendation/{crop_id}?n=45&p=22&k=25
+  5.24 Fertilizer Recommendation     GET  /api/fertilizer-recommendation/{crop_id}?n=45&p=22&k=25
        Compares soil NPK with crop requirements. Recommends specific fertilizer
        names (Urea, DAP, MOP) with exact quantities in kg/acre.
 
-  5.22 Irrigation Scheduler          GET  /api/irrigation-schedule/{crop_id}?sowing_date=2025-06-15&rainfall_mm=800
+  5.25 Irrigation Scheduler          GET  /api/irrigation-schedule/{crop_id}?sowing_date=2025-06-15&rainfall_mm=800
        Week-by-week water plan for entire crop duration. Adjusts for rainfall
        and irrigation level. Shows critical water stress periods.
 
-  5.23 Crop Calendar                 GET  /api/crop-calendar/{crop_id}?season=kharif
+  5.26 Crop Calendar                 GET  /api/crop-calendar/{crop_id}?season=kharif
        Complete sowing-to-harvest timeline: land prep, sowing, fertilizer
        application dates, critical irrigation windows, pest watch periods,
        harvest window, total duration.
 
-  5.24 Pest & Disease Risk Alerts    GET  /api/pest-alerts/{crop_id}?avg_temp_c=28&rainfall_mm=900
+  5.27 Pest & Disease Risk Alerts    GET  /api/pest-alerts/{crop_id}?avg_temp_c=28&rainfall_mm=900
        Weather-based pest/disease risk assessment. Matches current conditions
-       against 18 pest rules from pest_rules.csv. Returns severity, description,
+       against 38 pest rules from pest_rules.csv. Returns severity, description,
        and specific management recommendations (chemical/biological).
+       A planning aid, not an official weather warning.
 
-  5.25 Rotation Planner              POST /api/rotation-plan
+  5.28 Rotation Planner              POST /api/rotation-plan
        Recommends optimal kharif-rabi annual crop rotation. Scores all
        season combinations by profit, risk, and diversity bonus.
 
-  5.26 Loan/Credit Calculator        POST /api/loan-calculator
+  5.29 Loan/Credit Calculator        POST /api/loan-calculator
        Computes: EMI, total repayment, interest burden, DSCR (debt service
        coverage ratio), and feasibility verdict (safe/moderate/risky).
 
-  5.27 Multi-Year Soil Projection    POST /api/soil-projection
+  5.30 Multi-Year Soil Projection    POST /api/soil-projection
        Projects soil NPK levels over 3-5 years based on chosen crop rotation.
        Models nutrient depletion per crop, legume nitrogen fixation, and
        fertilizer restoration (60% efficiency). Returns timeline + health trend.
 
-  5.28 Regional Benchmark            POST /api/benchmark
+  5.31 Regional Benchmark            POST /api/benchmark
        Compares farmer's actual yield and profit against regional averages.
        Shows percentile ranking and gap analysis.
 
-  ---- Farm Management ----
-
-  5.29 Log Expense                   POST /api/expense/log
-       Records actual expenses by farm_id, category, amount, date, notes.
-       In-memory store (production would use database).
-
-  5.30 Expense Summary               GET  /api/expense/{farm_id}?planned_budget=15000
-       Returns expense totals by category with optional variance analysis
-       against planned budget (over/under budget with percentage).
-
-  5.31 Strategy Templates            GET  /api/strategy-templates?profile=small
+  5.32 Strategy Templates            GET  /api/strategy-templates?profile=small
        8 pre-built strategy presets: conservative, aggressive, balanced,
        water-saver, organic, high-value, subsistence, diversified.
        Filterable by farmer profile (small, medium, large).
 
-  5.32 Government Scheme Matcher     GET  /api/government-schemes?crop_id=rice&area_acres=2&season=kharif
+  5.33 Government Scheme Matcher     GET  /api/government-schemes?crop_id=rice&area_acres=2&season=kharif
        Matches farmer profile against 12 government schemes from
        government_schemes.csv. Filters by crop, region, area, and season
        eligibility. Returns scheme details, benefit type, and application URLs.
 
+  5.34 Disease Screening             POST /api/disease/predict
+       Preliminary visual screening of an uploaded leaf photo. Uses the
+       trained classifier when available, else the HSV colour/texture
+       heuristic. Returns a ranked class list plus an action plan from
+       engine/disease_actions.py and disease_treatments.csv.
+       Explicitly NOT a diagnosis — the disclaimer is part of the response.
+
+  ---- Field Intelligence & Sustainability ----
+
+  5.35 Field NDVI                    POST /api/field/ndvi
+       Sentinel-2 NDVI index, canopy cover %, and a sub-field health grid
+       for a drawn boundary.
+
+  5.36 Farm Score                    POST /api/farm-score
+       Blends recommendation, risk and — when a location is supplied —
+       field health into a single composite score.
+
+  5.37 Climate Alerts                POST /api/climate/alerts
+       Micro-climate pest and fungal disease outbreak risk alerts.
+
+  5.38 Carbon Credits                POST /api/carbon-credits
+       An UNVERIFIED carbon-planning estimate. These are not saleable credits
+       and the response says so.
+
+  5.39 IoT Telemetry                 POST /api/iot/telemetry
+       Returns a clearly labelled sample payload — there is no sensor
+       integration behind this yet.
+
+  5.40 Smart Pump Trigger            POST /api/iot/pump-trigger
+       Calculates a pump-runtime recommendation. It never actuates equipment.
+
+  ---- Farm Management ----
+
+  5.41 Log Expense                   POST /api/expense/log
+  5.42 Expense Summary               GET  /api/expense/{farm_id}?planned_budget=15000
+       DISABLED. Both return HTTP 503: expense persistence requires
+       authenticated, tenant-scoped storage, which this deployment does not
+       have. The frontend marketplace works around this with per-browser
+       localStorage instead.
+
+  ---- Usage Instrumentation (privacy-gated) ----
+
+  5.43 Usage Config                  GET  /api/usage/config
+       Tells the frontend whether to show the sharing opt-in.
+
+  5.44 Usage Collect                 POST /api/usage/collect
+       Accepts anonymous event counts only. Requires the server-side
+       ENABLE_USAGE_COLLECTION flag; see utils/usage_store.py.
+
+  5.45 Usage Summary                 GET  /api/usage/summary
+       Aggregate counts. Admin-gated — operational data, not public.
+
   ---- ML Management ----
 
-  5.33 Train All Models              POST /api/ml/train
-       Retrains all 3 ML models on current CSV data. Returns training metrics
-       (R^2, MAE, RMSE, accuracy) and feature importances for each model.
+  5.46 Train All Models              POST /api/ml/train
+       Retrains the 3 tabular ML models on current CSV data and returns
+       training metrics and feature importances.
+       Admin-gated: needs ENABLE_MODEL_TRAINING=true plus a valid X-Admin-Key
+       header matching ADMIN_API_KEY.
 
-  5.34 Model Status                  GET  /api/ml/status
-       Reports which models are loaded, model directory path, and full
-       training manifest with metrics.
+  5.47 Model Status                  GET  /api/ml/status
+       Reports which models are loaded and the model directory path, merging
+       manifest.json with audit_metrics.json and evaluation_manifest.json.
+
+  ---- Chat ----
+
+  5.48 Site-Aware Chatbot            POST /api/chat
+       Intent-routed assistant grounded in the project's own datasets and
+       engine. Supports slash commands, session context, and deep-link
+       actions back into the dashboard. See docs/CHATBOT.md.
+
+  ---- Diagnostics ----
+
+  5.49 Cache Stats                   GET  /api/_cache/stats
+       Current CSV cache state — rows per file plus built indexes.
+
+  5.50 Data Freshness                GET  /api/data-freshness
+       Provenance and age of every dataset behind the numbers shown to the
+       user. Drives the frontend's Live/Aging/Stale provenance pill.
+
+  ---- Flat Query-Param Endpoints ----
+
+  A parallel, flatter set of endpoints that take plain query parameters
+  (typically lat/lon or region + crop) rather than path segments. They wrap
+  the same engine and ML code as the endpoints above.
+
+  5.51 GET  /api/crop      Ranked crop suggestions with expected profit, risk
+                           score, and ML confidence.
+  5.52 POST /api/crop      POST wrapper over the same recommendation logic.
+  5.53 GET  /api/yield     Yield in kg/acre with 95% confidence intervals and
+                           agronomic drivers.
+  5.54 POST /api/profit    Expected profit, input expenses, and ROI.
+  5.55 GET  /api/irrigation  Week-by-week scheduling parameters + reasoning.
+  5.56 GET  /api/fertilizer  Replenishment dosage from soil NPK indicators.
+  5.57 GET  /api/soil        Soil attributes mapped to region coordinates.
+  5.58 GET  /api/weather     Meteorological averages and severe IMD alerts.
+  5.59 GET  /api/market      Commodity averages and price volatility risk.
+
+  Note the collision in shape: /api/soil and /api/weather here are the flat
+  query-param versions, distinct from /api/soil/{region_id} and
+  /api/weather/{region_id} in 5.4-5.5, which come from the data router.
 
 
 6. DATA PIPELINE
 ================================================================================
 
-  CSV Files (source of truth)
-       |
-       v
-  _load_csv() / _load_crop_parameters() -- cached in memory at first call
-       |
+  Live fetchers (optional)                CSV seed files (always present)
+  data_ingestion/fetchers/                dataset/*.csv
+  SoilGrids, Open-Meteo, agmarknet,            |
+  NASA POWER, IMD, Bhuvan, Earth Engine        |
+       |                                       |
+       +------> @cached (data_ingestion/cache.py, file + memory layers)
+                        |
+                        v
+       utils/csv_cache.py -- shared mtime-aware CSV cache with indexes
+                        |
        +---> engine/simulator.py      (uses crop_parameters, for simulation)
        +---> ml/predict.py            (uses all CSVs for predictions)
        +---> ml/train_models.py       (uses all CSVs for model training)
@@ -342,23 +591,81 @@
   ML Models (.joblib files in ml/models/)
        |
        v
-  API Endpoints (backend/main.py) -- serve results as JSON
+  API Endpoints (backend/main.py + backend/routers/data.py) -- JSON out
+       |
+       v
+  utils/provenance.py -> GET /api/data-freshness -> frontend freshness pill
+
+  Because the live fetchers are optional, any figure may be coming from a seed
+  CSV rather than an upstream API. That is exactly what /api/data-freshness and
+  the frontend's Live/Aging/Stale pill exist to disclose.
 
 
-7. CROPS SUPPORTED (8)
+7. CROPS SUPPORTED (32)
 ================================================================================
 
-  rice, wheat, maize, sugarcane, cotton, pulses, groundnut, soybean
+  From dataset/crop_parameters.csv. The season column is the crop's own
+  season string, which is not always a single season:
 
-  Seasons: kharif (Jun-Oct), rabi (Nov-Mar), annual (sugarcane)
+    Kharif        (14)  arhar, bajra, chilli, cotton, ginger, groundnut, jute,
+                        paddy_basmati, ragi, rice, soybean, tobacco, turmeric,
+                        urad
+    Rabi           (5)  barley, mustard, onion, potato, wheat
+    Kharif/Rabi    (4)  jowar, maize, sunflower, tomato
+    Kharif/Zaid    (1)  moong
+    Rabi/Kharif    (1)  pulses
+    Perennial      (5)  cashew, coconut, coffee, mango, tea
+    Annual         (2)  banana, sugarcane
+
+  Season windows: kharif (Jun-Oct), rabi (Nov-Mar), zaid (Mar-Jun).
+
+  Note that the 32 crops here are the planning catalogue. Other parts of the
+  stack cover narrower sets: the recommendation model has 12 classes, MSP data
+  covers 18 crops, the disease classifier covers 18 classes across 4 crops
+  (maize, potato, soybean, tomato), and frontend/offline-simulator.js carries
+  its own hard-coded table of 10 crops for offline use.
 
 
-8. REGIONS SUPPORTED (3)
+8. REGIONS SUPPORTED (30)
 ================================================================================
 
-  mp_sehore    - Sehore, Madhya Pradesh (Black cotton soil, pH 7.2)
-  up_lucknow   - Lucknow, Uttar Pradesh (Alluvial soil, pH 7.5)
-  mh_pune      - Pune, Maharashtra (Laterite soil, pH 6.5)
+  30 distinct region_ids in dataset/soil.csv (51 rows total — most regions have
+  more than one soil profile). GET /api/regions derives its list from this file.
+
+    ap_guntur             black_cotton / red_sandy        pH 6.7-7.6
+    assam_nagaon          alluvial / red_loam             pH 5.6-5.8
+    bihar_patna           alluvial / silt_loam            pH 7.1-7.4
+    chhattisgarh_raipur   alluvial / red_yellow           pH 6.3-6.9
+    goa_north             laterite                        pH 5.6
+    guj_anand             alluvial                        pH 7.5
+    guj_rajkot            black_medium                    pH 7.5
+    haryana_karnal        alluvial / sandy_loam           pH 7.4-7.7
+    hp_shimla             brown_hill / mountain_loam      pH 6.1-6.4
+    jharkhand_ranchi      laterite / red_yellow           pH 5.5-5.8
+    jk_pulwama            alluvial / mountain_loam        pH 6.6-7.0
+    kar_belagavi          black_medium / red_loam         pH 6.5-7.2
+    kar_mysuru            red_loam                        pH 6.4
+    kerala_palakkad       laterite / red_loam             pH 5.9-6.3
+    mh_nashik             black_medium / red_laterite     pH 6.6-7.3
+    mh_pune               black_cotton / red_laterite     pH 6.5-7.4
+    mh_yavatmal           black_cotton                    pH 7.5
+    mp_indore             black_cotton                    pH 7.4
+    mp_sehore             black_cotton / clay_loam        pH 7.0-7.3
+    odisha_cuttack        alluvial_clay / laterite        pH 6.2-7.2
+    punjab_ludhiana       alluvial / sandy_clay_loam      pH 7.4-7.6
+    rajasthan_jaipur      loamy_sand / sandy              pH 7.6-7.8
+    telangana_medak       red_loam / sandy_loam           pH 6.5-6.8
+    tn_coimbatore         black_medium / red_sandy        pH 6.6-7.4
+    tn_thanjavur          alluvial_clay                   pH 7.6
+    tripura_west          alluvial                        pH 5.9
+    uk_udhamsinghnagar    silt_loam / tarai_alluvial      pH 6.9-7.1
+    up_lucknow            alluvial / silt_loam            pH 7.2-7.5
+    up_varanasi           alluvial                        pH 7.3
+    wb_bardhaman          alluvial / clay_loam            pH 6.8-7.0
+
+  weather.csv covers the same 30 regions (180 region x season rows).
+  frontend/farm-state.js carries lat/lon centroids for all 30 so a drawn farm
+  boundary can be matched to a region offline, with no network call.
 
 
 9. KEY ALGORITHMS & FORMULAS
@@ -401,18 +708,27 @@
 10. HOW TO RUN
 ================================================================================
 
-  # Install dependencies
+  # Install dependencies (scikit-learn, numpy, joblib and pandas are already
+  # pinned in requirements.txt — no extra pip install needed)
   pip install -r requirements.txt
-  pip install scikit-learn numpy joblib
 
-  # Train ML models (one-time, or call POST /api/ml/train)
+  # (Optional) Validate and rebuild derived datasets
+  python data_ingestion/prepare_data.py
+
+  # (Optional) Retrain the 3 tabular ML models. Trained .joblib artifacts are
+  # already committed under ml/models/, so this is not required to run the app.
   python -m ml.train_models
 
   # Start server
-  python backend/main.py
+  uvicorn backend.main:app --reload --port 8000
+  # or: python backend/main.py   (runs uvicorn on 0.0.0.0:8000, no reload)
+
   # Server runs at http://localhost:8000
   # Swagger docs at http://localhost:8000/docs
-  # Frontend at http://localhost:8000/
+  # Frontend at http://localhost:8000/  (FastAPI mounts frontend/ at /)
+
+  # Tests
+  pytest -q tests
 
 ================================================================================
 11. TECH STACK & ARCHITECTURE DECISIONS
@@ -421,9 +737,11 @@
 Backend & API:
 - Python 3.10+ & FastAPI Core: Chosen for high-performance async capabilities (Uvicorn), built-in data validation (Pydantic models), automatic OpenAPI (Swagger) documentation, and seamless integration with Python's data science ecosystem.
 
-Frontend Single Page Application (SPA):
-- Vanilla JavaScript, HTML5, Tailwind CSS (CDN), & Chart.js: Chosen to maintain a strict "zero build pipeline" (No React/Node/Webpack dependencies). This ensures the app is extremely lightweight, instantaneously deployable via FastAPI static mounting, and capable of rendering complex visualizations (Chart.js Radar/Doughnut) securely offline or in low-bandwidth zones. 
-- UI Aesthetic: "Earthy Claymorphism" was utilized to ensure a tactical, friendly, "field journal" feel that departs from sterile B2B SaaS norms, focusing deeply on farmer accessibility via Lucide iconography and clear typographic hierarchy (Fraunces + Quicksand).
+Frontend (multi-page static site, not an SPA):
+- Vanilla JavaScript, HTML5, a hand-written CSS design system, & Chart.js: Chosen to maintain a strict "zero build pipeline" (No React/Node/Webpack dependencies). This ensures the app is extremely lightweight, instantaneously deployable via FastAPI static mounting, and capable of rendering complex visualizations (Chart.js Radar/Doughnut) securely offline or in low-bandwidth zones.
+- Styling is deliberately framework-free. There is NO Tailwind and no CSS build step: the entire design system is ~110 KB of hand-written CSS custom properties and component classes in `frontend/style.css`. Dark mode is a `html[data-theme="dark"]` token flip, with the dark overrides injected by `toolbar.js`. The only remote stylesheet is the Google Fonts link.
+- Seven separate HTML pages (index, dashboard, marketplace, gyan-seva, book-a-tractor, farm-boundary, login) each load their own `<script defer>` set; there is no client-side router.
+- UI Aesthetic: "Earthy Claymorphism" was utilized to ensure a tactical, friendly, "field journal" feel that departs from sterile B2B SaaS norms, focusing deeply on farmer accessibility via hand-inlined SVG icons (no icon library) and clear typographic hierarchy (Fraunces display + Inter body).
 
 Machine Learning & Simulation Engine:
 - Scikit-Learn (RandomForest, GradientBoosting), Numpy, Joblib: Chosen because ensemble tree-based models elegantly handle complex, non-linear environmental relationships (like how N/P/K and Rainfall interplay) without requiring the massive overhead or latency of Deep Learning neural networks.
@@ -436,7 +754,7 @@ Data Persistence:
 ================================================================================
 
 Q1. Why did you choose Vanilla JS over modern frameworks like React or Angular?
-A1: We wanted this MVP to be as deployable and dependency-free as possible. Avoiding a node_modules build pipeline means the entire application runs natively out of a basic Python environment. It loads incredibly fast, ensuring high performance in low-connectivity rural zones, while vanilla JS ES6 class structures (ApiClient, AppState) neatly replicate framework capabilities.
+A1: We wanted this MVP to be as deployable and dependency-free as possible. Avoiding a node_modules build pipeline means the entire application runs natively out of a basic Python environment. It loads incredibly fast, ensuring high performance in low-connectivity rural zones, while a shared `window.MM` namespace (mm-core.js) plus per-page IIFE modules give us the state management, formatting and cross-page utilities a framework would otherwise provide. A service worker precaches the shell and `offline-simulator.js` keeps the simulate tool usable with no backend at all.
 
 Q2. How does the deterministic Simulation Engine work alongside the Machine Learning models?
 A2: The Core Engine handles deterministic logic (fixed input costs, baseline constraints, basic multipliers), while the ML models sit on top of it to introduce real-world variance. The ML algorithms predict the yield based on complex historic weather and soil feature interactions, and evaluate risk scores (Price Volatility, Pest, Drought) based on prior disaster logs. 
@@ -453,7 +771,7 @@ Q4. How scalable is the current CSV database approach?
 A4: CSV is used strictly as a structural MVP scaffolding. Because we pipe data reads through internal helper functions and enforce strong typing via FastAPI's Pydantic Data Models, migrating to a robust PostgreSQL or MongoDB instance later requires almost zero rewrites of the business logic or frontend APIs — we only need to swap the driver in our helper methods.
 
 Q5. How does the system generate "Smart Recommendations"?
-A5: When a user enters their region and budget, the system routes these inputs through our ML-powered `recommend_crops` matrix. It simulates the profitability, calculates the predictive risk, assigns a 'Smart Score' balancing ROI against agricultural feasibility for the season, and serves the top 3 safest and most profitable choices directly to the Farm Setup UI.
+A5: When a user enters their region and budget, the system routes these inputs through our ML-powered `recommend_crops` matrix. It simulates the profitability, calculates the predictive risk, assigns a 'Smart Score' balancing ROI against agricultural feasibility for the season, and serves the top-ranked choices back to the "Smart recommend" tool on the dashboard, where mm-enhance.js adds a per-row "Why this crop?" breakdown of the contributing factors.
 
 ================================================================================
                           END OF OVERVIEW
