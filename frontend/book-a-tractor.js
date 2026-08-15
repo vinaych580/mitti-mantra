@@ -502,7 +502,8 @@
     // Animate bars once the browser has painted them
     requestAnimationFrame(() => requestAnimationFrame(() => {
       grid.querySelectorAll('.perf-bar__fill').forEach((el) => {
-        el.style.width = el.dataset.target + '%';
+        const pct = Math.max(0, Math.min(100, Number(el.dataset.target) || 0));
+        el.style.transform = `scaleX(${pct / 100})`;
       });
     }));
   }

@@ -754,7 +754,7 @@
             <div class="kpi__sub">ROI ${PCT(top.roi_percent)}</div></div>
         </div>
 
-        <div class="alert alert--green" style="margin-top:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--brand-soft);border-left:4px solid var(--brand);">
+        <div class="alert alert--green" style="margin-top:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--brand-soft);border:1px solid color-mix(in srgb, var(--brand) 35%, transparent);">
           <div class="alert__body" style="color:var(--brand-deep);">
             <strong>🌾 Ready to sell?</strong> List ${cropLabel(top.crop_id)} on the Marketplace once it's harvested — buyers can see it alongside real mandi price context.
           </div>
@@ -762,7 +762,7 @@
         </div>
 
         ${top.reasons ? `
-        <div class="alert alert--green" style="margin-top: 16px; border-left: 4px solid var(--brand); background: var(--brand-soft);">
+        <div class="alert alert--green" style="margin-top: 16px; border:1px solid color-mix(in srgb, var(--brand) 35%, transparent); background: var(--brand-soft);">
           <div class="alert__body" style="color: var(--brand-deep);">
             <strong>Agronomic suitability & reasoning:</strong>
             <ul style="margin: 8px 0 0 16px; padding: 0;">
@@ -934,7 +934,7 @@
         </div>
 
         ${r.intelligence_report ? `
-        <div class="alert alert--info" style="margin-top: 16px; border-left: 4px solid var(--brand); background: var(--brand-soft);">
+        <div class="alert alert--info" style="margin-top: 16px; border:1px solid color-mix(in srgb, var(--brand) 35%, transparent); background: var(--brand-soft);">
           <div class="alert__body" style="color: var(--brand-deep);">
             <strong>Yield Model Explainability Drivers:</strong>
             <div style="font-size: 0.95rem; margin-top: 4px; font-weight: 600;">${r.intelligence_report.uncertainty_range}</div>
@@ -1471,7 +1471,7 @@
         </div>
 
         ${r.reasons ? `
-        <div class="alert alert--green" style="margin-top: 16px; border-left: 4px solid var(--brand); background: var(--brand-soft);">
+        <div class="alert alert--green" style="margin-top: 16px; border:1px solid color-mix(in srgb, var(--brand) 35%, transparent); background: var(--brand-soft);">
           <div class="alert__body" style="color: var(--brand-deep);">
             <strong>Irrigation Intelligence Reasoning:</strong>
             <ul style="margin: 8px 0 0 16px; padding: 0;">
@@ -1551,7 +1551,7 @@
         </div>
 
         ${r.reasons ? `
-        <div class="alert alert--green" style="margin-top: 16px; border-left: 4px solid var(--brand); background: var(--brand-soft);">
+        <div class="alert alert--green" style="margin-top: 16px; border:1px solid color-mix(in srgb, var(--brand) 35%, transparent); background: var(--brand-soft);">
           <div class="alert__body" style="color: var(--brand-deep);">
             <strong>Fertilizer Application guidelines & timing:</strong>
             <ul style="margin: 8px 0 0 16px; padding: 0;">
@@ -2196,7 +2196,7 @@
           </div>
         </div>
 
-        <div class="alert alert--green" style="margin-top: 20px; border-left: 4px solid var(--brand); background: var(--brand-soft);">
+        <div class="alert alert--green" style="margin-top: 20px; border:1px solid color-mix(in srgb, var(--brand) 35%, transparent); background: var(--brand-soft);">
           <div class="alert__body" style="color: var(--brand-deep);">
             <strong>ML Robustness Stress Test Diagnostics:</strong>
             <ul style="margin: 8px 0 0 16px; padding: 0; font-size: 0.85rem;">
@@ -2598,7 +2598,7 @@
       </div>`).join('');
 
     return `
-      <div class="alert alert--green" style="margin-top:20px;border-left:4px solid var(--brand);background:var(--brand-soft);">
+      <div class="alert alert--green" style="margin-top:20px;border:1px solid color-mix(in srgb, var(--brand) 35%, transparent);background:var(--brand-soft);">
         <div class="alert__body" style="color:var(--brand-deep);">
           <strong>${plan.headline}</strong>
         </div>
@@ -2742,7 +2742,7 @@
           </div>`}
 
           ${subsidySchemes.length ? `
-          <div class="alert alert--green" style="margin-top: 20px; border-left: 4px solid var(--brand); background: var(--brand-soft);">
+          <div class="alert alert--green" style="margin-top: 20px; border:1px solid color-mix(in srgb, var(--brand) 35%, transparent); background: var(--brand-soft);">
             <div class="alert__body" style="color: var(--brand-deep);">
               <strong>Eligible Subsidy Schemes:</strong>
               <ul style="margin: 8px 0 0 16px; padding: 0; font-size: 0.85rem; line-height: 1.4;">
