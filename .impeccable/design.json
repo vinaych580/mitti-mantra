@@ -1,0 +1,242 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-14T00:00:00.000Z",
+  "title": "Design System: Mitti Mantra",
+  "extensions": {
+    "colorMeta": {
+      "brand": {
+        "role": "primary",
+        "displayName": "Leaf Green",
+        "canonical": "#2f6b3a",
+        "tonalRamp": ["oklch(20% 0.05 148)", "oklch(30% 0.07 148)", "oklch(40% 0.08 148)", "oklch(50% 0.09 148)", "oklch(62% 0.09 148)", "oklch(74% 0.07 148)", "oklch(86% 0.04 148)", "oklch(95% 0.02 148)"]
+      },
+      "brand-deep": {
+        "role": "primary",
+        "displayName": "Deep Leaf",
+        "canonical": "#1f4d28",
+        "tonalRamp": ["oklch(16% 0.04 148)", "oklch(25% 0.06 148)", "oklch(34% 0.07 148)", "oklch(45% 0.08 148)", "oklch(57% 0.08 148)", "oklch(70% 0.06 148)", "oklch(84% 0.04 148)", "oklch(94% 0.02 148)"]
+      },
+      "brand-soft": {
+        "role": "primary",
+        "displayName": "Leaf Wash",
+        "canonical": "#e8f3ea",
+        "tonalRamp": ["oklch(22% 0.02 148)", "oklch(33% 0.02 148)", "oklch(44% 0.02 148)", "oklch(56% 0.02 148)", "oklch(68% 0.02 148)", "oklch(80% 0.02 148)", "oklch(90% 0.02 148)", "oklch(96% 0.01 148)"]
+      },
+      "accent": {
+        "role": "secondary",
+        "displayName": "Wheat Gold",
+        "canonical": "#c88a3a",
+        "tonalRamp": ["oklch(22% 0.05 70)", "oklch(32% 0.07 70)", "oklch(43% 0.09 70)", "oklch(54% 0.10 70)", "oklch(66% 0.10 70)", "oklch(78% 0.08 70)", "oklch(88% 0.05 70)", "oklch(96% 0.02 70)"]
+      },
+      "accent-soft": {
+        "role": "secondary",
+        "displayName": "Wheat Wash",
+        "canonical": "#f7ecd7",
+        "tonalRamp": ["oklch(24% 0.02 70)", "oklch(35% 0.03 70)", "oklch(46% 0.03 70)", "oklch(58% 0.03 70)", "oklch(70% 0.03 70)", "oklch(82% 0.03 70)", "oklch(91% 0.02 70)", "oklch(97% 0.01 70)"]
+      },
+      "clay": {
+        "role": "tertiary",
+        "displayName": "Soil Clay",
+        "canonical": "#a5562a",
+        "tonalRamp": ["oklch(20% 0.06 50)", "oklch(29% 0.08 50)", "oklch(39% 0.10 50)", "oklch(50% 0.11 50)", "oklch(62% 0.11 50)", "oklch(74% 0.08 50)", "oklch(86% 0.05 50)", "oklch(95% 0.02 50)"]
+      },
+      "sky": {
+        "role": "tertiary",
+        "displayName": "Monsoon Blue",
+        "canonical": "#6ea7c7",
+        "tonalRamp": ["oklch(22% 0.04 232)", "oklch(33% 0.05 232)", "oklch(44% 0.06 232)", "oklch(55% 0.07 232)", "oklch(67% 0.07 232)", "oklch(78% 0.05 232)", "oklch(88% 0.03 232)", "oklch(96% 0.01 232)"]
+      },
+      "bg": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "#faf6ef",
+        "tonalRamp": ["oklch(18% 0.008 82)", "oklch(28% 0.009 82)", "oklch(40% 0.010 82)", "oklch(52% 0.011 82)", "oklch(64% 0.012 82)", "oklch(76% 0.012 82)", "oklch(88% 0.012 82)", "oklch(97% 0.010 82)"]
+      },
+      "bg-soft": {
+        "role": "neutral",
+        "displayName": "Soft Paper",
+        "canonical": "#f4ede0",
+        "tonalRamp": ["oklch(18% 0.010 82)", "oklch(29% 0.012 82)", "oklch(41% 0.014 82)", "oklch(53% 0.016 82)", "oklch(65% 0.018 82)", "oklch(77% 0.018 82)", "oklch(88% 0.016 82)", "oklch(96% 0.012 82)"]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Surface White",
+        "canonical": "#ffffff",
+        "tonalRamp": ["oklch(18% 0 0)", "oklch(29% 0 0)", "oklch(41% 0 0)", "oklch(53% 0 0)", "oklch(65% 0 0)", "oklch(77% 0 0)", "oklch(89% 0 0)", "oklch(100% 0 0)"]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Soil Ink",
+        "canonical": "#1d1a15",
+        "tonalRamp": ["oklch(15% 0.008 80)", "oklch(26% 0.009 80)", "oklch(38% 0.010 80)", "oklch(50% 0.010 80)", "oklch(62% 0.010 80)", "oklch(74% 0.009 80)", "oklch(86% 0.008 80)", "oklch(95% 0.006 80)"]
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Soft Ink",
+        "canonical": "#4a4339",
+        "tonalRamp": ["oklch(16% 0.010 80)", "oklch(27% 0.012 80)", "oklch(39% 0.013 80)", "oklch(51% 0.013 80)", "oklch(63% 0.012 80)", "oklch(75% 0.011 80)", "oklch(87% 0.009 80)", "oklch(96% 0.006 80)"]
+      },
+      "ink-faint": {
+        "role": "neutral",
+        "displayName": "Faint Ink",
+        "canonical": "#8a8376",
+        "tonalRamp": ["oklch(17% 0.010 82)", "oklch(28% 0.012 82)", "oklch(40% 0.014 82)", "oklch(52% 0.015 82)", "oklch(64% 0.015 82)", "oklch(76% 0.013 82)", "oklch(88% 0.010 82)", "oklch(96% 0.007 82)"]
+      },
+      "dark-bg": {
+        "role": "neutral",
+        "displayName": "Night Soil (dark theme page)",
+        "canonical": "#141110",
+        "tonalRamp": ["oklch(12% 0.006 50)", "oklch(20% 0.007 50)", "oklch(30% 0.008 50)", "oklch(42% 0.009 50)", "oklch(55% 0.009 50)", "oklch(68% 0.008 50)", "oklch(82% 0.007 50)", "oklch(94% 0.005 50)"]
+      },
+      "dark-surface": {
+        "role": "neutral",
+        "displayName": "Night Surface (dark theme card)",
+        "canonical": "#23201c",
+        "tonalRamp": ["oklch(14% 0.007 75)", "oklch(23% 0.008 75)", "oklch(33% 0.009 75)", "oklch(45% 0.010 75)", "oklch(57% 0.010 75)", "oklch(70% 0.009 75)", "oklch(83% 0.007 75)", "oklch(95% 0.005 75)"]
+      },
+      "dark-ink": {
+        "role": "neutral",
+        "displayName": "Lamplight (dark theme text)",
+        "canonical": "#f3ece0",
+        "tonalRamp": ["oklch(18% 0.010 80)", "oklch(29% 0.012 80)", "oklch(41% 0.014 80)", "oklch(53% 0.015 80)", "oklch(65% 0.016 80)", "oklch(77% 0.016 80)", "oklch(88% 0.014 80)", "oklch(96% 0.010 80)"]
+      },
+      "danger": {
+        "role": "tertiary",
+        "displayName": "Alert Red",
+        "canonical": "#8b2f2f",
+        "tonalRamp": ["oklch(18% 0.07 25)", "oklch(27% 0.09 25)", "oklch(37% 0.11 25)", "oklch(48% 0.13 25)", "oklch(60% 0.13 25)", "oklch(73% 0.10 25)", "oklch(86% 0.06 25)", "oklch(95% 0.02 25)"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Page-owning h1. One per page, in the hero. Fraunces at tightened 1.08 leading." },
+      "headline": { "displayName": "Headline", "purpose": "Section openers that carry the narrative spine of a long page." },
+      "title": { "displayName": "Title", "purpose": "Card and tool headings. Steps to weight 600 because small Fraunces needs it." },
+      "body": { "displayName": "Body", "purpose": "All prose, set in Soft Ink rather than full Ink. Inter." },
+      "label": { "displayName": "Label", "purpose": "KPI labels and preview captions. Uppercase, wide-tracked, Soft Ink or darker." },
+      "eyebrow": { "displayName": "Eyebrow", "purpose": "Section kickers in Leaf Green, prefixed by a 24px leaf-green rule." }
+    },
+    "shadows": [
+      { "name": "resting", "value": "0 1px 2px rgba(29, 26, 21, .06), 0 2px 6px rgba(29, 26, 21, .04)", "purpose": "Default for cards and light buttons. Separates without lifting." },
+      { "name": "raised", "value": "0 4px 12px rgba(29, 26, 21, .08), 0 12px 30px rgba(29, 26, 21, .06)", "purpose": "Hover state for cards and light buttons; resting state for genuinely floating panels." },
+      { "name": "lifted", "value": "0 10px 40px rgba(29, 26, 21, .14), 0 30px 80px rgba(29, 26, 21, .08)", "purpose": "Modals, drawers, and the chat widget. Reserved — this tier is what makes an overlay read as an overlay." },
+      { "name": "brand-glow", "value": "0 10px 24px rgba(47, 107, 58, .28)", "purpose": "Primary button at rest. A green-tinted shadow, never neutral." },
+      { "name": "brand-glow-hover", "value": "0 14px 32px rgba(47, 107, 58, .35)", "purpose": "Primary button on hover, paired with a -2px lift." },
+      { "name": "focus-ring", "value": "0 0 0 3px rgba(47, 107, 58, .15)", "purpose": "Form control focus. Replaces the removed native outline — never omit both." }
+    ],
+    "motion": [
+      { "name": "ease", "value": "cubic-bezier(.22, 1, .36, 1)", "purpose": "The single easing curve for the whole system. Fast out, long settle." },
+      { "name": "dur", "value": "0.5s", "purpose": "Default transition duration for surfaces, backgrounds, and shadows." },
+      { "name": "dur-control", "value": "0.3s", "purpose": "Faster duration for controls and icon nudges, where 0.5s feels sluggish." },
+      { "name": "dur-micro", "value": "0.2s", "purpose": "Chip hover and other small lifts." },
+      { "name": "reduced-motion", "value": "0.01ms", "purpose": "Global override under prefers-reduced-motion: reduce. All animation and transition durations collapse; smooth scrolling is disabled." }
+    ],
+    "breakpoints": [
+      { "name": "primary-stack", "value": "860px" },
+      { "name": "small-phone", "value": "640px" },
+      { "name": "tablet", "value": "1080px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The brand action. Fully-round pill in Leaf Green carrying its own green-tinted glow; lifts and deepens on hover.",
+      "html": "<button class=\"ds-btn-primary\">Explore your land <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14M13 5l7 7-7 7\"/></svg></button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 10px; padding: 14px 26px; border-radius: 999px; border: none; font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif; font-size: .95rem; font-weight: 600; white-space: nowrap; cursor: pointer; background: var(--brand, #2f6b3a); color: #fff; box-shadow: 0 10px 24px rgba(47,107,58,.28); transition: transform .5s cubic-bezier(.22,1,.36,1), background .5s cubic-bezier(.22,1,.36,1), box-shadow .5s cubic-bezier(.22,1,.36,1); } .ds-btn-primary svg { width: 16px; height: 16px; transition: transform .3s cubic-bezier(.22,1,.36,1); } .ds-btn-primary:hover { background: var(--brand-deep, #1f4d28); transform: translateY(-2px); box-shadow: 0 14px 32px rgba(47,107,58,.35); } .ds-btn-primary:hover svg { transform: translateX(4px); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 10px 24px rgba(47,107,58,.28), 0 0 0 3px rgba(47,107,58,.35); }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "The secondary action. Hairline-bordered pill that inverts fully to Soil Ink on hover rather than merely tinting.",
+      "html": "<button class=\"ds-btn-ghost\">Try demo</button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; gap: 10px; padding: 14px 26px; border-radius: 999px; font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif; font-size: .95rem; font-weight: 600; white-space: nowrap; cursor: pointer; background: transparent; color: var(--ink, #1d1a15); border: 1.5px solid rgba(29,26,21,.14); transition: background .5s cubic-bezier(.22,1,.36,1), border-color .5s cubic-bezier(.22,1,.36,1), color .5s cubic-bezier(.22,1,.36,1); } .ds-btn-ghost:hover { border-color: var(--ink, #1d1a15); background: var(--ink, #1d1a15); color: #fff; } .ds-btn-ghost:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(47,107,58,.25); }"
+    },
+    {
+      "name": "Feature Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "The bento card. 22px radius on Surface White with a hairline border and a 3px accent bar that scales in from the left on hover.",
+      "html": "<article class=\"ds-card\"><span class=\"ds-card__eyebrow\">Market</span><h3 class=\"ds-card__title\">Know when to sell</h3><p class=\"ds-card__body\">Six-month price forecasts and a best-time-to-sell advisor built on real mandi history.</p></article>",
+      "css": ".ds-card { position: relative; overflow: hidden; display: flex; flex-direction: column; padding: 28px; border-radius: 22px; background: var(--surface, #fff); border: 1px solid rgba(29,26,21,.06); box-shadow: 0 1px 2px rgba(29,26,21,.06), 0 2px 6px rgba(29,26,21,.04); transition: transform .5s cubic-bezier(.22,1,.36,1), box-shadow .5s cubic-bezier(.22,1,.36,1), border-color .5s cubic-bezier(.22,1,.36,1); } .ds-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent, #c88a3a); transform: scaleX(0); transform-origin: left; transition: transform .5s cubic-bezier(.22,1,.36,1); z-index: 2; } .ds-card:hover { transform: translateY(-4px); box-shadow: 0 4px 12px rgba(29,26,21,.08), 0 12px 30px rgba(29,26,21,.06); } .ds-card:hover::before { transform: scaleX(1); } .ds-card__eyebrow { font-family: 'Inter', -apple-system, sans-serif; font-size: .78rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--accent, #c88a3a); margin-bottom: 12px; } .ds-card__title { font-family: 'Fraunces', 'Playfair Display', Georgia, serif; font-size: 1.5rem; font-weight: 600; line-height: 1.08; letter-spacing: -.02em; color: var(--ink, #1d1a15); margin: 0 0 8px; } .ds-card__body { font-family: 'Inter', -apple-system, sans-serif; font-size: 1rem; line-height: 1.6; color: var(--ink-soft, #4a4339); margin: 0; }"
+    },
+    {
+      "name": "KPI Tile",
+      "kind": "custom",
+      "refersTo": "kpi",
+      "description": "Signature component. The dashboard readout — Soft Paper tile with an uppercase label over a large value; semantic variants re-tint the whole tile.",
+      "html": "<div class=\"ds-kpi ds-kpi--good\"><div class=\"ds-kpi__lbl\">Net profit</div><div class=\"ds-kpi__val\">₹1.24 L</div><div class=\"ds-kpi__sub\">ROI 62% · 3 acres</div></div>",
+      "css": ".ds-kpi { padding: 16px; border-radius: 14px; background: var(--bg-soft, #f4ede0); overflow: hidden; min-width: 0; transition: transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s cubic-bezier(.22,1,.36,1); } .ds-kpi:hover { transform: translateY(-2px); box-shadow: 0 1px 2px rgba(29,26,21,.06), 0 2px 6px rgba(29,26,21,.04); } .ds-kpi__lbl { font-family: 'Inter', -apple-system, sans-serif; font-size: .72rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft, #4a4339); } .ds-kpi__val { font-family: 'Inter', -apple-system, sans-serif; font-size: 1.4rem; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--ink, #1d1a15); margin-top: 6px; } .ds-kpi__sub { font-family: 'Inter', -apple-system, sans-serif; font-size: .8rem; color: var(--ink-soft, #4a4339); margin-top: 4px; overflow-wrap: anywhere; } .ds-kpi--good { background: var(--brand-soft, #e8f3ea); } .ds-kpi--good .ds-kpi__val { color: var(--brand-deep, #1f4d28); } .ds-kpi--warn { background: var(--accent-soft, #f7ecd7); } .ds-kpi--warn .ds-kpi__val { color: var(--clay, #a5562a); }"
+    },
+    {
+      "name": "Input Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Form control that fills on focus — Paper at rest, white when focused, with a green border and 3px glow replacing the native outline.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-field__lbl\">Area (acres)</span><input class=\"ds-field__input\" type=\"text\" value=\"3\"></label>",
+      "css": ".ds-field { display: block; } .ds-field__lbl { display: block; font-family: 'Inter', -apple-system, sans-serif; font-size: .72rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft, #4a4339); margin-bottom: 8px; } .ds-field__input { width: 100%; padding: 12px 14px; border-radius: 8px; border: 1.5px solid rgba(29,26,21,.1); background: var(--bg, #faf6ef); font-family: 'Inter', -apple-system, sans-serif; font-size: .95rem; color: var(--ink, #1d1a15); transition: border-color .25s cubic-bezier(.22,1,.36,1), background .25s cubic-bezier(.22,1,.36,1), box-shadow .25s cubic-bezier(.22,1,.36,1); } .ds-field__input:focus { outline: none; border-color: var(--brand, #2f6b3a); background: #fff; box-shadow: 0 0 0 3px rgba(47,107,58,.15); }"
+    },
+    {
+      "name": "Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Metadata and filter pill in Soft Paper. Lifts 1px into the resting shadow on hover. Not a button — actions use pill buttons.",
+      "html": "<span class=\"ds-chip\">Kharif</span>",
+      "css": ".ds-chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; background: var(--bg-soft, #f4ede0); border: 1px solid rgba(29,26,21,.06); font-family: 'Inter', -apple-system, sans-serif; font-size: .76rem; font-weight: 600; color: var(--ink-soft, #4a4339); white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; transition: transform .2s cubic-bezier(.22,1,.36,1), background .2s cubic-bezier(.22,1,.36,1), box-shadow .2s cubic-bezier(.22,1,.36,1); } .ds-chip:hover { transform: translateY(-1px); box-shadow: 0 1px 2px rgba(29,26,21,.06), 0 2px 6px rgba(29,26,21,.04); }"
+    },
+    {
+      "name": "Navigation Bar",
+      "kind": "nav",
+      "refersTo": "nav",
+      "description": "Fixed 72px bar, transparent at page top, gaining a warm paper-tinted blur and hairline underline once scrolled.",
+      "html": "<nav class=\"ds-nav ds-nav--scrolled\"><span class=\"ds-nav__logo\">Mitti Mantra</span><ul class=\"ds-nav__links\"><li><a href=\"#\">Dashboard</a></li><li><a href=\"#\">Marketplace</a></li><li><a href=\"#\">Gyan Seva</a></li></ul></nav>",
+      "css": ".ds-nav { display: flex; align-items: center; gap: 32px; height: 72px; padding: 0 24px; transition: background .5s cubic-bezier(.22,1,.36,1), box-shadow .5s cubic-bezier(.22,1,.36,1); } .ds-nav--scrolled { background: rgba(250,246,239,.85); -webkit-backdrop-filter: saturate(180%) blur(18px); backdrop-filter: saturate(180%) blur(18px); box-shadow: 0 1px 0 rgba(29,26,21,.06); } .ds-nav__logo { font-family: 'Fraunces', 'Playfair Display', Georgia, serif; font-size: 1.15rem; font-weight: 600; letter-spacing: -.02em; color: var(--ink, #1d1a15); } .ds-nav__links { display: flex; gap: 24px; list-style: none; margin: 0; padding: 0; } .ds-nav__links a { font-family: 'Inter', -apple-system, sans-serif; font-size: .92rem; font-weight: 500; color: var(--ink-soft, #4a4339); text-decoration: none; white-space: nowrap; transition: color .3s cubic-bezier(.22,1,.36,1); } .ds-nav__links a:hover { color: var(--ink, #1d1a15); } .ds-nav__links a:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(47,107,58,.25); border-radius: 4px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Field Journal",
+    "overview": "A working notebook kept at the edge of a field — warm paper, a serif hand for the things that matter, and margins filled with numbers earned rather than assumed. The palette is taken from the subject itself: leaf, wheat, soil, monsoon. Nothing here is borrowed from the sterile blue-and-grey vocabulary of B2B SaaS, and that departure is deliberate.\n\nThe register is warm but confident and alive. The grounded palette and paper background do the reassuring; motion, scale, and a disciplined accent do the rest. Surfaces respond when touched — cards lift, buttons rise two pixels, arrows slide forward — so the product reads as something modern and responsive rather than a form that happens to be beige. A farmer making a season-defining decision should feel steadied, not hurried; the interface earns trust by being legible and specific, never by shouting.\n\nThe system serves two very different sessions on the same tokens: a farmer's short, high-stakes visit and an advisor's long comparative one. The resolution is that warmth lives in the shell — paper, radii, serif headings — while the interior stays exact. Numbers are tabular, labels are uppercase and small, and colour carries meaning rather than decoration.",
+    "keyCharacteristics": [
+      "Warm paper ground (#faf6ef), never pure white as the page",
+      "Fraunces serif for headings, Inter for everything operational",
+      "Fully-round pill buttons and generous 22px card radii",
+      "Depth from tonal layering and hairline borders first, shadow as a response to state",
+      "A four-colour agricultural accent set, one accent per context",
+      "Contrast reasoning documented inline in the stylesheet, not improvised"
+    ],
+    "rules": [
+      { "name": "The Legibility Over Palette Rule", "body": "When an accent cannot carry text at the required contrast, the text goes high-contrast and the accent moves to a dot, bar, or border instead. The stylesheet already enforces this in two places and says so in comments: --ink-faint is rejected for small supporting text because it only reaches 3.5:1 on paper, and diagnosis confidence numbers stay --ink because Monsoon Blue on paper is 2.4:1. Colour signals category; it does not get to cost legibility.", "section": "colors" },
+      { "name": "The Paper Ground Rule", "body": "--bg is the page and --surface is what sits on it. A full-bleed white background is a bug, not a style choice — it collapses the tonal stack that this system uses instead of heavy shadows.", "section": "colors" },
+      { "name": "The One Accent Per Context Rule", "body": "A card, tile, or section commits to a single accent from the four (leaf / wheat / clay / monsoon) and expresses it through the --f-accent / --f-soft pair. Mixing two accents inside one component reads as decoration and drops the semantic link between colour and meaning.", "section": "colors" },
+      { "name": "The Serif Stops at the Data Rule", "body": "Fraunces is for headings and hero statements only. Every number, form control, label, table cell, and chip is Inter. A serif quintal figure is a category error — the serif is the voice, not the instrument.", "section": "typography" },
+      { "name": "The Tightened Display Rule", "body": "All Fraunces headings run at 1.08 line-height with -0.02em tracking. Large serif set at default spacing drifts apart and loses the printed quality the North Star depends on.", "section": "typography" },
+      { "name": "The Earned Elevation Rule", "body": "A surface at rest sits at Resting or flat. Raised and Lifted are responses — to hover, to focus, to genuinely floating above the page. A component that ships at Lifted while idle has taken the modal tier for itself.", "section": "elevation" },
+      { "name": "The Warm Shadow Rule", "body": "Every shadow is rgba(29, 26, 21, …) — the ink colour, not black. A neutral grey-black shadow on this paper reads cold immediately and breaks the ground.", "section": "elevation" },
+      { "name": "The Pill and the Panel Rule", "body": "Anything you press is a pill. Anything that holds content is a panel at 14–22px. A square-cornered button or a pill-shaped content card both break the system's most legible convention.", "section": "shapes" },
+      { "name": "The Fill-On-Focus Rule", "body": "An input at rest is Paper; a focused input is white. The field lifts out of the page as you enter it, which is the same earned-elevation logic applied to form controls.", "section": "components" }
+    ],
+    "dos": [
+      "Do build on the Paper ground (#faf6ef) and treat white as a raised surface.",
+      "Do set every heading in Fraunces at 1.08 line-height with -0.02em tracking, and everything operational in Inter.",
+      "Do make buttons fully round (999px) and content containers 14–22px.",
+      "Do give each card or tile exactly one accent via --f-accent / --f-soft.",
+      "Do tint shadows with the ink colour rgba(29,26,21, …), and tint the primary button's glow green.",
+      "Do replace any removed outline with the 3px rgba(47,107,58,.15) focus ring.",
+      "Do use --ink-soft for small supporting text; --ink-faint is for large or decorative text only.",
+      "Do update toolbar.js's dark block whenever you add a component with a hardcoded light surface.",
+      "Do route new motion through --ease (cubic-bezier(.22, 1, .36, 1)) and --dur (.5s)."
+    ],
+    "donts": [
+      "Don't set small text in Monsoon Blue or --ink-faint on paper — 2.4:1 and 3.5:1 respectively. Move the colour to a dot, bar, or border and keep the text high-contrast.",
+      "Don't use pure #000 for text or #fff for the page background.",
+      "Don't ship a component at the Lifted shadow tier while idle; that tier belongs to overlays.",
+      "Don't set numbers, labels, form controls, or table cells in Fraunces.",
+      "Don't mix two accents inside a single card or tile.",
+      "Don't use neutral grey-black shadows — they read cold against the warm ground immediately.",
+      "Don't introduce a new breakpoint when 860px or 640px will do.",
+      "Don't re-enable animation inside prefers-reduced-motion: reduce.",
+      "Don't reach for the sterile blue/grey SaaS palette; the agricultural accent set is the identity."
+    ]
+  }
+}

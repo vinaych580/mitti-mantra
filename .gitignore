@@ -49,6 +49,13 @@ Thumbs.db
 .claude/
 .cursor/
 .agents/
+.codex/
+
+# Impeccable: the design system and its project-level rules are tracked
+# (.impeccable/design.json, config.json); per-machine consent and caches are not.
+.impeccable/config.local.json
+.impeccable/hook.cache.json
+.impeccable/live/
 
 # ML training run artifacts
 catboost_info/
