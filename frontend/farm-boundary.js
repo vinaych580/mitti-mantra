@@ -43,6 +43,47 @@
     { attribution: '© OSM © CartoDB', maxZoom: 19, opacity: 0.85 }
   ).addTo(map);
 
+  /* ── Drawing hints ─────────────────────────────────── */
+  // leaflet-draw ships its own English strings, and i18n.js only walks the DOM,
+  // so the live hints shown while drawing — the most important text on this
+  // page — would stay English in hi/te/kn. L.drawLocal is read when a handler
+  // starts, so re-applying it on every language change is enough. The wording
+  // is also touch-first ("tap"), since that is how this page is actually used.
+  const DRAW_STRINGS = {
+    start:  'Tap each corner of your plot.',
+    cont:   'Keep tapping to add corners.',
+    end:    'Tap the first corner again to finish.',
+    rect:   'Drag to draw a rectangle.',
+    finish: 'Finish',
+    cancel: 'Cancel',
+    undo:   'Delete last point',
+  };
+
+  function localiseDrawTooltips() {
+    const lang = window.AgriSimI18n ? window.AgriSimI18n.getLanguage() : 'en';
+    const cat = (window.MM_I18N_CATALOG || {})[lang] || {};
+    const t = (s) => cat[s] || s;
+
+    const poly = L.drawLocal.draw.handlers.polygon.tooltip;
+    poly.start = t(DRAW_STRINGS.start);
+    poly.cont  = t(DRAW_STRINGS.cont);
+    poly.end   = t(DRAW_STRINGS.end);
+    L.drawLocal.draw.handlers.rectangle.tooltip.start = t(DRAW_STRINGS.rect);
+
+    const actions = L.drawLocal.draw.toolbar;
+    actions.finish.text = t(DRAW_STRINGS.finish);
+    actions.finish.title = t(DRAW_STRINGS.finish);
+    actions.actions.text = t(DRAW_STRINGS.cancel);
+    actions.actions.title = t(DRAW_STRINGS.cancel);
+    actions.undo.text = t(DRAW_STRINGS.undo);
+    actions.undo.title = t(DRAW_STRINGS.undo);
+  }
+
+  // i18n-data.js loads after this file, so wait for the document to finish.
+  document.addEventListener('DOMContentLoaded', localiseDrawTooltips);
+  document.addEventListener('mm:lang-changed', localiseDrawTooltips);
+  localiseDrawTooltips();
+
   /* ── Drawing controls ──────────────────────────────── */
   const drawnItems = new L.FeatureGroup().addTo(map);
   const STROKE = '#2f6b3a'; // MittiMantra brand green
@@ -99,6 +140,13 @@
     quickSaveBtn.hidden = !canSave;
   }
 
+  /** Re-run the catalog over freshly injected text; no-op in English. */
+  function retranslate() {
+    if (window.AgriSimI18n && window.AgriSimI18n.getLanguage() !== 'en') {
+      window.AgriSimI18n.retranslate();
+    }
+  }
+
   sheetToggle.addEventListener('click', () => {
     setSheetOpen(!resultEl.classList.contains('is-open'));
   });
@@ -127,6 +175,7 @@
     actionsEl.style.display = 'none';
     setPeek('Draw your plot to see its area', false);
     setSheetOpen(false);
+    retranslate();
   }
 
   /* ── Summary card ──────────────────────────────────── */
@@ -192,6 +241,7 @@
     setPeek(`${d.acres.toFixed(2)} acres${where ? ' · ' + where : ''}`, true);
     // Auto-expand on the first render for a shape, then leave it to the user.
     if (geoState === 'geocoding') setSheetOpen(true);
+    retranslate();
   }
 
 

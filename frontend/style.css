@@ -900,20 +900,10 @@ section {
   --f-soft: #f7e4d5;
 }
 
-/* Top accent bar */
-.feature::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--f-accent);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform .5s var(--ease);
-  z-index: 2;
-}
+/* The card's accent used to wipe across its top edge on hover. Hover already
+   lifts the card, tints its border with --f-accent and lights the spotlight
+   below, so the bar was a third signal for the same state — and an edge bar on
+   every card in a grid is the tell we removed everywhere else. */
 
 /* Pointer-tracked spotlight. Driven by --mx/--my set in site-ui.js,
    and only ever enabled on real hover devices. */
@@ -932,10 +922,6 @@ section {
   transform: translateY(-4px);
   box-shadow: var(--shadow-lg);
   border-color: color-mix(in srgb, var(--f-accent) 22%, transparent);
-}
-
-.feature:hover::before {
-  transform: scaleX(1);
 }
 
 @media (hover: hover) and (pointer: fine) {

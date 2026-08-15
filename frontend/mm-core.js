@@ -71,8 +71,6 @@
     } catch (_) { return null; }
   }
 
-  const ACRE_M2 = 4046.8564224;
-
   const profile = {
     get() {
       let stored = null;
@@ -88,23 +86,15 @@
     set(patch) {
       const next = Object.assign(this.get(), patch || {});
 
-      // Write region/area edits back to the active plot, so a farmer who types
-      // an area into the bar changes the farm itself rather than shadowing it.
+      // Area is measured from the boundary, so it is never writable here — a typed
+      // acreage would contradict the polygon it came from, and nothing could
+      // reconcile the two. The draw page owns it. Region is metadata rather than
+      // geometry, so an override is legitimate and is stored on the plot.
       const plot = activePlot();
       if (plot) {
-        const upd = {};
+        next.area_acres = +Number(plot.acres).toFixed(2);
         if (next.region_id && next.region_id !== plot.region_id) {
-          upd.region_id = next.region_id;
-        }
-        const acres = Number(next.area_acres);
-        if (acres > 0 && Math.abs(acres - Number(plot.acres || 0)) > 0.005) {
-          upd.acres = acres;
-          upd.hectares = +(acres * ACRE_M2 / 10000).toFixed(4);
-          upd.sqm = Math.round(acres * ACRE_M2);
-          upd.areaSource = "manual";   // typed by the user, no longer the polygon's area
-        }
-        if (Object.keys(upd).length) {
-          try { window.FarmState.save(upd); } catch (_) {}
+          try { window.FarmState.save({ region_id: next.region_id }); } catch (_) {}
         }
       }
 
@@ -196,6 +186,9 @@
     padding:7px 14px;font-weight:600;font-size:12.5px;cursor:pointer;}
   .mm-farm-bar__save:hover{background:#1b5e20;}
   .mm-farm-bar__hint{font-size:.7rem;color:#5b6b5b;margin-left:6px;}
+  .mm-farm-bar input[readonly]{background:#f4ede0;color:#4a4339;cursor:default;}
+  .mm-farm-bar__measured{font-size:.62rem;color:#5b6b5b;text-decoration:underline;
+    text-underline-offset:2px;margin-top:1px;}
   /* On phones the four fields wrap to ~290px tall. Sticky, that plus the
      72px fixed nav held 45% of the viewport permanently — so unpin it and
      pack the fields two-up instead. */
@@ -298,7 +291,8 @@
           <option value="kharif">Kharif</option><option value="rabi">Rabi</option><option value="zaid">Zaid</option>
         </select></label>
       <label class="mm-farm-bar__field"><small>Area (acres)</small>
-        <input data-mm="area_acres" type="number" min="0.1" step="0.1"></label>
+        <input data-mm="area_acres" type="number" min="0.1" step="0.1">
+        <a class="mm-farm-bar__measured" href="farm-boundary.html" hidden>measured — edit boundary</a></label>
       <label class="mm-farm-bar__field"><small>Budget / acre (₹)</small>
         <input data-mm="budget_per_acre" type="number" min="0" step="500"></label>
       <span class="mm-farm-bar__hint">Used by every tool & the chatbot</span>
@@ -335,12 +329,17 @@
         const k = el.dataset.mm;
         if (p[k] !== undefined && p[k] !== "") el.value = p[k];
       });
+      // With a boundary drawn, the area is a measurement, not a setting: show it
+      // read-only and point at the page that can actually change it.
       const areaEl = bar.querySelector('[data-mm="area_acres"]');
+      const measuredNote = bar.querySelector(".mm-farm-bar__measured");
       const plot = activePlot();
       if (areaEl) {
-        areaEl.title = plot && plot.areaSource !== "manual"
-          ? "Measured from the boundary you drew. Editing it here updates the plot."
+        areaEl.readOnly = !!plot;
+        areaEl.title = plot
+          ? "Measured from the boundary you drew — edit the boundary to change it."
           : "Area used by every tool.";
+        if (measuredNote) measuredNote.hidden = !plot;
       }
 
       // The region list comes from /api/regions; a plot matched offline (or while
