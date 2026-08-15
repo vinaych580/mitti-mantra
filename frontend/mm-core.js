@@ -186,9 +186,9 @@
     padding:7px 14px;font-weight:600;font-size:12.5px;cursor:pointer;}
   .mm-farm-bar__save:hover{background:#1b5e20;}
   .mm-farm-bar__hint{font-size:.7rem;color:#5b6b5b;margin-left:6px;}
-  .mm-farm-bar input[readonly]{background:#f4ede0;color:#4a4339;cursor:default;}
-  .mm-farm-bar__measured{font-size:.62rem;color:#5b6b5b;text-decoration:underline;
-    text-underline-offset:2px;margin-top:1px;}
+  .mm-farm-bar input[readonly]{background:var(--bg-soft);color:var(--ink-soft);cursor:default;}
+  .mm-farm-bar__measured{font-size:.72rem;color:var(--ink-soft);text-decoration:underline;
+    text-underline-offset:2px;margin-top:2px;}
   /* On phones the four fields wrap to ~290px tall. Sticky, that plus the
      72px fixed nav held 45% of the viewport permanently — so unpin it and
      pack the fields two-up instead. */
