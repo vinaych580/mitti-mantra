@@ -15,6 +15,9 @@
   const savedTheme = localStorage.getItem(THEME_KEY);
   if (savedTheme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
 
+  // Captured from beforeinstallprompt; used by the panel's Install app button.
+  let deferredInstallPrompt = null;
+
   // Track the last focused input field so voice input can target it even after focus shifts to the toolbar.
   let lastActiveInput = null;
   document.addEventListener('focusin', (e) => {
@@ -471,7 +474,12 @@
     mic:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>',
     speak: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10v4a1 1 0 0 0 1 1h3l5 4V5L7 9H4a1 1 0 0 0-1 1z"/><path d="M16 8a5 5 0 0 1 0 8"/><path d="M19 5a9 9 0 0 1 0 14"/></svg>',
     wa:    '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.48A11.94 11.94 0 0 0 12 0C5.37 0 0 5.37 0 12c0 2.11.55 4.16 1.6 5.97L0 24l6.2-1.63A11.96 11.96 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.19-1.24-6.2-3.48-8.52zM12 21.8c-1.86 0-3.68-.5-5.27-1.45l-.38-.22-3.68.96.98-3.59-.25-.37A9.79 9.79 0 0 1 2.2 12C2.2 6.6 6.6 2.2 12 2.2S21.8 6.6 21.8 12 17.4 21.8 12 21.8zm5.53-7.33c-.3-.15-1.79-.88-2.07-.98-.28-.1-.48-.15-.68.15-.2.3-.78.98-.96 1.18-.18.2-.36.22-.66.07-.3-.15-1.27-.47-2.41-1.49-.89-.8-1.5-1.78-1.68-2.08-.18-.3-.02-.47.13-.62.13-.13.3-.36.45-.53.15-.18.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.68-1.63-.93-2.23-.25-.6-.5-.52-.68-.52h-.58c-.2 0-.52.07-.8.37-.28.3-1.07 1.04-1.07 2.53 0 1.49 1.1 2.93 1.25 3.13.15.2 2.16 3.3 5.24 4.63.73.31 1.3.5 1.74.64.73.23 1.39.2 1.91.12.58-.09 1.79-.73 2.04-1.43.25-.7.25-1.3.18-1.43-.07-.13-.27-.2-.57-.35z"/></svg>',
-    pdf:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M12 18v-6"/><path d="M9 15l3 3 3-3"/></svg>'
+    pdf:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M12 18v-6"/><path d="M9 15l3 3 3-3"/></svg>',
+    link:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
+    text:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>',
+    contrast: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20z" fill="currentColor" stroke="none"/></svg>',
+    install: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>',
+    privacy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/></svg>',
   };
 
   /* ---------- Build trigger + popover ----------
@@ -543,6 +551,45 @@
     mkBtn(ICONS.speak, 'Read aloud', toggleSpeak,   'qw-speak');
     mkBtn(ICONS.wa,    'WhatsApp',   shareWhatsApp);
     mkBtn(ICONS.pdf,   'Save PDF',   exportPdf,     'qw-pdf');
+    mkBtn(ICONS.link,  'Copy link',  copyLink);
+
+    // Accessibility — folded in from what used to be a second floating
+    // button (mm-core.js's Tools fab) so there is one settings surface, not two.
+    // Gated on mm-core.js actually being on the page (farm-boundary.html loads
+    // this file without it) so these never appear as dead, throwing buttons.
+    if (window.MM && window.MM.a11y) {
+      const textBtn = mkBtn(ICONS.text, 'Large text', () => {
+        window.MM.a11y.toggle('largeText');
+        textBtn.classList.toggle('active', !!window.MM.a11y.get().largeText);
+      });
+      textBtn.classList.toggle('active', !!window.MM.a11y.get().largeText);
+      const contrastBtn = mkBtn(ICONS.contrast, 'High contrast', () => {
+        window.MM.a11y.toggle('highContrast');
+        contrastBtn.classList.toggle('active', !!window.MM.a11y.get().highContrast);
+      });
+      contrastBtn.classList.toggle('active', !!window.MM.a11y.get().highContrast);
+    }
+
+    // Install (PWA) — stays hidden until the browser offers it.
+    const installBtn = mkBtn(ICONS.install, 'Install app', async () => {
+      if (!deferredInstallPrompt) return;
+      deferredInstallPrompt.prompt();
+      const { outcome } = await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt = null;
+      if (outcome === 'accepted' && window.MM && window.MM.toast) window.MM.toast('Installing Mitti Mantra…');
+    });
+    installBtn.style.display = 'none';
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      installBtn.style.display = '';
+    });
+
+    // Usage & privacy — local-only tool-usage counting, opt-in sharing.
+    // Only appears once mm-analytics.js has actually installed the API.
+    if (window.MM && window.MM.analytics) {
+      mkBtn(ICONS.privacy, 'Usage & privacy', openPrivacyModal);
+    }
 
     document.body.appendChild(panel);
 
@@ -825,6 +872,49 @@
     window.speechSynthesis.speak(u);
     speaking = true;
     btn?.classList.add('active');
+  }
+
+  /* ---------- Copy link ---------- */
+  function copyLink() {
+    const url = location.href;
+    const done = () => { if (window.MM && window.MM.toast) window.MM.toast('Link copied'); };
+    if (navigator.clipboard) navigator.clipboard.writeText(url).then(done);
+    else { prompt('Copy link:', url); }
+  }
+
+  /* ---------- Usage & privacy modal ----------
+     Folded in from mm-core.js's old Tools button. Reuses this file's own
+     modal instead of a row-based popover, since the panel here is a grid. */
+  function openPrivacyModal() {
+    const a = window.MM.analytics;
+    const row = (label, checked) => `
+      <label style="display:flex;align-items:center;gap:10px;padding:8px 2px;cursor:pointer;">
+        <input type="checkbox" data-qw-toggle="${label}" ${checked ? 'checked' : ''} style="width:16px;height:16px;">
+        ${label}
+      </label>`;
+    const stats = a.summary();
+    const statsLine = stats.total
+      ? `${stats.total} actions since ${stats.since}`
+      : 'No usage recorded yet on this device.';
+    const body = `
+      <p style="margin:0 0 10px;">Usage counting is local to this device by default. Sharing anonymous counts is off unless you turn it on.</p>
+      ${row('Count my tool usage', a.isEnabled())}
+      ${row('Share anonymous counts', a.isSharing())}
+      <p style="margin:10px 0 0;color:var(--ink-faint,#8a8376);">${statsLine}</p>`;
+    const modal = showModal('Usage & privacy', body, [{ label: 'Done', primary: true, onClick: hideModal }]);
+
+    const boxes = modal.querySelectorAll('input[data-qw-toggle]');
+    boxes[0].addEventListener('change', (e) => {
+      a.setEnabled(e.target.checked);
+      if (window.MM.toast) window.MM.toast(e.target.checked ? 'Counting tool usage on this device' : 'Usage counting off — history cleared');
+    });
+    boxes[1].addEventListener('change', (e) => {
+      a.setSharing(e.target.checked);
+      if (window.MM.toast) window.MM.toast(e.target.checked ? 'Sharing anonymous tool counts' : 'Sharing off');
+    });
+    // The share toggle only makes sense once the server actually accepts uploads.
+    boxes[1].closest('label').style.display = 'none';
+    a.serverAcceptsUploads().then((ok) => { boxes[1].closest('label').style.display = ok ? '' : 'none'; });
   }
 
   /* ---------- WhatsApp share ---------- */

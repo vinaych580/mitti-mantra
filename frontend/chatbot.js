@@ -19,9 +19,6 @@
   .mm-chat-fab:hover{transform:translateY(-2px) scale(1.05);}
   .mm-chat-fab.dragging{cursor:grabbing;transition:none;box-shadow:0 14px 40px rgba(46,125,50,.55);transform:scale(1.08);}
   .mm-chat-fab svg{width:28px;height:28px;pointer-events:none;}
-  .mm-chat-fab .mm-drag-hint{position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;
-    background:#fff;color:#2e7d32;font-size:11px;display:flex;align-items:center;justify-content:center;
-    box-shadow:0 2px 6px rgba(0,0,0,.2);font-weight:700;pointer-events:none;}
   .mm-chat-panel{position:fixed;right:22px;bottom:184px;width:380px;max-width:calc(100vw - 32px);
     height:560px;max-height:calc(100vh - 200px);background:#fff;border-radius:18px;
     box-shadow:0 20px 60px rgba(0,0,0,.25);display:none;flex-direction:column;overflow:hidden;
@@ -92,7 +89,7 @@
   fab.setAttribute("aria-label", "Open Mitti Mantra assistant");
   fab.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
     stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5
-    a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="mm-drag-hint" title="Drag to move">⇕</span>`;
+    a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`;
   fab.title = "Click to chat · drag to move";
 
   const panel = document.createElement("div");

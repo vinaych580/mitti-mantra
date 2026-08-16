@@ -203,24 +203,6 @@
     .mm-farm-bar__save{margin-left:0;flex:1 1 100%;}
   }
 
-  /* ---- Tools floating menu (share / a11y / install) ---- */
-  .mm-tools-fab{position:fixed;left:18px;bottom:22px;width:44px;height:44px;border-radius:50%;
-    background:#fff;border:1px solid #d6e0d6;color:#2e7d32;cursor:pointer;z-index:9997;
-    box-shadow:0 6px 20px rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;
-    font-family:inherit;transition:transform .15s;}
-  .mm-tools-fab:hover{transform:translateY(-2px);}
-  .mm-tools-pop{position:fixed;left:18px;bottom:72px;background:#fff;border-radius:12px;
-    box-shadow:0 14px 40px rgba(0,0,0,.18);padding:8px;z-index:9997;display:none;min-width:200px;
-    font-family:Inter,system-ui,sans-serif;border:1px solid rgba(0,0,0,.06);}
-  .mm-tools-pop.open{display:block;animation:mmFadeInL .15s ease;}
-  @keyframes mmFadeInL{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
-  .mm-tools-pop button{width:100%;text-align:left;background:transparent;border:none;padding:9px 11px;
-    border-radius:8px;font-size:13px;font-family:inherit;cursor:pointer;color:#1c2a1c;
-    display:flex;align-items:center;gap:9px;}
-  .mm-tools-pop button:hover{background:#f1f6f1;}
-  .mm-tools-pop hr{border:none;border-top:1px solid #eaeaea;margin:4px 0;}
-  .mm-tools-pop .mm-chk{margin-left:auto;color:#2e7d32;font-weight:700;}
-
   /* ---- Toast ---- */
   .mm-toast{position:fixed;left:50%;bottom:34px;transform:translateX(-50%);
     background:#1b5e20;color:#fff;padding:10px 16px;border-radius:999px;font-size:13px;
@@ -238,7 +220,7 @@
   /* ---- Print / PDF ---- */
   @media print{
     .nav, .footer, .sidebar, .mobile-panel, .mobile-backdrop,
-    .mm-chat-fab, .mm-chat-panel, .mm-tools-fab, .mm-tools-pop, .mm-farm-bar__save,
+    .mm-chat-fab, .mm-chat-panel, .qw-fab, .qw-panel, .mm-farm-bar__save,
     .farm-pickup, #scene3d, .hero__scene, form[data-form] button[type=submit]
     { display:none !important; }
     body { background:#fff !important; }
@@ -404,150 +386,6 @@
   }
 
   // ------------------------------------------------------------------
-  // Tools floating menu (share / a11y / install)
-  // ------------------------------------------------------------------
-  function buildToolsMenu() {
-    const fab = document.createElement("button");
-    fab.className = "mm-tools-fab";
-    fab.title = "Share, accessibility & more";
-    fab.setAttribute("aria-label", "Open tools menu");
-    fab.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1.6"/>
-      <circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg>`;
-
-    const pop = document.createElement("div");
-    pop.className = "mm-tools-pop";
-
-    const row = (label, icon) => {
-      const b = document.createElement("button");
-      b.type = "button";
-      b.innerHTML = `<span style="width:16px;">${icon}</span> <span>${label}</span>`;
-      return b;
-    };
-    const addToggleRow = (label, icon, key) => {
-      const b = row(label, icon);
-      const chk = document.createElement("span");
-      chk.className = "mm-chk";
-      b.appendChild(chk);
-      const refresh = () => { chk.textContent = a11y.get()[key] ? "✓" : ""; };
-      refresh();
-      b.addEventListener("click", () => { a11y.toggle(key); refresh(); });
-      pop.appendChild(b);
-      return b;
-    };
-
-    const header = document.createElement("div");
-    header.style.cssText = "font-size:.7rem;font-weight:700;color:#5b6b5b;letter-spacing:.1em;padding:6px 11px 2px;text-transform:uppercase;";
-    header.textContent = "Share this page";
-    pop.appendChild(header);
-
-    const wa = row("Share on WhatsApp", "💬");
-    wa.addEventListener("click", () => share.whatsapp("Check out my Mitti Mantra farm plan:"));
-    pop.appendChild(wa);
-
-    const pr = row("Print / Save as PDF", "🖨️");
-    pr.addEventListener("click", () => share.print());
-    pop.appendChild(pr);
-
-    const cp = row("Copy link", "🔗");
-    cp.addEventListener("click", () => share.copyLink());
-    pop.appendChild(cp);
-
-    pop.appendChild(document.createElement("hr"));
-    const h2 = header.cloneNode(true);
-    h2.textContent = "Accessibility";
-    pop.appendChild(h2);
-    addToggleRow("Large text", "🅰️", "largeText");
-    addToggleRow("High contrast", "🌓", "highContrast");
-
-    // Privacy — usage counting is local-only by default; sharing is opt-in and
-    // additionally requires ENABLE_USAGE_COLLECTION on the server.
-    const analytics = () => window.MM && window.MM.analytics;
-    if (analytics()) {
-      pop.appendChild(document.createElement("hr"));
-      const h3 = header.cloneNode(true);
-      h3.textContent = "Privacy";
-      pop.appendChild(h3);
-
-      const addAnalyticsToggle = (label, icon, read, write) => {
-        const b = row(label, icon);
-        const chk = document.createElement("span");
-        chk.className = "mm-chk";
-        b.appendChild(chk);
-        const refresh = () => { chk.textContent = read() ? "✓" : ""; };
-        refresh();
-        b.addEventListener("click", () => { write(!read()); refresh(); });
-        pop.appendChild(b);
-        return b;
-      };
-
-      addAnalyticsToggle(
-        "Count my tool usage", "📊",
-        () => analytics().isEnabled(),
-        (on) => {
-          analytics().setEnabled(on);
-          toast(on ? "Counting tool usage on this device" : "Usage counting off — history cleared");
-        }
-      );
-
-      const shareRow = addAnalyticsToggle(
-        "Share anonymous counts", "📮",
-        () => analytics().isSharing(),
-        (on) => {
-          analytics().setSharing(on);
-          toast(on ? "Sharing anonymous tool counts" : "Sharing off");
-        }
-      );
-      // Hide the sharing option entirely when the server does not accept it.
-      shareRow.style.display = "none";
-      analytics().serverAcceptsUploads().then((ok) => {
-        if (ok) shareRow.style.display = "";
-      });
-
-      const statsBtn = row("My most used tools", "🏅");
-      statsBtn.addEventListener("click", () => {
-        const s = analytics().summary();
-        if (!s.total) { toast("No usage recorded yet"); return; }
-        const top = s.events.slice(0, 3)
-          .map((e) => e.event.replace(/^(tool_open_|api_)/, "").replace(/_/g, " "))
-          .join(", ");
-        toast(`${s.total} actions since ${s.since} · top: ${top}`, 4000);
-      });
-      pop.appendChild(statsBtn);
-    }
-
-    // Install (PWA) — row is hidden until beforeinstallprompt fires
-    pop.appendChild(document.createElement("hr"));
-    const installBtn = row("Install app", "📲");
-    installBtn.style.display = "none";
-    pop.appendChild(installBtn);
-    let deferredPrompt = null;
-    window.addEventListener("beforeinstallprompt", (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      installBtn.style.display = "";
-    });
-    installBtn.addEventListener("click", async () => {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      deferredPrompt = null;
-      if (outcome === "accepted") toast("Installing Mitti Mantra…");
-    });
-
-    document.body.appendChild(fab);
-    document.body.appendChild(pop);
-
-    fab.addEventListener("click", (e) => {
-      e.stopPropagation();
-      pop.classList.toggle("open");
-    });
-    document.addEventListener("click", (e) => {
-      if (!pop.contains(e.target) && e.target !== fab) pop.classList.remove("open");
-    });
-  }
-
-  // ------------------------------------------------------------------
   // Public API
   // ------------------------------------------------------------------
   window.MM = { fmt, profile, units, a11y, share, toast, escapeHtml };
@@ -555,9 +393,14 @@
   // ------------------------------------------------------------------
   // Boot
   // ------------------------------------------------------------------
+  // The floating "extra tools" menu (share / accessibility / install) used to
+  // live here as its own button, right next to toolbar.js's language/voice/
+  // dark-mode button — two separate circular FABs in opposite corners with
+  // overlapping items (WhatsApp share and PDF export existed in both). Its
+  // items now live inside toolbar.js's single panel; see toolbar.js for
+  // Copy link, Large text, High contrast, Install app, and Usage & privacy.
   function boot() {
     apply();                 // a11y classes
-    buildToolsMenu();        // everywhere
     if (document.querySelector(".dashx__wrap")) buildFarmBar();  // dashboard only
   }
   if (document.readyState === "loading")
