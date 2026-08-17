@@ -23,6 +23,24 @@
         ],
         "createdAt": "2026-08-16T05:44:21.974Z",
         "reason": "pre-existing qw-fab/qw-panel open-close spring feel, predates the recent chats this cleanup targeted; not touched to avoid regressing a widely-used floating toolbar without visual QA"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "0.9rem",
+        "files": [
+          "frontend/book-a-tractor.js"
+        ],
+        "createdAt": "2026-08-17T12:45:00.000Z",
+        "reason": "pre-existing #btnLoadMoreTractors inline style, predates and is unrelated to this session's audit-fix commit (booking-conflict/date-validation/marketplace-stock changes only); not touched to avoid unrelated visual drift without QA"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#9a958a",
+        "files": [
+          "frontend/book-a-tractor.js"
+        ],
+        "createdAt": "2026-08-17T12:45:00.000Z",
+        "reason": "pre-existing .mm-success-icon background fallback (var(--ink-faint,#9a958a)), predates and is unrelated to this session's audit-fix commit; not touched to avoid unrelated visual drift without QA"
       }
     ]
   }
