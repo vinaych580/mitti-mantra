@@ -136,6 +136,18 @@
       </div>`;
   }
 
+  // Thrown after a response was actually received but had a non-2xx status.
+  // Kept distinct from a genuine network-level failure (fetch rejecting,
+  // e.g. TypeError: Failed to fetch) so the catch block below never confuses
+  // real backend validation/server errors with "the backend is unreachable".
+  class HttpError extends Error {
+    constructor(status, message) {
+      super(message);
+      this.name = 'HttpError';
+      this.status = status;
+    }
+  }
+
   async function api(url, opts = {}) {
     try {
       const res = await fetch(url, { headers: { 'Content-Type': 'application/json' }, ...opts });
@@ -149,7 +161,7 @@
           else if (d && typeof d === 'object') msg = JSON.stringify(d);
           else msg = res.statusText;
         } catch { msg = res.statusText; }
-        throw new Error(`${res.status} · ${msg}`);
+        throw new HttpError(res.status, `${res.status} · ${msg}`);
       }
 
       const data = await res.json();
@@ -157,7 +169,13 @@
       window.dispatchEvent(new CustomEvent('mitti-api-success', { detail: { url, opts, data } }));
       return data;
     } catch (err) {
-      // Network-level failure: try the offline fallback for key routes.
+      // A real HTTP error response (400/422/500...) is not a "backend
+      // unreachable" condition — surface it as-is via the normal error path
+      // instead of masking it with fabricated offline-heuristic results.
+      if (err instanceof HttpError) throw err;
+
+      // Genuine network-level failure (fetch rejected, e.g. offline / DNS /
+      // CORS / connection refused): try the offline fallback for key routes.
       const offline = window.AgriSimOffline;
       const body = opts.body ? tryParseJSON(opts.body) : null;
       if (offline) {
@@ -205,7 +223,22 @@
        </div>`;
   }
 
+  // A likely network-level failure: either the browser reports itself
+  // offline, or the error is the generic TypeError a rejected fetch() throws
+  // (e.g. "Failed to fetch") rather than an HttpError with a real status.
+  // Deliberately excludes HttpError (real backend 4xx/5xx responses), which
+  // should keep showing their actual message instead of a generic one.
+  function isLikelyOffline(err) {
+    if (!navigator.onLine) return true;
+    return err instanceof TypeError;
+  }
+
   function showError(el, err) {
+    if (isLikelyOffline(err)) {
+      el.innerHTML = `<div class="alert alert--red"><svg class="alert__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l22 22"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/><path d="M10.71 5.05A16 16 0 0 1 22.58 9"/><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+        <div class="alert__body"><strong>You're offline</strong><p>Reconnect to use this tool.</p></div></div>`;
+      return;
+    }
     el.innerHTML = `<div class="alert alert--red"><svg class="alert__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
       <div class="alert__body"><strong>Request failed</strong><p>${err.message}</p></div></div>`;
   }
@@ -726,7 +759,7 @@
   /* ==========================================================
      TOOL 1: Smart recommend — returns LIST directly
      ========================================================== */
-  $('[data-form="recommend"]').addEventListener('submit', async e => {
+  $('[data-form="recommend"]')?.addEventListener('submit', async e => {
     e.preventDefault();
     const out = $('[data-out="recommend"]');
     showLoading(out, 'Running 3 ML models…');
@@ -851,7 +884,7 @@
   /* ==========================================================
      TOOL 2: Simulate (auto-fetches soil & weather)
      ========================================================== */
-  $('[data-form="simulate"]').addEventListener('submit', async e => {
+  $('[data-form="simulate"]')?.addEventListener('submit', async e => {
     e.preventDefault();
     const out = $('[data-out="simulate"]');
     showLoading(out, 'Simulating yield, cost & profit…');
@@ -1072,7 +1105,7 @@
   /* ==========================================================
      TOOL 3: Rotation planner — top_rotations[]
      ========================================================== */
-  $('[data-form="rotation"]').addEventListener('submit', async e => {
+  $('[data-form="rotation"]')?.addEventListener('submit', async e => {
     e.preventDefault();
     const out = $('[data-out="rotation"]');
     showLoading(out, 'Scoring kharif × rabi combinations…');
@@ -1135,7 +1168,7 @@
   /* ==========================================================
      TOOL 4: Price forecast — forecasts[] + historical via /mandi-prices
      ========================================================== */
-  $('[data-form="forecast"]').addEventListener('submit', async e => {
+  $('[data-form="forecast"]')?.addEventListener('submit', async e => {
     e.preventDefault();
     const out = $('[data-out="forecast"]');
     showLoading(out, 'Forecasting mandi prices…');
@@ -1241,7 +1274,7 @@
   /* ==========================================================
      TOOL 5: MSP vs Market
      ========================================================== */
-  $('[data-form="msp"]').addEventListener('submit', async e => {
+  $('[data-form="msp"]')?.addEventListener('submit', async e => {
     e.preventDefault();
     const out = $('[data-out="msp"]');
     showLoading(out);
@@ -1291,7 +1324,7 @@
   /* ==========================================================
      TOOL 6: Sell advisor
      ========================================================== */
-  $('[data-form="sell"]').addEventListener('submit', async e => {
+  $('[data-form="sell"]')?.addEventListener('submit', async e => {
     e.preventDefault();
     const out = $('[data-out="sell"]');
     showLoading(out);
@@ -1361,7 +1394,7 @@
   /* ==========================================================
      TOOL 7: Arbitrage — cheapest_market / costliest_market / opportunities
      ========================================================== */
-  $('[data-form="arbitrage"]').addEventListener('submit', async e => {
+  $('[data-form="arbitrage"]')?.addEventListener('submit', async e => {
     e.preventDefault();
     const out = $('[data-out="arbitrage"]');
     showLoading(out);
@@ -1401,7 +1434,7 @@
   /* ==========================================================
      TOOL 8: Crop calendar — calendar is a DICT of named activities
      ========================================================== */
-  $('[data-form="calendar"]').addEventListener('submit', async e => {
+  $('[data-form="calendar"]')?.addEventListener('submit', async e => {
     e.preventDefault();
     const out = $('[data-out="calendar"]');
     showLoading(out);
@@ -1447,7 +1480,7 @@
   /* ==========================================================
      TOOL 9: Irrigation — weekly_schedule[], priority field
      ========================================================== */
-  $('[data-form="irrigation"]').addEventListener('submit', async e => {
+  $('[data-form="irrigation"]')?.addEventListener('submit', async e => {
     e.preventDefault();
     const out = $('[data-out="irrigation"]');
     showLoading(out);
@@ -1519,7 +1552,7 @@
   /* ==========================================================
      TOOL 10: Fertilizer — deficit_npk dict, recommendations[]
      ========================================================== */
-  $('[data-form="fertilizer"]').addEventListener('submit', async e => {
+  $('[data-form="fertilizer"]')?.addEventListener('submit', async e => {
     e.preventDefault();
     const out = $('[data-out="fertilizer"]');
     showLoading(out);
@@ -1596,7 +1629,7 @@
   /* ==========================================================
      TOOL 11: Pest alerts — alerts[] with pest_disease/risk_level/severity
      ========================================================== */
-  $('[data-form="pest"]').addEventListener('submit', async e => {
+  $('[data-form="pest"]')?.addEventListener('submit', async e => {
     e.preventDefault();
     const out = $('[data-out="pest"]');
     showLoading(out);
@@ -1641,7 +1674,7 @@
   /* ==========================================================
      TOOL 12: Loan — debt_service_coverage_ratio, kcc_note
      ========================================================== */
-  $('[data-form="loan"]').addEventListener('submit', async e => {
+  $('[data-form="loan"]')?.addEventListener('submit', async e => {
     e.preventDefault();
     const out = $('[data-out="loan"]');
     showLoading(out);
@@ -1737,7 +1770,7 @@
   /* ==========================================================
      TOOL 13: Govt schemes — eligible_schemes[]
      ========================================================== */
-  $('[data-form="schemes"]').addEventListener('submit', async e => {
+  $('[data-form="schemes"]')?.addEventListener('submit', async e => {
     e.preventDefault();
     const out = $('[data-out="schemes"]');
     showLoading(out);
@@ -1772,7 +1805,7 @@
   /* ==========================================================
      TOOL 15: Strategy templates
      ========================================================== */
-  $('[data-form="templates"]').addEventListener('submit', async e => {
+  $('[data-form="templates"]')?.addEventListener('submit', async e => {
     e.preventDefault();
     const out = $('[data-out="templates"]');
     showLoading(out, 'Loading templates…');
@@ -1840,7 +1873,7 @@
   /* ==========================================================
      TOOL 16: Compare crops (batch-simulate)
      ========================================================== */
-  $('[data-form="compare"]').addEventListener('submit', async e => {
+  $('[data-form="compare"]')?.addEventListener('submit', async e => {
     e.preventDefault();
     const out = $('[data-out="compare"]');
     const form = e.target;
@@ -1961,7 +1994,7 @@
   /* ==========================================================
      TOOL 17: Optimal crop mix
      ========================================================== */
-  $('[data-form="mix"]').addEventListener('submit', async e => {
+  $('[data-form="mix"]')?.addEventListener('submit', async e => {
     e.preventDefault();
     const out = $('[data-out="mix"]');
     showLoading(out, 'Optimising allocation across crops…');
@@ -2374,6 +2407,54 @@
   renderFarmPickup();
   applyFarmToForms();
 
+  /* H-4: savedFarm was read once at load and never refreshed. The plot
+     picker (mm-plots.js) and FarmState mutations (farm-state.js) both
+     dispatch 'mm:plot-changed' on document when the active plot switches,
+     but nothing here listened — banner/soil/map/disease-scan region context
+     all kept showing the old plot until a manual reload. Re-derive every
+     piece of state that was seeded from savedFarm at load time. */
+  function refreshFarmContext() {
+    savedFarm = (typeof window.FarmState !== 'undefined')
+      ? window.FarmState.load()
+      : (() => {
+        try {
+          return JSON.parse(
+            localStorage.getItem('mittimantra_selectedFarm') ||
+            localStorage.getItem('agrisim_farm') ||
+            'null'
+          );
+        } catch { return null; }
+      })();
+
+    renderFarmPickup();     // farm-pickup banner (acres/location/soil note)
+    applyFarmToForms();     // area/region form fields + fertilizer soil prefill
+    // window.__agrisimFarmSoil() reads `savedFarm` live via closure, so no
+    // extra step is needed for the simulate tool's soil context.
+
+    // applyFarmToForms() repoints select[data-regions] via .value, which does
+    // NOT fire a 'change' event, so the telemetry map/panel would otherwise
+    // keep showing the previous plot's region. Refresh it explicitly.
+    if (savedFarm && savedFarm.region_id) {
+      const sel = $('select[data-regions]');
+      const opt = sel && sel.querySelector(`option[value="${savedFarm.region_id}"]`);
+      const name = opt ? opt.text : (savedFarm.district || savedFarm.state || savedFarm.region_id);
+      updateRegionalTelemetry(savedFarm.region_id, name);
+    }
+
+    // Disease-scan region/crop context (normally synced only when the tab is
+    // first opened — keep it in sync if the plot changes while it's open too).
+    const diseaseRegionSel = $('#diseaseRegionSelect');
+    if (diseaseRegionSel && savedFarm && savedFarm.region_id) {
+      diseaseRegionSel.value = savedFarm.region_id;
+    }
+    const diseaseCropSel = $('#diseaseCropSelect');
+    const knownCrop = savedFarm?.crop_id || localStorage.getItem('mittimantra_selectedCrop') || '';
+    if (diseaseCropSel && knownCrop && ["maize", "potato", "soybean", "tomato"].includes(knownCrop)) {
+      diseaseCropSel.value = knownCrop;
+    }
+  }
+  document.addEventListener('mm:plot-changed', refreshFarmContext);
+
   /* ---------- Arrival from the map (?fromMap=1) ----------
      farm-boundary.html has always appended this flag, but nothing read it, so
      saving a boundary dropped the user at the top of a long dashboard with no
@@ -2551,6 +2632,14 @@
     }
   }
 
+  // M-8: There is no backend endpoint that actually accepts these logs
+  // (only /api/disease/predict exists, which just runs a single scan) — this
+  // only ever console.log'd, so it was never really "syncing" anything. It
+  // used to then unconditionally wipe the local queue regardless, which
+  // discarded a user's scan history with no record of it anywhere. Until a
+  // real sync endpoint exists, keep the logs in localStorage (capped so the
+  // queue can't grow unbounded) instead of deleting them.
+  const MAX_STORED_DISEASE_LOGS = 50;
   async function syncOfflineLogs() {
     if (!navigator.onLine) return;
     let logs = [];
@@ -2559,9 +2648,16 @@
     } catch (_) { return; }
     if (!logs.length) return;
 
-    // We process logs through our Site-aware Chatbot /api/chat or console reporting
-    console.log("Synchronizing crop disease diagnostic logs to Mitti Mantra backend:", logs);
-    localStorage.setItem('mittimantra_disease_logs', '[]');
+    // Nothing durable to sync to yet — this is a local record only.
+    console.log("Crop disease diagnostic logs pending sync (no backend endpoint yet):", logs);
+    if (logs.length > MAX_STORED_DISEASE_LOGS) {
+      try {
+        localStorage.setItem(
+          'mittimantra_disease_logs',
+          JSON.stringify(logs.slice(-MAX_STORED_DISEASE_LOGS))
+        );
+      } catch (_) { }
+    }
   }
   window.addEventListener('online', syncOfflineLogs);
 

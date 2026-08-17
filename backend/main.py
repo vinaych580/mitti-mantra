@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Header, HTTPException, Request, status
+from fastapi import Depends, FastAPI, Header, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -245,6 +245,8 @@ def get_rotation_plan(req: RotationRequest):
 @app.get("/api/crop-comparison/{region_id}/{season}")
 def get_crop_comparison(region_id: str, season: str, budget_per_acre: float = 15000, area_acres: float = 3):
     """Returns all crops compared for a region/season with full metrics."""
+    if budget_per_acre <= 0 or area_acres <= 0:
+        raise HTTPException(status_code=400, detail="budget_per_acre and area_acres must be greater than 0")
     try:
         return recommend_crops(region_id, season, budget_per_acre, area_acres, top_k=50)
     except Exception as e:
@@ -291,7 +293,14 @@ def batch_simulate(req: BatchSimRequest):
 # --- Flagship Feature REST API Endpoints ---
 @app.post("/api/field/ndvi")
 def get_field_ndvi(req: NDVIQuery):
-    """Returns Sentinel-2 satellite NDVI index, canopy cover %, and sub-field health grid."""
+    """Returns an estimated NDVI index, canopy cover %, and sub-field health grid.
+
+    This is NOT real Sentinel-2 (or any other) satellite imagery -- there is no
+    external earth-observation call. The values are deterministically derived
+    from the given lat/lon (and crop/area) via a hash-based estimator, which is
+    also disclosed to callers in the response payload (`is_estimate: true`).
+    Treat this as a plausible stand-in for field health, not a measurement.
+    """
     try:
         return calculate_ndvi_and_field_health(
             lat=req.lat,
@@ -675,7 +684,11 @@ def model_status():
     import ml.predict as pred
     pred._load_ml_models()
     model_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "ml", "models")
-    manifest_path = os.path.join(model_dir, "evaluation_manifest.json")
+    # Read manifest.json (written by ml/train_models.py), which describes the models
+    # actually loaded and serving predictions -- NOT evaluation_manifest.json, which
+    # describes a different, unwired model produced by ml/evaluate_models.py. See
+    # AUDIT_REPORT.md finding C-2.
+    manifest_path = os.path.join(model_dir, "manifest.json")
     audit_path = os.path.join(model_dir, "audit_metrics.json")
     
     manifest = None
@@ -1023,6 +1036,17 @@ async def predict_disease_api(req: DiseasePredictQuery):
         #    inference time that it was fit on.
         # -----------------------------------------------------------------
         image = Image.open(io.BytesIO(image_data))
+        # Guard against decompression-bomb images: DiseasePredictQuery caps the
+        # base64 payload by byte length, but that alone doesn't bound the
+        # decoded pixel dimensions (e.g. a tiny, highly-compressible PNG can
+        # still unpack to a huge bitmap). Reject anything above ~16 megapixels
+        # (e.g. 4000x4000) before running feature extraction. See AUDIT_REPORT.md M-5.
+        width, height = image.size
+        if width * height > 16_000_000:
+            raise HTTPException(
+                status_code=400,
+                detail="Image dimensions too large (max ~16 megapixels, e.g. 4000x4000).",
+            )
         leaf_features = extract_leaf_features(image)
         hue_yellow = leaf_features["hue_yellow"]
         hue_green = leaf_features["hue_green"]
@@ -1241,15 +1265,16 @@ def set_cached_response(key: str, data: Any):
 # --- Async & Cached REST API Routes ---
 
 @app.get("/api/crop")
-async def get_crop_recommendations_api(region_id: str, season: str, budget_per_acre: float, area_acres: float):
+async def get_crop_recommendations_api(q: CropRecQuery = Depends()):
     """Retrieves ranked crop suggestions with expected profits, risk scores, and ML confidence."""
+    # Query params are validated via the CropRecQuery Pydantic model (positive
+    # budget/area) instead of hand-rolled checks -- see AUDIT_REPORT.md M-2.
+    region_id, season, budget_per_acre, area_acres = q.region_id, q.season, q.budget_per_acre, q.area_acres
     logger.info(f"Crop rec request received for: region={region_id}, season={season}, budget={budget_per_acre}, area={area_acres}")
-    if budget_per_acre <= 0 or area_acres <= 0:
-        raise HTTPException(status_code=400, detail="budget_per_acre and area_acres must be greater than 0")
-    
+
     cache_key = f"crop_{region_id}_{season}_{budget_per_acre}_{area_acres}"
     cached = get_cached_response(cache_key)
-    if cached:
+    if cached is not None:
         return cached
         
     try:
@@ -1287,18 +1312,19 @@ async def get_crop_recommendations_api(region_id: str, season: str, budget_per_a
 @app.post("/api/crop")
 async def post_crop_recommendations_api(req: CropRecQuery):
     """POST wrapper for crop recommendation API checks."""
-    return await get_crop_recommendations_api(req.region_id, req.season, req.budget_per_acre, req.area_acres)
+    return await get_crop_recommendations_api(req)
 
 @app.get("/api/yield")
-async def get_yield_prediction_api(crop_id: str, region_id: str, season: str, irrigation_level: float = 0.5):
+async def get_yield_prediction_api(q: YieldPredQuery = Depends()):
     """Predicts yield output in kg/acre with 95% confidence intervals and agronomic drivers."""
+    # Validated via the YieldPredQuery Pydantic model (irrigation_level bounded
+    # 0.0-1.0) instead of a hand-rolled check -- see AUDIT_REPORT.md M-2.
+    crop_id, region_id, season, irrigation_level = q.crop_id, q.region_id, q.season, q.irrigation_level
     logger.info(f"Yield prediction request: crop={crop_id}, region={region_id}, irrigation={irrigation_level}")
-    if not (0.0 <= irrigation_level <= 1.0):
-        raise HTTPException(status_code=400, detail="irrigation_level must be between 0.0 and 1.0")
-        
+
     cache_key = f"yield_{crop_id}_{region_id}_{season}_{irrigation_level}"
     cached = get_cached_response(cache_key)
-    if cached:
+    if cached is not None:
         return cached
         
     try:
@@ -1375,11 +1401,13 @@ async def post_profit_estimation_api(req: ProfitEstRequest):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/api/irrigation")
-async def get_irrigation_api(crop_id: str, sowing_date: str = "2025-06-15", rainfall_mm: float = 800, irrigation_level: float = 0.5):
+async def get_irrigation_api(q: IrrigationQuery = Depends()):
     """Retrieves week-by-week scheduling parameters and supplemental reasoning."""
+    # Validated via the IrrigationQuery Pydantic model (irrigation_level bounded
+    # 0.0-1.0, rainfall_mm non-negative) instead of a hand-rolled check -- see
+    # AUDIT_REPORT.md M-2.
+    crop_id, sowing_date, rainfall_mm, irrigation_level = q.crop_id, q.sowing_date, q.rainfall_mm, q.irrigation_level
     logger.info(f"Irrigation schedule query: crop={crop_id}, rain={rainfall_mm}")
-    if not (0.0 <= irrigation_level <= 1.0):
-        raise HTTPException(status_code=400, detail="irrigation_level must be between 0.0 and 1.0")
     try:
         schedule = irrigation_schedule(crop_id, sowing_date, rainfall_mm, irrigation_level)
         
@@ -1394,11 +1422,12 @@ async def get_irrigation_api(crop_id: str, sowing_date: str = "2025-06-15", rain
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/api/fertilizer")
-async def get_fertilizer_api(crop_id: str, n_kg_per_acre: float, p_kg_per_acre: float, k_kg_per_acre: float):
+async def get_fertilizer_api(q: FertilizerQuery = Depends()):
     """Computes replenishment dosage based on soil NPK indicators and government guidelines."""
+    # Validated via the FertilizerQuery Pydantic model (all NPK values ge=0)
+    # instead of a hand-rolled check -- see AUDIT_REPORT.md M-2.
+    crop_id, n_kg_per_acre, p_kg_per_acre, k_kg_per_acre = q.crop_id, q.n_kg_per_acre, q.p_kg_per_acre, q.k_kg_per_acre
     logger.info(f"Fertilizer requirements calculation: crop={crop_id}, n={n_kg_per_acre}")
-    if n_kg_per_acre < 0 or p_kg_per_acre < 0 or k_kg_per_acre < 0:
-        raise HTTPException(status_code=400, detail="Nutrient weights cannot be negative")
     try:
         rec = fertilizer_recommendation(crop_id, {"n_kg_per_acre": n_kg_per_acre, "p_kg_per_acre": p_kg_per_acre, "k_kg_per_acre": k_kg_per_acre})
         
@@ -1416,7 +1445,7 @@ async def get_soil_details_api(region_id: str):
     logger.info(f"Soil grids lookup: region={region_id}")
     cache_key = f"soil_grid_{region_id}"
     cached = get_cached_response(cache_key)
-    if cached:
+    if cached is not None:
         return cached
     try:
         row = _csv_first("soil.csv", "region_id", region_id)
@@ -1443,7 +1472,7 @@ async def get_weather_details_api(region_id: str, season: str = "kharif"):
     logger.info(f"Weather info request: region={region_id}, season={season}")
     cache_key = f"weather_alert_{region_id}_{season}"
     cached = get_cached_response(cache_key)
-    if cached:
+    if cached is not None:
         return cached
     try:
         results = _csv_index("weather.csv", "region_id").get(region_id, [])
@@ -1481,7 +1510,7 @@ async def get_market_pricing_api(region_id: str, crop_id: str):
     logger.info(f"Market pricing metrics: region={region_id}, crop={crop_id}")
     cache_key = f"market_{region_id}_{crop_id}"
     cached = get_cached_response(cache_key)
-    if cached:
+    if cached is not None:
         return cached
     try:
         results = _csv_index("mandi_prices.csv", "region_id").get(region_id, [])

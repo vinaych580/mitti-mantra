@@ -1,3 +1,7 @@
+# NOT WIRED INTO PRODUCTION -- see AUDIT_REPORT.md M-22.
+# Only imported by data_ingestion/etl_pipeline.py (itself unwired) and the
+# data_ingestion.fetchers package re-export; not reachable from any live
+# request-handling code.
 import logging
 import os
 from typing import Dict, List, Optional

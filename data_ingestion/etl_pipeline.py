@@ -1,3 +1,6 @@
+# NOT WIRED INTO PRODUCTION -- see AUDIT_REPORT.md M-22.
+# This module is not imported by backend/main.py, backend/routers/*, or any
+# other live request-handling code. It is an offline/dev script only.
 import os
 import json
 import logging
@@ -137,11 +140,16 @@ class ETLPipeline:
         rainfall = round(precip_sum, 1)
 
         # Normalise Mandi price: extract modal price and convert quintal to kg (divide by 100)
+        # Field names below match the Agmarknet/data.gov.in API's actual capitalized
+        # keys ("District", "Modal_Price") -- not the lowercase "district"/"modal_price"
+        # this used to look up, which never matched any real record. Confirmed against
+        # data_ingestion/fetchers/mandi.py:102, which reads r["Modal_Price"] from the
+        # same API. See AUDIT_REPORT.md M-24.
         modal_price_kg = 24.50  # Fallback baseline modal price in INR per kg
         if mandi_records and isinstance(mandi_records, list):
-            matching_mandi = [r for r in mandi_records if isinstance(r, dict) and r.get("district", "").lower() == coord["district"].lower()]
+            matching_mandi = [r for r in mandi_records if isinstance(r, dict) and r.get("District", "").lower() == coord["district"].lower()]
             record = matching_mandi[0] if matching_mandi else (mandi_records[0] if isinstance(mandi_records[0], dict) else {})
-            raw_modal = record.get("modal_price")
+            raw_modal = record.get("Modal_Price")
             if raw_modal is not None:
                 try:
                     modal_price_kg = round(float(raw_modal) / 100.0, 2)

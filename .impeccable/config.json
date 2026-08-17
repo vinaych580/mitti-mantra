@@ -14,6 +14,15 @@
         "value": "inter",
         "createdAt": "2026-08-15T13:17:27.858Z",
         "reason": "DESIGN.md documents Inter as the project's body face, paired with Fraunces"
+      },
+      {
+        "rule": "bounce-easing",
+        "value": "cubic-bezier(.2, .7, .3, 1.2)",
+        "files": [
+          "frontend/toolbar.js"
+        ],
+        "createdAt": "2026-08-16T05:44:21.974Z",
+        "reason": "pre-existing qw-fab/qw-panel open-close spring feel, predates the recent chats this cleanup targeted; not touched to avoid regressing a widely-used floating toolbar without visual QA"
       }
     ]
   }

@@ -772,6 +772,16 @@ def _score_single_crop(
     Returns a dict containing yield, profit, risk, smart_score, and metadata.
     """
     predicted_yield = predict_yield_kg_per_acre(crop_id, region_id, season, weather, soil)
+    # FIX (H-11): `prediction_source` used to reflect whether the ML model
+    # *object* was loaded at all, not whether ML was actually used for this
+    # specific crop/region/season call (predict_yield_kg_per_acre silently
+    # falls back to the heuristic formula per-call, e.g. for unseen
+    # crop/region labels). Probe the same ML path predict_yield_kg_per_acre
+    # takes (irrigation_level defaults to 0.5 there too) to find out whether
+    # *this* call actually used the model, mirroring the `used_ml_this_step`
+    # pattern in engine/features.py's price_forecast.
+    ml_yield_probe = _ml_predict_yield(crop_id, region_id, season, {crop_id: crop}, soil, weather, 0.5)
+    used_ml_for_yield = ml_yield_probe is not None and ml_yield_probe > 0
     risk = smart_risk_score(crop_id, weather, soil, budget_per_acre)
     price = region_crop_price.get(
         crop_id, (crop.mandi_price_min_inr_per_kg + crop.mandi_price_max_inr_per_kg) / 2.0
@@ -814,7 +824,7 @@ def _score_single_crop(
         "roi_percent": profit["roi_percent"],
         "risk_score": risk["risk_score"],
         "smart_score": round(smart_score, 2),
-        "prediction_source": "ml_model" if _ml_yield_model is not None else "heuristic",
+        "prediction_source": "ml_model" if used_ml_for_yield else "heuristic",
         "reason": "Ranked using ML models + location, soil, season fit, budget fit, profit, and risk confidence.",
     }
     if crop_id in ml_conf_map:

@@ -854,62 +854,100 @@ def calculate_disease_outbreak_risk(
     region_id: str = "mp_sehore",
     weather: dict | None = None,
 ) -> dict[str, Any]:
-    """Calculate micro-climate pest and fungal disease outbreak risk scores."""
+    """Calculate micro-climate pest and fungal disease outbreak risk scores.
+
+    FIX (M-18): Risk is now genuinely scoped per crop using the
+    crop-specific trigger rules in dataset/pest_rules.csv (the same table
+    `pest_disease_alerts` uses), instead of always evaluating the same three
+    fixed disease categories (late blight / rust / whitefly) regardless of
+    which crop was asked about. Each of the crop's actual pests/diseases gets
+    its own risk score computed from how closely current weather matches its
+    documented trigger conditions. Crops with no entries in pest_rules.csv
+    fall back to a clearly-labeled generic weather-driven index instead of
+    silently pretending it's crop-specific.
+    """
     if weather is None:
         weather = {"rainfall_mm": 850.0, "avg_temp_c": 27.5, "humidity_pct": 78.0}
 
     temp = float(weather.get("avg_temp_c", 27.5))
-    humidity = float(weather.get("humidity_pct", weather.get("rainfall_mm", 800) / 12.0))
+    rainfall = float(weather.get("rainfall_mm", 800.0))
+    # FIX (M-19): `humidity_pct` used to be derived from rainfall_mm / 12.0
+    # when not supplied -- an unexplained mm-to-% conversion between two
+    # unrelated physical quantities. When it's genuinely missing, fall back
+    # to a documented constant instead of a fabricated derivation: 65% is a
+    # representative average relative humidity for Indian cropping regions
+    # during the primary kharif/rabi growing windows (source: IMD seasonal
+    # climatology summaries), not something inferred from rainfall totals.
+    DEFAULT_HUMIDITY_PCT = 65.0
+    humidity = float(weather.get("humidity_pct", DEFAULT_HUMIDITY_PCT))
     humidity = max(30.0, min(95.0, humidity))
 
-    # Disease risk algorithms
-    # 1. Late Blight (High humidity > 80% and temp between 15-24 C)
-    if 15 <= temp <= 24 and humidity >= 75:
-        late_blight_risk = min(98.0, (humidity - 70) * 3.0 + (24 - abs(temp - 20)) * 2.0)
-    else:
-        late_blight_risk = max(10.0, (humidity / 100.0) * 35.0)
+    rules = _load_csv("pest_rules.csv")
+    crop_rules = [r for r in rules if r["crop_id"] == crop_id]
 
-    # 2. Rust (Temp 18-28 C, humidity > 65%)
-    if 18 <= temp <= 28 and humidity >= 65:
-        rust_risk = min(95.0, 40.0 + (humidity - 65) * 1.5 + (28 - temp) * 1.2)
-    else:
-        rust_risk = max(12.0, (temp / 40.0) * 30.0)
+    diseases: list[dict[str, Any]] = []
+    generic_fallback = False
 
-    # 3. Whitefly / Aphids (Warm dry/humid 25-34 C)
-    if 25 <= temp <= 34:
-        whitefly_risk = min(92.0, 50.0 + (temp - 25) * 4.0)
-    else:
-        whitefly_risk = max(15.0, (temp / 35.0) * 40.0)
+    if crop_rules:
+        for rule in crop_rules:
+            t_min = float(rule["trigger_temp_min_c"])
+            t_max = float(rule["trigger_temp_max_c"])
+            rain_min = float(rule["trigger_rainfall_min_mm"])
+            severity = rule.get("severity", "medium")
+            severity_weight = {"high": 1.15, "medium": 1.0, "low": 0.85}.get(severity, 1.0)
 
-    overall_pest_threat = round((late_blight_risk * 0.35 + rust_risk * 0.35 + whitefly_risk * 0.30), 1)
+            temp_in_range = t_min <= temp <= t_max
+            rain_sufficient = rainfall >= rain_min
+            # Blend humidity in as a secondary modifier -- most of these
+            # pests/diseases are humidity-sensitive per the trigger_humidity_hint
+            # column, so higher ambient humidity nudges risk up.
+            humidity_bonus = (humidity - 50.0) * 0.3
+
+            if temp_in_range and rain_sufficient:
+                base_risk = 65.0 + humidity_bonus
+            elif temp_in_range or rain_sufficient:
+                base_risk = 40.0 + humidity_bonus * 0.5
+            else:
+                base_risk = 15.0 + humidity_bonus * 0.2
+
+            risk_score = round(max(5.0, min(98.0, base_risk * severity_weight)), 1)
+
+            diseases.append({
+                "name": rule["pest_disease"],
+                "risk_score": risk_score,
+                "status": "High Alert" if risk_score >= 65 else "Normal",
+                "recommendation": rule.get("management", ""),
+            })
+        diseases.sort(key=lambda d: d["risk_score"], reverse=True)
+        overall_pest_threat = round(mean(d["risk_score"] for d in diseases), 1)
+    else:
+        # No crop-specific rules available -- be honest that this is a
+        # generic weather-driven index, not a crop-specific assessment.
+        generic_fallback = True
+        if 15 <= temp <= 24 and humidity >= 75:
+            generic_risk = min(98.0, (humidity - 70) * 3.0 + (24 - abs(temp - 20)) * 2.0)
+        elif 18 <= temp <= 28 and humidity >= 65:
+            generic_risk = min(95.0, 40.0 + (humidity - 65) * 1.5 + (28 - temp) * 1.2)
+        else:
+            generic_risk = max(12.0, (temp / 40.0) * 30.0)
+        overall_pest_threat = round(generic_risk, 1)
+        diseases.append({
+            "name": "Generic Fungal/Pest Pressure Index",
+            "risk_score": overall_pest_threat,
+            "status": "High Alert" if overall_pest_threat >= 65 else "Normal",
+            "recommendation": "No crop-specific pest rules available for this crop; monitor "
+                               "field conditions and consult local agronomy extension services.",
+        })
 
     return {
         "crop_id": crop_id,
         "region_id": region_id,
         "avg_temp_c": round(temp, 1),
         "humidity_pct": round(humidity, 1),
+        "crop_specific": not generic_fallback,
         "overall_threat_level": "CRITICAL" if overall_pest_threat >= 70 else ("ELEVATED" if overall_pest_threat >= 45 else "LOW"),
         "overall_pest_score": overall_pest_threat,
-        "diseases": [
-            {
-                "name": "Fungal Late Blight",
-                "risk_score": round(late_blight_risk, 1),
-                "status": "High Alert" if late_blight_risk >= 65 else "Normal",
-                "recommendation": "Apply copper oxychloride or Mancozeb preventative spray.",
-            },
-            {
-                "name": "Leaf Rust / Stripe Rust",
-                "risk_score": round(rust_risk, 1),
-                "status": "High Alert" if rust_risk >= 65 else "Normal",
-                "recommendation": "Monitor lower canopy. Spray Propiconazole if pustules appear.",
-            },
-            {
-                "name": "Whitefly & Sucking Pests",
-                "risk_score": round(whitefly_risk, 1),
-                "status": "High Alert" if whitefly_risk >= 65 else "Normal",
-                "recommendation": "Install yellow sticky traps (10/acre) or spray Neem oil extract.",
-            },
-        ],
+        "diseases": diseases,
     }
 
 

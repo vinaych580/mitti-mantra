@@ -60,25 +60,25 @@
       "model": "crop_recommendation",
       "algorithm": "RandomForestClassifier",
       "metrics": {
-        "accuracy": 0.9259,
+        "accuracy": 0.5595,
         "train_samples": 48000,
         "test_samples": 12000,
-        "num_classes": 12
+        "num_classes": 32
       },
       "feature_importances": {
-        "region_enc": 0.0052,
-        "season_enc": 0.1354,
-        "soil_ph": 0.0049,
-        "soil_n": 0.0065,
-        "soil_p": 0.0056,
-        "soil_k": 0.0056,
-        "soil_oc": 0.0059,
-        "rainfall": 0.7611,
-        "avg_temp": 0.0077,
-        "min_temp": 0.0083,
-        "max_temp": 0.0069,
-        "budget": 0.0415,
-        "irrigation": 0.0054
+        "region_enc": 0.0104,
+        "season_enc": 0.079,
+        "soil_ph": 0.0167,
+        "soil_n": 0.0144,
+        "soil_p": 0.0137,
+        "soil_k": 0.0136,
+        "soil_oc": 0.0135,
+        "rainfall": 0.665,
+        "avg_temp": 0.0173,
+        "min_temp": 0.018,
+        "max_temp": 0.0169,
+        "budget": 0.0996,
+        "irrigation": 0.0219
       }
     },
     {
@@ -131,5 +131,11 @@
       }
     }
   ],
-  "model_dir": "ml/models"
+  "model_dir": "ml/models",
+  "trained_at": 1786949173.6240854,
+  "model_hashes": {
+    "yield_model.joblib": "ec9e60994840bcee1d4ae9ed43fad36d",
+    "price_model.joblib": "c03c3227a88978c42f57b01dd2502f58",
+    "recommend_model.joblib": "3142b50af33e893f3c6ae40fd114d3d5"
+  }
 }

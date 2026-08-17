@@ -29,7 +29,12 @@ def test_climate_alerts_endpoint():
     data = response.json()
     assert "overall_threat_level" in data
     assert "diseases" in data
-    assert len(data["diseases"]) >= 3
+    # M-18 fix: risk is now genuinely scoped per crop from dataset/pest_rules.csv
+    # instead of always returning the same 3 fixed generic categories regardless
+    # of crop. Wheat currently has 2 real documented entries (Yellow Rust, Aphids),
+    # so this only asserts the endpoint returns real, non-empty, crop-relevant data.
+    assert len(data["diseases"]) >= 1
+    assert all(d["name"] for d in data["diseases"])
 
 
 def test_carbon_credits_endpoint():

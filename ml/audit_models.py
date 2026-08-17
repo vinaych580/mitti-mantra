@@ -1,6 +1,7 @@
 import os
 import json
 import logging
+import time
 from pathlib import Path
 import joblib
 import numpy as np
@@ -23,9 +24,26 @@ sys.path.append(str(BASE_DIR))
 from ml.evaluate_models import _build_recommendation_dataset, _build_yield_dataset
 
 class ModelAuditor:
+    # FIX (C-3): ml/evaluate_models.py's and ml/train_models.py's dataset
+    # builders both consume np.random.RandomState(42) in the same row
+    # order, so reconstructing a "test split" here with the same seed
+    # mostly reproduces the deployed model's *training* rows (measured at
+    # 83.6% row-hash overlap) -- this audit was silently grading models on
+    # data they'd already seen. Whichever pipeline last trained/saved a
+    # model now also persists the exact held-out rows it evaluated itself
+    # on (ml/models/holdout_<name>.joblib); prefer those genuinely-unseen
+    # rows here instead of rebuilding+resplitting the dataset.
+    @staticmethod
+    def _load_holdout(name: str):
+        holdout_path = MODEL_DIR / f"holdout_{name}.joblib"
+        if not holdout_path.exists():
+            return None
+        data = joblib.load(holdout_path)
+        return data.get("X_test"), data.get("y_test")
+
     def run_audit(self):
         logger.info("Initializing model audit on corrected schemas...")
-        
+
         # Load models
         rec_model_path = MODEL_DIR / "recommend_model.joblib"
         yield_model_path = MODEL_DIR / "yield_model.joblib"
@@ -38,10 +56,10 @@ class ModelAuditor:
         rec_encoders = joblib.load(MODEL_DIR / "recommend_encoders.joblib")
         yield_encoders = joblib.load(MODEL_DIR / "yield_encoders.joblib")
 
-        
+
         # 1. Auditing Crop Recommendation
         X_rec, y_rec, crop_le_rec, region_le_rec, season_le_rec = _build_recommendation_dataset()
-        
+
         # Calculate feature correlations (Pearson) with target
         # For multi-class target, we compute average absolute correlation across unique labels
         correlations = {}
@@ -52,11 +70,22 @@ class ModelAuditor:
         for idx, col in enumerate(feature_names_rec):
             corr = np.corrcoef(X_rec[:, idx], y_rec)[0, 1]
             correlations[col] = round(float(corr) if not np.isnan(corr) else 0.0, 4)
-            
-        X_train_rec, X_test_rec, y_train_rec, y_test_rec = train_test_split(
-            X_rec, y_rec, test_size=0.2, random_state=42, stratify=y_rec
-        )
-        
+
+        rec_holdout = self._load_holdout("recommend")
+        if rec_holdout is not None:
+            X_test_rec, y_test_rec = rec_holdout
+            logger.info("Using persisted genuinely-unseen holdout for crop_recommendation audit (n=%d)", len(X_test_rec))
+        else:
+            logger.warning(
+                "No holdout_recommend.joblib found -- falling back to a freshly split "
+                "dataset, which may overlap with the deployed model's training rows. "
+                "Re-run training via ml/train_models.py or ml/evaluate_models.py to "
+                "generate a proper holdout set."
+            )
+            _, X_test_rec, _, y_test_rec = train_test_split(
+                X_rec, y_rec, test_size=0.2, random_state=42, stratify=y_rec
+            )
+
         pred_rec = rec_model.predict(X_test_rec)
         acc_rec = accuracy_score(y_test_rec, pred_rec)
         prec, rec, f1, _ = precision_recall_fscore_support(y_test_rec, pred_rec, average="macro")
@@ -67,11 +96,22 @@ class ModelAuditor:
         
         # 2. Auditing Yield Prediction
         X_yield, y_yield, crop_le_y, region_le_y, season_le_y = _build_yield_dataset()
-        
-        X_train_y, X_test_y, y_train_y, y_test_y = train_test_split(
-            X_yield, y_yield, test_size=0.2, random_state=42
-        )
-        
+
+        yield_holdout = self._load_holdout("yield")
+        if yield_holdout is not None:
+            X_test_y, y_test_y = yield_holdout
+            logger.info("Using persisted genuinely-unseen holdout for yield_prediction audit (n=%d)", len(X_test_y))
+        else:
+            logger.warning(
+                "No holdout_yield.joblib found -- falling back to a freshly split "
+                "dataset, which may overlap with the deployed model's training rows. "
+                "Re-run training via ml/train_models.py or ml/evaluate_models.py to "
+                "generate a proper holdout set."
+            )
+            _, X_test_y, _, y_test_y = train_test_split(
+                X_yield, y_yield, test_size=0.2, random_state=42
+            )
+
         pred_yield = yield_model.predict(X_test_y)
         r2 = r2_score(y_test_y, pred_yield)
         mae = mean_absolute_error(y_test_y, pred_yield)
@@ -109,7 +149,11 @@ class ModelAuditor:
                 "f1_macro": round(float(f1), 4),
                 "correlations": correlations,
                 "permutation_importances": pi_rec_importances,
-                "robustness_noisy_weather_accuracy": round(float(noisy_acc_rec), 4)
+                "robustness_noisy_weather_accuracy": round(float(noisy_acc_rec), 4),
+                # FIX (C-3): flag whether this audit ran on the genuinely
+                # unseen holdout persisted at training time, or fell back to
+                # a reconstructed (potentially overlapping) split.
+                "evaluated_on_persisted_holdout": rec_holdout is not None,
             },
             "yield_prediction": {
                 "algorithm": type(yield_model).__name__,
@@ -118,10 +162,12 @@ class ModelAuditor:
                 "rmse": round(float(rmse), 2),
                 "mape_pct": round(float(mape), 2),
                 "permutation_importances": pi_yield_importances,
-                "robustness_drought_r2": round(float(drought_r2), 4)
-            }
+                "robustness_drought_r2": round(float(drought_r2), 4),
+                "evaluated_on_persisted_holdout": yield_holdout is not None,
+            },
+            "audited_at": time.time(),
         }
-        
+
         output_path = MODEL_DIR / "audit_metrics.json"
         with open(output_path, "w", encoding="utf-8") as f:
             json.dump(audit_output, f, indent=2)

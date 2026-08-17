@@ -1,3 +1,6 @@
+# NOT WIRED INTO PRODUCTION -- see AUDIT_REPORT.md M-22.
+# Not imported by backend/main.py, backend/routers/*, or any other live
+# request-handling code. It is an offline/dev script dependency only.
 import logging
 import os
 from pathlib import Path

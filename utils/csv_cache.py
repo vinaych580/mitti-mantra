@@ -60,9 +60,18 @@ def load(name: str) -> List[Dict[str, str]]:
         rows = list(csv.DictReader(f))
 
     with _lock:
-        _row_cache[cache_key] = (mtime, rows)
-        _idx_cache.pop(cache_key, None)  # invalidate derived indexes
-    return rows
+        # Re-verify the mtime we parsed against is still the file's current mtime
+        # (or at least not older than what another thread already committed) before
+        # storing, so a slow reader parsing a stale snapshot can't clobber a fresher
+        # concurrent write. This keeps the actual file parsing outside the lock
+        # (see comment above) while making the commit itself a compare-and-swap.
+        current = _row_cache.get(cache_key)
+        if current is None or current[0] <= mtime:
+            _row_cache[cache_key] = (mtime, rows)
+            _idx_cache.pop(cache_key, None)  # invalidate derived indexes
+            return rows
+        # A newer read already landed while we were parsing; serve that instead.
+        return current[1]
 
 
 def index_by(name: str, key: str) -> Dict[str, List[Dict[str, str]]]:

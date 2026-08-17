@@ -1,0 +1,29 @@
+{
+  "model": "yield",
+  "n_samples": 2956,
+  "n_features": 20,
+  "row_hashes_sample": [
+    "8936af811aed86c6652fcbbb1eb96ca7",
+    "01a8724f19d9738f63042ed6cdde8cae",
+    "01d94d6089ebdde3208ce0b6d8358cdb",
+    "e9f21fa6d96ad840fb0b6186b04f3eea",
+    "d1acca32ca8bb38a8932b8d402bf4561",
+    "8647928e995328480049f6ebcf749c58",
+    "5fb5911a689d115130ee68fbb6878a31",
+    "bcdb397b0838ef9fa93727bdb077b16a",
+    "50a710d5f1019489dbf5396793127038",
+    "b07b1cffeb1d277b2530f1bb4b7f3b13",
+    "70a05ebfa8cdb0af6e60821a5b89a120",
+    "424a92dd8fc760e462dca18bec4ed2d1",
+    "4758264cb14f1706592bc53c1a033dc3",
+    "3cc2a0b3193410304c61ad5e05abb480",
+    "5cfeb96ced95633efeba156e2ef58e7e",
+    "86a1f3ac8f3c3c546cb9aa94ba2a8445",
+    "03a7b5792760fab6112250f24f2dcb24",
+    "77f097612ee3ebf9591dc046594e52ac",
+    "022f2c5df89dc39c0fb514f44e047ced",
+    "8541d0fd53f292e4a72ec06ffb944cf9"
+  ],
+  "row_hash_set_size": 2925,
+  "saved_at": 1786949128.813735
+}

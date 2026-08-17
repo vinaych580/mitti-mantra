@@ -1,3 +1,6 @@
+# NOT WIRED INTO PRODUCTION -- see AUDIT_REPORT.md M-22.
+# This module is not imported by backend/main.py, backend/routers/*, or any
+# other live request-handling code. It is an offline/dev script only.
 import logging
 import argparse
 from pathlib import Path

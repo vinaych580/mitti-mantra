@@ -441,7 +441,15 @@
     if (!currentData) return;
     try {
       ensureRegion();
-      FarmState.save(currentData);
+      // M-7: FarmState.save() now returns null (rather than the saved plot)
+      // when the localStorage write didn't actually persist — e.g. quota
+      // exceeded — so this no longer redirects to a dashboard showing a
+      // "saved" boundary that isn't really there.
+      const saved = FarmState.save(currentData);
+      if (!saved) {
+        setStatus('Could not save on this device — storage is full. Free up space (or remove a saved plot) and try again.', 'error');
+        return;
+      }
       window.location.href = 'dashboard.html?fromMap=1';
     } catch (e) {
       setStatus('Could not save on this device: ' + e.message, 'error');
@@ -461,7 +469,11 @@
       const suggested = currentData.village || currentData.district || 'New plot';
       const name = prompt('Name this plot:', suggested);
       if (name === null) return;          // cancelled
-      FarmState.add(currentData, name.trim());
+      const added = FarmState.add(currentData, name.trim());
+      if (!added) {
+        alert('Could not save on this device — storage is full. Free up space (or remove a saved plot) and try again.');
+        return;
+      }
       window.location.href = 'dashboard.html?fromMap=1';
     } catch (e) {
       alert(e.message);

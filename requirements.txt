@@ -1,10 +1,16 @@
+# Production runtime dependencies only. Packages only used by offline/dev
+# scripts (ml/evaluate_models.py, ml/audit_models.py, data_ingestion/*) belong
+# in requirements-dev.txt instead -- see AUDIT_REPORT.md M-27.
 fastapi>=0.110
 uvicorn>=0.29
 pydantic>=2.0
-numpy>=1.24.0,<2.5
+# Pinned to match the actual tested venv (verified via `pip freeze`) -- the
+# previous <2.5 upper bound had already been violated by numpy 2.5.1 installed
+# in venv, so a fresh install would not reproduce the tested environment.
+# See AUDIT_REPORT.md H-10.
+numpy==2.5.1
 joblib>=1.3.0
 scikit-learn>=1.3.0
-pandas>=2.0.0
 Pillow>=10.0.0
 python-dotenv>=1.0.0
 requests>=2.31.0

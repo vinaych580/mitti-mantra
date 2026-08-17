@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import json
 import os
+import random
 import time
 import hashlib
 import collections
@@ -31,6 +32,20 @@ _DEFAULT_DIR = os.path.join(
 MAX_CACHE_SIZE = 1000
 _memory: collections.OrderedDict[str, tuple[float, Any]] = collections.OrderedDict()
 _memory_lock = threading.Lock()
+
+# Disk cache eviction (see AUDIT_REPORT.md M-25): unlike the in-memory cache,
+# which is bounded by MAX_CACHE_SIZE + LRU eviction, the on-disk JSON cache
+# previously grew without bound -- entries were only ever added
+# (`_write_disk`) or removed on an explicit `clear_bucket()`/`clear_all()`
+# call, never on expiry. We now do a cheap, probabilistic TTL sweep on write
+# so long-running / repeatedly-invoked processes don't accumulate stale files
+# forever. Entries with ttl_seconds <= 0 ("never expire" per the `cached()`
+# contract) are still capped by _DISK_MAX_AGE_SECONDS so a "permanent" cache
+# doesn't literally live forever on disk.
+_DISK_MAX_AGE_SECONDS = 30 * 24 * 3600  # 30 days, used as the fallback cap for ttl<=0 entries
+_DISK_SWEEP_PROBABILITY = 0.02  # sweep on ~1 in 50 writes; avoids a stat() storm on every call
+_last_disk_sweep = 0.0
+_disk_sweep_lock = threading.Lock()
 
 
 def _cache_dir() -> str:
@@ -61,12 +76,70 @@ def _read_disk(path: str) -> Optional[tuple[float, Any]]:
         return None
 
 
-def _write_disk(path: str, value: Any) -> None:
+def _write_disk(path: str, value: Any, ttl_seconds: int = 0) -> None:
     try:
         with open(path, "w", encoding="utf-8") as f:
-            json.dump({"ts": time.time(), "value": value}, f, default=str)
+            json.dump({"ts": time.time(), "ttl_seconds": ttl_seconds, "value": value}, f, default=str)
     except Exception:
         pass
+    _maybe_sweep_disk()
+
+
+def _maybe_sweep_disk() -> None:
+    """Probabilistically run sweep_disk_cache() so writers don't pay a stat()
+    cost on every call, while long-lived processes still get periodic cleanup."""
+    if random.random() >= _DISK_SWEEP_PROBABILITY:
+        return
+    with _disk_sweep_lock:
+        global _last_disk_sweep
+        now = time.time()
+        if now - _last_disk_sweep < 60:  # never sweep more than once a minute
+            return
+        _last_disk_sweep = now
+    sweep_disk_cache()
+
+
+def sweep_disk_cache() -> int:
+    """Remove expired on-disk cache entries. Returns the number of files removed.
+
+    An entry is expired when `now - ts >= ttl_seconds` (for ttl_seconds > 0),
+    or when `now - ts >= _DISK_MAX_AGE_SECONDS` regardless of ttl (covers
+    ttl_seconds <= 0 "never expire" entries and legacy files written before
+    this sweep existed, which carry no ttl_seconds field).
+    """
+    d = _cache_dir()
+    removed = 0
+    now = time.time()
+    try:
+        names = os.listdir(d)
+    except OSError:
+        return 0
+    for name in names:
+        if not name.endswith(".json"):
+            continue
+        path = os.path.join(d, name)
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                payload = json.load(f)
+            ts = float(payload["ts"])
+            ttl = int(payload.get("ttl_seconds", 0) or 0)
+        except Exception:
+            # Unreadable/corrupt cache file -- fall back to filesystem mtime
+            # so it still gets swept eventually instead of lingering forever.
+            try:
+                ts = os.path.getmtime(path)
+                ttl = 0
+            except OSError:
+                continue
+        age = now - ts
+        expired = (0 < ttl <= age) or age >= _DISK_MAX_AGE_SECONDS
+        if expired:
+            try:
+                os.remove(path)
+                removed += 1
+            except OSError:
+                pass
+    return removed
 
 
 def cached(
@@ -120,7 +193,7 @@ def cached(
                 if len(_memory) > MAX_CACHE_SIZE:
                     _memory.popitem(last=False)
             if serializable:
-                _write_disk(os.path.join(_cache_dir(), tag + ".json"), value)
+                _write_disk(os.path.join(_cache_dir(), tag + ".json"), value, ttl_seconds)
             return value
 
         def clear_bucket() -> None:

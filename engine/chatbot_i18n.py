@@ -42,9 +42,19 @@ _KANNADA = re.compile(r"[ಀ-೿]")
 # sentence typed in Latin script, which is how a large share of Indian
 # WhatsApp/SMS-literate users actually type. Deliberately short and common
 # words only, to keep false positives on English text low.
+#
+# NOTE (C-4 fix): "mandi" and "kisan" were removed from this list. Both are
+# everyday English-Indian vocabulary that this platform itself uses
+# constantly in English sentences ("mandi price", "PM-KISAN scheme", "Kisan
+# Credit Card") — having them here misdetected ordinary English messages as
+# Hindi and (combined with sticky context.lang in backend/chatbot.py) could
+# lock an entire English session into Hindi replies after a single mention
+# of "mandi". The remaining words are distinctly Hindi function/domain words
+# that are not standalone English vocabulary, so they're safe single-word
+# triggers.
 _HINGLISH_WORDS = {
     "kya", "kaise", "kaisa", "kab", "kahan", "kitna", "kitne", "kitni",
-    "fasal", "fasl", "kheti", "kisan", "mandi", "bhav", "daam", "mausam",
+    "fasal", "fasl", "kheti", "bhav", "daam", "mausam",
     "beej", "khad", "sinchai", "paani", "zameen", "jameen", "rupaye",
     "bataye", "batao", "bataiye", "chahiye", "acha", "theek", "namaste",
     "namaskar", "dhanyavad", "shukriya", "aap", "hum", "mera", "meri",
@@ -342,6 +352,7 @@ REPLY: Dict[str, Dict[str, str]] = {
             "**क्षेत्र** बताएं (जैसे _तेलंगाना मेडक_ या _एमपी सेहोर_) और "
             "मैं सर्वश्रेष्ठ फ़सलों की सिफारिश करूंगा।"
         ),
+        "need_crop": "कौन सी फ़सल? जैसे `{example} rice`",
         "sug_recommend_medak_kharif": "तेलंगाना मेडक के लिए खरीफ़ में सिफारिश करें",
         "recommend_no_strong": "{region} में {season} के लिए कोई मजबूत सिफारिश नहीं है।",
         "recommend_header": "**{region}** में **{season}** के लिए शीर्ष फ़सलें (बजट {budget}/एकड़, {area} एकड़):\n",
@@ -365,7 +376,8 @@ REPLY: Dict[str, Dict[str, str]] = {
         "sug_irrigation_of2": "{crop} के लिए सिंचाई कार्यक्रम",
         "sug_fertilizer_of": "{crop} के लिए उर्वरक",
         "irrigation_header": "### सिंचाई कार्यक्रम — {crop}",
-        "irrigation_sub": "_15 जून को बुवाई · 800 मिमी मौसमी वर्षा_\n",
+        "irrigation_sub": "_15 जून को बुवाई · {rain} मिमी मौसमी वर्षा_\n",
+        "need_crop": "कौन सी फ़सल? जैसे `/{cmd} rice`।",
         "irrigation_table_hdr": "| सप्ताह | चरण | जल आवश्यकता (मिमी) | वर्षा (मिमी) | सिंचाई (मिमी) |",
         "irrigation_none": "_कोई कार्यक्रम उपलब्ध नहीं है।_",
         "irrigation_total": "\n**कुल मौसमी सिंचाई आवश्यकता:** {mm} मिमी",
@@ -470,6 +482,7 @@ REPLY: Dict[str, Dict[str, str]] = {
             "**ప్రాంతం** చెప్పండి (ఉదా. _తెలంగాణ మెదక్_ లేదా _MP సెహోర్_) "
             "నేను ఉత్తమ పంటలను సిఫారసు చేస్తాను."
         ),
+        "need_crop": "ఏ పంట? ఉదా. `{example} rice`",
         "sug_recommend_medak_kharif": "తెలంగాణ మెదక్ కోసం ఖరీఫ్‌లో సిఫారసు చేయండి",
         "recommend_no_strong": "{region}లో {season}కి బలమైన సిఫారసు లేదు.",
         "recommend_header": "**{region}**లో **{season}**కి అగ్రశ్రేణి పంటలు (బడ్జెట్ {budget}/ఎకరం, {area} ఎకరాలు):\n",
@@ -493,7 +506,8 @@ REPLY: Dict[str, Dict[str, str]] = {
         "sug_irrigation_of2": "{crop}కి నీటిపారుదల షెడ్యూల్",
         "sug_fertilizer_of": "{crop}కి ఎరువు",
         "irrigation_header": "### నీటిపారుదల షెడ్యూల్ — {crop}",
-        "irrigation_sub": "_జూన్ 15న విత్తనం · 800 మిమీ కాలానుగుణ వర్షపాతం_\n",
+        "irrigation_sub": "_జూన్ 15న విత్తనం · {rain} మిమీ కాలానుగుణ వర్షపాతం_\n",
+        "need_crop": "ఏ పంట? ఉదా. `/{cmd} rice`.",
         "irrigation_table_hdr": "| వారం | దశ | నీటి అవసరం (మిమీ) | వర్షం (మిమీ) | నీటిపారుదల (మిమీ) |",
         "irrigation_none": "_షెడ్యూల్ అందుబాటులో లేదు._",
         "irrigation_total": "\n**మొత్తం కాలానుగుణ నీటిపారుదల అవసరం:** {mm} మిమీ",
@@ -600,6 +614,7 @@ REPLY: Dict[str, Dict[str, str]] = {
             "ನಾನು ಉತ್ತಮ ಬೆಳೆಗಳನ್ನು ಶಿಫಾರಸು ಮಾಡುತ್ತೇನೆ."
         ),
         "sug_recommend_medak_kharif": "ತೆಲಂಗಾಣ ಮೆದಕ್‌ಗೆ ಖರೀಫ್‌ನಲ್ಲಿ ಶಿಫಾರಸು ಮಾಡಿ",
+        "need_crop": "ಯಾವ ಬೆಳೆ? ಉದಾ. `{example} rice`",
         "recommend_no_strong": "{region}ನಲ್ಲಿ {season}ಗೆ ಬಲವಾದ ಶಿಫಾರಸು ಇಲ್ಲ.",
         "recommend_header": "**{region}**ನಲ್ಲಿ **{season}**ಗೆ ಅಗ್ರ ಬೆಳೆಗಳು (ಬಜೆಟ್ {budget}/ಎಕರೆ, {area} ಎಕರೆ):\n",
         "recommend_line": "{i}. **{name}** — ಲಾಭ {profit}, ROI {roi}%, ಅಪಾಯ {risk}/10",
@@ -622,7 +637,8 @@ REPLY: Dict[str, Dict[str, str]] = {
         "sug_irrigation_of2": "{crop}ಗೆ ನೀರಾವರಿ ವೇಳಾಪಟ್ಟಿ",
         "sug_fertilizer_of": "{crop}ಗೆ ಗೊಬ್ಬರ",
         "irrigation_header": "### ನೀರಾವರಿ ವೇಳಾಪಟ್ಟಿ — {crop}",
-        "irrigation_sub": "_ಜೂನ್ 15ರಂದು ಬಿತ್ತನೆ · 800 ಮಿಮೀ ಋತುಮಾನ ಮಳೆ_\n",
+        "irrigation_sub": "_ಜೂನ್ 15ರಂದು ಬಿತ್ತನೆ · {rain} ಮಿಮೀ ಋತುಮಾನ ಮಳೆ_\n",
+        "need_crop": "ಯಾವ ಬೆಳೆ? ಉದಾ. `/{cmd} rice`.",
         "irrigation_table_hdr": "| ವಾರ | ಹಂತ | ನೀರಿನ ಅಗತ್ಯ (ಮಿಮೀ) | ಮಳೆ (ಮಿಮೀ) | ನೀರಾವರಿ (ಮಿಮೀ) |",
         "irrigation_none": "_ವೇಳಾಪಟ್ಟಿ ಲಭ್ಯವಿಲ್ಲ._",
         "irrigation_total": "\n**ಒಟ್ಟು ಋತುಮಾನ ನೀರಾವರಿ ಅಗತ್ಯ:** {mm} ಮಿಮೀ",

@@ -1,3 +1,6 @@
+# NOT WIRED INTO PRODUCTION -- see AUDIT_REPORT.md M-22.
+# Only imported by soil_health_card.py, which is itself unwired dead code;
+# not reachable from any live request-handling code.
 import logging
 from typing import Dict, Optional
 from data_ingestion.cache import cached

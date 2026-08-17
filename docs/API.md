@@ -19,6 +19,7 @@ All endpoints return JSON. Interactive Swagger UI: [`/docs`](http://localhost:80
 - [Simulation & recommendations](#simulation--recommendations)
 - [Market intelligence](#market-intelligence)
 - [Farm advisory](#farm-advisory)
+- [Flagship features](#flagship-features)
 - [Farm management](#farm-management)
 - [Chat](#chat)
 - [ML management](#ml-management)

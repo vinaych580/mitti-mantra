@@ -25,6 +25,13 @@
     pulses:    { name: 'Pulses',    season: 'kharif', base_yield:  700, water_mm:  450, temp_min: 18, temp_max: 32, n: 18, p: 22, k: 30, base_cost:  9500 },
     mustard:   { name: 'Mustard',   season: 'rabi',   base_yield:  900, water_mm:  350, temp_min: 10, temp_max: 25, n: 35, p: 22, k: 30, base_cost: 10500 },
     bajra:     { name: 'Bajra',     season: 'kharif', base_yield: 1100, water_mm:  400, temp_min: 22, temp_max: 36, n: 30, p: 18, k: 25, base_cost:  8500 },
+    // Added for parity with dashboard.js's crop dropdowns (CROP_LABELS),
+    // which already offered these three — values sourced from
+    // dataset/crop_parameters.csv so offline mode doesn't hit an
+    // "unknown crop" error for them.
+    jowar:     { name: 'Jowar',     season: 'kharif', base_yield:  900, water_mm:  500, temp_min: 20, temp_max: 38, n: 40, p: 25, k: 25, base_cost: 13000 },
+    potato:    { name: 'Potato',    season: 'rabi',   base_yield: 9000, water_mm:  550, temp_min: 10, temp_max: 26, n: 80, p: 40, k: 100, base_cost: 42000 },
+    onion:     { name: 'Onion',     season: 'rabi',   base_yield: 12000, water_mm:  650, temp_min: 13, temp_max: 30, n: 50, p: 30, k: 40, base_cost: 38000 },
   };
 
   const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));

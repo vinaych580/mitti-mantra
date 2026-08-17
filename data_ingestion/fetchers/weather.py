@@ -1,5 +1,10 @@
 from __future__ import annotations
 
+# NOT WIRED INTO PRODUCTION -- see AUDIT_REPORT.md M-22.
+# Only reachable via the data_ingestion package-level re-export, which is
+# itself not imported by any live request-handling code (backend/main.py,
+# backend/routers/*). Offline/dev script dependency only.
+
 import csv
 import logging
 from datetime import date, timedelta

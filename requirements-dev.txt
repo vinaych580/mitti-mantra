@@ -1,0 +1,16 @@
+# Dev/offline dependencies -- NOT part of the production Vercel bundle.
+# These are used only by scripts that run outside the live request path
+# (ml/evaluate_models.py, ml/audit_models.py, data_ingestion/feature_pipeline.py).
+# See AUDIT_REPORT.md M-27.
+-r requirements.txt
+
+# Used by ml/audit_models.py, ml/evaluate_models.py, data_ingestion/feature_pipeline.py.
+pandas>=2.0.0
+
+# Imported by ml/evaluate_models.py behind a try/except (CATBOOST_AVAILABLE guard),
+# so it is optional even for evaluation -- but when present, pin to what has been
+# verified to work with the rest of this file's pins. Not currently installed in
+# the tested venv (verified via `pip freeze`), so this is an upper/lower bound
+# based on the latest release compatible with numpy/pandas above, not an exact
+# tested pin. See AUDIT_REPORT.md M-26.
+catboost>=1.2.10

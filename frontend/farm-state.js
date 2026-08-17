@@ -255,12 +255,21 @@
     return migrated;
   }
 
+  /**
+   * M-7: this used to swallow localStorage.setItem quota-exceeded errors
+   * silently and still dispatch 'mm:plot-changed' / let callers treat the
+   * write as successful — a farmer could be told a boundary was saved when
+   * it silently wasn't. Now returns whether the write actually persisted so
+   * callers (save/add/remove/rename/setActive) can propagate the failure.
+   */
   function _writeStore(store, reason) {
+    let persisted = true;
     try {
       localStorage.setItem(PLOTS_KEY, JSON.stringify(store));
-    } catch { /* storage full — ignore */ }
+    } catch { persisted = false; /* storage full (or unavailable) */ }
 
     // Mirror the active plot to the legacy key so direct readers stay correct.
+    // Best-effort only — it does not gate the overall success/failure signal.
     const active = _activeOf(store);
     try {
       if (active) localStorage.setItem(STORAGE_KEY, JSON.stringify(active));
@@ -274,9 +283,12 @@
           plots: store.plots.slice(),
           activeId: store.activeId,
           reason: reason || 'update',
+          persisted,
         },
       }));
     } catch { /* pre-DOM call — nothing is listening yet anyway */ }
+
+    return persisted;
   }
 
   function _activeOf(store) {
@@ -306,8 +318,8 @@
     });
     store.plots = store.plots.map(p => (p.id === active.id ? merged : p));
     store.activeId = merged.id;
-    _writeStore(store, 'save');
-    return merged;
+    const persisted = _writeStore(store, 'save');
+    return persisted ? merged : null;
   }
 
   function clear() {
@@ -352,8 +364,8 @@
     const plot = _asPlot(farm, name);
     store.plots.push(plot);
     store.activeId = plot.id;
-    _writeStore(store, 'add');
-    return plot;
+    const persisted = _writeStore(store, 'add');
+    return persisted ? plot : null;
   }
 
   function remove(id) {
@@ -364,8 +376,7 @@
     if (store.activeId === id) {
       store.activeId = next.length ? next[0].id : null;
     }
-    _writeStore(store, 'remove');
-    return true;
+    return _writeStore(store, 'remove');
   }
 
   function rename(id, name) {
@@ -375,16 +386,15 @@
     const plot = store.plots.find(p => p.id === id);
     if (!plot) return false;
     plot.name = clean;
-    _writeStore(store, 'rename');
-    return true;
+    return _writeStore(store, 'rename');
   }
 
   function setActive(id) {
     const store = _readStore();
     if (!store.plots.some(p => p.id === id)) return null;
     store.activeId = id;
-    _writeStore(store, 'activate');
-    return _activeOf(store);
+    const persisted = _writeStore(store, 'activate');
+    return persisted ? _activeOf(store) : null;
   }
 
   /* ── Export ─────────────────────────────────────── */

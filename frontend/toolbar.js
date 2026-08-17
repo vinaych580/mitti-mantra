@@ -62,9 +62,9 @@
         position: fixed; right: 20px; bottom: 86px; z-index: 9998;
         width: 268px; padding: 14px;
         background: rgba(255,255,255,0.98); backdrop-filter: blur(14px);
-        border: 1px solid rgba(0,0,0,0.06);
+        border: 1px solid rgba(29,26,21,0.06);
         border-radius: 18px;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.18);
+        box-shadow: 0 20px 50px rgba(29,26,21,0.18);
         opacity: 0; transform: translateY(12px) scale(.94);
         transform-origin: bottom right;
         pointer-events: none;
@@ -91,7 +91,7 @@
       }
       .qw-panel .i18n-switcher button.active { background: #2f6b3a; color: #fff; }
       .qw-panel__sep {
-        height: 1px; background: rgba(0,0,0,0.06); margin: 4px 0 10px;
+        height: 1px; background: rgba(29,26,21,0.06); margin: 4px 0 10px;
       }
       .qw-panel__grid {
         display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
@@ -139,7 +139,7 @@
       .qw-modal__card {
         background: #fff; border-radius: 22px; padding: 26px;
         max-width: 440px; width: 100%;
-        box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+        box-shadow: 0 24px 60px rgba(29,26,21,0.25);
         font-family: 'Inter', system-ui, sans-serif;
       }
       .qw-modal__h { font-family: 'Fraunces', serif; font-size: 1.3rem; margin: 0 0 10px; color: #1d1a15; }
@@ -328,7 +328,7 @@
       html[data-theme="dark"] .qw-panel {
         background: rgba(35,32,28,0.98) !important;
         border-color: rgba(255,255,255,0.08);
-        box-shadow: 0 20px 50px rgba(0,0,0,0.55);
+        box-shadow: 0 20px 50px rgba(29,26,21,0.55);
       }
       html[data-theme="dark"] .qw-panel__label { color: #9e9384; }
       html[data-theme="dark"] .qw-panel__sep   { background: rgba(255,255,255,0.08); }
@@ -366,7 +366,7 @@
         background: rgba(35, 32, 28, 0.88);
         color: var(--ink) !important;
         border-color: rgba(255, 255, 255, 0.12);
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+        box-shadow: 0 4px 14px rgba(29, 26, 21, 0.22);
       }
       html[data-theme="dark"] .hero__cta .btn-ghost svg { color: var(--ink); }
       html[data-theme="dark"] .hero__cta .btn-ghost:hover {
@@ -433,10 +433,6 @@
         background: var(--surface) !important;
         color: #9ed2a7 !important;
         border-color: rgba(255, 255, 255, 0.12) !important;
-      }
-      html[data-theme="dark"] .mm-chat-fab .mm-drag-hint {
-        background: var(--surface) !important;
-        color: #9ed2a7 !important;
       }
       html[data-theme="dark"] .mm-msg th {
         background: rgba(47, 107, 58, 0.2) !important;

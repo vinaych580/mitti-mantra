@@ -171,21 +171,25 @@
   // Styles (injected once)
   // ------------------------------------------------------------------
   const css = `
-  /* ---- Farm Profile bar ---- */
-  .mm-farm-bar{position:sticky;top:60px;z-index:40;background:linear-gradient(135deg,#f4f9f0,#eaf3ea);
-    border:1px solid #d7e6d1;border-radius:14px;padding:10px 14px;margin:12px 0 16px;
-    display:flex;gap:10px;align-items:center;flex-wrap:wrap;box-shadow:0 2px 8px rgba(0,0,0,.04);
+  /* ---- Farm Profile bar ----
+     Tokenized against DESIGN.md: brand/ink hues are constant across themes,
+     so this needs no separate toolbar.js dark-mode block — it inherits. */
+  .mm-farm-bar{position:sticky;top:60px;z-index:40;
+    background:linear-gradient(135deg,var(--brand-soft),var(--bg-soft));
+    border:1px solid color-mix(in srgb, var(--brand) 20%, transparent);border-radius:14px;
+    padding:10px 14px;margin:12px 0 16px;
+    display:flex;gap:10px;align-items:center;flex-wrap:wrap;box-shadow:var(--shadow-sm);
     font-family:Inter,system-ui,sans-serif;grid-column:1 / -1;}
-  .mm-farm-bar__lbl{font-size:.72rem;font-weight:700;color:#1b5e20;letter-spacing:.1em;
+  .mm-farm-bar__lbl{font-size:.72rem;font-weight:700;color:var(--brand);letter-spacing:.1em;
     text-transform:uppercase;margin-right:4px;display:flex;align-items:center;gap:6px;}
   .mm-farm-bar__field{display:flex;flex-direction:column;gap:2px;min-width:130px;}
-  .mm-farm-bar__field small{font-size:.65rem;color:#5b6b5b;font-weight:600;text-transform:uppercase;letter-spacing:.08em;}
-  .mm-farm-bar select,.mm-farm-bar input{border:1px solid #cfdccf;background:#fff;border-radius:8px;
-    padding:6px 8px;font-size:13px;font-family:inherit;min-width:120px;}
-  .mm-farm-bar__save{margin-left:auto;background:#2e7d32;color:#fff;border:none;border-radius:999px;
+  .mm-farm-bar__field small{font-size:.65rem;color:var(--ink-soft);font-weight:600;text-transform:uppercase;letter-spacing:.08em;}
+  .mm-farm-bar select,.mm-farm-bar input{border:1.5px solid rgba(29,26,21,.1);background:var(--bg);color:var(--ink);
+    border-radius:8px;padding:6px 8px;font-size:13px;font-family:inherit;min-width:120px;}
+  .mm-farm-bar__save{margin-left:auto;background:var(--brand);color:#fff;border:none;border-radius:999px;
     padding:7px 14px;font-weight:600;font-size:12.5px;cursor:pointer;}
-  .mm-farm-bar__save:hover{background:#1b5e20;}
-  .mm-farm-bar__hint{font-size:.7rem;color:#5b6b5b;margin-left:6px;}
+  .mm-farm-bar__save:hover{background:var(--brand-deep);}
+  .mm-farm-bar__hint{font-size:.7rem;color:var(--ink-soft);margin-left:6px;}
   .mm-farm-bar input[readonly]{background:var(--bg-soft);color:var(--ink-soft);cursor:default;}
   .mm-farm-bar__measured{font-size:.72rem;color:var(--ink-soft);text-decoration:underline;
     text-underline-offset:2px;margin-top:2px;}
@@ -205,8 +209,8 @@
 
   /* ---- Toast ---- */
   .mm-toast{position:fixed;left:50%;bottom:34px;transform:translateX(-50%);
-    background:#1b5e20;color:#fff;padding:10px 16px;border-radius:999px;font-size:13px;
-    box-shadow:0 8px 24px rgba(0,0,0,.25);z-index:10000;opacity:0;transition:opacity .25s, transform .25s;
+    background:var(--brand-deep);color:#fff;padding:10px 16px;border-radius:999px;font-size:13px;
+    box-shadow:0 8px 24px rgba(29,26,21,.25);z-index:10000;opacity:0;transition:opacity .25s, transform .25s;
     font-family:Inter,system-ui,sans-serif;}
   .mm-toast.show{opacity:1;transform:translateX(-50%) translateY(-4px);}
 
@@ -214,7 +218,10 @@
   body.mm-lg{font-size:17px;}
   body.mm-lg .kpi__val{font-size:1.6rem;}
   body.mm-hc{filter:contrast(1.15) saturate(1.15);}
-  body.mm-hc .kpi{outline:2px solid rgba(0,0,0,.08);}
+  /* var(--ink) rather than a fixed rgba so the outline stays visible against
+     the KPI tile's own background in both themes — a black outline vanishes
+     against the dark-mode tile it's meant to highlight. */
+  body.mm-hc .kpi{outline:2px solid color-mix(in srgb, var(--ink) 35%, transparent);}
   body.mm-hc a,body.mm-hc .btn-primary{text-decoration:underline;}
 
   /* ---- Print / PDF ---- */
@@ -342,6 +349,21 @@
     // pull its values into the bar AND into the tool forms, so a switch is not
     // half-applied (bar updated, forms still showing the previous plot).
     document.addEventListener("mm:plot-changed", () => {
+      fillBar();
+      profile.applyToForms();
+    });
+
+    // M-6: the plot-name dropdown (mm-plots.js) listens for the cross-tab
+    // 'storage' event and refreshes; this farm bar only reacted to the
+    // same-tab 'mm:plot-changed' CustomEvent above, so two tabs open at once
+    // would disagree about the active plot's region/season/budget after a
+    // switch made in one of them. Mirror mm-plots.js's approach here too.
+    window.addEventListener("storage", (e) => {
+      const fs = window.FarmState;
+      const relevantKeys = fs
+        ? [fs.PLOTS_KEY, fs.STORAGE_KEY, fs.LEGACY_KEY].filter(Boolean)
+        : ["mittimantra_plots_v1", "mittimantra_selectedFarm", "agrisim_farm"];
+      if (e.key !== null && !relevantKeys.includes(e.key)) return;
       fillBar();
       profile.applyToForms();
     });

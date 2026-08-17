@@ -31,6 +31,32 @@
     try { localStorage.setItem(BOOKINGS_KEY, JSON.stringify(list)); } catch (_) {}
   }
 
+  /* ─── Booking-conflict checking (H-8) ───
+     There's no real backend to enforce exclusivity, but we can at least prevent
+     this device from double-booking the same tractor for overlapping dates by
+     checking this device's own booking history in localStorage before saving
+     a new one. A booking "occupies" [date, date + spanDays - 1] — day-rate
+     bookings span multiple calendar days, hour-rate bookings are treated as
+     occupying just the one day. */
+  function computeSpanDays(rateType, hoursOrDays) {
+    return rateType === 'day' ? Math.max(1, Number(hoursOrDays) || 1) : 1;
+  }
+  function bookingDateRange(dateStr, spanDays) {
+    const start = new Date(dateStr + 'T00:00:00');
+    const end = new Date(start);
+    end.setDate(start.getDate() + Math.max(1, spanDays) - 1);
+    return { start, end };
+  }
+  function findTractorBookingConflict(tractorId, dateStr, spanDays) {
+    if (!dateStr) return null;
+    const { start, end } = bookingDateRange(dateStr, spanDays);
+    const existing = getMyBookings().filter((b) => b.tractorId === tractorId && b.date);
+    return existing.find((b) => {
+      const bRange = bookingDateRange(b.date, b.spanDays || 1);
+      return start <= bRange.end && bRange.start <= end;
+    }) || null;
+  }
+
   /* ─── Trust loop: post-job verification + reliability score ───
      Real bookings on this device are logged after their date passes and feed
      into a tractor's reliability chip. Since no fleet has real booking history
@@ -960,6 +986,7 @@
           date,
           duration: durationStr,
           rateType,
+          spanDays: computeSpanDays(rateType, rateType === 'hour' ? hours : days),
           cost: totalEstimate,
           splitWith,
           myShare,
@@ -1139,14 +1166,19 @@
             </div>
           </div>
 
+          <div class="mm-form-error" id="bookingFormError" role="alert" style="display:none;color:var(--danger, #8b2f2f);font-size:0.78rem;font-weight:600;margin-top:-6px;"></div>
+
           <button type="submit" class="mm-form-submit">Confirm Booking Request</button>
         </form>
       `;
 
-      // Set default date to tomorrow
+      // Set default date to tomorrow, and disallow picking anything earlier (M-11).
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
-      document.getElementById('bookingDate').value = tomorrow.toISOString().split('T')[0];
+      const tomorrowStr = tomorrow.toISOString().split('T')[0];
+      const bookingDateInput = document.getElementById('bookingDate');
+      bookingDateInput.value = tomorrowStr;
+      bookingDateInput.min = tomorrowStr;
 
       // Form bindings
       document.getElementById('btnModalClose').addEventListener('click', () => {
@@ -1225,8 +1257,44 @@
       });
 
       const form = document.getElementById('modalBookingForm');
+      const formErrorEl = document.getElementById('bookingFormError');
+      function showFormError(msg) {
+        if (!formErrorEl) return;
+        formErrorEl.textContent = msg;
+        formErrorEl.style.display = '';
+      }
+      function clearFormError() {
+        if (!formErrorEl) return;
+        formErrorEl.style.display = 'none';
+        formErrorEl.textContent = '';
+      }
+
       form.addEventListener('submit', (ev) => {
         ev.preventDefault();
+        clearFormError();
+
+        // M-11: reject a past (or same-day/before-min) booking date even if the
+        // native date picker's min got bypassed somehow.
+        const dateVal = bookingDateInput.value;
+        const minVal = bookingDateInput.min;
+        if (!dateVal || (minVal && dateVal < minVal)) {
+          showFormError('Please choose a valid date — bookings must start tomorrow or later.');
+          bookingDateInput.focus();
+          return;
+        }
+
+        // H-8: block/warn on a conflicting booking for this tractor on this device.
+        const spanDays = computeSpanDays(rateType, rateType === 'hour' ? hours : days);
+        const conflict = findTractorBookingConflict(t.id, dateVal, spanDays);
+        if (conflict) {
+          const conflictRange = bookingDateRange(conflict.date, conflict.spanDays || 1);
+          const rangeLabel = conflictRange.start.getTime() === conflictRange.end.getTime()
+            ? conflict.date
+            : `${conflict.date} to ${conflictRange.end.toISOString().split('T')[0]}`;
+          showFormError(`You already have ${esc(t.name)} booked for ${rangeLabel} (${conflict.bookingId}). Pick a different date or tractor to avoid a scheduling conflict.`);
+          return;
+        }
+
         renderModalContent('success');
       });
 

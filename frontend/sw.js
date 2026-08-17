@@ -6,16 +6,13 @@
      • Network-only for API calls to the backend.
 */
 
-const VERSION = 'mittimantra-v43';
+const VERSION = 'mittimantra-v44';
 const CORE = [
   './',
   './index.html',
   './dashboard.html',
   './farm-boundary.html',
-  './login.html',
   './marketplace.html',
-  './firebase-config.js',
-  './auth.js',
   './style.css',
   './assets/logo.png',
   './assets/logo-192.png',

@@ -129,21 +129,21 @@ def _entry(
 
 
 def _mandi_entry() -> Dict[str, Any]:
+    # NOTE (AUDIT_REPORT.md M-23): mandi.get_mandi_price() is the only function
+    # that ever records mode="live" (via last_resolution()/_record()), but
+    # nothing in the live request path calls it — the app only ever calls
+    # into `mandi_prices.csv` directly. That makes a "live" mandi-price
+    # freshness entry permanently unreachable today, so we don't pretend the
+    # branch exists here; this always reports "seed". `last_resolution()`'s
+    # `live_error` is still meaningful as "why isn't this live" context
+    # (e.g. no DATAGOV_API_KEY) even though the "live" outcome can't occur.
+    # If get_mandi_price() is wired into the live path in the future, restore
+    # a mode == "live" branch here.
     from data_ingestion.fetchers.mandi import last_resolution
 
     resolution = last_resolution()
     key_present = bool(os.getenv("DATAGOV_API_KEY"))
     seed_as_of = _max_column("mandi_prices.csv", "date")
-
-    if resolution.get("mode") == "live":
-        return _entry(
-            "mandi_prices",
-            "Mandi prices",
-            "live",
-            _epoch_to_iso(resolution.get("live_ok_at")),
-            "data.gov.in (Agmarknet daily modal prices)",
-            "Live prices, refreshed at most once an hour.",
-        )
 
     if key_present:
         reason = resolution.get("live_error") or "the live API has not been queried yet"

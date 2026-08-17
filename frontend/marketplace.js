@@ -1709,6 +1709,34 @@
     });
   }
 
+  /** Shared inventory-decrement logic (M-10) — used by both the seller-side
+   *  "Record a Sale" report and the buyer-side "Simulate: Mark Completed"
+   *  lifecycle transition, so the two pathways can't disagree about the same
+   *  listing's quantityAvailable. Clamps at 0 and flips the listing to
+   *  sold_out, mirroring the original record-sale behavior exactly. */
+  function applySaleToListingQuantity(listingId, qty) {
+    const amount = Math.max(0, Number(qty) || 0);
+    if (!amount) return;
+
+    const mine = getMyListings();
+    const mineIdx = mine.findIndex((x) => x.id === listingId);
+    if (mineIdx >= 0) {
+      mine[mineIdx].quantityAvailable = Math.max(0, (mine[mineIdx].quantityAvailable || 0) - amount);
+      if (mine[mineIdx].quantityAvailable === 0) mine[mineIdx].status = 'sold_out';
+      saveMyListings(mine);
+      return;
+    }
+
+    // Demo catalog listings are frozen reference data never written back to
+    // localStorage (see allListings()) — mutate the in-memory copy so this
+    // session's UI still reflects the completed purchase consistently.
+    const demo = DEMO_LISTINGS.find((x) => x.id === listingId);
+    if (demo) {
+      demo.quantityAvailable = Math.max(0, (demo.quantityAvailable || 0) - amount);
+      if (demo.quantityAvailable === 0) demo.status = 'sold_out';
+    }
+  }
+
   function handleListingAction(id, action, row) {
     const mine = getMyListings();
     const idx = mine.findIndex((l) => l.id === id);
@@ -1742,13 +1770,7 @@
         });
         saveSelfSales(sales);
 
-        const listings = getMyListings();
-        const li = listings.findIndex((x) => x.id === l.id);
-        if (li >= 0) {
-          listings[li].quantityAvailable = Math.max(0, listings[li].quantityAvailable - qty);
-          if (listings[li].quantityAvailable === 0) listings[li].status = 'sold_out';
-          saveMyListings(listings);
-        }
+        applySaleToListingQuantity(l.id, qty);
         toast(`Sale of ${qty} ${l.unit} recorded`);
         renderMyListings();
       });
@@ -1885,7 +1907,15 @@
       'simulate-pickup': () => { o.status = 'PICKUP_PENDING'; },
       'simulate-transit': () => { o.status = 'IN_TRANSIT'; },
       'simulate-delivered': () => { o.status = 'DELIVERED'; },
-      'simulate-complete': () => { o.status = 'COMPLETED'; o.paymentStatus = 'PAID'; },
+      // M-10: mirror the seller-side "Record a Sale" inventory decrement here
+      // too — otherwise a purchase can walk all the way to COMPLETED without
+      // ever reducing the listing's quantityAvailable, disagreeing with the
+      // seller-reported number for the same stock.
+      'simulate-complete': () => {
+        o.status = 'COMPLETED';
+        o.paymentStatus = 'PAID';
+        applySaleToListingQuantity(o.listingId, o.requestedQuantity);
+      },
     };
 
     if (transitions[action]) {

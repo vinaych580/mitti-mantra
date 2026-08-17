@@ -11,9 +11,10 @@ Or via API:    POST /api/train
 from __future__ import annotations
 
 import csv
-# FIX (4.3): Removed unused imports `hashlib` and `random`
+import hashlib
 import json
 import logging
+import time
 import warnings
 from pathlib import Path
 from typing import Any
@@ -87,6 +88,39 @@ def _fit_label_encoders(crops: list[str], regions: list[str], seasons: list[str]
     region_le = LabelEncoder().fit(sorted(set(regions)))
     season_le = LabelEncoder().fit(sorted(set(seasons)))
     return crop_le, region_le, season_le
+
+
+# ---------------------------------------------------------------------------
+# FIX (C-3): Persist the *actual* held-out test rows used to evaluate a
+# freshly-trained model, so ml/audit_models.py can audit against rows that
+# are genuinely unseen by the deployed model instead of reconstructing its
+# own dataset with the same RandomState(42) seed/row-order and getting a
+# test split that mostly overlaps with the deployed model's training rows
+# (measured at 83.6% row-hash overlap before this fix).
+# ---------------------------------------------------------------------------
+def _row_hash(row: np.ndarray) -> str:
+    return hashlib.md5(np.round(np.asarray(row, dtype=np.float64), 6).tobytes()).hexdigest()
+
+
+def _save_holdout(name: str, X_test: np.ndarray, y_test: np.ndarray) -> None:
+    """Persist the exact held-out test set for `name` alongside the model
+    artifact, so a later audit can evaluate on genuinely unseen rows.
+    """
+    holdout_path = MODEL_DIR / f"holdout_{name}.joblib"
+    joblib.dump({"X_test": X_test, "y_test": y_test}, holdout_path)
+
+    manifest_path = MODEL_DIR / f"holdout_{name}.json"
+    row_hashes = [_row_hash(row) for row in X_test]
+    manifest = {
+        "model": name,
+        "n_samples": int(len(X_test)),
+        "n_features": int(X_test.shape[1]) if X_test.ndim > 1 else 1,
+        "row_hashes_sample": row_hashes[:20],  # small sample for quick sanity checks
+        "row_hash_set_size": len(set(row_hashes)),
+        "saved_at": time.time(),
+    }
+    with open(manifest_path, "w") as f:
+        json.dump(manifest, f, indent=2)
 
 
 # ===================================================================
@@ -275,6 +309,9 @@ def train_yield_model() -> dict[str, Any]:
     joblib.dump({"crop": crop_le, "region": region_le, "season": season_le},
                 MODEL_DIR / "label_encoders.joblib")
 
+    # FIX (C-3): Persist the real held-out test rows for later unbiased audit
+    _save_holdout("yield", X_test, y_test)
+
     return {"model": "yield_prediction", "algorithm": "RandomForestRegressor",
             "metrics": metrics, "feature_importances": importances}
 
@@ -459,8 +496,7 @@ def _build_recommendation_dataset() -> tuple[np.ndarray, np.ndarray, LabelEncode
                 temp = float(rng.uniform(15, 40))
 
                 # Score each crop with realistic factors
-                best_crop = None
-                best_score = -1e9
+                scores: dict[str, float] = {}
                 for cid, cp in crop_params.items():
                     crop_season = cp["season"].lower()
                     if (season not in crop_season and 
@@ -488,15 +524,51 @@ def _build_recommendation_dataset() -> tuple[np.ndarray, np.ndarray, LabelEncode
 
                     yield_est = base_yield * climate_factor * soil_factor * (0.6 + 0.5 * irr)
                     revenue = yield_est * price
-                    profit = (revenue - cost) * budget_fit
-                    score = profit
+                    profit = revenue - cost
+                    # FIX (C-1): Label generation used to rank crops by raw
+                    # absolute profit, which is dominated by high-value/
+                    # perennial crops (tea, cashew, coconut) purely because
+                    # of their high per-kg price -- regardless of how
+                    # efficiently they use the budget. That meant 20 of 32
+                    # crops (rice, wheat, maize, cotton, soybean, sugarcane,
+                    # potato, tomato, ...) were *never* the best_crop label,
+                    # so the trained model could never recommend them. Rank
+                    # by ROI (return on investment relative to input cost),
+                    # scaled by the same budget_fit factor, matching how
+                    # ml/predict.py's smart_score blends ROI + budget fit
+                    # rather than raw absolute profit.
+                    roi_percent = (profit / cost * 100.0) if cost > 1e-6 else -100.0
+                    score = roi_percent * budget_fit
+                    scores[cid] = score
 
-                    if score > best_score:
-                        best_score = score
-                        best_crop = cid
-
-                if best_crop is None:
+                if not scores:
                     continue
+
+                # FIX (C-1, cont'd): ranking by ROI still picks a single
+                # deterministic argmax winner per sample, which just moved the
+                # structural-exclusion problem from "highest absolute price
+                # wins" to "lowest input-cost wins" (pulses/ragi/urad have
+                # tiny input costs, so their ROI% dominates every sample the
+                # same way tea/cashew dominated on raw profit before). Staple
+                # crops that are genuinely competitive but rarely *the single
+                # best* by this synthetic score would still never appear as a
+                # label. Fix: softmax-weighted sampling over candidates
+                # instead of strict argmax, so a crop that's close to the top
+                # (not just literally #1) has a real, weighted chance of
+                # being the label across the ~500 samples per region/season.
+                # The genuinely best-fit crop for a scenario stays the most
+                # likely pick; runner-ups aren't permanently zeroed out.
+                cids = list(scores.keys())
+                vals = np.array([scores[c] for c in cids], dtype=np.float64)
+                vals = vals - vals.max()
+                temperature = 15.0
+                probs = np.exp(vals / temperature)
+                probs_sum = probs.sum()
+                if probs_sum <= 0 or not np.isfinite(probs_sum):
+                    best_crop = cids[int(np.argmax(vals))]
+                else:
+                    probs = probs / probs_sum
+                    best_crop = cids[rng.choice(len(cids), p=probs)]
 
                 features = [
                     region_le.transform([rid])[0],
@@ -580,6 +652,9 @@ def train_recommendation_model() -> dict[str, Any]:
     joblib.dump({"crop": crop_le, "region": region_le, "season": season_le},
                 MODEL_DIR / "recommend_encoders.joblib")
 
+    # FIX (C-3): Persist the real held-out test rows for later unbiased audit
+    _save_holdout("recommend", X_test, y_test)
+
     return {"model": "crop_recommendation", "algorithm": "RandomForestClassifier",
             "metrics": metrics, "feature_importances": importances}
 
@@ -628,13 +703,47 @@ def train_all() -> dict[str, Any]:
             "metrics": None,
         }
 
+    # FIX (M-20): audit_metrics.json / evaluation_manifest.json go stale
+    # relative to whatever model is currently deployed. Now that training
+    # persists a genuinely-unseen holdout per model (FIX C-3), regenerate
+    # the audit against the models we *just* trained/saved so audit_metrics.json
+    # always reflects the currently-deployed model, not a prior run's.
+    print("Refreshing model audit (audit_metrics.json) against freshly trained models...")
+    try:
+        from ml.audit_models import ModelAuditor
+        ModelAuditor().run_audit()
+        print("  audit_metrics.json refreshed.")
+    except Exception as e:
+        logger.warning("Post-training audit refresh failed: %s", e)
+        print(f"  Failed to refresh audit_metrics.json: {e}")
+
     print("=" * 60)
     print("All models saved to:", MODEL_DIR)
+
+    # FIX (M-20): stamp the manifest with a timestamp and a content hash of
+    # the deployed model artifacts, so consumers (e.g. /api/ml/status) can
+    # detect when audit_metrics.json / evaluation_manifest.json were
+    # generated against a different model than the one currently loaded.
+    def _file_hash(path: Path) -> str | None:
+        if not path.exists():
+            return None
+        h = hashlib.md5()
+        with open(path, "rb") as fh:
+            for chunk in iter(lambda: fh.read(65536), b""):
+                h.update(chunk)
+        return h.hexdigest()
+
+    model_hashes = {
+        name: _file_hash(MODEL_DIR / name)
+        for name in ("yield_model.joblib", "price_model.joblib", "recommend_model.joblib")
+    }
 
     # Save a manifest
     manifest = {
         "models": [yield_report, price_report, rec_report, disease_report],
         "model_dir": "ml/models",
+        "trained_at": time.time(),
+        "model_hashes": model_hashes,
     }
     with open(MODEL_DIR / "manifest.json", "w") as f:
         json.dump(manifest, f, indent=2)

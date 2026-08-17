@@ -143,7 +143,11 @@
         'auth/invalid-credential':    'Invalid email or password.',
         'auth/network-request-failed':'Network error. Check your connection.'
       };
-      return map[err.code] || err.message || 'Something went wrong. Please try again.';
+      if (err.code && map[err.code]) return map[err.code];
+      // auth.js is currently a stub (rejects every call with Error('Auth
+      // removed')) — never surface that raw internal string to the user.
+      if (!err.code) return "Sign-in isn't available in this build yet.";
+      return err.message || 'Something went wrong. Please try again.';
     }
   })();
   </script>

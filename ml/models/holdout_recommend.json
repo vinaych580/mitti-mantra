@@ -1,0 +1,29 @@
+{
+  "model": "recommend",
+  "n_samples": 12000,
+  "n_features": 13,
+  "row_hashes_sample": [
+    "260e018d6a000ed35a7e2c114ed5b3a0",
+    "a0487aed7172e548f57c654a55171a3d",
+    "7b6f413d3d8ec1965806315ca4f6f84c",
+    "28ead9ab2ec37134ff9c5cca1754ef23",
+    "32aac1d562fc61a0e00049fa60f3cc8b",
+    "2c2ea4152602e1d226482ad8389b3e45",
+    "2ddb22b34e26511e8b8f61dc5718675b",
+    "af514eec3ec608f6304368d01eb060b7",
+    "50eb5d4f011ec963219a8a1cace31104",
+    "e6270a5d6814d626af92e7cbcbfa48b7",
+    "d16aef6c8b67d08fabb603095dd87453",
+    "d03141f77fee5b23d5acafb4de3e7d47",
+    "1d108ba3aa50bcc9b19244faf519c1af",
+    "cfd4b4e2de3a422dec17d1c8ba554ff4",
+    "f3d65066b0b0d34cf9a0de957c574925",
+    "522fda1efc431a1f81e1b991c630ae73",
+    "c90e32f070ec70f8bf24d8a889257d59",
+    "d755181b9919b8199dff915d5cb1aa44",
+    "764c017c6cac4abc176817309f642ac1",
+    "5df9433af98263d30724d05f3fb4e4e1"
+  ],
+  "row_hash_set_size": 12000,
+  "saved_at": 1786949144.4781432
+}

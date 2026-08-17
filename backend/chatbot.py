@@ -49,6 +49,7 @@ from utils.csv_cache import load as _csv_load
 def _crops() -> List[Dict[str, str]]:   return _csv_load("crop_parameters.csv")
 def _soil() -> List[Dict[str, str]]:    return _csv_load("soil.csv")
 def _mandi() -> List[Dict[str, str]]:   return _csv_load("mandi_prices.csv")
+def _weather() -> List[Dict[str, str]]: return _csv_load("weather.csv")
 
 
 def _crop_by_id() -> Dict[str, Dict[str, str]]:
@@ -61,6 +62,36 @@ def _crop_by_name() -> Dict[str, Dict[str, str]]:
 
 def _regions() -> List[str]:
     return sorted({r["region_id"] for r in _soil()})
+
+
+_VALID_SEASONS = {"kharif", "rabi", "zaid"}
+
+
+def _region_weather(region_id: Optional[str], season: Optional[str] = None) -> Dict[str, float]:
+    """Look up a region's actual average temperature/rainfall from
+    weather.csv (M-17 fix) so pest/irrigation replies reflect where the
+    farmer actually is instead of always using the same fixed generic
+    numbers. Falls back to those generic defaults when the region is
+    unknown or has no weather rows on file."""
+    defaults = {"avg_temp_c": 28.0, "rainfall_mm": 800.0}
+    if not region_id:
+        return defaults
+    rows = [r for r in _weather() if r.get("region_id") == region_id]
+    if season:
+        season_rows = [r for r in rows if r.get("season") == season]
+        if season_rows:
+            rows = season_rows
+    if not rows:
+        return defaults
+    try:
+        temps = [float(r["avg_temp_c"]) for r in rows if r.get("avg_temp_c")]
+        rains = [float(r["rainfall_mm"]) for r in rows if r.get("rainfall_mm")]
+    except ValueError:
+        return defaults
+    return {
+        "avg_temp_c": round(sum(temps) / len(temps), 1) if temps else defaults["avg_temp_c"],
+        "rainfall_mm": round(sum(rains) / len(rains), 1) if rains else defaults["rainfall_mm"],
+    }
 
 
 
@@ -90,22 +121,54 @@ GREETINGS = ("hi", "hii", "hello", "hey", "namaste", "namaskar", "salaam", "vana
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+# M-16 fix: common English synonyms that are part of a crop's own display
+# name/id but wouldn't match the whole-name/whole-id checks below on their
+# own — e.g. crop_name is "Rice (Paddy)" so a bare "paddy" doesn't match the
+# full string "rice (paddy)", and "basmati" is only half of the crop_id
+# "paddy_basmati".
+_ENGLISH_CROP_ALIASES: Dict[str, str] = {
+    "paddy": "rice",
+    "basmati": "paddy_basmati",
+    "sarson": "mustard",
+}
+
+
 def _find_crop(text: str) -> Optional[Dict[str, str]]:
     t = text.lower()
+    cbi = _crop_by_id()
     # Prefer longer names first (e.g. "black gram" before "gram")
     for name, row in sorted(_crop_by_name().items(), key=lambda kv: -len(kv[0])):
         if name in t:
             return row
-    for cid, row in sorted(_crop_by_id().items(), key=lambda kv: -len(kv[0])):
+    for alias, cid in sorted(_ENGLISH_CROP_ALIASES.items(), key=lambda kv: -len(kv[0])):
+        if cid in cbi and re.search(rf"\b{re.escape(alias)}\b", t):
+            return cbi[cid]
+    for cid, row in sorted(cbi.items(), key=lambda kv: -len(kv[0])):
         if re.search(rf"\b{re.escape(cid)}\b", t):
             return row
+        # Multi-word crop_ids ("paddy_basmati") — let either half resolve,
+        # since users type spaces, not underscores.
+        if "_" in cid:
+            for part in cid.split("_"):
+                if len(part) > 3 and re.search(rf"\b{re.escape(part)}\b", t):
+                    return row
     # Native-script / Hinglish crop name (चावल, వరి, ಅಕ್ಕಿ, "chawal", ...)
     native_cid = find_crop_id(text)
     if native_cid:
-        cbi = _crop_by_id()
         if native_cid in cbi:
             return cbi[native_cid]
     return None
+
+
+# H-5 fix: generic/directional English words that show up as district
+# suffixes in some region_ids ("goa_north", "tripura_west") but are common
+# standalone English vocabulary — matching them bare silently resolves to an
+# unrelated specific region. Never let these alone trigger the district
+# fallback match.
+_REGION_STOPWORDS = {
+    "north", "south", "east", "west", "central",
+    "district", "region", "area", "zone", "state", "rural", "urban",
+}
 
 
 def _find_region(text: str) -> Optional[str]:
@@ -115,13 +178,29 @@ def _find_region(text: str) -> Optional[str]:
     normalized = normalize_region_text(text)
     regions = _regions()
     t = normalized.lower().replace(" ", "_")
+
     for rid in sorted(regions, key=len, reverse=True):
         if rid.lower() in t:
             return rid
-        # also allow matching just the district part: "medak" -> telangana_medak
-        district = rid.split("_", 1)[-1]
-        if district and re.search(rf"\b{re.escape(district)}\b", normalized.lower()):
+
+    # District-suffix fallback: "medak" -> telangana_medak. Restricted to
+    # districts that (a) aren't generic/directional stopwords and (b) are
+    # unique across all regions — a district name shared by multiple regions
+    # can't be resolved confidently, so it falls through to the state-prefix
+    # matcher / a clarifying question instead of guessing.
+    district_counts: Dict[str, int] = {}
+    for rid in regions:
+        d = rid.split("_", 1)[-1].lower()
+        district_counts[d] = district_counts.get(d, 0) + 1
+    for rid in sorted(regions, key=len, reverse=True):
+        district = rid.split("_", 1)[-1].lower()
+        if not district or district in _REGION_STOPWORDS:
+            continue
+        if district_counts.get(district, 0) != 1:
+            continue
+        if re.search(rf"\b{re.escape(district)}\b", normalized.lower()):
             return rid
+
     # State name alone, for states with exactly one region — the district
     # itself usually isn't translated (see STATE_SYNONYMS), so a Telugu/
     # Kannada/Hindi query naming just the state still resolves for Telangana,
@@ -143,6 +222,15 @@ def _find_season(text: str) -> Optional[str]:
 
 _NUM_RE = re.compile(r"(\d[\d,]*\.?\d*)")
 
+# H-7 fix: role keywords used to bind a nearby number to what it actually
+# means, instead of trusting sentence position. Checked in this order
+# (area, profit, then budget/cost) so a number tagged by an earlier rule
+# isn't re-claimed by a later, broader one (e.g. "cost" inside "budget").
+_AREA_KW = re.compile(r"\bacres?\b|\bhectares?\b", re.I)
+_PROFIT_KW = re.compile(r"\bprofit\b", re.I)
+_BUDGET_KW = re.compile(r"\bbudget\b|\bcost\b|₹|\brs\.?\b|\brupees?\b", re.I)
+_WINDOW = 18  # chars of context scanned on either side of a number
+
 
 def _find_numbers(text: str) -> List[float]:
     nums = []
@@ -152,6 +240,86 @@ def _find_numbers(text: str) -> List[float]:
         except ValueError:
             pass
     return nums
+
+
+def _find_tagged_numbers(text: str) -> Dict[str, float]:
+    """Bind numbers to a semantic role (area / expected_profit / budget)
+    using the NEAREST keyword to each number, so reordering a sentence
+    ("3 acres and 15000 budget" vs "15000 budget for 3 acres") can't
+    silently swap which number means what. Numbers with no nearby keyword
+    are left untagged for the caller to fill in positionally.
+
+    Bug fix note: an earlier version used a fixed symmetric character
+    window and an "area checked before budget" priority order to decide a
+    number's role. When two (number, keyword) pairs sit close together --
+    e.g. "15000 budget and 3 acres" -- both numbers' windows can contain
+    BOTH keywords, and the area-first priority made both numbers resolve
+    to the wrong role whenever their windows overlapped (confirmed: this
+    exact phrase used to tag 15000->area, 3->budget, the opposite of
+    correct). Ranking by which keyword is actually CLOSEST to each number
+    (not just "does the window contain a match") fixes this.
+    """
+    numbers: List[Tuple[float, int, int]] = []
+    for m in _NUM_RE.finditer(text):
+        try:
+            val = float(m.group(1).replace(",", ""))
+        except ValueError:
+            continue
+        numbers.append((val, m.start(), m.end()))
+    if not numbers:
+        return {}
+
+    kw_positions: Dict[str, List[Tuple[int, int]]] = {
+        "area": [m.span() for m in _AREA_KW.finditer(text)],
+        "expected_profit": [m.span() for m in _PROFIT_KW.finditer(text)],
+        "budget": [m.span() for m in _BUDGET_KW.finditer(text)],
+    }
+
+    candidates: List[Tuple[int, str, float, int]] = []  # (distance, role, val, num_start)
+    for val, start, end in numbers:
+        best: Optional[Tuple[int, str]] = None
+        for role, spans in kw_positions.items():
+            for kstart, kend in spans:
+                if kend <= start:
+                    dist = start - kend
+                elif kstart >= end:
+                    dist = kstart - end
+                else:
+                    dist = 0
+                if dist <= _WINDOW and (best is None or dist < best[0]):
+                    best = (dist, role)
+        if best is not None:
+            candidates.append((best[0], best[1], val, start))
+
+    tags: Dict[str, float] = {}
+    for dist, role, val, start in sorted(candidates, key=lambda c: c[0]):
+        if role not in tags:
+            tags[role] = val
+    return tags
+
+
+def _extract_amounts(text: str) -> Tuple[Dict[str, float], List[float]]:
+    """Returns (role-tagged numbers, remaining untagged numbers in order)
+    for callers that need positional fallback for whichever roles weren't
+    tagged by a keyword."""
+    tagged = _find_tagged_numbers(text)
+    tagged_values = set(tagged.values())
+    leftover: List[float] = []
+    consumed = {v: False for v in tagged_values}
+    for n in _find_numbers(text):
+        if n in consumed and not consumed[n]:
+            consumed[n] = True
+            continue
+        leftover.append(n)
+    return tagged, leftover
+
+
+def _sane_budget(v: float) -> bool:
+    return 100 <= v <= 100_000_000
+
+
+def _sane_area(v: float) -> bool:
+    return 0 < v <= 10_000
 
 
 def _fmt_inr(v: float) -> str:
@@ -337,7 +505,7 @@ def _intent_mandi_price(crop: Optional[Dict[str, str]], region: Optional[str], l
     return "\n".join(lines), tips
 
 
-def _intent_recommend(region: Optional[str], season: Optional[str], nums: List[float], lang: str) -> Reply:
+def _intent_recommend(region: Optional[str], season: Optional[str], text: str, lang: str) -> Reply:
     if not region:
         if lang == "en":
             return (
@@ -347,8 +515,22 @@ def _intent_recommend(region: Optional[str], season: Optional[str], nums: List[f
             )
         return T(lang, "recommend_need_region"), [T(lang, "sug_list_regions"), T(lang, "sug_recommend_medak_kharif")]
     season = season or "kharif"
-    budget = nums[0] if nums else 15000.0
-    area = nums[1] if len(nums) > 1 else 3.0
+    # H-7 fix: bind budget/area to nearby keywords instead of trusting
+    # sentence position; fall back to positional order only for whichever
+    # one wasn't tagged.
+    tagged, leftover = _extract_amounts(text)
+    budget = tagged.get("budget")
+    area = tagged.get("area")
+    if budget is None:
+        budget = leftover.pop(0) if leftover else 15000.0
+    if area is None:
+        area = leftover.pop(0) if leftover else 3.0
+    if not _sane_budget(budget) or not _sane_area(area):
+        msg = (
+            f"That budget/area doesn't look right ({_fmt_inr(budget)} budget, {area} acres). "
+            "Try e.g. _\"recommend for 3 acres, ₹15000 budget\"_."
+        ) if lang == "en" else T(lang, "generic_error", err=f"{budget}/{area}")
+        return msg, []
     try:
         recs = recommend_crops(region_id=region, season=season, budget_per_acre=budget, area_acres=area)
     except Exception as e:
@@ -456,9 +638,11 @@ def _intent_sell_advice(crop: Dict[str, str], region: Optional[str], lang: str) 
     ]
 
 
-def _intent_pest(crop: Dict[str, str], lang: str) -> Reply:
+def _intent_pest(crop: Dict[str, str], lang: str, region: Optional[str] = None,
+                  season: Optional[str] = None) -> Reply:
+    weather = _region_weather(region, season)
     try:
-        alerts = pest_disease_alerts(crop["crop_id"], {"avg_temp_c": 28, "rainfall_mm": 800})
+        alerts = pest_disease_alerts(crop["crop_id"], weather)
     except Exception as e:
         return (f"Couldn't fetch pest alerts: {e}" if lang == "en" else T(lang, "generic_error", err=e)), []
     items = alerts if isinstance(alerts, list) else alerts.get("alerts", []) if isinstance(alerts, dict) else []
@@ -504,14 +688,17 @@ def _intent_pest(crop: Dict[str, str], lang: str) -> Reply:
     ]
 
 
-def _intent_irrigation(crop: Dict[str, str], lang: str) -> Reply:
+def _intent_irrigation(crop: Dict[str, str], lang: str, region: Optional[str] = None,
+                        season: Optional[str] = None) -> Reply:
+    weather = _region_weather(region, season)
+    rainfall = weather["rainfall_mm"]
     try:
-        sch = irrigation_schedule(crop["crop_id"], "2025-06-15", 800, 0.5)
+        sch = irrigation_schedule(crop["crop_id"], "2025-06-15", rainfall, 0.5)
     except Exception as e:
         return (f"Couldn't build schedule: {e}" if lang == "en" else T(lang, "generic_error", err=e)), []
     weeks = sch.get("weekly_schedule", []) if isinstance(sch, dict) else []
     if lang == "en":
-        lines = [f"### Irrigation schedule — {crop['crop_name']}", "_Sown 15 Jun · 800 mm seasonal rainfall_\n"]
+        lines = [f"### Irrigation schedule — {crop['crop_name']}", f"_Sown 15 Jun · {rainfall:.0f} mm seasonal rainfall_\n"]
         if weeks:
             lines.append("| Week | Stage | Water Need (mm) | Rain (mm) | Irrigation (mm) |")
             lines.append("|---:|---|---:|---:|---:|")
@@ -527,7 +714,7 @@ def _intent_irrigation(crop: Dict[str, str], lang: str) -> Reply:
         else:
             lines.append("_No schedule available._")
         return "\n".join(lines), [f"Pest alerts for {crop['crop_id']}", f"Crop calendar for {crop['crop_id']}"]
-    lines = [T(lang, "irrigation_header", crop=crop["crop_name"]), T(lang, "irrigation_sub")]
+    lines = [T(lang, "irrigation_header", crop=crop["crop_name"]), T(lang, "irrigation_sub", rain=f"{rainfall:.0f}")]
     if weeks:
         lines.append(T(lang, "irrigation_table_hdr"))
         lines.append("|---:|---|---:|---:|---:|")
@@ -585,8 +772,13 @@ def _intent_calendar(crop: Dict[str, str], lang: str) -> Reply:
     ]
 
 
-def _intent_schemes(crop: Optional[Dict[str, str]], region: Optional[str], nums: List[float], lang: str) -> Reply:
-    area = nums[0] if nums else 3.0
+def _intent_schemes(crop: Optional[Dict[str, str]], region: Optional[str], text: str, lang: str) -> Reply:
+    tagged, leftover = _extract_amounts(text)
+    area = tagged.get("area")
+    if area is None:
+        area = leftover[0] if leftover else 3.0
+    if not _sane_area(area):
+        area = 3.0
     try:
         schemes = match_government_schemes(
             crop["crop_id"] if crop else "all",
@@ -633,8 +825,15 @@ def _intent_schemes(crop: Optional[Dict[str, str]], region: Optional[str], nums:
     return "\n".join(lines).strip(), []
 
 
-def _intent_loan(nums: List[float], lang: str) -> Reply:
-    if len(nums) < 2:
+def _intent_loan(text: str, lang: str) -> Reply:
+    tagged, leftover = _extract_amounts(text)
+    total_cost = tagged.get("budget")
+    expected_profit = tagged.get("expected_profit")
+    if total_cost is None:
+        total_cost = leftover.pop(0) if leftover else None
+    if expected_profit is None:
+        expected_profit = leftover.pop(0) if leftover else None
+    if total_cost is None or expected_profit is None:
         if lang == "en":
             return (
                 "Tell me the **total cost** and **expected profit**, e.g. "
@@ -642,8 +841,14 @@ def _intent_loan(nums: List[float], lang: str) -> Reply:
                 [],
             )
         return T(lang, "loan_need_input"), []
+    if not _sane_budget(total_cost):
+        msg = (
+            f"That cost doesn't look right ({_fmt_inr(total_cost)}). "
+            "Try e.g. _\"loan for cost 80000 profit 120000\"_."
+        ) if lang == "en" else T(lang, "loan_need_input")
+        return msg, []
     try:
-        res = loan_calculator(total_cost=nums[0], expected_profit=nums[1])
+        res = loan_calculator(total_cost=total_cost, expected_profit=expected_profit)
     except Exception as e:
         return (f"Couldn't run calculator: {e}" if lang == "en" else T(lang, "loan_error", err=e)), []
     if lang == "en":
@@ -786,12 +991,21 @@ def answer(message: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, 
 
     text = raw.lower()
 
-    # Language: an explicit context value (set by a prior turn, or passed by
-    # the frontend from its own i18n.js language choice) wins; otherwise
-    # detect from script/Hinglish cues in this message. A short English-script
-    # follow-up ("MSP?") after a Hindi conversation keeps the remembered
-    # language rather than bouncing back to English.
-    lang = context.get("lang") or detect_lang(raw)
+    # Language (C-4 fix): re-detect from THIS message every turn rather than
+    # trusting a sticky context["lang"] forever — a single ambiguous message
+    # (e.g. one Hinglish word) used to permanently lock the whole session
+    # into that language even once the user switched back to plain English.
+    # The only time we fall back to the remembered language is when this
+    # message has no Latin letters at all (pure digits/punctuation, e.g. a
+    # bare "15000" answering a follow-up question) and therefore carries no
+    # detectable signal of its own; a message with actual Devanagari/Telugu/
+    # Kannada script or English words is always trusted over the memory.
+    detected_lang = detect_lang(raw)
+    prev_lang = context.get("lang")
+    if prev_lang and detected_lang == "en" and not re.search(r"[a-zA-Z]", raw):
+        lang = prev_lang
+    else:
+        lang = detected_lang
 
     def _pack(reply: str, sug: List[str], intent: str = "",
               crop: Optional[Dict[str, str]] = None, region: Optional[str] = None,
@@ -804,12 +1018,16 @@ def answer(message: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, 
         actions = _build_actions(intent, crop, region, season, nums or []) if intent else []
         return {"reply": reply, "suggestions": sug, "actions": actions, "context": new_ctx}
 
-    # Greetings
-    is_greeting = (
-        any(re.search(rf"\b{g}\b", text) for g in GREETINGS)
-        or any(g in raw for g in sum(GREETING_WORDS.values(), []))
+    # Greetings (M-15 fix): only short-circuit to the canned greeting when
+    # the ENTIRE message is made of greeting words (+ punctuation) — a
+    # greeting word appearing anywhere in a short message used to swallow
+    # real questions like "hey what is msp".
+    _greeting_tokens = re.findall(r"\w+", text)
+    _native_greeting_words = {g.lower() for g in sum(GREETING_WORDS.values(), [])}
+    is_greeting = bool(_greeting_tokens) and all(
+        tok in GREETINGS or tok in _native_greeting_words for tok in _greeting_tokens
     )
-    if is_greeting and len(text.split()) <= 4:
+    if is_greeting:
         reply, sug = _intent_greeting(lang)
         return _pack(reply, sug)
 
@@ -827,8 +1045,21 @@ def answer(message: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, 
         return _pack(reply, sug)
 
     crop = _find_crop(text)
-    region = _find_region(raw) or context.get("region_id")
-    season = _find_season(text) or context.get("season")
+
+    # M-13 fix: crop_id from the client is already checked against the real
+    # crop table below; region_id/season weren't, so a forged/stale context
+    # value could reach the engine and surface a raw ValueError. Validate
+    # both and drop to None on failure so the existing "which region?"
+    # clarifying prompts kick in instead.
+    ctx_region = context.get("region_id")
+    if ctx_region and ctx_region not in _regions():
+        ctx_region = None
+    ctx_season = context.get("season")
+    if ctx_season and ctx_season not in _VALID_SEASONS:
+        ctx_season = None
+
+    region = _find_region(raw) or ctx_region
+    season = _find_season(text) or ctx_season
     nums = _find_numbers(text)
     # Fall back to remembered crop when the user asks a short follow-up like "its MSP?"
     if not crop and context.get("crop_id"):
@@ -847,12 +1078,30 @@ def answer(message: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, 
         return _pack(reply, sug, crop=crop, region=region)
 
     # Recommend
-    if _matches("recommend", text, r"\brecommend(ation)?\b|\bsuggest(ion)?\b|\bwhich crop\b|\bbest crop\b|\bwhat (should|to) (i )?(grow|plant|sow)\b"):
-        reply, sug = _intent_recommend(region, season, nums, lang)
+    # M-14 fix: a bare "suggest(ion)" alternation used to hijack unrelated
+    # questions like "any suggestion for pest control on rice" before the
+    # pest/irrigation/etc. intents below ever got a chance to match. Require
+    # "suggest(ion)" to co-occur with a crop/grow/plant word so it only
+    # fires for genuine crop-choice questions.
+    if _matches("recommend", text, r"\brecommend(ation)?\b|\bwhich crop\b|\bbest crop\b|\bwhat (should|to) (i )?(grow|plant|sow)\b|\bsuggest(ion)?\b.*\b(crop|grow|plant|sow)\b|\b(crop|grow|plant|sow)\b.*\bsuggest(ion)?\b"):
+        reply, sug = _intent_recommend(region, season, text, lang)
         return _pack(reply, sug, "recommend", region=region, season=season, nums=nums)
 
+    # H-6 fix: "which crop?" clarifying prompts, shared by the four
+    # crop-gated intents below. These used to have no branch for crop=None,
+    # so a bare /pest, /irrigate, /calendar, /sell fell all the way through
+    # to the generic "I didn't catch that" fallback -- which itself
+    # recommended trying the exact command that had just failed.
+    def _need_crop(example: str) -> Reply:
+        if lang == "en":
+            return f"Which crop? e.g. `{example} rice`", [f"{example} rice", f"{example} wheat"]
+        return T(lang, "need_crop", example=example), []
+
     # Sell timing
-    if crop and _matches("sell_advice", text, r"\bbest time to sell\b|\bwhen (should|to) (i )?sell\b|\bsell(ing)? advice\b"):
+    if _matches("sell_advice", text, r"\bbest time to sell\b|\bwhen (should|to) (i )?sell\b|\bsell(ing)? advice\b"):
+        if not crop:
+            reply, sug = _need_crop("/sell")
+            return _pack(reply, sug, "forecast", region=region)
         reply, sug = _intent_sell_advice(crop, region, lang)
         return _pack(reply, sug, "forecast", crop, region)
 
@@ -862,17 +1111,30 @@ def answer(message: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, 
         return _pack(reply, sug, "forecast", crop, region)
 
     # Pest / disease
-    if crop and _matches("pest", text, r"\bpest\b|\bdisease\b|\binsect\b|\bfung"):
-        reply, sug = _intent_pest(crop, lang)
+    if _matches("pest", text, r"\bpest\b|\bdisease\b|\binsect\b|\bfung"):
+        if not crop:
+            reply, sug = _need_crop("/pest")
+            return _pack(reply, sug, "pest", region=region)
+        # M-17 fix: pass the extracted region/season through so pest risk
+        # reflects this region's real weather instead of always using a
+        # fixed generic 28C/800mm regardless of where the user asked about.
+        reply, sug = _intent_pest(crop, lang, region, season)
         return _pack(reply, sug, "pest", crop, region)
 
     # Irrigation
-    if crop and _matches("irrigation", text, r"\birrigat|\bwater(ing)?\b"):
-        reply, sug = _intent_irrigation(crop, lang)
+    if _matches("irrigation", text, r"\birrigat|\bwater(ing)?\b"):
+        if not crop:
+            reply, sug = _need_crop("/irrigate")
+            return _pack(reply, sug, "irrigate", region=region)
+        # M-17 fix: same as pest above -- use the real region/season weather.
+        reply, sug = _intent_irrigation(crop, lang, region, season)
         return _pack(reply, sug, "irrigate", crop, region)
 
     # Calendar
-    if crop and _matches("calendar", text, r"\bcalendar\b|\bsowing\b|\bsow(ing)? date\b|\bharvest(ing)? date\b"):
+    if _matches("calendar", text, r"\bcalendar\b|\bsowing\b|\bsow(ing)? date\b|\bharvest(ing)? date\b"):
+        if not crop:
+            reply, sug = _need_crop("/calendar")
+            return _pack(reply, sug, region=region)
         reply, sug = _intent_calendar(crop, lang)
         return _pack(reply, sug, crop=crop, region=region)
 

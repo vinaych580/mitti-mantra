@@ -1,7 +1,9 @@
 import os
 import csv
+import hashlib
 import json
 import logging
+import time
 import warnings
 from pathlib import Path
 import joblib
@@ -59,6 +61,33 @@ def _fit_label_encoders(crops: list[str], regions: list[str], seasons: list[str]
     region_le = LabelEncoder().fit(sorted(set(regions)))
     season_le = LabelEncoder().fit(sorted(set(seasons)))
     return crop_le, region_le, season_le
+
+
+# FIX (C-3): This pipeline can also overwrite the deployed yield_model.joblib
+# / recommend_model.joblib (see run_pipeline below). Whichever pipeline last
+# wrote a model file must also persist the exact held-out test rows used to
+# evaluate it, so ml/audit_models.py can audit unbiased -- see the matching
+# helper and rationale in ml/train_models.py.
+def _row_hash(row: np.ndarray) -> str:
+    return hashlib.md5(np.round(np.asarray(row, dtype=np.float64), 6).tobytes()).hexdigest()
+
+
+def _save_holdout(name: str, X_test: np.ndarray, y_test: np.ndarray) -> None:
+    holdout_path = MODEL_DIR / f"holdout_{name}.joblib"
+    joblib.dump({"X_test": X_test, "y_test": y_test}, holdout_path)
+
+    manifest_path = MODEL_DIR / f"holdout_{name}.json"
+    row_hashes = [_row_hash(row) for row in X_test]
+    manifest = {
+        "model": name,
+        "n_samples": int(len(X_test)),
+        "n_features": int(X_test.shape[1]) if X_test.ndim > 1 else 1,
+        "row_hashes_sample": row_hashes[:20],
+        "row_hash_set_size": len(set(row_hashes)),
+        "saved_at": time.time(),
+    }
+    with open(manifest_path, "w") as f:
+        json.dump(manifest, f, indent=2)
 
 # ===================================================================
 # 1. YIELD PREDICTION DATA BUILDER (20 Features Schema)
@@ -350,7 +379,11 @@ class ModelEvaluationPipeline:
         tuned_clf = search.best_estimator_
         
         joblib.dump(tuned_clf, MODEL_DIR / "recommend_model.joblib")
-        
+
+        # FIX (C-3): Persist the real held-out test rows for this freshly
+        # saved model so the audit doesn't re-derive an overlapping split.
+        _save_holdout("recommend", X_test, y_test)
+
         feature_names = [
             "region_enc", "season_enc", "soil_ph", "soil_n", "soil_p", "soil_k", "soil_oc",
             "rainfall", "avg_temp", "min_temp", "max_temp", "budget", "irrigation"
@@ -442,7 +475,11 @@ class ModelEvaluationPipeline:
         tuned_reg = search.best_estimator_
         
         joblib.dump(tuned_reg, MODEL_DIR / "yield_model.joblib")
-        
+
+        # FIX (C-3): Persist the real held-out test rows for this freshly
+        # saved model so the audit doesn't re-derive an overlapping split.
+        _save_holdout("yield", X_test, y_test)
+
         feature_names = [
             "crop_enc", "region_enc", "season_enc", "base_yield", "water_req", "temp_min", "temp_max",
             "npk_n", "npk_p", "npk_k", "soil_ph", "soil_n", "soil_p", "soil_k", "soil_oc",
