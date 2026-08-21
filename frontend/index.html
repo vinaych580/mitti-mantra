@@ -565,6 +565,7 @@
         </ul>
       </div>
       <div class="scene3d__canvas reveal" id="scene3dCanvas">
+        <span class="scene3d__live" aria-hidden="true"><i></i>Live · drag to rotate</span>
         <div class="scene3d__label" id="scene3dLabel"></div>
 
         <div class="scene3d__hud" data-no-translate>
@@ -576,10 +577,11 @@
               <option value="soilN">Soil N heatmap</option>
               <option value="profit">Avg profit heatmap</option>
               <option value="crop">Crop suitability…</option>
+              <option value="arbitrage">Mandi arbitrage…</option>
             </select>
           </label>
           <label class="scene3d__hud-row" id="scene3dCropWrap" style="display:none;">
-            <span>Crop</span>
+            <span id="scene3dCropLabel">Crop</span>
             <select id="scene3dCrop"><option value="">Pick a crop…</option></select>
           </label>
           <div class="scene3d-legend" id="scene3dLegend"></div>
@@ -836,6 +838,7 @@
   <script defer src="mm-freshness.js"></script>
   <script defer src="site-ui.js"></script>
   <script defer src="state-data.js"></script>
+  <script defer src="farm-state.js"></script>
   <script defer src="india-globe.js"></script>
   <script defer src="demo-recommender.js"></script>
   <script defer src="i18n-data.js"></script>

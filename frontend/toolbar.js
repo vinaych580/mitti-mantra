@@ -183,6 +183,17 @@
       html[data-theme="dark"] .nav__links a { color: var(--ink-soft); }
       html[data-theme="dark"] .nav__links a:hover { color: var(--ink); }
 
+      /* Nav goes dark in this theme, but the logo's wordmark is baked into
+         the raster too dark to read on it -- give it the same light card
+         the footer logo already uses. */
+      html[data-theme="dark"] .nav .logo__img {
+        padding: 6px 10px;
+        background: #faf6ef;
+        border-radius: var(--r-md);
+        box-shadow: var(--shadow-sm);
+        filter: none;
+      }
+
       /* Surfaces */
       html[data-theme="dark"] .surface,
       html[data-theme="dark"] .card,
@@ -200,6 +211,7 @@
       html[data-theme="dark"] .farmmap__summary,
       html[data-theme="dark"] .scene3d__hud,
       html[data-theme="dark"] .scene3d__label,
+      html[data-theme="dark"] .scene3d__live,
       html[data-theme="dark"] .scene3d-panel,
       html[data-theme="dark"] .livedemo,
       html[data-theme="dark"] .livedemo__card,
@@ -234,6 +246,11 @@
       html[data-theme="dark"] .kpi--info .kpi__val { color: #8ec2de; }
       html[data-theme="dark"] .chip--green { background: rgba(47,107,58,0.22) !important; color: #9ed2a7; }
       html[data-theme="dark"] .chip--gold  { background: rgba(200,138,58,0.22) !important; color: #e4b87c; }
+
+      /* Marketplace notes. --brand-deep on --brand-soft is 8.6:1 on paper but
+         both tokens go dark under this theme, collapsing to 1.3:1 — these
+         carry the prototype's honesty disclaimers, so they must stay legible. */
+      html[data-theme="dark"] .mkt-alert--info { color: #9ed2a7; }
 
       /* Features bento — the preview widgets use light-mode hairlines
          and pastels that vanish or glare on dark. */
@@ -310,9 +327,11 @@
       html[data-theme="dark"] .demo__play { background: rgba(35,32,28,0.92); color: #e4b87c; }
 
       /* Scene3D overlays */
-      html[data-theme="dark"] .scene3d__label { background: rgba(35,32,28,0.92) !important; color: var(--ink); }
+      html[data-theme="dark"] .scene3d__label,
+      html[data-theme="dark"] .scene3d__live { background: rgba(35,32,28,0.92) !important; color: var(--ink); }
       html[data-theme="dark"] .scene3d__hud,
       html[data-theme="dark"] .scene3d-panel { background: rgba(35,32,28,0.92) !important; color: var(--ink); }
+      html[data-theme="dark"] .scene3d__live { border-color: rgba(255,255,255,0.08); }
       html[data-theme="dark"] .scene3d-panel__close { color: var(--ink-soft); }
       html[data-theme="dark"] .scene3d-panel__close:hover { background: var(--bg-soft); color: var(--ink); }
       html[data-theme="dark"] .scene3d-crop__bar { background: rgba(255,255,255,0.08); }
@@ -469,6 +488,7 @@
     theme: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>',
     mic:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>',
     speak: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10v4a1 1 0 0 0 1 1h3l5 4V5L7 9H4a1 1 0 0 0-1 1z"/><path d="M16 8a5 5 0 0 1 0 8"/><path d="M19 5a9 9 0 0 1 0 14"/></svg>',
+    briefing: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>',
     wa:    '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.48A11.94 11.94 0 0 0 12 0C5.37 0 0 5.37 0 12c0 2.11.55 4.16 1.6 5.97L0 24l6.2-1.63A11.96 11.96 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.19-1.24-6.2-3.48-8.52zM12 21.8c-1.86 0-3.68-.5-5.27-1.45l-.38-.22-3.68.96.98-3.59-.25-.37A9.79 9.79 0 0 1 2.2 12C2.2 6.6 6.6 2.2 12 2.2S21.8 6.6 21.8 12 17.4 21.8 12 21.8zm5.53-7.33c-.3-.15-1.79-.88-2.07-.98-.28-.1-.48-.15-.68.15-.2.3-.78.98-.96 1.18-.18.2-.36.22-.66.07-.3-.15-1.27-.47-2.41-1.49-.89-.8-1.5-1.78-1.68-2.08-.18-.3-.02-.47.13-.62.13-.13.3-.36.45-.53.15-.18.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.68-1.63-.93-2.23-.25-.6-.5-.52-.68-.52h-.58c-.2 0-.52.07-.8.37-.28.3-1.07 1.04-1.07 2.53 0 1.49 1.1 2.93 1.25 3.13.15.2 2.16 3.3 5.24 4.63.73.31 1.3.5 1.74.64.73.23 1.39.2 1.91.12.58-.09 1.79-.73 2.04-1.43.25-.7.25-1.3.18-1.43-.07-.13-.27-.2-.57-.35z"/></svg>',
     pdf:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M12 18v-6"/><path d="M9 15l3 3 3-3"/></svg>',
     link:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
@@ -545,6 +565,7 @@
     if (document.documentElement.getAttribute('data-theme') === 'dark') themeBtn.classList.add('active');
     mkBtn(ICONS.mic,   'Voice',      startVoice);
     mkBtn(ICONS.speak, 'Read aloud', toggleSpeak,   'qw-speak');
+    mkBtn(ICONS.briefing, "Today's briefing", playBriefing, 'qw-briefing');
     mkBtn(ICONS.wa,    'WhatsApp',   shareWhatsApp);
     mkBtn(ICONS.pdf,   'Save PDF',   exportPdf,     'qw-pdf');
     mkBtn(ICONS.link,  'Copy link',  copyLink);
@@ -868,6 +889,90 @@
     window.speechSynthesis.speak(u);
     speaking = true;
     btn?.classList.add('active');
+  }
+
+  /* ---------- Spoken daily briefing ----------
+     Unlike "Read aloud" (which reads whatever text happens to be on
+     screen), this composes one short sentence from the farmer's actual
+     Farm Profile: the top-ranked crop recommendation (crop, expected
+     profit, risk score) plus this season's expected rainfall. Two light
+     fetches against endpoints that already exist — no new backend code. */
+  let speakingBriefing = false;
+
+  function briefingSentence(lang, d) {
+    const rainClause = d.rainfall == null ? { en: '', hi: '', te: '' } : {
+      en: ` Expected rainfall this season is around ${d.rainfall} millimetres.`,
+      hi: ` इस सीज़न में लगभग ${d.rainfall} मिलीमीटर बारिश की उम्मीद है।`,
+      te: ` ఈ సీజన్‌లో సుమారు ${d.rainfall} మిల్లీమీటర్ల వర్షం అంచనా.`
+    };
+    const profitStr = '₹' + Math.round(d.profit).toLocaleString('en-IN');
+    const t = {
+      en: `Today's advice: sow ${d.crop}. Expected profit is about ${profitStr} per acre, with a risk score of ${d.risk} out of 100.${rainClause.en}`,
+      hi: `आज की सलाह: ${d.crop} बोइए। अनुमानित मुनाफ़ा लगभग ${profitStr} प्रति एकड़ है, और जोखिम स्कोर 100 में से ${d.risk} है।${rainClause.hi}`,
+      te: `ఈరోజు సలహా: ${d.crop} విత్తండి. ఎకరాకు అంచనా లాభం సుమారు ${profitStr}, రిస్క్ స్కోరు 100కి ${d.risk}.${rainClause.te}`
+    };
+    return t[lang] || t.en;
+  }
+
+  async function composeBriefing(profile) {
+    const season = profile.season || 'kharif';
+    const qs = new URLSearchParams({
+      region_id: profile.region_id,
+      season,
+      budget_per_acre: profile.budget_per_acre || 15000,
+      area_acres: profile.area_acres || 1
+    });
+    const [recs, weather] = await Promise.all([
+      fetch(`/api/crop?${qs}`).then(r => r.json()).catch(() => null),
+      fetch(`/api/weather/${encodeURIComponent(profile.region_id)}?season=${encodeURIComponent(season)}`).then(r => r.json()).catch(() => null)
+    ]);
+    const top = Array.isArray(recs) ? recs[0] : null;
+    if (!top) return null;
+    const lang = (window.AgriSimI18n && window.AgriSimI18n.getLanguage && window.AgriSimI18n.getLanguage()) || 'en';
+    const rainfall = weather && weather.rainfall_mm != null ? Math.round(Number(weather.rainfall_mm)) : null;
+    // expected_profit from /api/crop is the TOTAL for area_acres, not per-acre.
+    const area = Number(profile.area_acres) || 1;
+    return briefingSentence(lang, {
+      crop: top.crop_name || top.crop_id,
+      profit: (top.expected_profit || 0) / area,
+      risk: Math.round(top.risk_score || 0),
+      rainfall
+    });
+  }
+
+  async function playBriefing() {
+    const btn = document.getElementById('qw-briefing');
+    if (!('speechSynthesis' in window)) {
+      showModal("Today's briefing", 'This browser does not support speech synthesis.');
+      return;
+    }
+    if (speakingBriefing) {
+      window.speechSynthesis.cancel();
+      speakingBriefing = false;
+      btn?.classList.remove('active');
+      return;
+    }
+    const profile = (window.MM && window.MM.profile && window.MM.profile.get()) || {};
+    if (!profile.region_id) {
+      showModal("Today's briefing", '<p>Set up your farm (region &amp; season) first on the dashboard, then come back for a spoken daily briefing.</p>');
+      return;
+    }
+    btn?.classList.add('active');
+    const text = await composeBriefing(profile).catch(() => null);
+    if (!text) {
+      btn?.classList.remove('active');
+      showModal("Today's briefing", '<p>Could not put together a briefing right now — try again in a moment.</p>');
+      return;
+    }
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = currentLangBCP47();
+    const voices = window.speechSynthesis.getVoices();
+    const match = voices.find(v => v.lang && v.lang.toLowerCase().startsWith(u.lang.toLowerCase().slice(0, 2)));
+    if (match) u.voice = match;
+    u.onend = () => { speakingBriefing = false; btn?.classList.remove('active'); };
+    u.onerror = u.onend;
+    window.speechSynthesis.speak(u);
+    speakingBriefing = true;
   }
 
   /* ---------- Copy link ---------- */

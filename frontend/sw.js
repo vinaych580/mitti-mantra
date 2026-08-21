@@ -6,7 +6,7 @@
      • Network-only for API calls to the backend.
 */
 
-const VERSION = 'mittimantra-v46';
+const VERSION = 'mittimantra-v49';
 const CORE = [
   './',
   './index.html',
@@ -124,6 +124,28 @@ self.addEventListener('fetch', (event) => {
         caches.open(VERSION).then((c) => c.put(req, clone)).catch(() => null);
         return res;
       }).catch(() => caches.match(req).then((c) => c || caches.match('./index.html')))
+    );
+    return;
+  }
+
+  // Generated data under Data/ is the exception to the rule below: these files
+  // are large (consultants.js alone is ~1.8MB raw), they only ever change when a
+  // deploy regenerates them, and VERSION is bumped on every such deploy. Under
+  // stale-while-revalidate the network fetch is issued even on a cache hit, so a
+  // visitor on a metered rural connection re-paid for them on every page load
+  // without ever receiving different bytes. Cache-first; VERSION does the
+  // invalidating, which is what VERSION is for.
+  if (url.origin === location.origin && /\/Data\/[^/]+\.(js|json)$/i.test(url.pathname)) {
+    event.respondWith(
+      caches.match(req).then((cached) =>
+        cached || fetch(req).then((res) => {
+          if (res && res.ok) {
+            const clone = res.clone();
+            caches.open(VERSION).then((c) => c.put(req, clone)).catch(() => null);
+          }
+          return res;
+        }).catch(() => cached)
+      )
     );
     return;
   }

@@ -964,17 +964,30 @@
 
     const oStats = computeOutcomeStats(expert.id);
     const testimonials = getTestimonialsFor(expert.id).slice(0, 4);
+    // Outcome tone comes from a tinted ground plus a hairline in the same hue,
+    // the convention the rest of the app uses -- not the 4px left bar this
+    // carried, which the design system bans as decoration rather than signal.
+    // The old amber/red were hardcoded literals off the palette; --danger takes
+    // the same fallback used everywhere else, since it is only defined for the
+    // dark theme. All three tints invert with the theme on their own.
+    const OUTCOME_TONE = {
+      'Advice worked':    { bg: 'var(--brand-soft)',            line: 'var(--brand)' },
+      'Partially helped': { bg: 'var(--accent-soft)',           line: 'var(--accent)' },
+    };
+    const toneFor = (outcome) => OUTCOME_TONE[outcome] ||
+      { bg: 'var(--danger-soft, #fce4e4)', line: 'var(--danger, #d14444)' };
+
     const outcomesHtml = testimonials.length
       ? testimonials.map((t) => `
-        <div style="background: var(--gs-green-light); border-left: 4px solid ${t.outcome === 'Advice worked' ? 'var(--brand)' : t.outcome === 'Partially helped' ? '#f59e0b' : '#ef4444'}; padding: 12px 16px; border-radius: 0 var(--r-sm) var(--r-sm) 0; margin-bottom:10px;">
-          <div style="display:flex;justify-content:space-between;gap:8px;font-size:.78rem;color:var(--ink-faint);margin-bottom:4px;">
+        <div style="background: ${toneFor(t.outcome).bg}; border: 1px solid ${toneFor(t.outcome).line}; border-color: color-mix(in srgb, ${toneFor(t.outcome).line} 35%, transparent); padding: 12px 16px; border-radius: var(--r-sm); margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;gap:8px;font-size:.78rem;color:var(--ink-soft);margin-bottom:4px;">
             <span>${esc(t.farmerLabel)}${t.source === 'demo' ? ' · <em>demo example</em>' : ' · self-reported on this device'}</span>
             <strong style="color:var(--brand-deep);">${esc(t.outcome)}</strong>
           </div>
           <p style="font-size:0.9rem;color:var(--ink-soft);font-style:italic;">"${esc(t.quote)}"</p>
-          <div style="font-size:.76rem;color:var(--ink-faint);margin-top:4px;">${esc(t.crop)} · ${esc(t.problem)}</div>
+          <div style="font-size:.76rem;color:var(--ink-soft);margin-top:4px;">${esc(t.crop)} · ${esc(t.problem)}</div>
         </div>`).join('')
-      : `<p style="font-size:0.88rem;color:var(--ink-faint);font-style:italic;">No outcomes logged for this expert yet — book a consultation and be the first to report how it went.</p>`;
+      : `<p style="font-size:0.88rem;color:var(--ink-soft);font-style:italic;">No outcomes logged for this expert yet — book a consultation and be the first to report how it went.</p>`;
 
     modalBody.innerHTML = `
       <div class="gs-modal-profile">
@@ -1771,21 +1784,16 @@
   faqHeaders.forEach(header => {
     header.addEventListener("click", function () {
       const item = this.parentElement;
-      const body = item.querySelector(".gs-faq-body");
-      
       const isOpen = item.classList.contains("open");
 
+      // Height comes from the grid-template-rows transition in CSS now, so
+      // there is nothing to measure or reset here.
       document.querySelectorAll(".gs-faq-item").forEach(other => {
         other.classList.remove("open");
-        other.querySelector(".gs-faq-body").style.maxHeight = null;
       });
 
       if (!isOpen) {
         item.classList.add("open");
-        body.style.maxHeight = body.scrollHeight + "px";
-      } else {
-        item.classList.remove("open");
-        body.style.maxHeight = null;
       }
     });
   });

@@ -30,7 +30,15 @@
       '.mm-plotpick__add{display:inline-flex;align-items:center;justify-content:center;',
       'width:26px;height:26px;border-radius:8px;text-decoration:none;flex:0 0 auto;',
       'border:1px dashed rgba(29,26,21,.25);color:var(--ink-soft);font-size:1rem;line-height:1;}',
-      '.mm-plotpick__add:hover{border-color:var(--brand);color:var(--brand);}'
+      '.mm-plotpick__add:hover{border-color:var(--brand);color:var(--brand);}',
+      /* 26px square is a comfortable cursor target and an uncomfortable thumb
+         one; this is the entry point to drawing a farm, so it should not be
+         the hardest thing on the row to hit. */
+      // min-*, not fixed width/height: this control has two forms -- a 26px "+"
+      // square when plots exist, and a wider "Draw your farm →" link when none
+      // do (which sets width:auto inline just below). A min only raises the
+      // small one to a thumb target and leaves the wide one alone.
+      '@media (max-width:860px){.mm-plotpick__add{min-width:44px;min-height:44px;}}'
     ].join('');
     document.head.appendChild(s);
   }

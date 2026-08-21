@@ -155,6 +155,11 @@
   world.add(indiaStatesGroup);
   const stateMeshes = []; // for raycasting + recolor
 
+  /* ---------- Mandi arbitrage arcs (added on top of the same globe) ---------- */
+  const arbitrageGroup = new THREE.Group();
+  world.add(arbitrageGroup);
+  let arbitrageMeshes = []; // arcs + markers, for raycasting
+
   // Palette used for "Default" view
   const DEFAULT_PALETTE = [
     0xc88a3a, 0x8fb04a, 0xd45c4a, 0x6fa8c9, 0xe5b84b, 0x7a4ea8,
@@ -290,8 +295,9 @@
   }
 
   /* ---------- Mode / heatmap logic ---------- */
-  let currentMode = 'default'; // default | rainfall | soilN | profit | crop
+  let currentMode = 'default'; // default | rainfall | soilN | profit | crop | arbitrage
   let currentCrop = null;
+  let currentArbitrageCropId = null;
 
   function lerpColor(a, b, t) {
     return new THREE.Color(a).lerp(new THREE.Color(b), t);
@@ -326,6 +332,10 @@
         const s = DATA.suitability(name, crop);
         if (s <= 0) col = new THREE.Color(0x444444);
         else col = heatColor(s);
+      } else if (mode === 'arbitrage') {
+        // Dim and desaturate the state fill so the arbitrage arcs read
+        // clearly against the globe instead of competing with 38 hues.
+        col = m.userData.defaultColor.clone().lerp(new THREE.Color(0x3a382f), 0.72);
       } else {
         col = m.userData.defaultColor;
       }
@@ -340,6 +350,99 @@
     if (!sel || !DATA) return;
     sel.innerHTML = '<option value="">Pick a crop…</option>' +
       DATA.crops.map(c => `<option value="${c}">${c}</option>`).join('');
+  }
+
+  /* ---------- Arbitrage mode: real cross-mandi price gaps as arcs ----------
+     Reuses /api/arbitrage/{crop_id} (already computed server-side from
+     mandi_prices.csv, same-month comparisons only) and FarmState's real
+     lat/lon per region_id — no new backend endpoint needed. */
+  let arbitrageCropsCache = null;
+
+  async function populateArbitrageCropDropdown() {
+    const sel = document.getElementById('scene3dCrop');
+    if (!sel) return;
+    if (!arbitrageCropsCache) {
+      try {
+        const res = await fetch('/api/crops');
+        const rows = await res.json();
+        arbitrageCropsCache = rows
+          .map(r => ({ id: r.crop_id, name: r.crop_name }))
+          .sort((a, b) => a.name.localeCompare(b.name));
+      } catch (e) {
+        arbitrageCropsCache = [];
+      }
+    }
+    if (currentMode !== 'arbitrage') return; // user switched away while this was loading
+    sel.innerHTML = '<option value="">Pick a crop…</option>' +
+      arbitrageCropsCache.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+  }
+
+  function clearArbitrage() {
+    arbitrageGroup.children.forEach(obj => {
+      obj.geometry?.dispose();
+      obj.material?.dispose();
+    });
+    arbitrageGroup.clear();
+    arbitrageMeshes = [];
+  }
+
+  function buildArbitrageArc(buy, sell, opportunity, colorHex) {
+    const start = latLonToVec3(buy.lat, buy.lon, GLOBE_R + 0.02);
+    const end = latLonToVec3(sell.lat, sell.lon, GLOBE_R + 0.02);
+    const mid = start.clone().add(end).multiplyScalar(0.5);
+    mid.normalize().multiplyScalar(GLOBE_R + 0.18 + start.distanceTo(end) * 0.18);
+    const curve = new THREE.QuadraticBezierCurve3(start, mid, end);
+    const geom = new THREE.BufferGeometry().setFromPoints(curve.getPoints(40));
+    const mat = new THREE.LineBasicMaterial({ color: colorHex, transparent: true, opacity: 0.85 });
+    const line = new THREE.Line(geom, mat);
+    line.renderOrder = 4;
+    line.userData = { isArbitrage: true, kind: 'arc', opportunity };
+    arbitrageGroup.add(line);
+    arbitrageMeshes.push(line);
+  }
+
+  function buildArbitrageMarker(region, colorHex) {
+    const geom = new THREE.SphereGeometry(0.035, 12, 12);
+    const mat = new THREE.MeshBasicMaterial({ color: colorHex });
+    const mesh = new THREE.Mesh(geom, mat);
+    mesh.position.copy(latLonToVec3(region.lat, region.lon, GLOBE_R + 0.02));
+    mesh.renderOrder = 5;
+    mesh.userData = { isArbitrage: true, kind: 'marker', label: region.displayName };
+    arbitrageGroup.add(mesh);
+    arbitrageMeshes.push(mesh);
+  }
+
+  async function renderArbitrage(cropId) {
+    clearArbitrage();
+    if (!cropId || !window.FarmState) { updateLegend(); return; }
+    if (legendEl) legendEl.innerHTML = '<span class="scene3d-legend__txt">Loading arbitrage data…</span>';
+    let data;
+    try {
+      const res = await fetch(`/api/arbitrage/${encodeURIComponent(cropId)}`);
+      data = await res.json();
+    } catch (e) {
+      if (legendEl) legendEl.innerHTML = '<span class="scene3d-legend__txt">Could not load arbitrage data.</span>';
+      return;
+    }
+    if (currentMode !== 'arbitrage' || currentArbitrageCropId !== cropId) return; // stale by the time it landed
+
+    const opportunities = (data.opportunities || []).slice(0, 8); // top gaps only — keeps the globe legible
+    if (!opportunities.length) {
+      if (legendEl) legendEl.innerHTML = `<span class="scene3d-legend__txt">${data.message || 'Not enough same-month mandi data for this crop yet.'}</span>`;
+      return;
+    }
+    const maxGap = Math.max(...opportunities.map(o => o.price_gap_per_kg));
+    const seenRegions = new Set();
+    opportunities.forEach(op => {
+      const buy = window.FarmState.getRegionRecord(op.buy_region);
+      const sell = window.FarmState.getRegionRecord(op.sell_region);
+      if (!buy || !sell) return;
+      const t = maxGap > 0 ? op.price_gap_per_kg / maxGap : 0.5;
+      buildArbitrageArc(buy, sell, op, lerpColor(0xf4c542, 0xd4432a, t).getHex());
+      if (!seenRegions.has(op.buy_region)) { buildArbitrageMarker(buy, 0x4aa07b); seenRegions.add(op.buy_region); }
+      if (!seenRegions.has(op.sell_region)) { buildArbitrageMarker(sell, 0xd45c4a); seenRegions.add(op.sell_region); }
+    });
+    updateLegend();
   }
 
   /* ---------- HUD controls ---------- */
@@ -366,6 +469,10 @@
       html = currentCrop
         ? legendGradient('Suitability · ' + currentCrop, 'low', 'high')
         : '<span class="scene3d-legend__txt">Pick a crop from the dropdown.</span>';
+    } else if (currentMode === 'arbitrage') {
+      html = currentArbitrageCropId
+        ? '<span class="scene3d-legend__txt">Arcs = price gap (gold small → red large). Green dot = cheaper mandi, red dot = costlier. Click an arc for details.</span>'
+        : '<span class="scene3d-legend__txt">Pick a crop to see real cross-mandi price gaps.</span>';
     }
     legendEl.innerHTML = html;
   }
@@ -378,13 +485,30 @@
   if (modeSelect) {
     modeSelect.addEventListener('change', () => {
       currentMode = modeSelect.value;
-      if (cropWrap) cropWrap.style.display = currentMode === 'crop' ? '' : 'none';
+      if (cropWrap) cropWrap.style.display = (currentMode === 'crop' || currentMode === 'arbitrage') ? '' : 'none';
+      if (currentMode === 'arbitrage') {
+        clearArbitrage();
+        currentArbitrageCropId = null;
+        if (cropSelect) cropSelect.value = '';
+        populateArbitrageCropDropdown();
+      } else {
+        clearArbitrage();
+        if (currentMode === 'crop') {
+          populateCropDropdown();
+          if (cropSelect) cropSelect.value = currentCrop || '';
+        }
+      }
       applyMode(currentMode, currentCrop);
       updateLegend();
     });
   }
   if (cropSelect) {
     cropSelect.addEventListener('change', () => {
+      if (currentMode === 'arbitrage') {
+        currentArbitrageCropId = cropSelect.value || null;
+        renderArbitrage(currentArbitrageCropId);
+        return;
+      }
       currentCrop = cropSelect.value || null;
       applyMode(currentMode, currentCrop);
       updateLegend();
@@ -537,6 +661,7 @@
 
   /* ---------- Raycaster ---------- */
   const raycaster = new THREE.Raycaster();
+  raycaster.params.Line = { threshold: 0.05 }; // arcs are thin lines; give them a comfortable hit area
   const pointer = new THREE.Vector2();
 
   function hitState(e) {
@@ -544,6 +669,10 @@
     pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
     pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
     raycaster.setFromCamera(pointer, camera);
+    if (currentMode === 'arbitrage' && arbitrageMeshes.length) {
+      const arbHit = raycaster.intersectObjects(arbitrageMeshes, false)[0];
+      if (arbHit) return arbHit;
+    }
     return raycaster.intersectObjects(stateMeshes, false)[0];
   }
 
@@ -555,6 +684,13 @@
       label.style.display = 'block';
       label.style.left = (e.clientX - rect.left) + 'px';
       label.style.top  = (e.clientY - rect.top) + 'px';
+      if (info.isArbitrage) {
+        label.innerHTML = info.kind === 'arc'
+          ? `<strong>₹${info.opportunity.price_gap_per_kg}/kg gap</strong><small>${info.opportunity.buy_market} → ${info.opportunity.sell_market}</small>`
+          : `<strong>${info.label}</strong><small>click an arc for the price gap</small>`;
+        canvas.style.cursor = 'pointer';
+        return;
+      }
       const d = DATA ? DATA.get(info.state) : null;
       let hint = 'India · click to inspect';
       if (d) {
@@ -575,9 +711,30 @@
   }
   function onClick(e) {
     const hit = hitState(e);
-    if (hit) selectState(hit.object);
+    if (!hit) return;
+    const info = hit.object.userData;
+    if (info.isArbitrage) {
+      if (info.kind === 'arc') selectArbitrageArc(info.opportunity);
+      return;
+    }
+    selectState(hit.object);
   }
   function hideLabel() { label.style.display = 'none'; }
+
+  function selectArbitrageArc(op) {
+    if (!panelEl) return;
+    const body = panelEl.querySelector('.scene3d-panel__body');
+    const titleEl = panelEl.querySelector('.scene3d-panel__title');
+    if (titleEl) titleEl.textContent = `${op.buy_market} → ${op.sell_market}`;
+    if (body) body.innerHTML = `
+      <div class="scene3d-stats">
+        <div><span>Buy at</span><b>₹${op.buy_price}/kg</b></div>
+        <div><span>Sell at</span><b>₹${op.sell_price}/kg</b></div>
+        <div><span>Gap</span><b>₹${op.price_gap_per_kg}/kg (${op.gap_pct}%)</b></div>
+      </div>
+      <a class="scene3d-panel__cta" href="dashboard.html">Plan on dashboard →</a>`;
+    panelEl.classList.add('open');
+  }
 
   /* ---------- Resize ---------- */
   function resize() {

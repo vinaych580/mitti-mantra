@@ -269,12 +269,20 @@ section {
 }
 
 .footer .logo {
-  min-height: 58px;
+  min-height: 74px;
   color: #fff;
 }
 
+/* The footer ground (#15110c) is dark in both themes, and the mark's
+   wordmark is baked into the raster in colors too dark to read on it —
+   give it a light card to sit on rather than recolor pixels we don't own. */
 .footer .logo__img {
   height: 58px;
+  padding: 8px 12px;
+  background: #faf6ef;
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-sm);
+  filter: none;
 }
 
 @media (max-width: 500px) {
@@ -288,11 +296,12 @@ section {
   }
 
   .footer .logo {
-    min-height: 48px;
+    min-height: 62px;
   }
 
   .footer .logo__img {
     height: 48px;
+    padding: 6px 10px;
   }
 }
 
@@ -3009,10 +3018,35 @@ section {
   box-shadow: var(--shadow-md);
 }
 
+/* Ambient wash behind the (alpha:true) globe canvas, in the same four
+   accent hues the layer legend below already uses — an empty ring around
+   the render otherwise reads as unfinished rather than atmospheric. */
+.scene3d__canvas::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(38% 34% at 14% 12%, rgba(47, 107, 58, .18), transparent 70%),
+    radial-gradient(34% 30% at 88% 20%, rgba(200, 138, 58, .15), transparent 70%),
+    radial-gradient(32% 30% at 84% 88%, rgba(110, 167, 199, .16), transparent 70%),
+    radial-gradient(30% 26% at 14% 90%, rgba(165, 86, 42, .13), transparent 70%);
+}
+
 .scene3d__canvas canvas {
+  position: relative;
+  z-index: 1;
   width: 100% !important;
   height: 100% !important;
   display: block;
+}
+
+/* The WebGL fallback replaces the canvas via innerHTML; without an explicit
+   stacking order it would paint under the z-index:0 ambient wash above. */
+.scene3d__canvas > .globe-fallback {
+  position: relative;
+  z-index: 1;
 }
 
 .scene3d__label {
@@ -3037,6 +3071,42 @@ section {
 
 .scene3d__label small {
   color: var(--ink-faint);
+}
+
+/* Signals the render is a live, draggable scene rather than a static
+   image — the affordance the empty canvas chrome was missing. */
+.scene3d__live {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .78);
+  border: 1px solid rgba(29, 26, 21, .08);
+  backdrop-filter: blur(8px);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  pointer-events: none;
+}
+
+.scene3d__live i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--brand);
+  box-shadow: 0 0 0 0 rgba(47, 107, 58, .5);
+  animation: scene3dPulse 2s var(--ease) infinite;
+}
+
+@keyframes scene3dPulse {
+  0% { box-shadow: 0 0 0 0 rgba(47, 107, 58, .45); }
+  70% { box-shadow: 0 0 0 8px rgba(47, 107, 58, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(47, 107, 58, 0); }
 }
 
 @media (max-width: 860px) {
@@ -3209,14 +3279,20 @@ section {
   z-index: 3;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   background: var(--surface-alpha, rgba(255, 255, 255, 0.92));
   backdrop-filter: blur(10px);
-  padding: 12px 14px;
+  padding: 14px 16px;
   border-radius: var(--r-md);
+  border: 1px solid rgba(29, 26, 21, .07);
   box-shadow: var(--shadow-sm);
   font-size: 0.82rem;
   max-width: 260px;
+  transition: box-shadow .3s var(--ease);
+}
+
+.scene3d__hud:hover {
+  box-shadow: var(--shadow-md);
 }
 
 .scene3d__hud-row {
@@ -3226,23 +3302,37 @@ section {
 }
 
 .scene3d__hud-row>span {
-  color: var(--ink-faint);
-  font-weight: 500;
+  color: var(--brand);
+  font-weight: 600;
   font-size: 0.72rem;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
 }
 
 .scene3d__hud-row select {
   appearance: none;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  -webkit-appearance: none;
+  border: 1.5px solid rgba(29, 26, 21, .1);
   border-radius: var(--r-sm);
-  padding: 7px 10px;
+  padding: 8px 30px 8px 11px;
   font-size: 0.85rem;
-  background: var(--surface);
-  color: var(--ink);
   font-family: inherit;
+  background: var(--bg) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234a4339' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>") no-repeat right 9px center;
+  background-size: 13px;
+  color: var(--ink);
   cursor: pointer;
+  transition: border-color .25s var(--ease), background-color .25s var(--ease), box-shadow .25s var(--ease);
+}
+
+.scene3d__hud-row select:hover {
+  border-color: rgba(29, 26, 21, .22);
+}
+
+.scene3d__hud-row select:focus {
+  outline: none;
+  border-color: var(--brand);
+  background-color: var(--surface);
+  box-shadow: 0 0 0 3px rgba(47, 107, 58, .15);
 }
 
 .scene3d-legend {
@@ -3284,7 +3374,7 @@ section {
   background: var(--surface-alpha, rgba(255, 255, 255, 0.97));
   backdrop-filter: blur(14px);
   border-radius: var(--r-lg);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-lg);
   padding: 22px 22px 18px;
   z-index: 4;
   overflow-y: auto;
@@ -4650,6 +4740,24 @@ section {
   animation: pulse 1.5s infinite ease-in-out;
 }
 
+/* Loading placeholder lines. Previously each one carried an inline
+   background literal (#e0d9cb in markup, #e2e8f0 in dashboard.js) that
+   overrode the token above and left the dark theme untreated. */
+.skeleton--line {
+  height: 14px;
+  width: 80%;
+  border-radius: 4px;
+  margin-bottom: 6px;
+}
+
+.skeleton--line:last-child {
+  margin-bottom: 0;
+}
+
+.skeleton--short {
+  width: 60%;
+}
+
 @keyframes pulse {
   0% {
     opacity: 0.55;
@@ -5894,23 +6002,58 @@ body {
   background: var(--brand);
 }
 
-/* --- Telemetry Insights Container Revamp --- */
+/* --- Telemetry Insights Container ---
+   Tokens, not literals: --surface and --bg both invert under
+   html[data-theme="dark"], so this block themes itself instead of needing a
+   parallel override in toolbar.js. The !important flags that used to pin these
+   to #fff are gone with the inline styles they were fighting. */
 .telemetry-box {
-  background: rgba(255, 255, 255, 0.95) !important;
-  border-radius: var(--r-lg) !important;
+  background: var(--surface);
+  border-radius: var(--r-lg);
   /* Definition comes from the border and shadow; the 6px brand bar that used to
      sit on the left edge read as decoration rather than information. */
-  border: 1px solid rgba(47, 107, 58, 0.22) !important;
-  box-shadow: 0 8px 30px rgba(29, 26, 21, 0.06) !important;
+  border: 1px solid rgba(47, 107, 58, 0.22);
+  box-shadow: 0 8px 30px rgba(29, 26, 21, 0.06);
+  padding: 24px;
+  margin-bottom: 30px;
   transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
 }
 
+.telemetry-box__title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(1.25rem, 1.8vw, 1.6rem);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--brand-deep);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.telemetry-box__title svg {
+  width: 22px;
+  height: 22px;
+  color: var(--brand);
+  flex-shrink: 0;
+}
+
+.telemetry-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+/* Recessed against the box above it — the same paper-under-surface step the
+   KPI tiles use, rather than white-on-white. */
 .telemetry-card {
-  background: #ffffff !important;
-  border-radius: var(--r-md) !important;
-  border: 1px solid rgba(47, 107, 58, 0.1) !important;
-  box-shadow: 0 2px 8px rgba(29, 26, 21, 0.03) !important;
-  transition: all 0.3s var(--ease);
+  background: var(--bg);
+  border-radius: var(--r-md);
+  border: 1px solid rgba(47, 107, 58, 0.1);
+  box-shadow: 0 2px 8px rgba(29, 26, 21, 0.03);
+  padding: 16px;
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease), border-color 0.3s var(--ease);
   position: relative;
   overflow: hidden;
 }
@@ -5920,8 +6063,30 @@ body {
 
 .telemetry-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(29, 26, 21, 0.08) !important;
-  border-color: rgba(47, 107, 58, 0.25) !important;
+  box-shadow: 0 8px 20px rgba(29, 26, 21, 0.08);
+  border-color: rgba(47, 107, 58, 0.25);
+}
+
+.telemetry-card__title {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.telemetry-map {
+  height: 180px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--bg-soft);
+  margin-top: 16px;
+  overflow: hidden;
+  z-index: 1;
 }
 
 /* --- Main Tool Panels Revamp --- */
@@ -6053,4 +6218,113 @@ body {
   border: 1.5px solid rgba(47, 107, 58, 0.2);
   border-radius: var(--r-md);
   box-shadow: 0 4px 15px rgba(47, 107, 58, 0.08);
+}
+
+/* --- Touch viewports: form controls at 16px ---------------------------------
+   iOS Safari zooms the viewport whenever a focused field computes below 16px,
+   and the user has to pinch back out afterwards. Every rule below sat between
+   13px and 15.2px, so on the dashboard alone 81 controls tripped it.
+
+   .mm-farm-bar already carried this fix at its own breakpoint; this generalises
+   it to every control instead of enumerating class names, because each page
+   defines its own (.tractor-cta__form, .map-filters, .mm-form-input, …) and an
+   enumeration goes stale the moment someone adds another.
+
+   The :not() chains are load-bearing, not decoration. Page-scoped <style>
+   blocks sit after this file's <link>, so an equal-specificity rule here would
+   lose to them; each :not([attr]) adds a class-level weight, putting these at
+   (0,2,1)-(0,3,1) against the pages' (0,1,1). They also exclude the controls
+   that have no keyboard to zoom for. max() holds a true 16px floor even if the
+   root size is under the default. */
+@media (max-width: 860px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="color"]),
+  select:not([hidden]):not([disabled]),
+  textarea:not([hidden]):not([disabled]) {
+    font-size: max(1rem, 16px);
+  }
+}
+
+/* --- Leaflet zoom controls on touch -----------------------------------------
+   Leaflet ships 30x30 controls and its stylesheet loads after this one, so the
+   selectors below carry an extra class to outrank `.leaflet-touch .leaflet-bar a`
+   rather than resorting to !important. The map is the primary way tractors and
+   experts are found, and zoom is how you use a map on a phone. */
+@media (max-width: 860px) {
+  .leaflet-touch .leaflet-bar a.leaflet-control-zoom-in,
+  .leaflet-touch .leaflet-bar a.leaflet-control-zoom-out,
+  .leaflet-bar a.leaflet-control-zoom-in,
+  .leaflet-bar a.leaflet-control-zoom-out {
+    width: 44px;
+    height: 44px;
+    line-height: 44px;
+    font-size: 20px;
+  }
+}
+
+/* --- Sidebar groups as disclosures on touch ---------------------------------
+   Desktop keeps the flat 22-tool palette: it is scannable at a glance and the
+   whole point of a persistent rail. Below 860px that same markup ran 1,346px
+   tall -- 37% of the dashboard document -- and sat above the content, so
+   reaching any tool meant scrolling past every tool. Collapsing onto the seven
+   labels already in the markup takes it to roughly 350px.
+
+   minmax(0, …) rather than a bare 0fr: an fr track still takes auto as its
+   minimum, which the button padding would hold open. */
+@media (max-width: 860px) {
+  .sidebar__label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+    min-height: 44px;
+    margin: 0;
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px solid var(--border, rgba(29, 26, 21, 0.1));
+  }
+
+  .sidebar__label::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    flex: 0 0 auto;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg) translate(-2px, -2px);
+    transition: transform 0.25s var(--ease);
+    opacity: 0.55;
+  }
+
+  .sidebar__group.is-open > .sidebar__label::after {
+    transform: rotate(-135deg) translate(-2px, -2px);
+  }
+
+  .sidebar__label:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+
+  .sidebar__items {
+    display: grid;
+    grid-template-rows: minmax(0, 0fr);
+    overflow: hidden;
+    transition: grid-template-rows 0.28s var(--ease);
+  }
+
+  .sidebar__group.is-open > .sidebar__items,
+  .sidebar.is-searching .sidebar__items {
+    grid-template-rows: minmax(0, 1fr);
+  }
+
+  /* Exactly one grid child, so there is exactly one track to collapse; the
+     buttons keep their original block layout inside it. */
+  .sidebar__items-inner {
+    min-height: 0;
+  }
+
+  /* The rail's own buttons were 40px; four short of a comfortable thumb. */
+  .sidebar__btn {
+    min-height: 44px;
+  }
 }

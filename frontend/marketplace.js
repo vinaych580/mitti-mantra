@@ -1998,7 +1998,7 @@
       <div class="mkt-cart-row" data-listing="${esc(l.id)}">
         <div class="mkt-cart-row__media">${img ? `<img src="${esc(img)}" alt="${esc(l.name)}">` : catIcon(l.category)}</div>
         <div class="mkt-cart-row__info">
-          <strong>${esc(l.name)} <small style="font-weight:500;color:var(--ink-faint);">${esc(l.variety || '')}</small></strong>
+          <strong>${esc(l.name)} <small style="font-weight:500;color:var(--ink-soft);">${esc(l.variety || '')}</small></strong>
           <span>${esc(l.sellerName)} · ${inr(l.pricePerUnit)}/${esc(l.unit)}</span>
         </div>
         <div class="mkt-cart-row__qty">

@@ -204,13 +204,17 @@
      pack the fields two-up instead. */
   @media (max-width:860px){
     .mm-farm-bar{position:static;}
+    /* Thumb-sized targets: the desktop 6px padding left these controls ~29px
+       tall, under the 44px touch guidance and awkward to hit one-handed. The
+       16px floor also keeps iOS from zooming the viewport on focus. Applied
+       from 860px rather than 620px so tablets in portrait get it too --
+       below 620 they were correct, but an iPad sat in the gap. */
+    .mm-farm-bar select,.mm-farm-bar input{min-height:44px;padding:8px 10px;font-size:16px;}
   }
   @media (max-width:620px){
     .mm-farm-bar{gap:8px;padding:10px 12px;}
     .mm-farm-bar__field{min-width:0;flex:1 1 calc(50% - 4px);}
-    /* Thumb-sized targets: the desktop 6px padding left these controls ~29px
-       tall, under the 44px touch guidance and awkward to hit one-handed. */
-    .mm-farm-bar select,.mm-farm-bar input{min-width:0;width:100%;min-height:44px;padding:8px 10px;font-size:16px;}
+    .mm-farm-bar select,.mm-farm-bar input{min-width:0;width:100%;}
     .mm-farm-bar__hint{display:none;}
     .mm-farm-bar__save{margin-left:0;flex:1 1 100%;min-height:44px;font-size:14px;}
   }

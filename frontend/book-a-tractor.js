@@ -311,7 +311,7 @@ window.MM_TRACTOR_FALLBACK = window.MM_TRACTOR_FALLBACK || (function () {
             ${b.splitWith ? `<span>🤝 <b>Split with ${esc(b.splitWith.name)}</b></span>` : ''}
           </div>
           <div class="tractor-booking-row__foot">
-            <span class="tractor-booking-row__cost">₹${(b.myShare != null ? b.myShare : (b.cost || 0)).toLocaleString('en-IN')}${b.splitWith ? ` <small style="font-weight:400;color:var(--ink-faint);">of ₹${(b.cost || 0).toLocaleString('en-IN')} total</small>` : ''}</span>
+            <span class="tractor-booking-row__cost">₹${(b.myShare != null ? b.myShare : (b.cost || 0)).toLocaleString('en-IN')}${b.splitWith ? ` <small style="font-weight:400;color:var(--ink-soft);">of ₹${(b.cost || 0).toLocaleString('en-IN')} total</small>` : ''}</span>
             ${phoneDigits ? `<a class="tractor-booking-row__call" href="tel:+91${phoneDigits}">📞 Call ${esc(b.operatorName || 'operator')}</a>` : `<span class="tractor-booking-row__call" style="opacity:.6;cursor:default;">Operator phone not listed</span>`}
           </div>
           ${isPast ? (b.outcomeLogged
@@ -874,13 +874,13 @@ window.MM_TRACTOR_FALLBACK = window.MM_TRACTOR_FALLBACK || (function () {
     const top = [...stateStats].sort((a, b) => b.pct - a.pct).slice(0, 8);
     barsEl.innerHTML = top.map((d) => `
       <div class="tractor-intel__row">
-        <div class="tractor-intel__row-label"><span>${esc(d.state)} <small style="color:var(--ink-faint);font-weight:400;">(${d.total} tractors)</small></span><b>${d.pct}%</b></div>
+        <div class="tractor-intel__row-label"><span>${esc(d.state)} <small style="color:var(--ink-soft);font-weight:400;">(${d.total} tractors)</small></span><b>${d.pct}%</b></div>
         <div class="tractor-intel__row-track"><div class="tractor-intel__row-fill" data-target="${d.pct}"></div></div>
       </div>
     `).join('');
 
     requestAnimationFrame(() => requestAnimationFrame(() => {
-      barsEl.querySelectorAll('.tractor-intel__row-fill').forEach((el) => { el.style.width = el.dataset.target + '%'; });
+      barsEl.querySelectorAll('.tractor-intel__row-fill').forEach((el) => { el.style.setProperty('--v', (parseFloat(el.dataset.target) || 0) / 100); });
     }));
     retranslate();
   }

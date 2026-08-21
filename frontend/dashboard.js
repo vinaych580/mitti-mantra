@@ -283,6 +283,74 @@
     el.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, true);
 
+  /* ---------- Sidebar: collapsible groups ----------
+     On desktop the 22-tool rail is a scannable palette. Linearised onto a
+     375px phone it became a 1,346px wall -- 37% of the document, sitting
+     above the content, with no way to reach a tool except scrolling past all
+     of them. The seven group labels already in the markup are the structure
+     to collapse onto, so below 860px each group becomes a disclosure and only
+     the active one starts open.
+
+     The buttons are wrapped here rather than in the HTML so the markup stays
+     flat and this stays one concern in one place. It must run before the tool
+     search is wired up, though the search's descendant queries keep working
+     through the wrapper either way. */
+  const groupEls = $$('.sidebar__group');
+  groupEls.forEach(group => {
+    const label = group.querySelector('.sidebar__label');
+    const groupBtns = group.querySelectorAll('.sidebar__btn');
+    if (!label || !groupBtns.length) return;
+
+    // Two elements, not one: the 0fr collapse only sizes the tracks it declares,
+    // so with the buttons as direct grid children every button past the first
+    // got an implicit auto row and the group stayed open. The inner wrapper
+    // gives the grid exactly one row to collapse.
+    const items = document.createElement('div');
+    items.className = 'sidebar__items';
+    const inner = document.createElement('div');
+    inner.className = 'sidebar__items-inner';
+    groupBtns.forEach(b => inner.appendChild(b));
+    items.appendChild(inner);
+    group.appendChild(items);
+
+    // The label is a <div>; give it real button semantics only while it acts
+    // as one, so desktop keeps its original seven non-focusable headings.
+    label.addEventListener('click', () => {
+      if (!window.matchMedia('(max-width: 860px)').matches) return;
+      const open = group.classList.toggle('is-open');
+      label.setAttribute('aria-expanded', String(open));
+    });
+    label.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); label.click(); }
+    });
+  });
+
+  const sidebarMq = window.matchMedia('(max-width: 860px)');
+  function syncSidebarGroups() {
+    const mobile = sidebarMq.matches;
+    groupEls.forEach(group => {
+      const label = group.querySelector('.sidebar__label');
+      if (!label) return;
+      if (mobile) {
+        label.setAttribute('role', 'button');
+        label.setAttribute('tabindex', '0');
+        label.setAttribute('aria-expanded', String(group.classList.contains('is-open')));
+      } else {
+        label.removeAttribute('role');
+        label.removeAttribute('tabindex');
+        label.removeAttribute('aria-expanded');
+      }
+    });
+  }
+  function openActiveGroup() {
+    const active = document.querySelector('.sidebar__btn.active');
+    const group = active && active.closest('.sidebar__group');
+    if (group) group.classList.add('is-open');
+    syncSidebarGroups();
+  }
+  openActiveGroup();
+  sidebarMq.addEventListener('change', syncSidebarGroups);
+
   /* ---------- Sidebar tool switcher ---------- */
   const btns = $$('.sidebar__btn');
   const tools = $$('.tool');
@@ -290,6 +358,10 @@
     const target = b.dataset.tool;
     btns.forEach(x => x.classList.toggle('active', x === b));
     tools.forEach(t => t.classList.toggle('active', t.dataset.tool === target));
+    // Keep the open group in step when a tool is chosen programmatically
+    // (several call sites click these buttons directly).
+    groupEls.forEach(g => g.classList.toggle('is-open', g.contains(b)));
+    syncSidebarGroups();
     if (window.innerWidth < 860) tools.find(t => t.dataset.tool === target)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }));
 
@@ -387,6 +459,10 @@
         group.hidden = !groupHas;
         if (groupHas) anyVisible = true;
       });
+
+      // While filtering, every surviving group is forced open -- otherwise on
+      // mobile the search would hide its own matches inside collapsed groups.
+      sidebar.classList.toggle('is-searching', !!q);
 
       empty.hidden = anyVisible;
     });
@@ -553,8 +629,8 @@
     if (rName) rName.innerText = regionName || regionId;
 
     const skeleton = `
-      <div class="skeleton" style="height: 12px; width: 90%; background: #e2e8f0; margin-bottom: 6px; border-radius: 4px; animation: pulse 1.5s infinite;"></div>
-      <div class="skeleton" style="height: 12px; width: 70%; background: #e2e8f0; border-radius: 4px; animation: pulse 1.5s infinite;"></div>
+      <div class="skeleton skeleton--line"></div>
+      <div class="skeleton skeleton--line skeleton--short"></div>
     `;
     const wBody = document.getElementById('telemetryWeatherBody');
     const sBody = document.getElementById('telemetrySoilBody');
@@ -1007,6 +1083,11 @@
             <div class="kpi__sub">${Math.round(water.irrigation_coverage_percent || 0)}% covered</div></div>
         </div>
 
+        <div class="chart-box" data-benchmark-card style="margin-top:14px;">
+          <div class="chart-box__title">Regional benchmark</div>
+          <div data-benchmark-body class="benchmark-loading">Comparing against ${f.region_id.replace(/_/g, ' ')} history…</div>
+        </div>
+
         ${r.intelligence_report ? `
         <div class="alert alert--info" style="margin-top: 16px; border:1px solid color-mix(in srgb, var(--brand) 35%, transparent); background: var(--brand-soft);">
           <div class="alert__body" style="color: var(--brand-deep);">
@@ -1140,6 +1221,47 @@
           }
         });
       }
+
+      // Regional benchmark — non-blocking; the KPIs above already stand on
+      // their own if this fails or the user has re-submitted meanwhile.
+      api('/api/benchmark', {
+        method: 'POST',
+        body: JSON.stringify({
+          region_id: f.region_id,
+          crop_id: f.crop_id,
+          user_yield_kg_per_acre: yieldPerAc,
+          user_profit_per_acre: (r.profit || 0) / (area || 1)
+        })
+      }).then(b => {
+        const body = out.querySelector('[data-benchmark-body]');
+        if (!body) return; // tool re-run or navigated away
+        const yieldGood = (b.yield_vs_avg_pct || 0) >= 0;
+        const profitGood = (b.profit_vs_avg_pct || 0) >= 0;
+        body.classList.remove('benchmark-loading');
+        body.innerHTML = `
+          <div class="kpi-grid" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr));">
+            <div class="kpi ${yieldGood ? 'kpi--good' : 'kpi--warn'}">
+              <div class="kpi__lbl">Yield vs regional avg</div>
+              <div class="kpi__val">${yieldGood ? '+' : ''}${FIX(b.yield_vs_avg_pct, 1)}%</div>
+              <div class="kpi__sub">avg ${Math.round(b.regional_avg_yield || 0)} kg/ac (${b.data_points} yrs of data)</div>
+            </div>
+            <div class="kpi ${profitGood ? 'kpi--good' : 'kpi--warn'}">
+              <div class="kpi__lbl">Profit vs regional avg</div>
+              <div class="kpi__val">${profitGood ? '+' : ''}${FIX(b.profit_vs_avg_pct, 1)}%</div>
+              <div class="kpi__sub">est. avg ${INR(b.estimated_regional_avg_profit_per_acre || 0)}/ac</div>
+            </div>
+            <div class="kpi kpi--info">
+              <div class="kpi__lbl">Yield percentile</div>
+              <div class="kpi__val">${Math.round(b.yield_percentile || 0)}<span style="font-size:.5em;color:var(--ink-faint)">th</span></div>
+            </div>
+          </div>
+          <p style="margin:10px 2px 0;font-size:.9rem;color:var(--ink-faint)">${(window.MM && window.MM.escapeHtml ? window.MM.escapeHtml : String)(b.rating || '')}</p>`;
+      }).catch(() => {
+        const body = out.querySelector('[data-benchmark-body]');
+        const card = out.querySelector('[data-benchmark-card]');
+        if (card) card.remove();
+        else if (body) body.textContent = 'Regional benchmark unavailable right now.';
+      });
     } catch (err) { showError(out, err); }
   });
 
@@ -2717,7 +2839,7 @@
       const qty = o.total_quantity ? `${o.total_quantity.value} ${o.total_quantity.unit}` : null;
       const modeTag = o.mode === 'organic' ? '🍃 Organic' : '🧪 Chemical';
       return `
-        <div class="chart-box" style="border-left:3px solid ${o.mode === 'organic' ? 'var(--brand)' : 'var(--accent)'};">
+        <div class="chart-box" style="border:1px solid ${o.mode === 'organic' ? 'var(--brand)' : 'var(--accent)'};border-color:color-mix(in srgb, ${o.mode === 'organic' ? 'var(--brand)' : 'var(--accent)'} 35%, transparent);">
           <div class="chart-box__title" style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;">
             <span>${modeTag} · ${o.product}</span>
             ${o.approx_cost_inr ? `<span style="font-size:.85rem;font-weight:700;color:var(--ink);">₹${o.approx_cost_inr.toLocaleString('en-IN')}</span>` : ''}

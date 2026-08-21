@@ -15,6 +15,7 @@ colors:
   accent-soft: "#f7ecd7"
   clay: "#a5562a"
   sky: "#6ea7c7"
+  info: "#2a5a7a"
   info-soft: "#e3f0f8"
   danger: "#8b2f2f"
   danger-soft: "#fce4e4"
@@ -210,7 +211,7 @@ Vertical rhythm is fluid: sections breathe at `clamp(72px, 10vw, 140px)`, so the
 
 Density is deliberately dual. Marketing surfaces run airy with large type and generous section padding; the dashboard runs dense, with 16px KPI tiles in a 2-column result grid and 16px gaps. Same tokens, different settings — this is how one system serves both the farmer and the advisor.
 
-**Breakpoints** cluster at **860px** (the primary desktop-to-stack transition, used a dozen times) and **640px** (small-phone adjustments), with situational stops at 520, 620, 700, 720, 900, 960, and 1080px. 860px is the one to design against; the others are local repairs.
+**Breakpoints** cluster at **860px** (the primary desktop-to-stack transition, used a dozen times) and **640px** (small-phone adjustments), with situational stops at 500, 520, 620, 700, 720, 900, 960, 1080, and 1100px. 860px is the one to design against; the others are local repairs.
 
 **Motion honors `prefers-reduced-motion`**: a global override collapses all animation and transition durations to `0.01ms` and disables smooth scrolling. Any new motion inherits this automatically — do not re-enable it locally.
 

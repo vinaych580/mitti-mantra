@@ -97,7 +97,7 @@
     .mkt-tabs { display: flex; gap: 4px; overflow-x: auto; }
     .mkt-tab {
       flex-shrink: 0; padding: 14px 18px; background: transparent; border: none; cursor: pointer;
-      font-family: inherit; font-size: .88rem; font-weight: 600; color: var(--ink-faint);
+      font-family: inherit; font-size: .88rem; font-weight: 600; color: var(--ink-soft);
       border-bottom: 2px solid transparent; white-space: nowrap;
     }
     .mkt-tab:hover { color: var(--ink); }
@@ -118,7 +118,7 @@
     .mkt-cart-row__media img { width: 100%; height: 100%; object-fit: cover; }
     .mkt-cart-row__info { flex: 1; min-width: 160px; display: flex; flex-direction: column; gap: 2px; }
     .mkt-cart-row__info strong { color: var(--ink); }
-    .mkt-cart-row__info span { font-size: .78rem; color: var(--ink-faint); }
+    .mkt-cart-row__info span { font-size: .78rem; color: var(--ink-soft); }
     .mkt-cart-row__qty { display: flex; align-items: center; gap: 6px; }
     .mkt-cart-row__qty input { width: 70px; padding: 7px 8px; border-radius: var(--r-md); border: 1px solid rgba(29,26,21,.15); font-family: inherit; }
     .mkt-cart-row__total { font-family: 'Fraunces', serif; font-weight: 600; color: var(--brand-deep); min-width: 100px; text-align: right; }
@@ -144,7 +144,7 @@
       background: var(--surface); border: 1px solid rgba(29,26,21,.07); border-radius: var(--r-lg);
       padding: 20px; display: flex; flex-direction: column; gap: 14px; position: sticky; top: calc(var(--nav-h) + 56px);
     }
-    .mkt-filters h4 { font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-faint); margin: 0 0 2px; }
+    .mkt-filters h4 { font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-soft); margin: 0 0 2px; }
     .mkt-filters label { display: flex; flex-direction: column; gap: 4px; font-size: .8rem; color: var(--ink-soft); font-weight: 600; }
     .mkt-filters select, .mkt-filters input[type="number"] {
       width: 100%; max-width: 100%; box-sizing: border-box;
@@ -176,7 +176,7 @@
     }
 
     .mkt-browse-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
-    #mktResultCount { color: var(--ink-faint); font-size: .86rem; }
+    #mktResultCount { color: var(--ink-soft); font-size: .86rem; }
 
     .mkt-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
     @media (max-width: 1080px) { .mkt-grid { grid-template-columns: repeat(2, 1fr); } }
@@ -222,15 +222,15 @@
     .mkt-card__body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
     .mkt-card__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
     .mkt-card__head h3 { font-size: 1rem; margin: 0; color: var(--ink); line-height: 1.3; }
-    .mkt-card__head h3 small { display: block; font-size: .74rem; font-weight: 500; color: var(--ink-faint); }
+    .mkt-card__head h3 small { display: block; font-size: .74rem; font-weight: 500; color: var(--ink-soft); }
     .mkt-card__grade { font-size: .68rem; font-weight: 700; padding: 3px 8px; border-radius: 999px; background: var(--brand-soft); color: var(--brand-deep); white-space: nowrap; }
     .mkt-card__price { font-family: 'Fraunces', serif; font-size: 1.2rem; font-weight: 600; color: var(--brand-deep); }
-    .mkt-card__price small { font-size: .6em; color: var(--ink-faint); font-family: 'Inter', sans-serif; font-weight: 500; }
+    .mkt-card__price small { font-size: .6em; color: var(--ink-soft); font-family: 'Inter', sans-serif; font-weight: 500; }
     .mkt-card__meta { display: flex; justify-content: space-between; font-size: .74rem; color: var(--ink-soft); gap: 8px; flex-wrap: wrap; }
     .mkt-card__seller { display: flex; flex-direction: column; gap: 2px; padding-top: 8px; border-top: 1px dashed rgba(29,26,21,.1); font-size: .78rem; }
     .mkt-card__seller-name { font-weight: 700; color: var(--ink); }
     .mkt-verified { color: var(--brand); }
-    .mkt-card__loc { color: var(--ink-faint); }
+    .mkt-card__loc { color: var(--ink-soft); }
     .mkt-card__actions { display: flex; gap: 8px; margin-top: 4px; }
     .mkt-btn-sm { padding: 9px 12px !important; font-size: .8rem !important; flex: 1; justify-content: center; }
     .mkt-btn-danger { color: #b91c1c !important; border-color: rgba(185,28,28,.3) !important; }
@@ -242,11 +242,25 @@
     #mktLoadMore { grid-column: 1 / -1; text-align: center; margin-top: 12px; }
 
     /* ---- Alerts / notes / insight ---- */
-    .mkt-alert { background: var(--accent-soft); border-left: 3px solid var(--accent); border-radius: var(--r-md); padding: 12px 14px; font-size: .84rem; color: var(--ink-soft); margin-bottom: 6px; }
-    .mkt-alert--info { background: var(--brand-soft); border-left-color: var(--brand); color: var(--brand-deep); }
-    .mkt-note { font-size: .76rem; color: var(--ink-faint); margin: 0; }
+    /* Severity reads from the tinted background plus a hairline border in the
+       same hue — matching .alert in style.css, not the thick left bar this
+       used to carry. Plain value first so WebViews without color-mix() still
+       draw the hairline. */
+    .mkt-alert { background: var(--accent-soft); border: 1px solid rgba(200,138,58,.35); border-color: color-mix(in srgb, var(--accent) 35%, transparent); border-radius: var(--r-md); padding: 12px 14px; font-size: .84rem; color: var(--ink-soft); margin-bottom: 6px; }
+    .mkt-alert--info { background: var(--brand-soft); border-color: rgba(47,107,58,.32); border-color: color-mix(in srgb, var(--brand) 35%, transparent); color: var(--brand-deep); }
+
+    /* Was an inline style attribute, which no stylesheet rule can override --
+       so the touch-viewport 16px floor in style.css could not reach it and
+       this field alone still zoomed the page on iOS. */
+    .mkt-listsearch {
+      padding: 9px 14px; border-radius: 999px;
+      border: 1px solid rgba(29,26,21,.14);
+      background: var(--surface); font-family: inherit;
+      font-size: .85rem; min-width: 200px;
+    }
+    .mkt-note { font-size: .76rem; color: var(--ink-soft); margin: 0; }
     .mkt-insight { background: var(--bg-soft); border-radius: var(--r-md); padding: 12px 14px; font-size: .82rem; color: var(--ink-soft); margin: 4px 0; border: 1px solid rgba(29,26,21,.05); animation: mktFadeUp .35s var(--ease) both; }
-    .mkt-insight--loading, .mkt-insight--empty { color: var(--ink-faint); font-style: italic; }
+    .mkt-insight--loading, .mkt-insight--empty { color: var(--ink-soft); font-style: italic; }
     .mkt-insight--loading {
       background: linear-gradient(90deg, var(--bg-soft) 25%, rgba(255,255,255,.7) 37%, var(--bg-soft) 63%);
       background-size: 400% 100%; animation: mktShimmer 1.4s ease infinite;
@@ -255,9 +269,9 @@
     @media (prefers-reduced-motion: reduce) { .mkt-insight--loading { animation: none; } }
     .mkt-insight__title { font-weight: 700; color: var(--ink); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
     .mkt-insight__tag { font-size: .62rem; text-transform: uppercase; letter-spacing: .05em; background: var(--accent-soft); color: var(--accent); padding: 2px 8px; border-radius: 999px; font-weight: 700; }
-    .mkt-insight__note { font-size: .72rem; color: var(--ink-faint); margin-top: 4px; }
+    .mkt-insight__note { font-size: .72rem; color: var(--ink-soft); margin-top: 4px; }
     .mkt-insight__msp { font-size: .8rem; color: var(--ink-soft); margin-top: 6px; padding-top: 6px; border-top: 1px dashed rgba(29,26,21,.1); }
-    .mkt-insight__chart-title { font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-faint); margin-top: 10px; margin-bottom: 4px; }
+    .mkt-insight__chart-title { font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-soft); margin-top: 10px; margin-bottom: 4px; }
     .mkt-insight__chart-wrap { height: 150px; position: relative; }
 
     /* ---- Product detail modal ---- */
@@ -284,7 +298,7 @@
       display: flex; align-items: center; justify-content: center;
     }
     .mkt-detail__body h2 { font-size: 1.4rem; margin: 0; color: var(--brand-deep); }
-    .mkt-detail__body h2 small { display: block; font-size: .8rem; font-weight: 500; color: var(--ink-faint); margin-top: 2px; }
+    .mkt-detail__body h2 small { display: block; font-size: .8rem; font-weight: 500; color: var(--ink-soft); margin-top: 2px; }
     .mkt-detail__chips { display: flex; gap: 6px; flex-wrap: wrap; }
     .mkt-detail__desc { color: var(--ink-soft); font-size: .9rem; line-height: 1.55; margin: 0; }
     .mkt-detail__kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
@@ -298,7 +312,7 @@
     .mkt-review { background: var(--bg-soft); border-radius: var(--r-md); padding: 10px 14px; font-size: .82rem; }
     .mkt-review__stars { font-size: .78rem; margin-bottom: 2px; }
     .mkt-review p { margin: 0 0 4px; color: var(--ink-soft); }
-    .mkt-review small { color: var(--ink-faint); }
+    .mkt-review small { color: var(--ink-soft); }
 
     /* ---- Seller profile modal ---- */
     .mkt-seller-profile { padding: 28px; }
@@ -309,18 +323,18 @@
 
     /* ---- Similar listings strip (product detail) ---- */
     .mkt-similar { margin-top: 4px; }
-    .mkt-similar h4 { font-size: .76rem; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-faint); margin: 0 0 10px; }
+    .mkt-similar h4 { font-size: .76rem; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-soft); margin: 0 0 10px; }
     .mkt-similar__row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; }
     .mkt-similar__card {
       flex-shrink: 0; min-width: 140px; text-align: left; background: var(--bg-soft); border: 1px solid rgba(29,26,21,.07);
       border-radius: var(--r-md); padding: 10px 12px; cursor: pointer; font-family: inherit; display: flex; flex-direction: column; gap: 3px;
     }
     .mkt-similar__card strong { color: var(--brand-deep); font-size: .88rem; }
-    .mkt-similar__card span { font-size: .72rem; color: var(--ink-faint); }
+    .mkt-similar__card span { font-size: .72rem; color: var(--ink-soft); }
     .mkt-similar__card:hover { border-color: var(--brand); }
 
     .mkt-detail__calc { background: var(--bg-soft); border-radius: var(--r-md); padding: 16px; }
-    .mkt-detail__calc h4 { margin: 0 0 10px; font-size: .85rem; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-faint); }
+    .mkt-detail__calc h4 { margin: 0 0 10px; font-size: .85rem; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); }
     .mkt-detail__calc-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; font-size: .84rem; font-weight: 600; color: var(--ink-soft); flex-wrap: wrap; }
     .mkt-detail__calc-row span:first-child { flex: 1 1 auto; min-width: 0; }
     .mkt-detail__calc-row input { width: 110px; max-width: 100%; flex-shrink: 0; box-sizing: border-box; padding: 8px 10px; border-radius: var(--r-md); border: 1px solid rgba(29,26,21,.15); background: var(--surface); font-family: inherit; }
@@ -345,25 +359,25 @@
     }
     .mkt-manage-row__info { display: flex; flex-direction: column; gap: 4px; min-width: 200px; flex: 1; }
     .mkt-manage-row__info strong { color: var(--ink); font-size: .95rem; }
-    .mkt-manage-row__info strong small { font-weight: 500; color: var(--ink-faint); font-size: .78em; }
+    .mkt-manage-row__info strong small { font-weight: 500; color: var(--ink-soft); font-size: .78em; }
     .mkt-manage-row__info span { font-size: .8rem; color: var(--ink-soft); }
-    .mkt-manage-row__stats { display: flex; gap: 14px; font-size: .78rem; color: var(--ink-faint); }
+    .mkt-manage-row__stats { display: flex; gap: 14px; font-size: .78rem; color: var(--ink-soft); }
     .mkt-manage-row__actions { display: flex; gap: 6px; flex-wrap: wrap; }
     .mkt-status { display: inline-block; width: fit-content; font-size: .68rem; font-weight: 700; padding: 2px 9px; border-radius: 999px; text-transform: uppercase; }
     .mkt-status--active { background: var(--brand-soft); color: var(--brand-deep); }
     .mkt-status--paused { background: var(--accent-soft); color: var(--accent); }
     .mkt-status--sold_out { background: rgba(185,28,28,.1); color: #b91c1c; }
     .mkt-status--limited { background: var(--accent-soft); color: var(--accent); }
-    .mkt-status--draft { background: var(--bg-soft); color: var(--ink-faint); border: 1px dashed rgba(29,26,21,.2); }
+    .mkt-status--draft { background: var(--bg-soft); color: var(--ink-soft); border: 1px dashed rgba(29,26,21,.2); }
     .mkt-expiry-warn { display: block; font-size: .74rem; color: var(--accent); font-weight: 700; margin-top: 4px; }
 
     .mkt-req-row { flex-direction: column; align-items: stretch; }
     .mkt-req-row__head { display: flex; justify-content: space-between; align-items: center; }
     .mkt-req-row__meta { display: flex; gap: 16px; flex-wrap: wrap; font-size: .8rem; color: var(--ink-soft); }
-    .mkt-lifecycle { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; font-size: .68rem; color: var(--ink-faint); }
+    .mkt-lifecycle { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; font-size: .68rem; color: var(--ink-soft); }
     .mkt-lifecycle__step { padding: 3px 8px; border-radius: 999px; background: var(--bg-soft); text-transform: uppercase; font-weight: 700; letter-spacing: .02em; }
     .mkt-lifecycle__step.done { background: var(--brand-soft); color: var(--brand-deep); }
-    .mkt-lifecycle__sep { color: var(--ink-faint); }
+    .mkt-lifecycle__sep { color: var(--ink-soft); }
     .mkt-req-row__actions { display: flex; gap: 8px; flex-wrap: wrap; }
     .mkt-review-form { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; background: var(--bg-soft); padding: 12px; border-radius: var(--r-md); }
     .mkt-review-form textarea { resize: vertical; }
@@ -410,7 +424,7 @@
     .mm-modal-close:hover { background: rgba(29,26,21,0.08); color: var(--ink); }
     .mm-modal-header { padding: 24px 28px 12px; border-bottom: 1px solid rgba(29,26,21,0.06); }
     .mm-modal-header h3 { font-family: 'Fraunces', serif; font-size: 1.4rem; color: var(--brand-deep); margin: 0; }
-    .mm-modal-header p { font-size: 0.85rem; color: var(--ink-faint); margin: 4px 0 0; }
+    .mm-modal-header p { font-size: 0.85rem; color: var(--ink-soft); margin: 4px 0 0; }
     .mm-modal-body { padding: 20px 28px 28px; display: flex; flex-direction: column; gap: 18px; }
     .mm-form-group { display: flex; flex-direction: column; gap: 6px; text-align: left; }
     .mm-form-group label { font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; color: var(--ink-soft); }
@@ -448,7 +462,7 @@
     .mm-success-screen p { font-size: 0.9rem; color: var(--ink-soft); line-height: 1.55; margin: 0; }
     .mm-success-details { background: var(--bg-soft); border-radius: var(--r-md); padding: 16px; width: 100%; border: 1px solid rgba(29,26,21,0.06); display: flex; flex-direction: column; gap: 10px; text-align: left; font-size: 0.84rem; }
     .mm-success-row { display: flex; justify-content: space-between; color: var(--ink-soft); }
-    .mm-success-row span:first-child { color: var(--ink-faint); }
+    .mm-success-row span:first-child { color: var(--ink-soft); }
     .mm-success-row strong { color: var(--ink); }
 
     /* ===== Wow-factor features: Sell/Hold, Field Health, Demand Match, Voice, Pools ===== */
@@ -549,11 +563,11 @@
     }
     .mkt-pool-card__title { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
     .mkt-pool-card__title strong { color: var(--brand-deep); font-size: 1rem; }
-    .mkt-pool-card__title span { font-size: .78rem; color: var(--ink-faint); }
+    .mkt-pool-card__title span { font-size: .78rem; color: var(--ink-soft); }
     .mkt-pool-card__stats { display: flex; gap: 20px; padding: 12px 0; border-top: 1px dashed rgba(29,26,21,.1); border-bottom: 1px dashed rgba(29,26,21,.1); }
     .mkt-pool-card__stats div { display: flex; flex-direction: column; gap: 2px; }
     .mkt-pool-card__stats b { font-family: 'Fraunces', serif; font-size: 1.05rem; color: var(--ink); }
-    .mkt-pool-card__stats span { font-size: .72rem; color: var(--ink-faint); }
+    .mkt-pool-card__stats span { font-size: .72rem; color: var(--ink-soft); }
     .mkt-pool-card__members { display: flex; flex-wrap: wrap; gap: 6px; font-size: .74rem; color: var(--ink-soft); }
     .mkt-pool-card__members span { background: var(--bg-soft); padding: 3px 9px; border-radius: 999px; }
 
@@ -588,12 +602,12 @@
       background: linear-gradient(135deg, var(--brand-soft), var(--accent-soft));
     }
     .mkt-credit-profile__head strong { font-family: 'Fraunces', serif; font-size: 1.3rem; color: var(--brand-deep); display: block; }
-    .mkt-credit-profile__head span { font-size: .82rem; color: var(--ink-faint); }
+    .mkt-credit-profile__head span { font-size: .82rem; color: var(--ink-soft); }
     .mkt-credit-profile__stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; padding: 14px 0; border-top: 1px dashed rgba(29,26,21,.1); border-bottom: 1px dashed rgba(29,26,21,.1); }
     @media (max-width: 640px) { .mkt-credit-profile__stats { grid-template-columns: repeat(2, 1fr); } }
     .mkt-credit-profile__stats div { display: flex; flex-direction: column; gap: 2px; text-align: center; }
     .mkt-credit-profile__stats b { font-family: 'Fraunces', serif; font-size: 1.15rem; color: var(--ink); }
-    .mkt-credit-profile__stats span { font-size: .68rem; color: var(--ink-faint); text-transform: uppercase; letter-spacing: .03em; }
+    .mkt-credit-profile__stats span { font-size: .68rem; color: var(--ink-soft); text-transform: uppercase; letter-spacing: .03em; }
 
     /* ---- Forward Booking / Pre-Harvest Marketplace ---- */
     .mkt-forward-panel {
@@ -763,7 +777,7 @@
         <div>
           <div class="mkt-browse-head">
             <span id="mktResultCount">Loading…</span>
-            <input type="search" id="mktSearch" placeholder="Search this list…" style="padding:9px 14px;border-radius:999px;border:1px solid rgba(29,26,21,.14);background:var(--surface);font-family:inherit;font-size:.85rem;min-width:200px;">
+            <input type="search" id="mktSearch" class="mkt-listsearch" placeholder="Search this list…">
           </div>
           <div class="mkt-grid" id="mktGrid"></div>
           <div id="mktLoadMore"></div>

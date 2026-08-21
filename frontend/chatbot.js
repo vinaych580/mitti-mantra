@@ -51,8 +51,11 @@
     padding:6px 11px;font-size:12px;cursor:pointer;transition:all .15s;}
   .mm-sug button:hover{background:#2e7d32;color:#fff;}
   .mm-chat-form{display:flex;gap:8px;padding:10px;border-top:1px solid #e5ebe5;background:#fff;}
+  /* 16px, not 13.5px: this input is the whole point of the chat panel, and
+     below 16px iOS zooms the viewport the moment it takes focus -- on the one
+     control a user is guaranteed to tap. */
   .mm-chat-form input{flex:1;border:1px solid #d6e0d6;border-radius:999px;padding:10px 14px;
-    font-size:13.5px;outline:none;font-family:inherit;}
+    font-size:16px;outline:none;font-family:inherit;}
   .mm-chat-form input:focus{border-color:#2e7d32;}
   .mm-chat-form button{background:#2e7d32;color:#fff;border:none;border-radius:999px;
     padding:0 16px;cursor:pointer;font-weight:600;font-size:13px;}

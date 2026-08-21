@@ -259,82 +259,56 @@
       <div class="toolbox">
 
         <!-- REGIONAL TELEMETRY INSIGHTS -->
-        <div id="regionalTelemetry" class="telemetry-box"
-          style="display: none; background: #fff; padding: 24px; border-radius: var(--r-md); box-shadow: var(--shadow-sm); margin-bottom: 30px; border-left: 5px solid var(--brand);">
-          <h3
-            style="font-size: 1.25rem; font-weight: 600; color: var(--brand-deep); margin-bottom: 16px; font-family: 'Fraunces', serif; display: flex; align-items: center; gap: 8px;">
-            <svg style="width: 22px; height: 22px; color: var(--brand);" fill="none" stroke="currentColor"
-              stroke-width="2" viewBox="0 0 24 24">
+        <div id="regionalTelemetry" class="telemetry-box" style="display: none;">
+          <h3 class="telemetry-box__title">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round"
                 d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z">
               </path>
             </svg>
-            Agri-Telemetry Insights &mdash; <span id="telemetryRegionName">...</span>
+            <span>Agri-Telemetry Insights &mdash; <span id="telemetryRegionName">...</span></span>
           </h3>
-          <div class="telemetry-grid"
-            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+          <div class="telemetry-grid">
 
             <!-- Weather Card -->
-            <div class="telemetry-card"
-              style="background: var(--bg); padding: 16px; border-radius: var(--r-sm); border: 1px solid var(--bg-soft);">
-              <h4
-                style="font-size: 0.9rem; color: var(--ink-soft); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; font-family: 'Inter', sans-serif; font-weight: 600;">
-                ⛅ Weather
-              </h4>
+            <div class="telemetry-card">
+              <h4 class="telemetry-card__title">⛅ Weather</h4>
               <div id="telemetryWeatherBody">
-                <div class="skeleton"
-                  style="height: 14px; width: 80%; background: #e0d9cb; margin-bottom: 6px; border-radius: 4px;"></div>
-                <div class="skeleton" style="height: 14px; width: 60%; background: #e0d9cb; border-radius: 4px;"></div>
+                <div class="skeleton skeleton--line"></div>
+                <div class="skeleton skeleton--line skeleton--short"></div>
               </div>
             </div>
 
             <!-- Soil Card -->
-            <div class="telemetry-card"
-              style="background: var(--bg); padding: 16px; border-radius: var(--r-sm); border: 1px solid var(--bg-soft);">
-              <h4
-                style="font-size: 0.9rem; color: var(--ink-soft); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; font-family: 'Inter', sans-serif; font-weight: 600;">
-                🌱 Soil Properties
-              </h4>
+            <div class="telemetry-card">
+              <h4 class="telemetry-card__title">🌱 Soil Properties</h4>
               <div id="telemetrySoilBody">
-                <div class="skeleton"
-                  style="height: 14px; width: 80%; background: #e0d9cb; margin-bottom: 6px; border-radius: 4px;"></div>
-                <div class="skeleton" style="height: 14px; width: 60%; background: #e0d9cb; border-radius: 4px;"></div>
+                <div class="skeleton skeleton--line"></div>
+                <div class="skeleton skeleton--line skeleton--short"></div>
               </div>
             </div>
 
             <!-- Market Card -->
-            <div class="telemetry-card"
-              style="background: var(--bg); padding: 16px; border-radius: var(--r-sm); border: 1px solid var(--bg-soft);">
-              <h4
-                style="font-size: 0.9rem; color: var(--ink-soft); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; font-family: 'Inter', sans-serif; font-weight: 600;">
-                📈 Mandi Prices
-              </h4>
+            <div class="telemetry-card">
+              <h4 class="telemetry-card__title">📈 Mandi Prices</h4>
               <div id="telemetryMarketBody">
-                <div class="skeleton"
-                  style="height: 14px; width: 80%; background: #e0d9cb; margin-bottom: 6px; border-radius: 4px;"></div>
-                <div class="skeleton" style="height: 14px; width: 60%; background: #e0d9cb; border-radius: 4px;"></div>
+                <div class="skeleton skeleton--line"></div>
+                <div class="skeleton skeleton--line skeleton--short"></div>
               </div>
             </div>
 
             <!-- Satellite Card -->
-            <div class="telemetry-card"
-              style="background: var(--bg); padding: 16px; border-radius: var(--r-sm); border: 1px solid var(--bg-soft);">
-              <h4
-                style="font-size: 0.9rem; color: var(--ink-soft); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; font-family: 'Inter', sans-serif; font-weight: 600;">
-                🛰️ Satellite Insights
-              </h4>
+            <div class="telemetry-card">
+              <h4 class="telemetry-card__title">🛰️ Satellite Insights</h4>
               <div id="telemetrySatelliteBody">
-                <div class="skeleton"
-                  style="height: 14px; width: 80%; background: #e0d9cb; margin-bottom: 6px; border-radius: 4px;"></div>
-                <div class="skeleton" style="height: 14px; width: 60%; background: #e0d9cb; border-radius: 4px;"></div>
+                <div class="skeleton skeleton--line"></div>
+                <div class="skeleton skeleton--line skeleton--short"></div>
               </div>
             </div>
 
           </div>
           <!-- Leaflet GIS Map Container -->
-          <div id="telemetryMap"
-            style="height: 180px; border-radius: var(--r-sm); border: 1px solid var(--bg-soft); margin-top: 16px; display: none; overflow: hidden; z-index: 1;">
-          </div>
+          <div id="telemetryMap" class="telemetry-map" style="display: none;"></div>
         </div>
 
         <!-- 1. RECOMMEND -->
