@@ -144,7 +144,7 @@
           const isBooked = t.availability === 'Booked';
           return `
       <div class="nearby-item" data-id="${t.id}">
-        <img src="${esc(t.image)}" alt="${esc(t.name)}" loading="lazy" referrerpolicy="no-referrer">
+        <img src="${esc(t.image)}" alt="${esc(t.name)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src=window.MM_TRACTOR_FALLBACK;this.classList.add('is-fallback');">
         <div class="nearby-item__body">
           <div class="nearby-item__head">
             <h4>${esc(t.name)}</h4>

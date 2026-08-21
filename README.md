@@ -29,13 +29,13 @@ _Mitti se judao, fasal se pao._
 - **Pest alerts and visual screening** — rule-based planning aids, not diagnoses or official weather warnings.
 - **Fertilizer / irrigation schedules**, loan calculator, multi-year soil-health projection.
 - **Government scheme matcher** (PM-KISAN, PMFBY, KCC, etc.).
-- **Site-aware chatbot** — grounded in the actual datasets, supports slash commands (`/recommend`, `/msp`, `/pest`…), voice input, session memory, and deep-link buttons into the dashboard.
+- **Site-aware chatbot** — grounded in the actual datasets, supports slash commands (`/recommend`, `/forecast`, `/rotation`, `/msp`, `/pest`…), voice input, session memory, and deep-link buttons into the dashboard.
 - **Unified Farm Profile** — set region / season / area / budget once; every tool auto-fills, chatbot remembers.
-- **3D India map** — clickable states, multiple planning overlays, and crop suitability indicators.
+- **3D India map** — clickable states, multiple planning overlays, and crop suitability indicators. Boundaries ship with the app (`frontend/Data/india-states.geo.json`), so it needs no third-party map service.
 - **Draw-your-farm tool** — Leaflet polygon + SoilGrids fetch at the centroid, auto-filled into the dashboard.
 - **PWA** — installable, offline-capable, precached shell with service worker.
 - **Share & export** — WhatsApp share, print/PDF, high-contrast / large-text accessibility modes.
-- **Multi-language UI** — English, Hindi, Telugu.
+- **Multi-language UI** — English, Hindi, Telugu, Kannada.
 
 ---
 
@@ -56,7 +56,7 @@ _Mitti se judao, fasal se pao._
 
 ```
 backend/
-  main.py               FastAPI app, 35+ endpoints, all middleware, static mount
+  main.py               FastAPI app, 50 endpoints, all middleware, static mount
   chatbot.py            Site-aware intent-based chatbot (/api/chat)
 engine/
   simulator.py          Deterministic yield/cost/profit/risk simulation
@@ -72,7 +72,7 @@ data_ingestion/
   cache.py              @cached decorator (file + memory layers)
   fetchers/             Live-API wrappers (SoilGrids, Open-Meteo, data.gov.in)
   prepare_data.py       Validates + rebuilds derived CSVs
-dataset/                29 crops × 35 regions of seed data (see docs/DATASETS.md)
+dataset/                32 crops × 30 regions of seed data (see docs/DATASETS.md)
 frontend/               Zero-build static site (served by FastAPI)
   index.html            Landing + 3D India globe + live demo
   dashboard.html        14-tool dashboard
@@ -88,7 +88,7 @@ frontend/               Zero-build static site (served by FastAPI)
   site-ui.js            Nav, reveal animations, PWA register
   i18n.js               EN / HI / TE switcher
   toolbar.js            Floating dark-mode / voice / TTS / WhatsApp / PDF
-  sw.js                 Service worker (v13) — 3 caching strategies
+  sw.js                 Service worker — precache + 3 caching strategies
   style.css             "Clay" design system
   manifest.webmanifest  PWA manifest
 tests/                  Pytest suite
@@ -188,7 +188,7 @@ ship new assets so old caches get evicted.
 
 ## API at a glance
 
-35+ endpoints across five domains — **core data**, **simulation**,
+50 endpoints across five domains — **core data**, **simulation**,
 **market intelligence**, **farm advisory**, and **ML management**. See
 [`docs/API.md`](./docs/API.md) for the complete reference or
 `http://localhost:8000/docs` for interactive Swagger.

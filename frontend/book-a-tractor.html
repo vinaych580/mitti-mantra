@@ -814,7 +814,7 @@
   <nav class="nav" id="nav">
     <div class="nav__wrap">
       <a href="index.html" class="logo" aria-label="Mitti Mantra home">
-        <img src="assets/logo.png" alt="Mitti Mantra" class="logo__img">
+        <img src="assets/logo-192.png" alt="Mitti Mantra" class="logo__img">
       </a>
 
       <ul class="nav__links">
@@ -902,7 +902,7 @@
     <div class="tractor-cropplan">
       <div class="tractor-cropplan__head">
         <span class="tractor-cropplan__label">🌾 My crop plan</span>
-        <select id="tractorCropSelect" class="tractor-cropplan__select">
+        <select id="tractorCropSelect" aria-label="Crop you are growing" class="tractor-cropplan__select">
           <option value="">What are you growing?</option>
           <option value="rice">Rice</option>
           <option value="wheat">Wheat</option>
@@ -923,7 +923,7 @@
     <div class="tractor-cropplan">
       <div class="tractor-cropplan__head">
         <span class="tractor-cropplan__label">📊 Demand near you</span>
-        <select id="tractorDemandDistrict" class="tractor-cropplan__select">
+        <select id="tractorDemandDistrict" aria-label="District for demand data" class="tractor-cropplan__select">
           <option value="">Select your district</option>
         </select>
       </div>
@@ -955,31 +955,31 @@
     </div>
 
     <div class="map-filters reveal">
-      <select id="filterState">
+      <select id="filterState" aria-label="Filter by state">
         <option value="">Select State</option>
       </select>
-      <select id="filterDistrict" disabled>
+      <select id="filterDistrict" aria-label="Filter by district" disabled>
         <option value="">Select District</option>
       </select>
-      <select id="filterHp">
+      <select id="filterHp" aria-label="Filter by horsepower">
         <option value="any">Any horsepower</option>
         <option value="le40">Up to 40 HP</option>
         <option value="40-50">40–50 HP</option>
         <option value="gt50">50+ HP</option>
       </select>
-      <select id="filterPrice">
+      <select id="filterPrice" aria-label="Filter by price">
         <option value="any">Any price</option>
         <option value="le400">Up to ₹400/hr</option>
         <option value="400-550">₹400–₹550/hr</option>
         <option value="gt550">₹550+/hr</option>
       </select>
-      <select id="filterAvailability">
+      <select id="filterAvailability" aria-label="Filter by availability">
         <option value="any">Any availability</option>
         <option value="Available">Available</option>
         <option value="Limited">Limited</option>
         <option value="Booked">Booked</option>
       </select>
-      <select id="filterFuel">
+      <select id="filterFuel" aria-label="Filter by fuel type">
         <option value="any">Any fuel type</option>
         <option value="Diesel">Diesel</option>
         <option value="Diesel (CRDe)">Diesel (CRDe)</option>

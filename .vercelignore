@@ -16,8 +16,14 @@ __pycache__
 *.dll
 *.log
 *.err
+*.zip
 .DS_Store
 .pytest_cache
+.impeccable
+.agents
+.codex
+.cursor
+.claude
 
 # Root files not needed
 README.md

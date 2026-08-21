@@ -84,6 +84,18 @@ def _load_ml_models():
             dle = MODEL_DIR / "disease_label_encoder.joblib"
             if dle.exists():
                 _ml_disease_label_encoder = joblib.load(dle)
+
+            # The forests were fitted with n_jobs=-1 and scikit-learn pickles
+            # that setting, so every serve-time predict() spun up a joblib
+            # worker pool. Recommending one region means ~45 single-row
+            # predictions, i.e. ~45 pool spin-ups at roughly 150 ms each --
+            # which was the entire reason /api/recommend took seconds and
+            # /api/rotation-plan took ~7 s. A single-row traversal is
+            # microseconds of real work; do it on the calling thread.
+            for _m in (_ml_yield_model, _ml_price_model,
+                       _ml_recommend_model, _ml_disease_model):
+                if _m is not None and hasattr(_m, "n_jobs"):
+                    _m.n_jobs = 1
         except Exception as e:
             # FIX (4.1): Log the actual error instead of silently swallowing
             logger.warning("Failed to load ML models, falling back to heuristics: %s", e)
@@ -281,6 +293,14 @@ def _season_match(input_season: str, crop_season: str) -> bool:
     return i_s in c_s
 
 
+#: Seasons a farmer actually picks in the UI when deciding what to sow now.
+GROWING_SEASONS = ("kharif", "rabi", "zaid")
+
+
+def _is_perennial(crop_season: str) -> bool:
+    return "perennial" in (crop_season or "").lower()
+
+
 def _historical_yield_average(crop_id: str, region_id: str, history_rows: list[dict[str, str]]) -> float | None:
     region_crop = [
         float(row["yield_kg_per_acre"])
@@ -349,6 +369,58 @@ def _ml_predict_yield(
         return None
 
 
+def _predict_yield_with_source(
+    crop_id: str,
+    region_id: str,
+    season: str,
+    weather: dict[str, float],
+    soil: dict[str, float],
+    irrigation_level: float = 0.5,
+    seed_variety: str | None = None,
+    sowing_date: str | None = None,
+) -> tuple[float, bool]:
+    """Return (yield_kg_per_acre, used_ml_model).
+
+    Callers that need to report provenance used to re-run `_ml_predict_yield`
+    afterwards purely to find out whether the model had been used -- doubling
+    the ML work for every crop in a ranking. Ask once, return both answers.
+    """
+    crop_params = _load_crop_parameters()
+    # FIX (1.3): Raise clear ValueError instead of unhandled KeyError
+    if crop_id not in crop_params:
+        raise ValueError(f"Unsupported crop_id: {crop_id}")
+    crop = crop_params[crop_id]
+    if not _season_match(season, crop.season):
+        return 0.0, False
+
+    # Try ML model first
+    ml_pred = _ml_predict_yield(
+        crop_id, region_id, season, crop_params, soil, weather, irrigation_level,
+    )
+    if ml_pred is not None and ml_pred > 0:
+        return round(ml_pred, 2), True
+
+    # Fallback: heuristic formula
+    history_rows = _load_yield_history()
+    historical = _historical_yield_average(crop_id, region_id, history_rows)
+
+    calc_yield = calculate_yield_kg_per_acre(
+        crop=crop,
+        soil=soil,
+        weather=weather,
+        irrigation_level=irrigation_level,
+        seed_variety=seed_variety,
+        sowing_date=sowing_date,
+    )
+
+    if historical is not None:
+        historical_baseline = crop.base_yield_kg_per_acre
+        adjustment = historical / historical_baseline if historical_baseline else 1.0
+        return round(calc_yield * adjustment, 2), False
+
+    return calc_yield, False
+
+
 def predict_yield_kg_per_acre(
     crop_id: str,
     region_id: str,
@@ -359,40 +431,10 @@ def predict_yield_kg_per_acre(
     seed_variety: str | None = None,
     sowing_date: str | None = None,
 ) -> float:
-    crop_params = _load_crop_parameters()
-    # FIX (1.3): Raise clear ValueError instead of unhandled KeyError
-    if crop_id not in crop_params:
-        raise ValueError(f"Unsupported crop_id: {crop_id}")
-    crop = crop_params[crop_id]
-    if not _season_match(season, crop.season):
-        return 0.0
-
-    # Try ML model first
-    ml_pred = _ml_predict_yield(
-        crop_id, region_id, season, crop_params, soil, weather, irrigation_level,
-    )
-    if ml_pred is not None and ml_pred > 0:
-        return round(ml_pred, 2)
-
-    # Fallback: heuristic formula
-    history_rows = _load_yield_history()
-    historical = _historical_yield_average(crop_id, region_id, history_rows)
-    
-    calc_yield = calculate_yield_kg_per_acre(
-        crop=crop,
-        soil=soil,
-        weather=weather,
-        irrigation_level=irrigation_level,
-        seed_variety=seed_variety,
-        sowing_date=sowing_date,
-    )
-    
-    if historical is not None:
-        historical_baseline = crop.base_yield_kg_per_acre
-        adjustment = historical / historical_baseline if historical_baseline else 1.0
-        return round(calc_yield * adjustment, 2)
-    
-    return calc_yield
+    return _predict_yield_with_source(
+        crop_id, region_id, season, weather, soil,
+        irrigation_level, seed_variety, sowing_date,
+    )[0]
 
 
 def smart_risk_score(
@@ -771,17 +813,16 @@ def _score_single_crop(
 
     Returns a dict containing yield, profit, risk, smart_score, and metadata.
     """
-    predicted_yield = predict_yield_kg_per_acre(crop_id, region_id, season, weather, soil)
     # FIX (H-11): `prediction_source` used to reflect whether the ML model
     # *object* was loaded at all, not whether ML was actually used for this
-    # specific crop/region/season call (predict_yield_kg_per_acre silently
-    # falls back to the heuristic formula per-call, e.g. for unseen
-    # crop/region labels). Probe the same ML path predict_yield_kg_per_acre
-    # takes (irrigation_level defaults to 0.5 there too) to find out whether
-    # *this* call actually used the model, mirroring the `used_ml_this_step`
-    # pattern in engine/features.py's price_forecast.
-    ml_yield_probe = _ml_predict_yield(crop_id, region_id, season, {crop_id: crop}, soil, weather, 0.5)
-    used_ml_for_yield = ml_yield_probe is not None and ml_yield_probe > 0
+    # specific crop/region/season call (the yield path silently falls back to
+    # the heuristic formula per-call, e.g. for unseen crop/region labels). The
+    # single call below reports which path it actually took; it used to be
+    # followed by a second, identical `_ml_predict_yield` probe whose only
+    # purpose was answering that question.
+    predicted_yield, used_ml_for_yield = _predict_yield_with_source(
+        crop_id, region_id, season, weather, soil,
+    )
     risk = smart_risk_score(crop_id, weather, soil, budget_per_acre)
     price = region_crop_price.get(
         crop_id, (crop.mandi_price_min_inr_per_kg + crop.mandi_price_max_inr_per_kg) / 2.0
@@ -825,6 +866,7 @@ def _score_single_crop(
         "risk_score": risk["risk_score"],
         "smart_score": round(smart_score, 2),
         "prediction_source": "ml_model" if used_ml_for_yield else "heuristic",
+        "crop_cycle": "perennial" if _is_perennial(crop.season) else "seasonal",
         "reason": "Ranked using ML models + location, soil, season fit, budget fit, profit, and risk confidence.",
     }
     if crop_id in ml_conf_map:
@@ -865,9 +907,24 @@ def recommend_crops(
     if ml_conf:
         ml_conf_map = {item["crop_id"]: item["ml_confidence"] for item in ml_conf}
 
+    # "Which crop for this kharif?" is a question about a crop that will be
+    # sown and harvested inside that season. Perennials match every season (a
+    # cashew or mango orchard has no kharif/rabi), so they used to be ranked
+    # head-to-head with annuals on a single season's economics -- booking a
+    # bearing orchard's revenue against one season's input cost. Cashew (Rs
+    # 800-1100/kg) consequently won almost every ranking with a ~290% "ROI"
+    # that no first-year planting can deliver: the trees take 3-5 years to
+    # fruit. They stay fully simulable on request (predict_yield_kg_per_acre
+    # and /api/simulate are unchanged) and still rank when the caller asks for
+    # a non-seasonal horizon -- they are just no longer the answer to a
+    # question about this season.
+    seasonal_request = season.lower() in GROWING_SEASONS
+
     recommendations: list[dict[str, Any]] = []
     for crop_id, crop in crop_params.items():
         if not _season_match(season, crop.season):
+            continue
+        if seasonal_request and _is_perennial(crop.season):
             continue
 
         # FIX (3.2): Extracted per-crop scoring into reusable function

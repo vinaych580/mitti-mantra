@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 from typing import Optional
 from statistics import mean
 
+from utils.calculations import region_display_name
 from utils.csv_cache import load as _csv_load, index_by as _csv_index, first_by as _csv_first
 
 router = APIRouter()
@@ -25,16 +26,10 @@ async def get_regions():
     soil_data = read_csv("soil.csv")
     regions = []
     seen = set()
-    # Known state abbreviations that should stay uppercase
-    STATE_ABBR = {"mp", "up", "tn", "mh", "kar", "guj", "pb", "ap", "tg", "ka", "wb", "or", "jk", "hp", "uk"}
     for row in soil_data:
         rid = row["region_id"]
         if rid not in seen:
-            # Clean region id for display: "telangana_medak" -> "Telangana · Medak", "mp_sehore" -> "MP · Sehore"
-            parts = rid.split('_')
-            display_parts = [p.upper() if p.lower() in STATE_ABBR else p.capitalize() for p in parts]
-            name = " · ".join(display_parts)
-            regions.append({"id": rid, "name": name})
+            regions.append({"id": rid, "name": region_display_name(rid)})
             seen.add(rid)
     return regions
 

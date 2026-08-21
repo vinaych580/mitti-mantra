@@ -243,3 +243,28 @@ def calculate_ndvi_and_field_health(
         "last_updated": None,
         "sub_field_grid": grid,
     }
+
+
+# ---------------------------------------------------------------------------
+# Region display names
+# ---------------------------------------------------------------------------
+#: State/UT abbreviations that must stay upper-case when a region_id is turned
+#: into a label. Without this, `"mp_sehore".title()` yields "Mp · Sehore".
+_STATE_ABBR = {
+    "mp", "up", "tn", "mh", "kar", "guj", "pb", "ap", "tg", "ka",
+    "wb", "or", "jk", "hp", "uk",
+}
+
+
+def region_display_name(region_id: str) -> str:
+    """Turn a region_id into a human label: `mp_sehore` -> `MP · Sehore`.
+
+    Three copies of this transform used to exist -- one in the /api/regions
+    handler (correct) and two inline `region.replace('_', ' · ').title()`
+    expressions in the chatbot, which rendered "Mp · Sehore" and "Up · Lucknow"
+    for most of the catalogue while the dropdowns beside them said "MP · Sehore".
+    """
+    if not region_id:
+        return ""
+    parts = str(region_id).split("_")
+    return " · ".join(p.upper() if p.lower() in _STATE_ABBR else p.capitalize() for p in parts)

@@ -1000,24 +1000,47 @@ def calculate_carbon_credits(
 # ===========================================================================
 
 def cross_mandi_arbitrage(crop_id: str) -> dict[str, Any]:
-    """Compare latest prices across all regions for a crop to find arbitrage opportunities."""
+    """Compare prices across regions *on one date* to find arbitrage opportunities.
+
+    This used to take each region's own most-recent row, which is not the same
+    thing: mandi_prices.csv does not end on the same month for every region, so
+    a region last quoted in Dec-2024 was being compared against one quoted in
+    Dec-2025. The resulting "52% spread" was mostly a year of drift, and a
+    farmer acting on it would truck grain toward a price that no longer exists.
+    Compare a single month, and say which month it was.
+    """
     rows = _load_csv("mandi_prices.csv")
-    # Group by region, take latest price
-    region_prices: dict[str, dict] = {}
+
+    by_date: dict[str, dict[str, dict]] = {}
     for r in rows:
         if r["crop_id"] != crop_id:
             continue
-        rid = r["region_id"]
-        if rid not in region_prices or r["date"] > region_prices[rid]["date"]:
-            region_prices[rid] = {
-                "region_id": rid,
-                "date": r["date"],
-                "price": float(r["price_inr_per_kg"]),
-                "market": r.get("market_name", rid),
-            }
+        try:
+            price = float(r["price_inr_per_kg"])
+        except (TypeError, ValueError):
+            continue
+        by_date.setdefault(r["date"], {})[r["region_id"]] = {
+            "region_id": r["region_id"],
+            "date": r["date"],
+            "price": price,
+            "market": r.get("market_name", r["region_id"]),
+        }
+
+    # Newest month that at least two mandis actually quoted.
+    region_prices: dict[str, dict] = {}
+    as_of = None
+    for date in sorted(by_date, reverse=True):
+        if len(by_date[date]) >= 2:
+            region_prices = by_date[date]
+            as_of = date
+            break
 
     if len(region_prices) < 2:
-        return {"crop_id": crop_id, "message": "Need data from at least 2 regions for arbitrage analysis.", "opportunities": []}
+        return {
+            "crop_id": crop_id,
+            "message": "Need at least 2 mandis quoting this crop in the same month for arbitrage analysis.",
+            "opportunities": [],
+        }
 
     sorted_regions = sorted(region_prices.values(), key=lambda x: x["price"])
     cheapest = sorted_regions[0]
@@ -1045,13 +1068,17 @@ def cross_mandi_arbitrage(crop_id: str) -> dict[str, Any]:
 
     return {
         "crop_id": crop_id,
+        "as_of": as_of,
         "regions_compared": len(region_prices),
         "cheapest_market": cheapest,
         "costliest_market": costliest,
         "max_price_gap_per_kg": round(price_gap, 2),
         "max_gap_pct": gap_pct,
         "opportunities": opportunities[:10],
-        "note": "Transport costs typically ₹1-3/kg depending on distance. Factor this before acting.",
+        "note": (
+            f"All prices compared as of {as_of}. Transport costs typically "
+            "₹1-3/kg depending on distance. Factor this before acting."
+        ),
     }
 
 
@@ -1324,6 +1351,45 @@ def get_expense_summary(farm_id: str, planned_budget: float | None = None) -> di
 # 14. Government Scheme Matcher
 # ===========================================================================
 
+#: government_schemes.csv stores benefits as slugs, and both the chatbot and the
+#: dashboard were rendering them verbatim -- a farmer was shown
+#: "Benefit: premium_subsidy" / "Type: cash_transfer". Resolve them once here so
+#: every consumer gets the same readable string.
+_BENEFIT_TYPE_LABELS = {
+    "cash_transfer": "Direct cash transfer",
+    "insurance": "Crop insurance",
+    "credit": "Credit / loan",
+    "advisory": "Free advisory",
+    "subsidy": "Input subsidy",
+    "price_support": "Price support",
+}
+
+_BENEFIT_VALUE_LABELS = {
+    "premium_subsidy": "Subsidised insurance premium",
+    "4pct_interest": "Interest at 4% a year",
+    "free_soil_test": "Free soil test",
+    "55pct_irrigation": "55% of irrigation equipment cost",
+    "50000_per_ha": "₹50,000 per hectare",
+    "seed_subsidy": "Subsidised certified seed",
+    "seed_and_equipment": "Subsidised seed and equipment",
+    "msp_procurement": "Guaranteed MSP procurement",
+    "frp_guaranteed": "Guaranteed fair & remunerative price",
+}
+
+
+def _humanise_benefit(benefit_type: str, benefit_value: str) -> str:
+    """Readable one-liner for a scheme's benefit, e.g. `6000` -> `₹6,000 a year`."""
+    raw = (benefit_value or "").strip()
+    if raw in _BENEFIT_VALUE_LABELS:
+        return _BENEFIT_VALUE_LABELS[raw]
+    try:
+        return f"₹{float(raw):,.0f}"
+    except (TypeError, ValueError):
+        pass
+    return _BENEFIT_TYPE_LABELS.get((benefit_type or "").strip(),
+                                    raw.replace("_", " ").capitalize() or "See scheme details")
+
+
 def match_government_schemes(
     crop_id: str,
     region_id: str = "all",
@@ -1364,6 +1430,9 @@ def match_government_schemes(
             "description": s["description"],
             "benefit_type": s["benefit_type"],
             "benefit_value": s["benefit_value"],
+            "benefit_label": _humanise_benefit(s["benefit_type"], s["benefit_value"]),
+            "benefit_type_label": _BENEFIT_TYPE_LABELS.get(
+                s["benefit_type"], s["benefit_type"].replace("_", " ").capitalize()),
             "url": s.get("url", ""),
         })
 

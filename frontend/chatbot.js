@@ -216,6 +216,10 @@
     }
   }
 
+  // Set when a pointer sequence turned out to be a drag, so the synthetic
+  // `click` that follows pointerup doesn't also toggle the panel.
+  let suppressClick = false;
+
   function onPointerUp(e) {
     if (!dragState) return;
     const wasDrag = dragState.moved;
@@ -224,14 +228,18 @@
     dragState = null;
     if (wasDrag) {
       savePos(current);
-    } else {
-      // treat as click -> toggle panel
-      panel.classList.toggle("open");
-      if (panel.classList.contains("open")) {
-        positionPanel(current.x, current.y);
-        if (body.childElementCount === 0) greet();
-        setTimeout(() => input.focus(), 150);
-      }
+      suppressClick = true;
+    }
+  }
+
+  function toggleChat() {
+    panel.classList.toggle("open");
+    const open = panel.classList.contains("open");
+    fab.setAttribute("aria-expanded", open ? "true" : "false");
+    if (open) {
+      positionPanel(current.x, current.y);
+      if (body.childElementCount === 0) greet();
+      setTimeout(() => input.focus(), 150);
     }
   }
 
@@ -239,6 +247,14 @@
   fab.addEventListener("pointermove", onPointerMove);
   fab.addEventListener("pointerup", onPointerUp);
   fab.addEventListener("pointercancel", onPointerUp);
+
+  // The toggle lives on `click`, not `pointerup`: the launcher is a <button>,
+  // so Enter/Space raise `click` with no pointer sequence at all. Handling only
+  // pointerup meant the assistant could not be opened from the keyboard.
+  fab.addEventListener("click", () => {
+    if (suppressClick) { suppressClick = false; return; }
+    toggleChat();
+  });
 
   // --------------- rendering ---------------
   // Markdown subset: **bold**, _em_, `code`, ```blocks```, bullet lists, headings,

@@ -239,9 +239,10 @@ section {
 }
 
 /* --- Brand logo ---
-   Single image (mark + wordmark baked in). Save a transparent-background
-   PNG at frontend/assets/logo.png. Height is fixed; width scales by the
-   image's natural aspect ratio. */
+   Single image (mark + wordmark baked in), served from
+   frontend/assets/logo-192.png -- the 729px original was 468 KB for a mark
+   rendered ~53px wide. Height is fixed; width scales by the image's natural
+   aspect ratio. */
 .logo {
   display: inline-flex;
   align-items: center;
@@ -507,42 +508,38 @@ section {
   color: #fff;
 }
 
+/* Factual capability chips. Replaced an avatar row + invented user count. */
 .hero__trust {
   margin-top: 48px;
+  list-style: none;
+  padding: 0;
   display: flex;
-  align-items: center;
-  gap: 20px;
+  flex-wrap: wrap;
+  gap: 10px;
   opacity: 0;
   animation: fadeUp 1s var(--ease) .85s forwards;
 }
 
-.hero__trust-avatars {
+.hero__trust li {
   display: flex;
-}
-
-.hero__trust-avatars img {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid var(--bg);
-  margin-left: -10px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, .1);
-}
-
-.hero__trust-avatars img:first-child {
-  margin-left: 0;
-}
-
-.hero__trust-text {
-  font-size: .88rem;
+  align-items: center;
+  gap: 8px;
+  font-size: .86rem;
+  font-weight: 500;
   color: var(--ink-soft);
+  background: var(--surface);
+  border: 1px solid rgba(29, 26, 21, .1);
+  border-radius: 999px;
+  padding: 7px 14px;
 }
 
-.hero__trust-text strong {
-  color: var(--ink);
-  display: block;
-  font-size: .95rem;
+.hero__trust li::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--brand);
+  flex: none;
 }
 
 /* Hero card stack (right) — flex column keeps equal spacing; no overlap */
@@ -1885,6 +1882,47 @@ section {
   color: var(--ink-faint);
 }
 
+/* Worked-example cards (replaced the old testimonial stars/author block). */
+.quote__tag {
+  align-self: flex-start;
+  font-size: .74rem;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--brand);
+  background: var(--brand-soft);
+  border-radius: 999px;
+  padding: 5px 11px;
+}
+
+.quote__src strong {
+  display: block;
+  font-size: .96rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.quote__src span {
+  font-size: .86rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.quote__cta {
+  font-size: .88rem;
+  font-weight: 600;
+  color: var(--brand);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  align-self: flex-start;
+  transition: border-color .2s var(--ease);
+}
+
+.quote__cta:hover,
+.quote__cta:focus-visible {
+  border-bottom-color: currentColor;
+}
+
 @media (max-width: 860px) {
   .testimonials__grid {
     grid-template-columns: 1fr;
@@ -2123,11 +2161,15 @@ section {
 }
 
 .mobile-panel li {
-  padding: 14px 0;
   border-bottom: 1px solid rgba(29, 26, 21, .08);
 }
 
+/* The padding used to sit on the <li>, so the tappable area was only the
+   20px-tall text box with dead space above and below it. Moving it onto the
+   anchor makes the whole row a 48px target. */
 .mobile-panel a {
+  display: block;
+  padding: 14px 0;
   font-size: 1.05rem;
   font-weight: 500;
 }
@@ -3935,6 +3977,25 @@ section {
   max-width: 340px;
 }
 
+/* Shown only when every boundary source failed, so the map section still
+   explains itself instead of presenting dead controls. */
+.scene3d__notice {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  max-width: min(90%, 460px);
+  padding: 10px 14px;
+  border-radius: var(--r-md);
+  background: var(--surface);
+  border: 1px solid rgba(29, 26, 21, .12);
+  color: var(--ink-soft);
+  font-size: 0.86rem;
+  line-height: 1.45;
+  text-align: center;
+  z-index: 4;
+}
+
 /* ---------- Farm-boundary pickup banner ---------- */
 .farm-pickup {
   max-width: var(--maxw);
@@ -5651,6 +5712,40 @@ html {
   border-radius: 50%;
   background: #22c55e;
   animation: gs-pulse 2s infinite;
+}
+
+/* Specialism list + honesty note that replaced the invented expert avatars. */
+.promo-specialisms {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  z-index: 2;
+}
+
+.promo-specialisms li {
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--brand-deep);
+  background: var(--surface);
+  border: 1px solid rgba(47, 107, 58, .15);
+  box-shadow: var(--shadow-sm);
+  border-radius: 999px;
+  padding: 7px 13px;
+}
+
+.promo-note {
+  max-width: 420px;
+  margin: 0 auto;
+  font-size: .78rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  text-align: center;
+  z-index: 2;
+  position: relative;
 }
 
 .promo-experts-avatars {
