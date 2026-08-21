@@ -543,19 +543,24 @@
       <div class="reveal">
         <span class="eyebrow">Explore in 3D</span>
         <h2 style="margin-bottom:16px;">Your farm data, rendered live.</h2>
-        <p>A real-time WebGL visualisation of our 3 pilot regions with crop markers sized by expected yield. Drag to rotate, scroll to zoom.</p>
+        <!-- This copy described an older version of the scene: "3 pilot
+             regions", "crop markers sized by expected yield" and "pillar
+             height represents avg profit". None of that renders -- the globe
+             draws all 36 states and shades them by the selected layer -- and
+             the mismatch sat directly beside the thing it misdescribed. -->
+        <p>Every state and union territory, drawn from real boundary data and shaded by whichever layer you pick. Drag to rotate, scroll to zoom, click a state to open it.</p>
         <ul class="showcase__list" style="margin-top:24px;">
           <li>
             <span class="showcase__list__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <span class="showcase__list__text"><strong>Live Three.js render</strong>Hardware-accelerated WebGL, 60 fps on any modern phone</span>
+            <span class="showcase__list__text"><strong>Five map layers</strong>Default colours, rainfall, soil nitrogen, average profit — or how well one specific crop suits each state</span>
           </li>
           <li>
             <span class="showcase__list__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <span class="showcase__list__text"><strong>Regional markers</strong>Each pillar height represents the avg profit potential — taller means better</span>
+            <span class="showcase__list__text"><strong>Click any state</strong>The globe turns to face it and a panel opens with its rainfall, soil N, average profit and top three crops with indicative mandi prices</span>
           </li>
           <li>
             <span class="showcase__list__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <span class="showcase__list__text"><strong>Interactive</strong>Hover a marker to read its data, drag the globe, scroll to zoom</span>
+            <span class="showcase__list__text"><strong>No WebGL? Still works</strong>Older phones and locked-down desktops get a static India map instead of an empty box</span>
           </li>
         </ul>
       </div>
