@@ -16,6 +16,41 @@
 
   // Constants
   const CONSULTANTS = window.CONSULTANTS_DATA || [];
+
+  /* ---------- Avatars ----------
+     Every consultant record carries a ui-avatars.com URL. With 2,292 records
+     that is 2,292 cross-origin image requests, and the service rate-limits well
+     before the first screen finishes: most cards rendered a broken-image icon.
+     The avatars are only tinted initials, so draw them locally instead -- no
+     network, no rate limit, works offline in the PWA, and identical output for
+     the same name every time. */
+  const AVATAR_COLORS = [
+    '#2f6b3a', '#a5562a', '#c88a3a', '#4a7db8', '#6b8e23',
+    '#8a5a83', '#3f7d7d', '#9c4f4f', '#5b6bbf', '#7a6a3a',
+  ];
+
+  function initialsOf(name) {
+    const words = String(name || '')
+      .replace(/\b(dr|mr|mrs|ms|er|prof)\.?\s+/gi, '')
+      .trim().split(/\s+/).filter(Boolean);
+    if (!words.length) return '?';
+    return (words[0][0] + (words.length > 1 ? words[words.length - 1][0] : '')).toUpperCase();
+  }
+
+  function avatarFor(name) {
+    const label = initialsOf(name);
+    let hash = 0;
+    const key = String(name || '');
+    for (let i = 0; i < key.length; i++) hash = (hash * 31 + key.charCodeAt(i)) >>> 0;
+    const bg = AVATAR_COLORS[hash % AVATAR_COLORS.length];
+    const svg =
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">` +
+      `<rect width="96" height="96" rx="48" fill="${bg}"/>` +
+      `<text x="48" y="49" text-anchor="middle" dominant-baseline="central" ` +
+      `font-family="Inter, Segoe UI, sans-serif" font-size="38" font-weight="600" ` +
+      `fill="#ffffff">${label}</text></svg>`;
+    return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+  }
   
   // State Capitals Coordinates (Fallback for dynamic reverse-geocoding/closest matching)
   const STATE_CAPITALS = {
@@ -731,7 +766,7 @@
       return `
         <article class="gs-card" style="animation-delay:${Math.min(idx, 8) * 45}ms;">
           <div class="gs-card__photo-container">
-            <img src="${esc(expert.photo)}" alt="${esc(expert.name)}" class="gs-card__photo" loading="lazy" referrerpolicy="no-referrer">
+            <img src="${avatarFor(expert.name)}" alt="" class="gs-card__photo" loading="lazy">
             <span class="gs-card__badge-status ${getAvailabilityClass(expert.availability)}">
               ${expert.availability}
             </span>
@@ -872,7 +907,7 @@
     if (experts.length < 2) return;
 
     const rows = [
-      ['Photo', (e) => `<div class="gs-compare-table__photo"><img src="${e.photo}" alt="${esc(e.name)}"><strong>${esc(e.name)}</strong></div>`],
+      ['Photo', (e) => `<div class="gs-compare-table__photo"><img src="${avatarFor(e.name)}" alt=""><strong>${esc(e.name)}</strong></div>`],
       ['Qualification', (e) => esc(e.qualification)],
       ['Specialization', (e) => esc(e.specialization)],
       ['Experience', (e) => `${e.experience} years`],
@@ -943,7 +978,7 @@
 
     modalBody.innerHTML = `
       <div class="gs-modal-profile">
-        <img src="${esc(expert.photo)}" alt="${esc(expert.name)}" class="gs-modal-profile__photo">
+        <img src="${avatarFor(expert.name)}" alt="" class="gs-modal-profile__photo">
         <div class="gs-modal-profile__info">
           <h3>${esc(expert.name)}</h3>
           <p><strong>${esc(expert.qualification)}</strong></p>
@@ -1494,7 +1529,7 @@
       <article class="gs-testimonial-card gs-testimonial-card--verified">
         <span class="gs-testimonial-ribbon ${t.source === 'demo' ? 'gs-testimonial-ribbon--demo' : ''}">${t.source === 'demo' ? 'Demo example' : 'Verified · self-reported'}</span>
         <div class="gs-testimonial-card__header">
-          <img src="${expert ? expert.photo : ''}" alt="" class="gs-testimonial-card__img">
+          <img src="${avatarFor(expert ? expert.name : '')}" alt="" class="gs-testimonial-card__img">
           <div class="gs-testimonial-card__meta">
             <strong>${esc(t.farmerLabel)}</strong>
             <span>Consulted ${esc(expert ? expert.name : 'an expert')}</span>

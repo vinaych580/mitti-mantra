@@ -112,6 +112,12 @@
         const k = el.name;
         if (k in p && p[k] !== "" && p[k] !== undefined && p[k] !== null) {
           if (el.dataset.mmUserDirty === "1") return;
+          // A <select> silently goes blank when handed a value it has no
+          // <option> for -- which happens whenever the profile holds a region
+          // the dropdown hasn't loaded (or can't represent). Leaving the
+          // existing selection is always better than emptying the control.
+          if (el.tagName === "SELECT" &&
+              !Array.from(el.options).some((o) => o.value === String(p[k]))) return;
           if (el.value != String(p[k])) el.value = p[k];
         }
       });
@@ -202,9 +208,11 @@
   @media (max-width:620px){
     .mm-farm-bar{gap:8px;padding:10px 12px;}
     .mm-farm-bar__field{min-width:0;flex:1 1 calc(50% - 4px);}
-    .mm-farm-bar select,.mm-farm-bar input{min-width:0;width:100%;}
+    /* Thumb-sized targets: the desktop 6px padding left these controls ~29px
+       tall, under the 44px touch guidance and awkward to hit one-handed. */
+    .mm-farm-bar select,.mm-farm-bar input{min-width:0;width:100%;min-height:44px;padding:8px 10px;font-size:16px;}
     .mm-farm-bar__hint{display:none;}
-    .mm-farm-bar__save{margin-left:0;flex:1 1 100%;}
+    .mm-farm-bar__save{margin-left:0;flex:1 1 100%;min-height:44px;font-size:14px;}
   }
 
   /* ---- Toast ---- */
@@ -390,21 +398,71 @@
     setTimeout(() => profile.applyToForms(), 1200);
 
     // Deep-linking: ?tool=recommend&region_id=…&crop_id=…
+    // Used by the chatbot's action buttons and by links from the landing page.
     const q = new URLSearchParams(location.search);
-    const tool = q.get("tool");
-    if (tool) {
-      const patch = {};
+    const rawTool = (q.get("tool") || "").trim().toLowerCase();
+    if (rawTool) {
+      // Names older links use that never matched a sidebar button.
+      const TOOL_ALIASES = { pests: "pest", prices: "forecast", price: "forecast" };
+      const tool = TOOL_ALIASES[rawTool] || rawTool;
+      const linked = {};
       for (const k of ["region_id", "season", "crop_id", "area_acres", "budget_per_acre"]) {
-        if (q.has(k)) patch[k] = q.get(k);
+        if (q.get(k)) linked[k] = q.get(k);
       }
-      if (Object.keys(patch).length) profile.set(patch);
-      setTimeout(() => {
-        const btn = document.querySelector(`.sidebar__btn[data-tool="${tool}"]`);
-        btn?.click();
-        btn?.scrollIntoView({ behavior: "smooth", block: "start" });
+
+      // A link is a request to *look at* something, not to re-home the farm.
+      // Persisting the whole patch meant that asking the chatbot about a
+      // neighbouring mandi silently rewrote the saved farm for every tool. Only
+      // fill profile keys that are still empty; the rest is applied to the
+      // linked tool's own form below and forgotten on the next visit.
+      const current = profile.get();
+      const seed = {};
+      for (const [k, v] of Object.entries(linked)) {
+        if (current[k] === undefined || current[k] === "" || current[k] === null) seed[k] = v;
+      }
+      if (Object.keys(seed).length) profile.set(seed);
+
+      // The tool panels exist at parse time but their <select> options are
+      // filled from /api/regions and /api/crops, so a fixed timeout raced the
+      // network on a slow connection and silently dropped the prefill. Wait for
+      // the button, then for the options, with a hard cap.
+      whenReady(`.sidebar__btn[data-tool="${tool}"]`, 6000, (btn) => {
+        btn.click();
+        btn.scrollIntoView({ behavior: "smooth", block: "start" });
         profile.applyToForms();
-      }, 600);
+        const form = document.querySelector(`form[data-form="${tool}"]`);
+        if (form) {
+          for (const [k, v] of Object.entries(linked)) {
+            const el = form.elements[k];
+            if (!el || !el.tagName) continue;   // absent, or a radio/checkbox group
+            // Assigning a value a <select> has no <option> for blanks it, and
+            // the tool then submits an empty field.
+            if (el.tagName === "SELECT" &&
+                !Array.from(el.options).some((o) => o.value === v)) continue;
+            el.value = v;
+            el.dataset.mmUserDirty = "1";  // don't let a later applyToForms undo it
+          }
+        }
+        // Drop the parameters so a reload or a shared URL doesn't replay them.
+        ["tool", "region_id", "season", "crop_id", "area_acres", "budget_per_acre"]
+          .forEach((k) => q.delete(k));
+        const rest = q.toString();
+        history.replaceState({}, "", location.pathname + (rest ? "?" + rest : "") + location.hash);
+      });
     }
+  }
+
+  /** Poll for `selector` until it exists (and any <select> inside the matching
+   *  tool has options), then run `fn`. Gives up after `timeoutMs`. */
+  function whenReady(selector, timeoutMs, fn) {
+    const started = Date.now();
+    (function tick() {
+      const el = document.querySelector(selector);
+      const regionsFilled = document.querySelector("select[data-regions] option");
+      if (el && regionsFilled) return fn(el);
+      if (Date.now() - started > timeoutMs) { if (el) fn(el); return; }
+      setTimeout(tick, 80);
+    })();
   }
 
   // ------------------------------------------------------------------

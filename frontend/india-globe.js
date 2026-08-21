@@ -249,10 +249,13 @@
     });
   }
 
+  // Boundaries ship with the app (frontend/Data/india-states.geo.json, ~120 KB:
+  // the upstream 23 MB survey file simplified to globe resolution). Same-origin
+  // means it is fast, offline-capable via the service worker, and immune to the
+  // upstream repos disappearing -- which they since have. The remote copy stays
+  // only as a last resort if the bundled asset is ever missing.
   const GEOJSON_URLS = [
-    'https://cdn.jsdelivr.net/gh/udit-001/india-maps-data@main/geojson/states/india.json',
-    'https://raw.githubusercontent.com/udit-001/india-maps-data/main/geojson/states/india.json',
-    'https://cdn.jsdelivr.net/gh/geohacker/india@master/state/india_telengana.geojson',
+    'Data/india-states.geo.json',
     'https://raw.githubusercontent.com/geohacker/india/master/state/india_telengana.geojson'
   ];
   (async function loadStates() {
@@ -271,7 +274,20 @@
         console.warn('[scene3d] geojson failed:', url, e.message);
       }
     }
+    // Every source failed: the globe would otherwise sit there as a bare sphere
+    // with two dropdowns that quietly do nothing. Say so instead.
+    onStatesUnavailable();
   })();
+
+  function onStatesUnavailable() {
+    const hud = document.querySelector('.scene3d__hud');
+    if (hud) hud.style.display = 'none';
+    const note = document.createElement('div');
+    note.className = 'scene3d__notice';
+    note.setAttribute('role', 'status');
+    note.textContent = 'State boundaries could not be loaded, so the map is not interactive right now. Every state view is still available on the dashboard.';
+    host.appendChild(note);
+  }
 
   /* ---------- Mode / heatmap logic ---------- */
   let currentMode = 'default'; // default | rainfall | soilN | profit | crop

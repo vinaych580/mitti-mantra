@@ -20,7 +20,7 @@
   <nav class="nav" id="nav">
     <div class="nav__wrap">
       <a href="index.html" class="logo" aria-label="Mitti Mantra home">
-        <img src="assets/logo.png" alt="Mitti Mantra — Growing the future" class="logo__img">
+        <img src="assets/logo-192.png" alt="Mitti Mantra — Growing the future" class="logo__img">
       </a>
 
       <ul class="nav__links">
@@ -93,18 +93,14 @@
           </a>
         </div>
 
-        <div class="hero__trust">
-          <div class="hero__trust-avatars">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&h=80&q=80" alt="">
-            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=80&h=80&q=80" alt="">
-            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=80&h=80&q=80" alt="">
-            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=80&h=80&q=80" alt="">
-          </div>
-          <div class="hero__trust-text">
-            <strong>Trusted by 12,000+ kisans</strong>
-            across Madhya Pradesh, UP, Maharashtra
-          </div>
-        </div>
+        <!-- This row used to read "Trusted by 12,000+ kisans" over four stock
+             photos. There is no sign-up and no user count to draw that from, so
+             it now states what a first-time visitor actually gets. -->
+        <ul class="hero__trust">
+          <li>No sign-up &mdash; open the dashboard and start</li>
+          <li>32 crops across 30 districts</li>
+          <li>Works offline once loaded</li>
+        </ul>
       </div>
 
       <!-- Floating UI cards preview -->
@@ -175,22 +171,19 @@
         <div class="gyan-seva-promo__visual">
           <div class="promo-badge">
             <span class="promo-badge__dot"></span>
-            Verified Experts
+            Every district covered
           </div>
-          <div class="promo-experts-avatars">
-            <div class="promo-expert-avatar">
-              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&h=80&q=80" alt="Dr. Rajesh Kumar">
-              <span>Dr. Rajesh Kumar</span>
-            </div>
-            <div class="promo-expert-avatar">
-              <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=80&h=80&q=80" alt="Dr. Sunita Patil">
-              <span>Dr. Sunita Patil</span>
-            </div>
-            <div class="promo-expert-avatar">
-              <img src="https://images.unsplash.com/photo-1620122303020-43ec4b6cf7f8?auto=format&fit=crop&w=80&h=80&q=80" alt="Er. Amit Mishra">
-              <span>Er. Amit Mishra</span>
-            </div>
-          </div>
+          <ul class="promo-specialisms">
+            <li>Soil testing &amp; amendment</li>
+            <li>Crop disease diagnosis</li>
+            <li>Irrigation &amp; water planning</li>
+            <li>Organic conversion</li>
+          </ul>
+          <p class="promo-note">
+            An illustrative directory, not a credential-checked network &mdash; the
+            page says so plainly and points to the government KVK scientist in your
+            district as the verified alternative.
+          </p>
         </div>
       </div>
     </div>
@@ -254,7 +247,7 @@
             </div>
             <div>
               <h3>Smart Crop Picks</h3>
-              <p>Trained on 45,000 soil-climate combinations. Enter your NPK, pH and rainfall — get a ranked shortlist scored for your land and your budget.</p>
+              <p>Trained on 60,000 soil-climate-budget combinations. Enter your NPK, pH and rainfall — get a ranked shortlist scored for your land and your budget, with the profit maths shown for every rank.</p>
             </div>
           </div>
 
@@ -267,10 +260,14 @@
             </ul>
           </div>
 
+          <!-- The middle chip claimed "98% accuracy". The deployed classifier
+               scores 0.56 top-1 across 32 crops (ml/models/manifest.json, also
+               served at /api/ml/status); the ranking is what is useful here,
+               not a single-label hit rate. -->
           <div class="feature__chips">
             <span class="chip">RandomForest</span>
-            <span class="chip">98% accuracy</span>
-            <span class="chip">45K samples</span>
+            <span class="chip">60K training rows</span>
+            <span class="chip">32 crops ranked</span>
           </div>
         </article>
 
@@ -496,34 +493,45 @@
   </section>
 
   <!-- ============= STATS ============= -->
+  <!-- Every figure here is checkable: the crop and region counts come from the
+       shipped CSVs, the endpoint count from backend/main.py, and the model
+       scores from ml/models/manifest.json (also served live at /api/ml/status).
+       The tiles previously claimed "12,000+ farmers served" and "98% model
+       accuracy"; neither was true. -->
   <section class="stats" id="stats">
     <div class="container">
       <div class="stats__head reveal">
-        <span class="eyebrow">Real impact · real numbers</span>
+        <span class="eyebrow">What&rsquo;s actually under the hood</span>
         <h2>Built on data, not guesswork</h2>
-        <p>Every recommendation is grounded in measurable history — from soil samples to mandi prices to regional yield records.</p>
+        <p>
+          The yield model scores <strong>R&sup2; 0.81</strong> on held-out data and the crop
+          recommender <strong>56% top-1 accuracy across 32 classes</strong> &mdash; useful for
+          ranking options, not a substitute for your own judgement. Both numbers are
+          published live at <a href="/api/ml/status">/api/ml/status</a>, and every
+          recommendation shows the maths behind it.
+        </p>
       </div>
 
       <div class="stats__grid reveal-stagger">
         <div class="stat">
-          <div class="stat__val" data-count="12000">0<small>+</small></div>
-          <div class="stat__lbl">Farmers served</div>
-          <div class="stat__desc">Across MP, UP, Maharashtra — kharif & rabi</div>
+          <div class="stat__val" data-count="32">0</div>
+          <div class="stat__lbl">Crops modelled</div>
+          <div class="stat__desc">Sowing window, water, NPK and cost baselines for each</div>
         </div>
         <div class="stat">
-          <div class="stat__val" data-count="98">0<small>%</small></div>
-          <div class="stat__lbl">Model accuracy</div>
-          <div class="stat__desc">RandomForest classifier on 45K samples</div>
+          <div class="stat__val" data-count="30">0</div>
+          <div class="stat__lbl">Regions covered</div>
+          <div class="stat__desc">Soil profile, seasonal weather and mandi history per region</div>
         </div>
         <div class="stat">
-          <div class="stat__val" data-count="32">0<small>+</small></div>
-          <div class="stat__lbl">API endpoints</div>
-          <div class="stat__desc">Full REST coverage for any integration</div>
+          <div class="stat__val" data-count="50">0<small>+</small></div>
+          <div class="stat__lbl">REST endpoints</div>
+          <div class="stat__desc">Every tool on this site is a documented public API call</div>
         </div>
         <div class="stat">
-          <div class="stat__val" data-count="45">0<small>K</small></div>
-          <div class="stat__lbl">Training rows</div>
-          <div class="stat__desc">Soil × climate × budget combinations</div>
+          <div class="stat__val" data-count="2868">0</div>
+          <div class="stat__lbl">Mandi price records</div>
+          <div class="stat__desc">Monthly APMC observations behind the forecasts and MSP gaps</div>
         </div>
       </div>
     </div>
@@ -535,19 +543,24 @@
       <div class="reveal">
         <span class="eyebrow">Explore in 3D</span>
         <h2 style="margin-bottom:16px;">Your farm data, rendered live.</h2>
-        <p>A real-time WebGL visualisation of our 3 pilot regions with crop markers sized by expected yield. Drag to rotate, scroll to zoom.</p>
+        <!-- This copy described an older version of the scene: "3 pilot
+             regions", "crop markers sized by expected yield" and "pillar
+             height represents avg profit". None of that renders -- the globe
+             draws all 36 states and shades them by the selected layer -- and
+             the mismatch sat directly beside the thing it misdescribed. -->
+        <p>Every state and union territory, drawn from real boundary data and shaded by whichever layer you pick. Drag to rotate, scroll to zoom, click a state to open it.</p>
         <ul class="showcase__list" style="margin-top:24px;">
           <li>
             <span class="showcase__list__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <span class="showcase__list__text"><strong>Live Three.js render</strong>Hardware-accelerated WebGL, 60 fps on any modern phone</span>
+            <span class="showcase__list__text"><strong>Five map layers</strong>Default colours, rainfall, soil nitrogen, average profit — or how well one specific crop suits each state</span>
           </li>
           <li>
             <span class="showcase__list__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <span class="showcase__list__text"><strong>Regional markers</strong>Each pillar height represents the avg profit potential — taller means better</span>
+            <span class="showcase__list__text"><strong>Click any state</strong>The globe turns to face it and a panel opens with its rainfall, soil N, average profit and top three crops with indicative mandi prices</span>
           </li>
           <li>
             <span class="showcase__list__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <span class="showcase__list__text"><strong>Interactive</strong>Hover a marker to read its data, drag the globe, scroll to zoom</span>
+            <span class="showcase__list__text"><strong>No WebGL? Still works</strong>Older phones and locked-down desktops get a static India map instead of an empty box</span>
           </li>
         </ul>
       </div>
@@ -634,11 +647,11 @@
           </label>
           <label class="livedemo__field">
             <span>Area (acres)</span>
-            <input id="ldArea" type="number" value="4" min="0.5" step="0.5">
+            <input id="ldArea" type="number" value="4" min="0.5" step="any">
           </label>
           <label class="livedemo__field">
             <span>Budget / acre (₹)</span>
-            <input id="ldBudget" type="number" value="15000" min="1000" step="500">
+            <input id="ldBudget" type="number" value="15000" min="1000" step="any">
           </label>
           <button class="btn btn-primary livedemo__go" id="ldRun" type="button">
             Run recommendation
@@ -702,67 +715,48 @@
     </div>
   </section>
 
-  <!-- ============= TESTIMONIALS ============= -->
+  <!-- ============= WORKED EXAMPLES ============= -->
+  <!-- This section used to carry three named "farmer testimonials" with stock
+       photos. They were invented, and the platform has no user accounts to
+       collect real ones from, so they have been replaced with walk-throughs a
+       visitor can reproduce on the dashboard in under a minute. -->
   <section class="testimonials">
     <div class="container">
       <div class="section-head reveal">
-        <span class="eyebrow">In farmers' words</span>
-        <h2>Real kisans. Real harvests.</h2>
+        <span class="eyebrow">Worked examples</span>
+        <h2>What a question looks like here</h2>
+        <p>Three things farmers actually ask, and exactly which tool answers them. These are walk-throughs of the live product &mdash; not customer stories &mdash; and you can reproduce every one on the dashboard right now.</p>
       </div>
 
       <div class="testimonials__grid reveal-stagger">
         <article class="quote">
-          <div class="quote__stars">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+          <span class="quote__tag">Crop choice</span>
+          <p class="quote__text">&ldquo;Pichhle saal gehun lagaya tha, munafa kam raha. Is baar kya boyein?&rdquo;</p>
+          <div class="quote__src">
+            <strong>Smart recommender</strong>
+            <span>Scores all 32 crops against your soil test, season and budget, then shows the cost, yield and margin behind every rank &mdash; so you can disagree with it.</span>
           </div>
-          <p class="quote__text">"Pichle saal genhu lagaya tha, zyada munafa nahi hua. Is baar app ne soybean suggest kiya - profit double ho gaya."</p>
-          <div class="quote__author">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=88&h=88&q=80" alt="">
-            <div class="quote__author__meta">
-              <strong>Ramesh Kumar</strong>
-              <span>Sehore, Madhya Pradesh · 4 acres</span>
-            </div>
-          </div>
+          <a class="quote__cta" href="dashboard.html?tool=recommend">Try it on your plot &rarr;</a>
         </article>
 
         <article class="quote">
-          <div class="quote__stars">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+          <span class="quote__tag">When to sell</span>
+          <p class="quote__text">&ldquo;Mandi ka bhaav abhi theek hai ya rukna chahiye?&rdquo;</p>
+          <div class="quote__src">
+            <strong>Sell advisor &amp; MSP compare</strong>
+            <span>Puts six months of mandi history, the 6-month forecast and this year&rsquo;s MSP side by side, and flags nearby markets paying more for the same crop.</span>
           </div>
-          <p class="quote__text">"Sinchai ka sahi samay pata chala. Paani bacha aur paidavaar bhi badhi. MSP aur mandi ke bhaav ki tulna wali suvidha sabse zyada faydemand lagi."</p>
-          <div class="quote__author">
-            <img src="https://imgs.search.brave.com/_4AIZ7fbaYai3bhYxU6dcZMaE155WaKMELNDk844Wto/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNDkv/OTMwLzgyNy9zbWFs/bC9wcm9mZXNzaW9u/YWwtaW5kaWFuLXdv/bWFuLWluLWN1c3Rv/bWVyLXN1cHBvcnQt/cm9sZS1hdC1kZXNr/LXBob3RvLmpwZWc" alt="">
-            <div class="quote__author__meta">
-              <strong>Sunita Devi</strong>
-              <span>Lucknow, UP · 8 acres</span>
-            </div>
-          </div>
+          <a class="quote__cta" href="dashboard.html?tool=sell">See the price view &rarr;</a>
         </article>
 
         <article class="quote">
-          <div class="quote__stars">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+          <span class="quote__tag">Field trouble</span>
+          <p class="quote__text">&ldquo;Patton par dhabbe aa rahe hain &mdash; kya karun?&rdquo;</p>
+          <div class="quote__src">
+            <strong>Leaf screening &amp; pest rules</strong>
+            <span>Photo screening for 18 common leaf conditions, plus temperature and rainfall triggers from the pest ruleset. A planning aid &mdash; confirm anything serious with your KVK.</span>
           </div>
-          <p class="quote__text">"Pest alert aaya jab temperature 32°C hua. Sifarish follow ki, cotton bacha liya. Seedha calculator ne 2 lakh bachaye."</p>
-          <div class="quote__author">
-            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=88&h=88&q=80" alt="">
-            <div class="quote__author__meta">
-              <strong>Ranisha Shetty</strong>
-              <span>Pune, Maharashtra · 12 acres</span>
-            </div>
-          </div>
+          <a class="quote__cta" href="dashboard.html?tool=disease">Open the scanner &rarr;</a>
         </article>
       </div>
     </div>
@@ -786,7 +780,7 @@
       <div class="footer__grid">
         <div class="footer__about">
           <a href="#" class="logo" aria-label="Mitti Mantra home">
-            <img src="assets/logo.png" alt="Mitti Mantra — Growing the future" class="logo__img">
+            <img src="assets/logo-192.png" alt="Mitti Mantra — Growing the future" class="logo__img">
           </a>
           <p class="footer__tagline">Growing the future — AI-powered farm intelligence, built with care for Indian kisans. Open-source, data-first, and designed to work on a 2G phone.</p>
         </div>

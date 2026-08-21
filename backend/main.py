@@ -60,6 +60,23 @@ from backend.routers.data import router as data_router
 app = FastAPI(title="AgriSim - Farm Intelligence Platform")
 app.include_router(data_router, prefix="/api")
 
+
+@app.on_event("startup")
+async def _warm_ml_models() -> None:
+    """Deserialize the forests off the request path.
+
+    The models are ~110 MB of joblib and load lazily on first use, so whoever
+    clicked first paid ~8 s before seeing anything -- reliably the person
+    demoing the product. Warm them on a daemon thread: startup stays instant,
+    and by the time a human has filled in a form the models are resident. A
+    failure here is not fatal; `_load_ml_models` already falls back to the
+    heuristics and logs.
+    """
+    import threading
+    from ml.predict import _load_ml_models
+
+    threading.Thread(target=_load_ml_models, name="ml-warmup", daemon=True).start()
+
 # Cross-origin access is only needed during local development or when the
 # static frontend is hosted separately. Same-origin production deployments do
 # not need CORS at all. Configure additional origins with CORS_ORIGINS.
@@ -82,11 +99,24 @@ app.add_middleware(
 app.add_middleware(GZipMiddleware, minimum_size=800)
 
 
+#: Content-addressed assets do not exist here -- the frontend is zero-build, so
+#: every script and stylesheet keeps a stable URL across deploys. Anything with
+#: a stable URL whose *contents* change must therefore be revalidated, or a
+#: returning visitor runs yesterday's JS against today's HTML for a full day.
+#: Only genuinely immutable payloads (images, boundary geometry, fonts) get a
+#: long TTL.
+_IMMUTABLE_ASSET_SUFFIXES = (
+    ".png", ".jpg", ".jpeg", ".webp", ".gif", ".svg", ".ico",
+    ".woff", ".woff2", ".ttf", ".otf", ".geo.json",
+)
+
+
 class StaticCacheHeaders(BaseHTTPMiddleware):
     """Adds sensible Cache-Control headers for the static frontend assets.
 
-    - HTML & service worker: no-cache so the browser always revalidates.
-    - JS / CSS / images / fonts: 1-day cache with stale-while-revalidate.
+    - HTML, service worker, JS & CSS: no-cache, so the browser always
+      revalidates (cheap 304s via ETag) and a deploy is picked up immediately.
+    - Images / fonts / boundary geometry: 1-day cache with stale-while-revalidate.
     - API responses: short 30s cache (private) so rapid repeat calls feel instant.
     """
 
@@ -95,12 +125,12 @@ class StaticCacheHeaders(BaseHTTPMiddleware):
         path = request.url.path
         if path.startswith("/api/"):
             response.headers.setdefault("Cache-Control", "private, max-age=30")
-        elif path.endswith(("/sw.js", ".html", "/")):
-            response.headers.setdefault("Cache-Control", "no-cache")
-        elif "." in path.rsplit("/", 1)[-1]:
+        elif path.endswith(_IMMUTABLE_ASSET_SUFFIXES):
             response.headers.setdefault(
                 "Cache-Control", "public, max-age=86400, stale-while-revalidate=604800"
             )
+        elif "." in path.rsplit("/", 1)[-1] or path.endswith("/"):
+            response.headers.setdefault("Cache-Control", "no-cache")
         return response
 
 

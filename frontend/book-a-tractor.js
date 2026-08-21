@@ -1,3 +1,19 @@
+/* Manufacturer image hosts (tractorjunction, mahindratractor, deere.co.in, ...)
+   are hotlinked, have no CORS/hotlink guarantee, and there was no error path:
+   a blocked or moved image left a broken-image icon in the middle of a card.
+   Swap in a drawn placeholder instead. Inline `onerror` fires once and then
+   clears itself so a failing placeholder can't loop. */
+window.MM_TRACTOR_FALLBACK = window.MM_TRACTOR_FALLBACK || (function () {
+  var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 110">' +
+    '<rect width="160" height="110" fill="#f4ede0"/>' +
+    '<g fill="none" stroke="#a5562a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">' +
+    '<circle cx="46" cy="76" r="20"/><circle cx="112" cy="82" r="14"/>' +
+    '<path d="M30 60h26l10-20h22l6 20h20v22"/></g>' +
+    '<text x="80" y="105" text-anchor="middle" font-family="Inter, sans-serif" ' +
+    'font-size="11" fill="#8a8376">Photo unavailable</text></svg>';
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+})();
+
 /* =========================================================================
    Book a Tractor — page renderer
    -------------------------------------------------------------------------
@@ -278,7 +294,7 @@
     const phoneDigits = (b.operatorPhone || '').replace(/\D/g, '');
     return `
       <article class="tractor-booking-row" data-booking-id="${esc(b.bookingId)}">
-        ${b.tractorImage ? `<img src="${esc(b.tractorImage)}" alt="${esc(b.tractorName || '')}" loading="lazy" referrerpolicy="no-referrer">` : `<div class="tractor-booking-row__noimg">🚜</div>`}
+        ${b.tractorImage ? `<img src="${esc(b.tractorImage)}" alt="${esc(b.tractorName || '')}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src=window.MM_TRACTOR_FALLBACK;this.classList.add('is-fallback');">` : `<div class="tractor-booking-row__noimg">🚜</div>`}
         <div class="tractor-booking-row__body">
           <div class="tractor-booking-row__head">
             <div>
@@ -374,7 +390,7 @@
       return `
       <article class="tractor-card">
         <div class="tractor-card__media">
-          <img src="${esc(t.image)}" alt="${esc(t.name)}" loading="lazy" referrerpolicy="no-referrer">
+          <img src="${esc(t.image)}" alt="${esc(t.name)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src=window.MM_TRACTOR_FALLBACK;this.classList.add('is-fallback');">
           <span class="tractor-card__avail ${availClass(t.availability)}">${esc(t.availability)}</span>
         </div>
         <div class="tractor-card__body">

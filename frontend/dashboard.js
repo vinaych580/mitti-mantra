@@ -248,6 +248,41 @@
     return obj;
   }
 
+  /* ---------- Label association ----------
+     Every tool field is markup of the shape
+       <div class="field"><label>Region</label><select name="region_id">…
+     -- the <label> is a sibling with no `for`, and the controls have no ids, so
+     none of the ~80 dashboard inputs were programmatically labelled: a screen
+     reader announced "combo box" with no clue what it selects. Wire each
+     .field's label to its control once, at boot, rather than hand-editing
+     every block (and re-breaking it on the next tool added). */
+  (function associateLabels() {
+    let seq = 0;
+    document.querySelectorAll('.field').forEach((field) => {
+      const label = field.querySelector(':scope > label');
+      const control = field.querySelector('input, select, textarea');
+      if (!label || !control || label.htmlFor) return;
+      if (!control.id) control.id = `fld-${control.name || 'x'}-${++seq}`;
+      label.htmlFor = control.id;
+    });
+  })();
+
+  /* ---------- Constraint failures never disappear silently ----------
+     A form that fails HTML validation never fires `submit`, so the tool's own
+     handler -- and every error path in it -- is skipped and the Run button
+     reads as dead. That already happened for real: the pest tool auto-filled a
+     measured 27.9 °C into an input declared step="0.5", and clicking Run did
+     nothing a user could interpret. The step constraints are fixed, but any
+     future one should announce itself rather than swallow the click. */
+  document.addEventListener('invalid', (e) => {
+    const el = e.target;
+    if (!el || !el.closest || !el.closest('form[data-form]')) return;
+    const label = el.closest('.field')?.querySelector('label')?.textContent?.trim() || el.name || 'A field';
+    window.MM?.toast?.(`${label}: ${el.validationMessage}`, 4000);
+    el.closest('.tool')?.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, true);
+
   /* ---------- Sidebar tool switcher ---------- */
   const btns = $$('.sidebar__btn');
   const tools = $$('.tool');
@@ -295,13 +330,19 @@
       const out = document.querySelector(`[data-out="${tool}"]`);
       if (!out || out.innerHTML.trim() !== '') return;
       const items = TOOL_OUTPUTS[tool].map(t => `<li>${CHECK_SVG}<span>${t}</span></li>`).join('');
+      // Not every tool takes input -- "ML status" is just a button -- so don't
+      // tell those users to fill in fields that aren't there.
+      const hasForm = !!document.querySelector(`form[data-form="${tool}"]`);
+      const hint = hasForm
+        ? "Fill in the fields above and run the tool to see your results here."
+        : "Press the button above to see your results here.";
       out.innerHTML =
         `<div class="tool__empty">
            <div class="tool__empty__ico">${SPARK_SVG}</div>
            <div>
              <div class="tool__empty__label">What you'll get</div>
              <ul>${items}</ul>
-             <p class="tool__empty__hint">Fill in the fields above and run the tool to see your results here.</p>
+             <p class="tool__empty__hint">${hint}</p>
            </div>
          </div>`;
     });
@@ -1405,14 +1446,20 @@
       const costliest = r.costliest_market || {};
       const opps = r.opportunities || [];
 
+      if (r.message && !opps.length) {
+        out.innerHTML = `<div class="alert alert--gold"><svg class="alert__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          <div class="alert__body"><strong>Not enough mandi data for ${cropLabel(f.crop_id)}</strong><p>${r.message}</p></div></div>`;
+        return;
+      }
+
       out.innerHTML = `
         <div class="kpi-grid">
           <div class="kpi kpi--good"><div class="kpi__lbl">Sell high</div>
-            <div class="kpi__val" style="font-size:1.1rem;">${costliest.market_name || costliest.region_id || '—'}</div>
-            <div class="kpi__sub">${INR2(costliest.price_inr_per_kg || 0)}/kg</div></div>
+            <div class="kpi__val" style="font-size:1.1rem;">${costliest.market || costliest.region_id || '—'}</div>
+            <div class="kpi__sub">${INR2(costliest.price || 0)}/kg</div></div>
           <div class="kpi kpi--warn"><div class="kpi__lbl">Buy low</div>
-            <div class="kpi__val" style="font-size:1.1rem;">${cheapest.market_name || cheapest.region_id || '—'}</div>
-            <div class="kpi__sub">${INR2(cheapest.price_inr_per_kg || 0)}/kg</div></div>
+            <div class="kpi__val" style="font-size:1.1rem;">${cheapest.market || cheapest.region_id || '—'}</div>
+            <div class="kpi__sub">${INR2(cheapest.price || 0)}/kg</div></div>
           <div class="kpi kpi--info"><div class="kpi__lbl">Max spread</div>
             <div class="kpi__val">${TT(r.max_price_gap_per_kg, INR2(r.max_price_gap_per_kg))}<span style="font-size:.5em">/kg</span></div>
             <div class="kpi__sub">${FIX(r.max_gap_pct, 1)}% · ${r.regions_compared} mandis</div></div>
@@ -1794,9 +1841,9 @@
           <div class="alert alert--green">
             <svg class="alert__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M9 15l2 2 4-4"/></svg>
             <div class="alert__body">
-              <strong>${s.scheme_name} ${s.benefit_type ? `<span class="chip chip--gold">${s.benefit_type}</span>` : ''}</strong>
+              <strong>${s.scheme_name} ${(s.benefit_type_label || s.benefit_type) ? `<span class="chip chip--gold">${s.benefit_type_label || s.benefit_type}</span>` : ''}</strong>
               <p>${s.description || ''}</p>
-              ${s.benefit_value ? `<p style="margin-top:4px;"><strong>Benefit:</strong> ${s.benefit_value}</p>` : ''}
+              ${(s.benefit_label || s.benefit_value) ? `<p style="margin-top:4px;"><strong>Benefit:</strong> ${s.benefit_label || s.benefit_value}</p>` : ''}
               ${(s.url || s.application_url) ? `<p style="margin-top:6px;"><a href="${s.url || s.application_url}" target="_blank" rel="noopener" style="color:var(--brand);font-weight:600;">Apply →</a></p>` : ''}
             </div></div>`).join('')}`;
     } catch (err) { showError(out, err); }

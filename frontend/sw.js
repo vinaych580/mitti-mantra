@@ -6,15 +6,17 @@
      • Network-only for API calls to the backend.
 */
 
-const VERSION = 'mittimantra-v44';
+const VERSION = 'mittimantra-v46';
 const CORE = [
   './',
   './index.html',
   './dashboard.html',
   './farm-boundary.html',
   './marketplace.html',
+  './gyan-seva.html',
+  './book-a-tractor.html',
+  './login.html',
   './style.css',
-  './assets/logo.png',
   './assets/logo-192.png',
   './assets/logo-512.png',
   './site-ui.js',
@@ -35,7 +37,12 @@ const CORE = [
   './mm-enhance.js',
   './chatbot.js',
   './marketplace.js',
+  './gyan-seva.js',
+  './book-a-tractor.js',
+  './map-tractors.js',
+  './auth.js',
   './Data/marketplace-listings.js',
+  './Data/india-states.geo.json',
   './assets/marketplace/rice.webp',
   './assets/marketplace/paddy_basmati.webp',
   './assets/marketplace/wheat.webp',
@@ -65,8 +72,14 @@ const CORE = [
 ];
 
 self.addEventListener('install', (event) => {
+  // Deliberately not `addAll`: it is atomic, so a single 404 (a renamed asset,
+  // a page not yet deployed) would silently discard the whole precache and
+  // leave the app with no offline shell at all. Cache each entry on its own so
+  // one bad URL costs one file.
   event.waitUntil(
-    caches.open(VERSION).then((cache) => cache.addAll(CORE).catch(() => null))
+    caches.open(VERSION).then((cache) =>
+      Promise.all(CORE.map((url) => cache.add(url).catch(() => null)))
+    )
   );
   self.skipWaiting();
 });
@@ -115,7 +128,27 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Same-origin static assets: cache-first
+  // Same-origin code (JS/CSS): stale-while-revalidate. These URLs are stable
+  // across deploys -- there is no build step to hash them -- so pure cache-first
+  // would pin a visitor to an old bundle until VERSION happens to change. Serve
+  // the cached copy instantly, then refresh it in the background for next load.
+  if (url.origin === location.origin && /\.(js|css|json)$/i.test(url.pathname)) {
+    event.respondWith(
+      caches.match(req).then((cached) => {
+        const network = fetch(req).then((res) => {
+          if (res && res.ok) {
+            const clone = res.clone();
+            caches.open(VERSION).then((c) => c.put(req, clone)).catch(() => null);
+          }
+          return res;
+        }).catch(() => cached);
+        return cached || network;
+      })
+    );
+    return;
+  }
+
+  // Same-origin immutable assets (images, fonts): cache-first
   if (url.origin === location.origin) {
     event.respondWith(
       caches.match(req).then((cached) =>

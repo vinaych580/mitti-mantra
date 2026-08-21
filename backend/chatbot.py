@@ -28,6 +28,7 @@ from engine.features import (
     match_government_schemes,
     msp_vs_market,
     pest_disease_alerts,
+    price_forecast,
 )
 from engine.chatbot_i18n import (
     GREETING_WORDS,
@@ -39,7 +40,8 @@ from engine.chatbot_i18n import (
     find_season as find_season_native,
     normalize_region_text,
 )
-from ml.predict import recommend_crops
+from ml.predict import recommend_crops, rotation_planner
+from utils.calculations import region_display_name
 from utils.csv_cache import load as _csv_load
 
 # ---------------------------------------------------------------------------
@@ -58,6 +60,15 @@ def _crop_by_id() -> Dict[str, Dict[str, str]]:
 
 def _crop_by_name() -> Dict[str, Dict[str, str]]:
     return {c["crop_name"].lower(): c for c in _crops()}
+
+
+def _crop_label(crop_id: str) -> str:
+    """Human crop name for a crop_id, falling back to the id itself.
+
+    Replies used to interleave display names ("Groundnut") with raw ids
+    ("soybean", "mp_sehore") depending on which handler produced them."""
+    row = _crop_by_id().get((crop_id or "").lower())
+    return row["crop_name"] if row else (crop_id or "?")
 
 
 def _regions() -> List[str]:
@@ -244,20 +255,28 @@ def _find_numbers(text: str) -> List[float]:
 
 def _find_tagged_numbers(text: str) -> Dict[str, float]:
     """Bind numbers to a semantic role (area / expected_profit / budget)
-    using the NEAREST keyword to each number, so reordering a sentence
-    ("3 acres and 15000 budget" vs "15000 budget for 3 acres") can't
-    silently swap which number means what. Numbers with no nearby keyword
-    are left untagged for the caller to fill in positionally.
+    using the nearest keyword to each number, so reordering a sentence
+    ("3 acres and 15000 budget" vs "15000 budget for 3 acres") can't silently
+    swap which number means what. Numbers with no nearby keyword are left
+    untagged for the caller to fill in positionally.
 
-    Bug fix note: an earlier version used a fixed symmetric character
-    window and an "area checked before budget" priority order to decide a
-    number's role. When two (number, keyword) pairs sit close together --
-    e.g. "15000 budget and 3 acres" -- both numbers' windows can contain
-    BOTH keywords, and the area-first priority made both numbers resolve
-    to the wrong role whenever their windows overlapped (confirmed: this
-    exact phrase used to tag 15000->area, 3->budget, the opposite of
-    correct). Ranking by which keyword is actually CLOSEST to each number
-    (not just "does the window contain a match") fixes this.
+    Two distinct bugs have been fixed here, both of which swapped roles:
+
+    1. A fixed symmetric window plus a fixed "area beats budget" priority made
+       *both* numbers resolve to the wrong role whenever their windows
+       overlapped ("15000 budget and 3 acres" tagged 15000 -> area).
+       Fixed by ranking on the distance to the closest keyword.
+
+    2. Ranking on distance alone still left ties, and a tie was decided by the
+       iteration order of the keyword dict. In "cost 80000 profit 150000" the
+       number 80000 sits exactly one character from *both* "cost" (before it)
+       and "profit" (after it); expected_profit happened to be visited first,
+       so 80000 was tagged as the profit and 150000 was left untagged and then
+       filled in positionally as the cost -- inverting a loan calculation.
+       Fixed by preferring the keyword that *precedes* the number on a tie
+       (English labels a value before stating it far more often than after),
+       and by letting a number fall through to its next-best role when a
+       closer number has already claimed its first choice.
     """
     numbers: List[Tuple[float, int, int]] = []
     for m in _NUM_RE.finditer(text):
@@ -275,26 +294,36 @@ def _find_tagged_numbers(text: str) -> Dict[str, float]:
         "budget": [m.span() for m in _BUDGET_KW.finditer(text)],
     }
 
-    candidates: List[Tuple[int, str, float, int]] = []  # (distance, role, val, num_start)
+    # For each number, every role within the window, best-first.
+    ranked: List[Tuple[float, int, List[Tuple[int, int, str]]]] = []
     for val, start, end in numbers:
-        best: Optional[Tuple[int, str]] = None
+        options: List[Tuple[int, int, str]] = []   # (distance, 0 if keyword precedes, role)
         for role, spans in kw_positions.items():
+            best_for_role: Optional[Tuple[int, int]] = None
             for kstart, kend in spans:
                 if kend <= start:
-                    dist = start - kend
+                    dist, precedes = start - kend, 0
                 elif kstart >= end:
-                    dist = kstart - end
+                    dist, precedes = kstart - end, 1
                 else:
-                    dist = 0
-                if dist <= _WINDOW and (best is None or dist < best[0]):
-                    best = (dist, role)
-        if best is not None:
-            candidates.append((best[0], best[1], val, start))
+                    dist, precedes = 0, 0
+                if dist <= _WINDOW and (best_for_role is None or (dist, precedes) < best_for_role):
+                    best_for_role = (dist, precedes)
+            if best_for_role is not None:
+                options.append((best_for_role[0], best_for_role[1], role))
+        if options:
+            options.sort()
+            ranked.append((val, start, options))
 
+    # Settle the closest bindings first; a number whose first choice is already
+    # taken by a nearer number falls through to its next-best role.
+    ranked.sort(key=lambda r: (r[2][0][0], r[2][0][1], r[1]))
     tags: Dict[str, float] = {}
-    for dist, role, val, start in sorted(candidates, key=lambda c: c[0]):
-        if role not in tags:
-            tags[role] = val
+    for val, _start, options in ranked:
+        for _dist, _precedes, role in options:
+            if role not in tags:
+                tags[role] = val
+                break
     return tags
 
 
@@ -402,7 +431,7 @@ def _intent_list_regions(lang: str) -> Reply:
     regs = _regions()
     if not regs:
         return (T(lang, "no_region_data") if lang != "en" else "No region data is loaded on the server."), []
-    pretty = ", ".join(r.replace("_", " · ").title() for r in regs)
+    pretty = ", ".join(region_display_name(r) for r in regs)
     if lang == "en":
         return (
             f"I have soil + weather data for **{len(regs)} regions**:\n\n{pretty}",
@@ -491,7 +520,8 @@ def _intent_mandi_price(crop: Optional[Dict[str, str]], region: Optional[str], l
     lines = ["Recent mandi prices:\n"] if lang == "en" else [T(lang, "mandi_recent")]
     for r in rows:
         lines.append(
-            f"- **{r.get('crop_id','?')}** @ {r.get('region_id','?')} "
+            f"- **{_crop_label(r.get('crop_id',''))}** @ "
+            f"{region_display_name(r.get('region_id','')) or '?'} "
             f"({r.get('date') or r.get('month','')}): ₹{r.get('price_inr_per_kg','?')}/kg"
         )
     tips = []
@@ -538,9 +568,9 @@ def _intent_recommend(region: Optional[str], season: Optional[str], text: str, l
                 else T(lang, "generic_error", err=e)), []
     if not recs:
         if lang == "en":
-            return f"No strong recommendations for {region} in {season}.", []
+            return f"No strong recommendations for {region_display_name(region)} in {season}.", []
         return T(lang, "recommend_no_strong", region=region, season=season), []
-    region_disp = region.replace('_', ' · ').title()
+    region_disp = region_display_name(region)
     if lang == "en":
         lines = [
             f"Top crops for **{region_disp}** in **{season.title()}** "
@@ -550,11 +580,11 @@ def _intent_recommend(region: Optional[str], season: Optional[str], text: str, l
             lines.append(
                 f"{i}. **{r.get('crop_name')}** — "
                 f"profit {_fmt_inr(r.get('expected_profit',0))}, "
-                f"ROI {r.get('roi_percent',0)}%, risk {r.get('risk_score',0)}/10"
+                f"ROI {r.get('roi_percent',0)}%, risk {r.get('risk_score',0)}/100"
             )
         return "\n".join(lines), [
             "Open dashboard",
-            f"Rotation plan for {region}",
+            f"Rotation plan for {region_disp}",
             f"Pest alerts for {recs[0].get('crop_id')}",
         ]
     lines = [T(lang, "recommend_header", region=region_disp, season=season.title(),
@@ -594,7 +624,7 @@ def _intent_sell_advice(crop: Dict[str, str], region: Optional[str], lang: str) 
         res = best_time_to_sell(region, crop["crop_id"])
     except Exception as e:
         return (f"Couldn't compute sell advice: {e}" if lang == "en" else T(lang, "sell_error", err=e)), []
-    rtxt = region.replace("_", " · ").title()
+    rtxt = region_display_name(region)
     if lang == "en":
         lines = [f"### Sell advice — {crop['crop_name']} @ {rtxt}\n"]
         if isinstance(res, dict):
@@ -797,7 +827,7 @@ def _intent_schemes(crop: Optional[Dict[str, str]], region: Optional[str], text:
         for s in items[:8]:
             name = s.get("scheme_name") or s.get("name") or "Scheme"
             desc = s.get("description", "")
-            benefit = s.get("benefit_value") or s.get("benefit", "")
+            benefit = s.get("benefit_label") or s.get("benefit_value") or s.get("benefit", "")
             link = s.get("url") or s.get("apply_url")
             lines.append(f"**📜 {name}**")
             if desc:
@@ -812,7 +842,7 @@ def _intent_schemes(crop: Optional[Dict[str, str]], region: Optional[str], text:
     for s in items[:8]:
         name = s.get("scheme_name") or s.get("name") or "Scheme"
         desc = s.get("description", "")
-        benefit = s.get("benefit_value") or s.get("benefit", "")
+        benefit = s.get("benefit_label") or s.get("benefit_value") or s.get("benefit", "")
         link = s.get("url") or s.get("apply_url")
         lines.append(f"**📜 {name}**")
         if desc:
@@ -885,7 +915,7 @@ def _intent_msp_vs_market(crop: Dict[str, str], region: Optional[str], lang: str
         res = msp_vs_market(region, crop["crop_id"])
     except Exception as e:
         return (f"Couldn't compare: {e}" if lang == "en" else T(lang, "msp_vs_error", err=e)), []
-    rtxt = region.replace('_', ' · ').title()
+    rtxt = region_display_name(region)
     if lang == "en":
         lines = [f"### MSP vs Market — {crop['crop_name']} @ {rtxt}\n"]
         pretty = {
@@ -920,6 +950,69 @@ def _intent_msp_vs_market(crop: Dict[str, str], region: Optional[str], lang: str
 # ---------------------------------------------------------------------------
 # Main router
 # ---------------------------------------------------------------------------
+def _intent_forecast(crop: Dict[str, str], region: Optional[str], lang: str) -> Reply:
+    """Six-month price outlook.
+
+    `_build_actions` has always had a "forecast" branch and the docs advertise
+    price forecasting, but no route ever produced that intent -- the question
+    fell through to the generic crop-info reply.
+    """
+    if not region:
+        return (("Which region? e.g. _\"price forecast for soybean in MP Sehore\"_."
+                 if lang == "en" else T(lang, "forecast_need_region")), [])
+    try:
+        res = price_forecast(region, crop["crop_id"])
+    except Exception as e:
+        return ((f"Couldn't build a forecast: {e}" if lang == "en"
+                 else T(lang, "generic_error", err=e)), [])
+    pts = res.get("forecasts") or []
+    cur = res.get("current_price")
+    rtxt = region_display_name(region)
+    head = (f"### Price outlook — {crop['crop_name']} @ {rtxt}"
+            if lang == "en" else T(lang, "forecast_header", crop=crop["crop_name"], region=rtxt))
+    lines = [head, ""]
+    if cur is not None:
+        lines.append(f"- **Now:** ₹{cur}/kg")
+    for pt in pts[:6]:
+        month = pt.get("month") or ""
+        price = pt.get("forecast_price")
+        if price is not None:
+            lines.append(f"- **{month}:** ₹{price}/kg")
+    if res.get("trend_direction"):
+        lines.append("")
+        lines.append(f"_Trend: {res['trend_direction']} "
+                     f"({res.get('trend_slope_per_month', 0)}/kg per month)._")
+    sug = [f"Best time to sell {crop['crop_id']}", f"MSP vs market for {crop['crop_id']}"]
+    return "\n".join(lines), sug
+
+
+def _intent_rotation(region: Optional[str], lang: str) -> Reply:
+    """Best kharif -> rabi pairings for a region (same engine the dashboard uses)."""
+    if not region:
+        return (("Which region should I plan a rotation for?" if lang == "en"
+                 else T(lang, "recommend_need_region")), ["List regions"])
+    try:
+        plan = rotation_planner(region, 15000, 3)
+    except Exception as e:
+        return ((f"Couldn't plan a rotation: {e}" if lang == "en"
+                 else T(lang, "generic_error", err=e)), [])
+    combos = (plan or {}).get("top_rotations") or []
+    if not combos:
+        return (("No rotation pairing scored well enough for that region."
+                 if lang == "en" else T(lang, "recommend_no_strong",
+                                        region=region_display_name(region), season="")), [])
+    rtxt = region_display_name(region)
+    lines = [f"### Rotation plan — {rtxt}", ""] if lang == "en" else [
+        T(lang, "rotation_header", region=rtxt), ""]
+    for i, c in enumerate(combos[:3], 1):
+        kh = c.get("kharif_crop") or c.get("kharif") or "?"
+        rb = c.get("rabi_crop") or c.get("rabi") or "?"
+        profit = c.get("annual_profit", 0)
+        lines.append(f"{i}. **{_crop_label(kh)} → {_crop_label(rb)}** "
+                     f"— annual profit {_fmt_inr(profit)}")
+    return "\n".join(lines), ["Recommend crops for this region", "Open dashboard"]
+
+
 _SLASH_ALIASES = {
     "/help": "help", "/?": "help",
     "/crops": "list crops", "/regions": "list regions",
@@ -933,7 +1026,28 @@ _SLASH_ALIASES = {
     "/schemes": "government schemes",
     "/loan": "loan",
     "/sell": "best time to sell",
+    # Intents the router already handles but that had no slash form, so typing
+    # the obvious command fell through to the generic crop-info reply.
+    "/forecast": "price forecast",
+    "/price": "price forecast",
+    "/rotation": "rotation plan",
+    "/mspvsmarket": "msp vs market",
 }
+
+
+def _unknown_slash_reply(token: str, lang: str) -> Reply:
+    """An unrecognised /command used to fall through to intent matching, so the
+    user got a generic "I didn't catch that" with no hint that the problem was
+    a typo in the command itself."""
+    known = ", ".join(sorted(k for k in _SLASH_ALIASES if k != "/?"))
+    if lang == "en":
+        return (
+            f"**{token}** isn't a command I know.\n\n"
+            f"Try one of these: {known}\n\n"
+            "Or just ask in plain language, e.g. \"what's the MSP of wheat?\".",
+            ["/help", "/crops", "/regions"],
+        )
+    return T(lang, "fallback"), ["/help", "/crops", "/regions"]
 
 
 def _build_actions(intent: str, crop: Optional[Dict[str, str]], region: Optional[str],
@@ -960,7 +1074,7 @@ def _build_actions(intent: str, crop: Optional[Dict[str, str]], region: Optional
         acts.append(_action("View all schemes →", _dashboard_link("schemes")))
     elif intent == "pest" and crop:
         acts.append(_action("See pest dashboard →",
-                            _dashboard_link("pests", crop_id=crop["crop_id"])))
+                            _dashboard_link("pest", crop_id=crop["crop_id"])))
     elif intent == "irrigate" and crop:
         acts.append(_action("Open irrigation planner →",
                             _dashboard_link("irrigation", crop_id=crop["crop_id"])))
@@ -982,12 +1096,15 @@ def answer(message: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, 
                 "suggestions": [], "actions": [], "context": context}
 
     # Expand slash command at the start to a natural-language phrase.
+    unknown_slash = None
     if raw.startswith("/"):
         token = raw.split(None, 1)[0].lower()
         rest = raw[len(token):].strip()
         expansion = _SLASH_ALIASES.get(token)
         if expansion:
             raw = f"{expansion} {rest}".strip()
+        else:
+            unknown_slash = token
 
     text = raw.lower()
 
@@ -1017,6 +1134,10 @@ def answer(message: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, 
         if season: new_ctx["season"] = season
         actions = _build_actions(intent, crop, region, season, nums or []) if intent else []
         return {"reply": reply, "suggestions": sug, "actions": actions, "context": new_ctx}
+
+    if unknown_slash:
+        reply, sug = _unknown_slash_reply(unknown_slash, lang)
+        return _pack(reply, sug)
 
     # Greetings (M-15 fix): only short-circuit to the canned greeting when
     # the ENTIRE message is made of greeting words (+ punctuation) — a
@@ -1097,6 +1218,30 @@ def answer(message: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, 
             return f"Which crop? e.g. `{example} rice`", [f"{example} rice", f"{example} wheat"]
         return T(lang, "need_crop", example=example), []
 
+    # MSP vs market. `_intent_msp_vs_market` has existed since the MSP work
+    # landed but nothing ever routed to it, so the comparison was unreachable.
+    # Checked before the plain-MSP branch, which would otherwise swallow it.
+    if _matches("msp_vs_market", text, r"\bmsp (vs|versus|against|compared? (to|with))\b|\bmsp.{0,12}market\b"):
+        if not crop:
+            reply, sug = _need_crop("/mspvsmarket")
+            return _pack(reply, sug, region=region)
+        reply, sug = _intent_msp_vs_market(crop, region, lang)
+        return _pack(reply, sug, "forecast", crop, region)
+
+    # Rotation planning
+    if _matches("rotation", text, r"\brotation\b|\brotate\b|\bkharif.{0,12}rabi\b"):
+        reply, sug = _intent_rotation(region, lang)
+        return _pack(reply, sug, "rotation", region=region)
+
+    # Price forecast. Must precede the mandi-price branch, whose broad
+    # "prices?" pattern would otherwise claim every forecast question.
+    if _matches("forecast", text, r"\bforecast\b|\bprice (outlook|trend|prediction)\b|predict.{0,10}price|future price"):
+        if not crop:
+            reply, sug = _need_crop("/forecast")
+            return _pack(reply, sug, "forecast", region=region)
+        reply, sug = _intent_forecast(crop, region, lang)
+        return _pack(reply, sug, "forecast", crop, region)
+
     # Sell timing
     if _matches("sell_advice", text, r"\bbest time to sell\b|\bwhen (should|to) (i )?sell\b|\bsell(ing)? advice\b"):
         if not crop:
@@ -1140,12 +1285,18 @@ def answer(message: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, 
 
     # Schemes
     if _matches("schemes", text, r"\bscheme|\bsubsidy|\bsubsidies|\bpm[- ]?kisan\b|\bgovernment\b|\bloan waiver\b|\binsurance\b"):
-        reply, sug = _intent_schemes(crop, region, nums, lang)
+        # `_intent_schemes` parses the acreage out of the raw message itself
+        # (`_extract_amounts`); it was being handed the already-parsed `nums`
+        # list instead, so every schemes question raised TypeError -> HTTP 500.
+        reply, sug = _intent_schemes(crop, region, text, lang)
         return _pack(reply, sug, "schemes", crop, region)
 
     # Loan
     if _matches("loan", text, r"\bloan\b|\bemi\b|\binterest\b"):
-        reply, sug = _intent_loan(nums, lang)
+        # Same defect as the schemes branch: `_intent_loan` parses amounts and
+        # tenure out of the raw message, and was being passed the parsed `nums`
+        # list, so any loan/EMI/interest question crashed with TypeError.
+        reply, sug = _intent_loan(text, lang)
         return _pack(reply, sug)
 
     # Tell me about <crop>
@@ -1165,7 +1316,8 @@ def answer(message: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, 
             "try questions about crops, regions, mandi prices, MSP, recommendations, "
             "irrigation, pests or government schemes.\n\n"
             "Type **help** to see everything I can do, or try slash commands like "
-            "`/recommend`, `/msp`, `/mandi`, `/pest`, `/sell`, `/schemes`."
+            "`/recommend`, `/forecast`, `/rotation`, `/msp`, `/mandi`, `/pest`, "
+            "`/sell`, `/schemes`."
         )
         sug = ["Help", "Recommend crops for Telangana Medak", "MSP of wheat", "Pest alerts for rice"]
     else:
