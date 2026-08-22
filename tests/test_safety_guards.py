@@ -36,3 +36,28 @@ def test_satellite_endpoint_does_not_fabricate_an_observation():
     data = response.json()
     assert data["available"] is False
     assert "ndvi" not in data
+
+
+def test_yield_endpoint_reports_honest_prediction_source():
+    """B-15: /api/yield used to hardcode "RandomForestRegressor (Tuned)" as
+    the algorithm on every response, even on calls where the yield model
+    silently fell back to the heuristic formula (e.g. a crop/region/season
+    combination unseen by the model's label encoder) -- unlike its sibling
+    endpoints (/api/crop, rotation, optimal-mix), which already reported
+    this honestly via `prediction_source`. A region_id that cannot be a
+    real trained-on label forces that fallback; the response must say so
+    instead of claiming the ML algorithm ran.
+    """
+    response = client.get(
+        "/api/yield",
+        params={
+            "crop_id": "rice",
+            "region_id": "zz_nonexistent_region_9999",
+            "season": "kharif",
+            "irrigation_level": 0.5,
+        },
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert data["prediction_source"] == "heuristic"
+    assert "RandomForest" not in data["algorithm"]

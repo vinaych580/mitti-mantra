@@ -79,6 +79,13 @@
     if (prev) prev.destroy();
     const chart = new Chart(canvasEl.getContext('2d'), config);
     CHART_REGISTRY.set(canvasEl, chart);
+    // Every chart here has the same data available as real text elsewhere on
+    // the card (KPI tiles, list rows), so this doesn't need a rich generated
+    // description -- just something better than a silent, nameless canvas.
+    const seriesLabels = ((config.data && config.data.datasets) || []).map((d) => d.label).filter(Boolean);
+    const kind = config.type || 'chart';
+    canvasEl.setAttribute('role', 'img');
+    canvasEl.setAttribute('aria-label', seriesLabels.length ? `${kind} chart: ${seriesLabels.join(', ')}` : `${kind} chart`);
     return chart;
   }
 
@@ -266,6 +273,16 @@
       label.htmlFor = control.id;
     });
   })();
+
+  /* ---------- Tool outputs announce themselves ----------
+     Every tool replaces its .output panel's content asynchronously (loading
+     -> result), but none of the ~20 panels were live regions, so a screen
+     reader had no way to know a result had landed short of re-exploring the
+     page. Marked once, at boot, for the same reason associateLabels() is:
+     one place instead of hand-editing every tool block. */
+  document.querySelectorAll('.output').forEach((el) => {
+    el.setAttribute('aria-live', 'polite');
+  });
 
   /* ---------- Constraint failures never disappear silently ----------
      A form that fails HTML validation never fires `submit`, so the tool's own

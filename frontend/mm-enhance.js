@@ -13,35 +13,50 @@
   window.__mmEnhanceLoaded = true;
 
   // --- styles ---
+  // Colors route through the DESIGN.md token set instead of a separate
+  // hand-picked palette, so this panel matches the rest of the dashboard and
+  // (via the dark-mode block below) actually works in dark mode -- the raw
+  // hex version had neither.
   const css = `
   .mm-why{margin-top:6px;}
-  .mm-why summary{cursor:pointer;font-size:.75rem;color:#2e7d32;font-weight:600;
+  .mm-why summary{cursor:pointer;font-size:.75rem;color:var(--brand);font-weight:600;
     list-style:none;display:inline-flex;align-items:center;gap:4px;
-    background:#eaf3ea;padding:3px 10px;border-radius:999px;}
+    background:var(--brand-soft);padding:3px 10px;border-radius:999px;}
   .mm-why summary::-webkit-details-marker{display:none;}
-  .mm-why[open] summary{background:#2e7d32;color:#fff;}
-  .mm-why__body{margin-top:8px;padding:10px 12px;background:#f7faf7;border-radius:10px;
-    border:1px solid #e2ebe2;font-size:.82rem;line-height:1.5;color:#2b3a2b;}
+  .mm-why[open] summary{background:var(--brand);color:#fff;}
+  .mm-why__body{margin-top:8px;padding:10px 12px;background:var(--brand-soft);border-radius:10px;
+    border:1px solid rgba(47,107,58,.15);font-size:.82rem;line-height:1.5;color:var(--ink);}
   .mm-factor{display:flex;align-items:center;gap:8px;margin:4px 0;}
-  .mm-factor__lbl{flex:0 0 110px;font-weight:600;color:#4a5b4a;}
-  .mm-factor__bar{flex:1;height:6px;background:#e5ebe5;border-radius:3px;overflow:hidden;}
-  .mm-factor__bar > div{height:100%;background:linear-gradient(90deg,#66bb6a,#1b5e20);border-radius:3px;}
-  .mm-factor__val{width:40px;text-align:right;font-variant-numeric:tabular-nums;color:#1b5e20;font-weight:600;}
+  .mm-factor__lbl{flex:0 0 110px;font-weight:600;color:var(--ink-soft);}
+  .mm-factor__bar{flex:1;height:6px;background:var(--bg-soft);border-radius:3px;overflow:hidden;}
+  .mm-factor__bar > div{height:100%;background:linear-gradient(90deg,var(--brand),var(--brand-deep));border-radius:3px;}
+  .mm-factor__val{width:40px;text-align:right;font-variant-numeric:tabular-nums;color:var(--brand-deep);font-weight:600;}
 
-  .mm-source{margin-top:14px;padding-top:10px;border-top:1px dashed #d0d8d0;
-    font-size:.68rem;color:#78877a;display:flex;gap:10px;flex-wrap:wrap;}
-  .mm-source b{color:#4a5b4a;}
+  .mm-source{margin-top:14px;padding-top:10px;border-top:1px dashed rgba(29,26,21,.15);
+    font-size:.68rem;color:var(--ink-soft);display:flex;gap:10px;flex-wrap:wrap;}
+  .mm-source b{color:var(--ink);}
 
   .mm-gauge{display:inline-flex;align-items:center;gap:6px;margin-left:6px;vertical-align:middle;}
-  .mm-gauge__track{width:54px;height:6px;background:#e5ebe5;border-radius:3px;overflow:hidden;}
+  .mm-gauge__track{width:54px;height:6px;background:var(--bg-soft);border-radius:3px;overflow:hidden;}
   .mm-gauge__fill{height:100%;border-radius:3px;}
-  .mm-gauge--low .mm-gauge__fill{background:#66bb6a;}
-  .mm-gauge--med .mm-gauge__fill{background:#f9a825;}
-  .mm-gauge--high .mm-gauge__fill{background:#d32f2f;}
+  .mm-gauge--low .mm-gauge__fill{background:var(--brand);}
+  .mm-gauge--med .mm-gauge__fill{background:var(--accent);}
+  .mm-gauge--high .mm-gauge__fill{background:var(--danger);}
   .mm-gauge__tag{font-size:.7rem;font-weight:700;}
-  .mm-gauge--low .mm-gauge__tag{color:#1b5e20;}
-  .mm-gauge--med .mm-gauge__tag{color:#a06500;}
-  .mm-gauge--high .mm-gauge__tag{color:#8b2f2f;}
+  .mm-gauge--low .mm-gauge__tag{color:var(--brand-deep);}
+  .mm-gauge--med .mm-gauge__tag{color:var(--clay);}
+  .mm-gauge--high .mm-gauge__tag{color:var(--danger);}
+
+  /* --brand / --brand-deep / --clay have no dark remap (only their -soft
+     washes do -- see toolbar.js), so text set in them collapses to ~2:1 on
+     a dark wash or dark surface. Reuse the same lighter substitutes already
+     proven elsewhere in the app (toolbar.js's .kpi--good/.kpi--warn, and
+     gyan-seva.html's --brand-deep remap) rather than inventing new ones. */
+  html[data-theme="dark"] .mm-why summary,
+  html[data-theme="dark"] .mm-factor__val,
+  html[data-theme="dark"] .mm-gauge--low .mm-gauge__tag{color:#9ed2a7;}
+  html[data-theme="dark"] .mm-gauge--med .mm-gauge__tag{color:#e4b87c;}
+  html[data-theme="dark"] .mm-factor__bar > div{background:linear-gradient(90deg,#7fc68f,#9ed2a7);}
   `;
   const styleEl = document.createElement("style");
   styleEl.textContent = css;

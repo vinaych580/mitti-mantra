@@ -156,3 +156,52 @@ def test_disease_predict_max_length_rejection():
     response = client.post("/api/disease/predict", json=payload)
     assert response.status_code == 422
 
+def test_disease_rate_limit_blocks_after_threshold(monkeypatch):
+    """D-8: the endpoint has no auth (it's a public, farmer-facing tool), so
+    it now enforces a minimal in-memory per-IP request budget instead.
+
+    Patches the budget down to 3 and starts from a clean counter dict (via
+    monkeypatch, so both are restored automatically even if an assertion
+    below fails) so this test is fast and independent of both the real
+    production limit and any calls other tests in this module already made
+    -- TestClient always presents as the same "testclient" address, so
+    without a clean slate this would be sensitive to test order.
+
+    Also confirms the 429 actually reaches the client as a 429: the
+    endpoint's own `except Exception` clause re-raises everything as a 400,
+    and HTTPException is itself an Exception, so the rate-limit check has
+    to run before that try block or this would silently become a 400.
+    """
+    import backend.main as backend_main
+    monkeypatch.setattr(backend_main, "_DISEASE_RATE_LIMIT_MAX_REQUESTS", 3)
+    monkeypatch.setattr(backend_main, "_disease_rate_limit_log", {})
+
+    img_b64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+    payload = {"image_b64": img_b64, "crop_id": "tomato", "region_id": "up_lucknow"}
+
+    for i in range(3):
+        response = client.post("/api/disease/predict", json=payload)
+        assert response.status_code == 200, f"call {i + 1}/3 should succeed, got {response.status_code}: {response.text}"
+
+    response = client.post("/api/disease/predict", json=payload)
+    assert response.status_code == 429
+    assert "detail" in response.json()
+    assert "many" in response.json()["detail"].lower()
+
+def test_disease_rate_limit_is_per_ip(monkeypatch):
+    """Two distinct callers must not share one budget -- checked directly
+    against the counter function so this doesn't depend on TestClient's
+    fixed client address."""
+    import backend.main as backend_main
+    monkeypatch.setattr(backend_main, "_DISEASE_RATE_LIMIT_MAX_REQUESTS", 2)
+    monkeypatch.setattr(backend_main, "_disease_rate_limit_log", {})
+
+    assert backend_main._disease_rate_limit_check("1.2.3.4") is True
+    assert backend_main._disease_rate_limit_check("1.2.3.4") is True
+    assert backend_main._disease_rate_limit_check("1.2.3.4") is False
+
+    # A different caller has its own, unaffected budget.
+    assert backend_main._disease_rate_limit_check("5.6.7.8") is True
+    assert backend_main._disease_rate_limit_check("5.6.7.8") is True
+    assert backend_main._disease_rate_limit_check("5.6.7.8") is False
+

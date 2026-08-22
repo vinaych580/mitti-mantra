@@ -73,6 +73,39 @@ window.MM_TRACTOR_FALLBACK = window.MM_TRACTOR_FALLBACK || (function () {
     }) || null;
   }
 
+  /* ─── Modal accessibility (dialog semantics, focus trap, Escape-to-close) ───
+     #bookingModalCard is shared by all three modal render paths (list-tractor
+     form, booking form, booking success/unavailable screens); this keeps the
+     dialog behavior in one place instead of duplicating it per render path. */
+  let mmModalTrigger = null;
+  let mmModalKeydown = null;
+  function mmFocusableIn(container) {
+    return Array.from(container.querySelectorAll(
+      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    ));
+  }
+  function openModalA11y(overlay, card) {
+    mmModalTrigger = document.activeElement;
+    const focusables = mmFocusableIn(card);
+    (focusables[0] || card).focus();
+    mmModalKeydown = (e) => {
+      if (e.key === 'Escape') { e.preventDefault(); closeModalA11y(overlay); return; }
+      if (e.key !== 'Tab') return;
+      const items = mmFocusableIn(card);
+      if (!items.length) return;
+      const first = items[0], last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    };
+    document.addEventListener('keydown', mmModalKeydown);
+  }
+  function closeModalA11y(overlay) {
+    overlay.classList.remove('open');
+    if (mmModalKeydown) { document.removeEventListener('keydown', mmModalKeydown); mmModalKeydown = null; }
+    if (mmModalTrigger && document.body.contains(mmModalTrigger)) mmModalTrigger.focus();
+    mmModalTrigger = null;
+  }
+
   /* ─── Trust loop: post-job verification + reliability score ───
      Real bookings on this device are logged after their date passes and feed
      into a tractor's reliability chip. Since no fleet has real booking history
@@ -134,6 +167,34 @@ window.MM_TRACTOR_FALLBACK = window.MM_TRACTOR_FALLBACK || (function () {
   }
   function findTractorById(id) {
     return TRACTORS.find((tr) => tr.id === id) || getOwnerListings().find((tr) => tr.id === id);
+  }
+
+  /* ─── T-1: reflect a real reservation in the availability badge ───
+     `.availability` is a single fleet-wide status string, not date-scoped
+     anywhere it's read (cards, owner listings, demand panels) — so a hard
+     flip to "Booked" would fully lock the tractor out of the booking modal
+     (see the `Booked` short-circuit in openBookingModal below), blocking even
+     a different, non-conflicting date that findTractorBookingConflict would
+     otherwise allow. Downgrading Available -> Limited instead makes the badge
+     honest (this device really does hold a reservation against it) without
+     re-blocking dates the per-date conflict check already permits.
+     Built-in fleet tractors live in the shared TRACTORS array reference, so
+     mutating in place is enough for every render in this file to pick it up;
+     it resets on reload since Data/tractors.js rebuilds window.TRACTORS_DATA
+     fresh each load. Owner-listed tractors are re-parsed from localStorage on
+     every read, so those need an explicit save to persist. */
+  function markTractorReservedOnThisDevice(tractorId) {
+    const fleetTractor = TRACTORS.find((tr) => tr.id === tractorId);
+    if (fleetTractor) {
+      if (fleetTractor.availability === 'Available') fleetTractor.availability = 'Limited';
+      return;
+    }
+    const listings = getOwnerListings();
+    const listing = listings.find((tr) => tr.id === tractorId);
+    if (listing && listing.availability === 'Available') {
+      listing.availability = 'Limited';
+      saveOwnerListings(listings);
+    }
   }
 
   function ownerCardHtml(t) {
@@ -253,7 +314,7 @@ window.MM_TRACTOR_FALLBACK = window.MM_TRACTOR_FALLBACK || (function () {
       </form>
     `;
 
-    document.getElementById('btnModalClose').addEventListener('click', () => overlay.classList.remove('open'));
+    document.getElementById('btnModalClose').addEventListener('click', () => closeModalA11y(overlay));
 
     document.getElementById('listTractorForm').addEventListener('submit', (ev) => {
       ev.preventDefault();
@@ -281,12 +342,13 @@ window.MM_TRACTOR_FALLBACK = window.MM_TRACTOR_FALLBACK || (function () {
       saveOwnerListings(listings);
       renderOwnerListings();
       renderDemandIntelligence();
-      overlay.classList.remove('open');
+      closeModalA11y(overlay);
       if (window.MM && window.MM.toast) window.MM.toast('Your tractor is now listed!');
     });
 
     retranslate();
     overlay.classList.add('open');
+    openModalA11y(overlay, card);
   };
 
   function bookingRowHtml(b) {
@@ -921,9 +983,10 @@ window.MM_TRACTOR_FALLBACK = window.MM_TRACTOR_FALLBACK || (function () {
           <button class="mm-form-submit" id="btnCloseSuccess" style="margin-top: 10px;">Close</button>
         </div>
       `;
-      document.getElementById('btnModalClose').addEventListener('click', () => overlay.classList.remove('open'));
-      document.getElementById('btnCloseSuccess').addEventListener('click', () => overlay.classList.remove('open'));
+      document.getElementById('btnModalClose').addEventListener('click', () => closeModalA11y(overlay));
+      document.getElementById('btnCloseSuccess').addEventListener('click', () => closeModalA11y(overlay));
       overlay.classList.add('open');
+      openModalA11y(overlay, card);
       retranslate();
       return;
     }
@@ -1015,6 +1078,15 @@ window.MM_TRACTOR_FALLBACK = window.MM_TRACTOR_FALLBACK || (function () {
         saveMyBookings(bookings);
         renderMyBookingsPanel();
 
+        // T-1: make the fleet/owner-listing badge agree with the booking we
+        // just recorded, instead of leaving it permanently stale (see
+        // markTractorReservedOnThisDevice for why this downgrades rather than
+        // hard-locks the tractor).
+        markTractorReservedOnThisDevice(t.id);
+        renderCards();
+        renderOwnerListings();
+        renderDemandIntelligence();
+
         const etaHtml = farmDistanceKm != null
           ? `<div class="mm-eta-box">
                <div class="mm-eta-box__head">
@@ -1022,7 +1094,7 @@ window.MM_TRACTOR_FALLBACK = window.MM_TRACTOR_FALLBACK || (function () {
                  <span class="mm-eta-box__badge">Estimated arrival</span>
                </div>
                <div class="mm-eta-box__val" id="mmEtaCountdown">~${etaMinutes} min</div>
-               <p class="mm-eta-box__note">Based on straight-line distance and typical rural road speed — not live GPS. The operator will confirm the exact time when they call to accept.</p>
+               <p class="mm-eta-box__note">Based on straight-line distance and typical rural road speed — not live GPS or a confirmed pickup time.</p>
              </div>`
           : `<div class="mm-eta-box mm-eta-box--empty">
                <span>📍 Draw your farm boundary to see the real distance and estimated arrival time for every booking.</span>
@@ -1048,6 +1120,7 @@ window.MM_TRACTOR_FALLBACK = window.MM_TRACTOR_FALLBACK || (function () {
               <div class="mm-success-row"><span>Operator</span><strong>${esc(t.operatorName || 'Partner Farmer')}</strong></div>
               <div class="mm-success-row"><span>Operator Phone</span><strong>+91 ${esc(t.operatorPhone || 'Not listed yet')}</strong></div>
             </div>
+            <p class="mm-split-note">Demo: this app has no live backend, so the operator isn't notified automatically. Call them with the number above to confirm your booking.</p>
             ${splitWith ? `<p class="mm-split-note">🤝 Let ${esc(splitWith.name)} know they owe ₹${splitWith.theirShare.toLocaleString('en-IN')} for their share — settle it between yourselves, MittiMantra doesn't handle payments.</p>` : ''}
 
             <button class="mm-form-submit" id="btnCloseSuccess" style="margin-top: 10px;">Close Window</button>
@@ -1055,8 +1128,9 @@ window.MM_TRACTOR_FALLBACK = window.MM_TRACTOR_FALLBACK || (function () {
         `;
 
         document.getElementById('btnCloseSuccess').addEventListener('click', () => {
-          overlay.classList.remove('open');
+          closeModalA11y(overlay);
         });
+        document.getElementById('btnCloseSuccess').focus();
 
         // Purely cosmetic client-side countdown of the estimate above — not a live position feed.
         if (etaMinutes != null) {
@@ -1115,7 +1189,7 @@ window.MM_TRACTOR_FALLBACK = window.MM_TRACTOR_FALLBACK || (function () {
                 <input type="tel" id="proxyBookerPhone" class="mm-form-input" placeholder="10-digit mobile" pattern="[6-9][0-9]{9}">
               </div>
             </div>
-            <p class="mm-split-note">The operator will call the farmer above directly. We'll also keep your details on this booking so the farmer knows who arranged it.</p>
+            <p class="mm-split-note">There's no live backend to call the operator for you — you or the farmer will need to reach them directly once the booking is confirmed. We'll keep your details on this booking so the farmer knows who arranged it.</p>
           </div>
 
           <div class="mm-form-row">
@@ -1198,7 +1272,7 @@ window.MM_TRACTOR_FALLBACK = window.MM_TRACTOR_FALLBACK || (function () {
 
       // Form bindings
       document.getElementById('btnModalClose').addEventListener('click', () => {
-        overlay.classList.remove('open');
+        closeModalA11y(overlay);
       });
 
       const rateTypeSelect = document.getElementById('rateTypeSelect');
@@ -1319,5 +1393,6 @@ window.MM_TRACTOR_FALLBACK = window.MM_TRACTOR_FALLBACK || (function () {
 
     renderModalContent('form');
     overlay.classList.add('open');
+    openModalA11y(overlay, card);
   };
 })();

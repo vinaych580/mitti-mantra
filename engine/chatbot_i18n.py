@@ -49,15 +49,32 @@ _KANNADA = re.compile(r"[ಀ-೿]")
 # Credit Card") — having them here misdetected ordinary English messages as
 # Hindi and (combined with sticky context.lang in backend/chatbot.py) could
 # lock an entire English session into Hindi replies after a single mention
-# of "mandi". The remaining words are distinctly Hindi function/domain words
-# that are not standalone English vocabulary, so they're safe single-word
-# triggers.
+# of "mandi".
+#
+# NOTE (C-21 fix): the same bug class recurred -- "hum" ("I hear a hum from
+# the borewell motor") and "aap" ("AAP won the election", the Aam Aadmi
+# Party) are ordinary English/Indian-English words, not Hindi-only. A full
+# systematic re-audit (every remaining word tested against a realistic
+# English sentence using it in its own English sense, per detect_lang())
+# additionally found and removed:
+#   - "namaste" / "namaskar" — both are recognized English loanwords used
+#     constantly in English yoga/wellness writing ("Surya Namaskar"), and
+#     both are *already* in chatbot.py's own English GREETINGS tuple, and
+#     this module's own English greeting reply literally starts with
+#     "Namaste!" -- so keeping them here was self-contradictory as well as
+#     a false-positive risk.
+#   - "paani" — "paani puri" (also spelled "pani puri") is a common snack
+#     name in ordinary English food writing across India, the same
+#     loanword-in-English-sentences pattern as "mandi"/"kisan".
+# Every other word here was tested the same way and kept only because it
+# has no standalone English/Indian-English meaning (e.g. "kya", "fasal",
+# "chahiye", "sinchai" are not English vocabulary in any register).
 _HINGLISH_WORDS = {
     "kya", "kaise", "kaisa", "kab", "kahan", "kitna", "kitne", "kitni",
     "fasal", "fasl", "kheti", "bhav", "daam", "mausam",
-    "beej", "khad", "sinchai", "paani", "zameen", "jameen", "rupaye",
-    "bataye", "batao", "bataiye", "chahiye", "acha", "theek", "namaste",
-    "namaskar", "dhanyavad", "shukriya", "aap", "hum", "mera", "meri",
+    "beej", "khad", "sinchai", "zameen", "jameen", "rupaye",
+    "bataye", "batao", "bataiye", "chahiye", "acha", "theek",
+    "dhanyavad", "shukriya", "mera", "meri",
 }
 
 
@@ -231,11 +248,26 @@ STATE_SYNONYMS: Dict[str, str] = {
     "పశ్చిమ బెంగాల్": "wb", "ఉత్తర ప్రదేశ్": "up", "మధ్య ప్రదేశ్": "mp",
     "తమిళనాడు": "tn", "ఒడిశా": "odisha", "జార్ఖండ్": "jharkhand",
     "ఆంధ్రప్రదేశ్": "ap",
+    # C-23 fix: Telugu was missing these 7 states entirely (no region in
+    # dataset/soil.csv using them was reachable from a Telugu message).
+    "అస్సాం": "assam", "ఛత్తీస్‌గఢ్": "chhattisgarh", "గోవా": "goa",
+    "హిమాచల్ ప్రదేశ్": "hp", "జమ్మూ కశ్మీర్": "jk", "త్రిపుర": "tripura",
+    "ఉత్తరాఖండ్": "uk",
     "ಪಂಜಾಬ್": "punjab", "ಗುಜರಾತ್": "guj", "ಬಿಹಾರ": "bihar",
     "ರಾಜಸ್ಥಾನ": "rajasthan", "ಹರಿಯಾಣ": "haryana", "ಮಹಾರಾಷ್ಟ್ರ": "mh",
     "ಕರ್ನಾಟಕ": "kar", "ಕೇರಳ": "kerala", "ಪಶ್ಚಿಮ ಬಂಗಾಳ": "wb",
     "ಉತ್ತರ ಪ್ರದೇಶ": "up", "ಮಧ್ಯ ಪ್ರದೇಶ": "mp", "ತಮಿಳುನಾಡು": "tn",
     "ಒಡಿಶಾ": "odisha", "ಜಾರ್ಖಂಡ್": "jharkhand", "ಆಂಧ್ರಪ್ರದೇಶ": "ap",
+    # C-23 fix: Kannada was missing these same 7 states, PLUS Telangana --
+    # the flagship demo region used in every language's own suggestion
+    # chips (e.g. REPLY["kn"]["sug_recommend_medak_kharif"]). A Kannada user
+    # clicking the bot's own "Telangana Medak" suggestion chip previously
+    # got stuck in an infinite loop of the identical unresolved reply,
+    # since "ತೆಲಂಗಾಣ" never resolved to a region.
+    "ತೆಲಂಗಾಣ": "telangana", "ಅಸ್ಸಾಂ": "assam",
+    "ಛತ್ತೀಸ್‌ಗಢ": "chhattisgarh", "ಗೋವಾ": "goa",
+    "ಹಿಮಾಚಲ ಪ್ರದೇಶ": "hp", "ಜಮ್ಮು ಕಾಶ್ಮೀರ": "jk", "ತ್ರಿಪುರ": "tripura",
+    "ಉತ್ತರಾಖಂಡ": "uk",
 }
 
 
@@ -280,7 +312,15 @@ INTENT_PATTERNS: Dict[str, str] = {
     "list_regions": r"क्षेत्रों की सूची|कौन से क्षेत्र|ప్రాంతాల జాబితా|ఏ ప్రాంతాలు|ಪ್ರದೇಶಗಳ ಪಟ್ಟಿ|ಯಾವ ಪ್ರದೇಶ",
     "msp_vs_market": r"एमएसपी.{0,10}(बनाम|और).{0,10}(मंडी|बाज़ार)|MSP.{0,10}(vs|మరియు).{0,10}మార్కెట్|MSP.{0,10}(vs|ಮತ್ತು).{0,10}ಮಾರುಕಟ್ಟೆ",
     "msp": r"एमएसपी|न्यूनतम समर्थन मूल्य|కనీస మద్దతు ధర|ಕನಿಷ್ಠ ಬೆಂಬಲ ಬೆಲೆ",
-    "recommend": r"सिफारिश|सुझाव|कौन सी फ़सल लगाऊं|क्या बोऊं|సిఫారసు|ఏ పంట వేయాలి|ಶಿಫಾರಸು|ಯಾವ ಬೆಳೆ ಬೆಳೆಯಲಿ|sifarish|kaunsi fasal|kya boyein",
+    # C-14 fix: a bare "सुझाव" (suggestion) used to hijack unrelated
+    # questions like "चावल में कीट के लिए सुझाव" (suggestion for pest in
+    # rice) into the crop-recommendation flow, before the pest/irrigation/
+    # etc. intents ever got a chance to match -- the exact same bug the
+    # English "suggest(ion)" trigger was already fixed for in chatbot.py
+    # (requiring it to co-occur with a crop/grow/plant/sow word). "सिफारिश"
+    # (recommendation) is unambiguous on its own and stays bare, same as
+    # English "recommend(ation)?" is never gated either.
+    "recommend": r"सिफारिश|सुझाव.*(फ़सल|फसल|उगा|रोप|बुवाई)|(फ़सल|फसल|उगा|रोप|बुवाई).*सुझाव|कौन सी फ़सल लगाऊं|क्या बोऊं|సిఫారసు|ఏ పంట వేయాలి|ಶಿಫಾರಸು|ಯಾವ ಬೆಳೆ ಬೆಳೆಯಲಿ|sifarish|kaunsi fasal|kya boyein",
     "sell_advice": r"बेचने का सही समय|कब बेचूं|అమ్మడానికి సరైన సమయం|ఎప్పుడు అమ్మాలి|ಮಾರಾಟಕ್ಕೆ ಸೂಕ್ತ ಸಮಯ|ಯಾವಾಗ ಮಾರಬೇಕು|kab bechu",
     "mandi_price": r"मंडी भाव|बाज़ार भाव|भाव क्या|మండీ ధర|మార్కెట్ ధర|ధర ఎంత|ಮಂಡಿ ಬೆಲೆ|ಮಾರುಕಟ್ಟೆ ಬೆಲೆ|ಬೆಲೆ ಎಷ್ಟು|mandi bhav|bhav kya",
     "pest": r"कीट|रोग|बीमारी|पुरుగు|వ్యాధి|ಕೀಟ|ರೋಗ",

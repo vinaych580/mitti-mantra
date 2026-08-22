@@ -50,6 +50,8 @@ Thumbs.db
 .cursor/
 .agents/
 .codex/
+agent/
+skills-lock.json
 
 # Impeccable: the design system and its project-level rules are tracked
 # (.impeccable/design.json, config.json); per-machine consent and caches are not.

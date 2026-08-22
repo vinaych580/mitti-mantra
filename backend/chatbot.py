@@ -1188,10 +1188,38 @@ def answer(message: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, 
         if context["crop_id"] in _cbi:
             crop = _cbi[context["crop_id"]]
 
-    # MSP vs market
-    if crop and _matches("msp_vs_market", text, r"msp\s*(vs|versus|compared)\s*(mandi|market)"):
+    # H-6 fix: "which crop?" clarifying prompts, shared by the crop-gated
+    # intents below (including MSP vs market). These used to have no branch
+    # for crop=None, so a bare /pest, /irrigate, /calendar, /sell, or
+    # /mspvsmarket fell all the way through to the generic "I didn't catch
+    # that" fallback -- which itself recommended trying the exact command
+    # that had just failed. Defined here (rather than further down, as it
+    # originally was) so the MSP-vs-market check below can use it too.
+    def _need_crop(example: str) -> Reply:
+        if lang == "en":
+            return f"Which crop? e.g. `{example} rice`", [f"{example} rice", f"{example} wheat"]
+        return T(lang, "need_crop", example=example), []
+
+    # MSP vs market. `_intent_msp_vs_market` has existed since the MSP work
+    # landed but nothing ever routed to it, so the comparison was
+    # unreachable. Must be checked before the plain-MSP branch below, which
+    # would otherwise swallow every comparison query first.
+    #
+    # C-22 fix: this exact check used to *also* exist, narrower (only
+    # recognized "vs/versus/compared", not "against"/"compared to/with"),
+    # right here, further up -- and *this* more complete version, with
+    # proper crop-gating, sat after the plain-MSP branch below, making it
+    # dead code. Plain MSP intercepted every comparison query -- both
+    # `/mspvsmarket` (crop=None, so the old narrower check above also
+    # skipped it via its `if crop and ...` guard) and any comparison
+    # phrasing the old narrow regex didn't cover -- before this ever ran.
+    # Consolidated into this single check, now reachable.
+    if _matches("msp_vs_market", text, r"\bmsp (vs|versus|against|compared? (to|with))\b|\bmsp.{0,12}market\b"):
+        if not crop:
+            reply, sug = _need_crop("/mspvsmarket")
+            return _pack(reply, sug, region=region)
         reply, sug = _intent_msp_vs_market(crop, region, lang)
-        return _pack(reply, sug, "forecast", crop, region, season, nums)
+        return _pack(reply, sug, "forecast", crop, region)
 
     # Plain MSP
     if _matches("msp", text, r"\bmsp\b|\bminimum support price\b"):
@@ -1207,26 +1235,6 @@ def answer(message: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, 
     if _matches("recommend", text, r"\brecommend(ation)?\b|\bwhich crop\b|\bbest crop\b|\bwhat (should|to) (i )?(grow|plant|sow)\b|\bsuggest(ion)?\b.*\b(crop|grow|plant|sow)\b|\b(crop|grow|plant|sow)\b.*\bsuggest(ion)?\b"):
         reply, sug = _intent_recommend(region, season, text, lang)
         return _pack(reply, sug, "recommend", region=region, season=season, nums=nums)
-
-    # H-6 fix: "which crop?" clarifying prompts, shared by the four
-    # crop-gated intents below. These used to have no branch for crop=None,
-    # so a bare /pest, /irrigate, /calendar, /sell fell all the way through
-    # to the generic "I didn't catch that" fallback -- which itself
-    # recommended trying the exact command that had just failed.
-    def _need_crop(example: str) -> Reply:
-        if lang == "en":
-            return f"Which crop? e.g. `{example} rice`", [f"{example} rice", f"{example} wheat"]
-        return T(lang, "need_crop", example=example), []
-
-    # MSP vs market. `_intent_msp_vs_market` has existed since the MSP work
-    # landed but nothing ever routed to it, so the comparison was unreachable.
-    # Checked before the plain-MSP branch, which would otherwise swallow it.
-    if _matches("msp_vs_market", text, r"\bmsp (vs|versus|against|compared? (to|with))\b|\bmsp.{0,12}market\b"):
-        if not crop:
-            reply, sug = _need_crop("/mspvsmarket")
-            return _pack(reply, sug, region=region)
-        reply, sug = _intent_msp_vs_market(crop, region, lang)
-        return _pack(reply, sug, "forecast", crop, region)
 
     # Rotation planning
     if _matches("rotation", text, r"\brotation\b|\brotate\b|\bkharif.{0,12}rabi\b"):

@@ -252,6 +252,11 @@
          carry the prototype's honesty disclaimers, so they must stay legible. */
       html[data-theme="dark"] .mkt-alert--info { color: #9ed2a7; }
 
+      /* Same collapse as above: --clay (#a5562a) is never remapped for dark,
+         so on the dark --accent-soft ground it drops to ~2.55:1. Reuse the
+         same lighter gold already proven for .kpi--warn .kpi__val below. */
+      html[data-theme="dark"] .tractor-weather-banner--moderate { color: #e4b87c; }
+
       /* Features bento — the preview widgets use light-mode hairlines
          and pastels that vanish or glare on dark. */
       html[data-theme="dark"] .features__badges li {
@@ -803,7 +808,7 @@
     const active = lastActiveInput || document.activeElement;
     const canFillInput = active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA');
 
-    showModal('Listening…', `<p><span class="qw-pulse"></span>Speak now (${rec.lang}). Your words will appear here.</p><div id="qw-voice-out" style="font-weight:500;color:#1d1a15;margin-top:8px;">—</div>`, [
+    showModal('Listening…', `<p><span class="qw-pulse"></span>Speak now (${rec.lang}). Your words will appear here.</p><div id="qw-voice-out" style="font-weight:500;margin-top:8px;">—</div>`, [
       { label: 'Stop', primary: false, onClick: () => { rec.stop(); } }
     ]);
     const out = () => document.getElementById('qw-voice-out');
@@ -838,8 +843,8 @@
         hideModal();
         return;
       }
-      showModal('You said:', `<p style="font-weight:500;color:#1d1a15;">${txt}</p>
-        <p style="font-size:.85rem;color:#6a6258;margin-top:8px;">Tip: try <em>"simulate rice in Punjab for 5 acres"</em> or <em>"recommend crops for kharif"</em>.</p>`, [
+      showModal('You said:', `<p style="font-weight:500;">${txt}</p>
+        <p style="font-size:.85rem;margin-top:8px;">Tip: try <em>"simulate rice in Punjab for 5 acres"</em> or <em>"recommend crops for kharif"</em>.</p>`, [
         { label: 'Copy', primary: false, onClick: () => { navigator.clipboard?.writeText(txt); hideModal(); } },
         { label: 'OK', primary: true, onClick: hideModal }
       ]);
@@ -957,9 +962,19 @@
       showModal("Today's briefing", '<p>Set up your farm (region &amp; season) first on the dashboard, then come back for a spoken daily briefing.</p>');
       return;
     }
+    // Arm the guard synchronously — before the async compose step — so a
+    // second click while this fetch is in flight hits the branch above
+    // (stop / no-op) instead of racing it into a duplicate speak() call.
+    speakingBriefing = true;
     btn?.classList.add('active');
     const text = await composeBriefing(profile).catch(() => null);
+    if (!speakingBriefing) {
+      // Stop-clicked while composing: that click already reset the flag
+      // and button state, so treat this stale resolve as a no-op.
+      return;
+    }
     if (!text) {
+      speakingBriefing = false;
       btn?.classList.remove('active');
       showModal("Today's briefing", '<p>Could not put together a briefing right now — try again in a moment.</p>');
       return;
@@ -972,7 +987,6 @@
     u.onend = () => { speakingBriefing = false; btn?.classList.remove('active'); };
     u.onerror = u.onend;
     window.speechSynthesis.speak(u);
-    speakingBriefing = true;
   }
 
   /* ---------- Copy link ---------- */

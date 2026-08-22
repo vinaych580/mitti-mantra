@@ -17,6 +17,42 @@
   // Constants
   const CONSULTANTS = window.CONSULTANTS_DATA || [];
 
+  /* ---------- Modal accessibility (dialog focus trap + Escape-to-close) ----------
+     Shared by the expert-profile modal and the compare-experts modal: moves
+     focus into the modal on open, traps Tab inside it, closes on Escape, and
+     restores focus to whatever triggered it on close. */
+  const modalA11yState = new WeakMap(); // modalContentEl -> { trigger, keydown }
+  function gsFocusableIn(container) {
+    return Array.from(container.querySelectorAll(
+      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    ));
+  }
+  function openModalA11y(modalContentEl, closeFn) {
+    if (!modalContentEl) return;
+    const trigger = document.activeElement;
+    const focusables = gsFocusableIn(modalContentEl);
+    (focusables[0] || modalContentEl).focus();
+    const keydown = (e) => {
+      if (e.key === 'Escape') { e.preventDefault(); closeFn(); return; }
+      if (e.key !== 'Tab') return;
+      const items = gsFocusableIn(modalContentEl);
+      if (!items.length) return;
+      const first = items[0], last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    };
+    document.addEventListener('keydown', keydown);
+    modalA11yState.set(modalContentEl, { trigger, keydown });
+  }
+  function closeModalA11y(modalContentEl) {
+    if (!modalContentEl) return;
+    const s = modalA11yState.get(modalContentEl);
+    if (!s) return;
+    document.removeEventListener('keydown', s.keydown);
+    if (s.trigger && document.body.contains(s.trigger)) s.trigger.focus();
+    modalA11yState.delete(modalContentEl);
+  }
+
   /* ---------- Avatars ----------
      Every consultant record carries a ui-avatars.com URL. With 2,292 records
      that is 2,292 cross-origin image requests, and the service rate-limits well
@@ -941,10 +977,15 @@
     compareModal.classList.add('open');
     document.body.style.overflow = 'hidden';
     retranslate();
+    openModalA11y(compareModal.querySelector('.gs-modal__content'), closeCompareModal);
   }
 
   function closeCompareModal() {
-    if (compareModal) { compareModal.classList.remove('open'); document.body.style.overflow = ''; }
+    if (compareModal) {
+      compareModal.classList.remove('open');
+      document.body.style.overflow = '';
+      closeModalA11y(compareModal.querySelector('.gs-modal__content'));
+    }
   }
 
   // Profile Modal Renderer
@@ -1060,12 +1101,14 @@
     modal.classList.add("open");
     document.body.style.overflow = "hidden";
     retranslate();
+    openModalA11y(modal.querySelector('.gs-modal__content'), closeModal);
   }
 
   function closeModal() {
     if (modal) {
       modal.classList.remove("open");
       document.body.style.overflow = "";
+      closeModalA11y(modal.querySelector('.gs-modal__content'));
     }
   }
 
@@ -1347,6 +1390,7 @@
     modal.classList.add('open');
     document.body.style.overflow = 'hidden';
     retranslate();
+    openModalA11y(modal.querySelector('.gs-modal__content'), closeModal);
   }
 
   /* =========================================================================
@@ -1385,9 +1429,9 @@
           : `<button type="button" class="btn-gs-outline btn-log-outcome" data-booking-id="${esc(b.id)}" style="padding:6px 14px;font-size:.78rem;">📋 Log the Outcome</button>`}
         <div class="gs-outcome-inline" id="gsOutcomeForm_${esc(b.id)}">
           <div class="gs-outcome-inline__choices">
-            <span class="gs-outcome-choice" data-val="yes">✅ Worked</span>
-            <span class="gs-outcome-choice" data-val="partial">🟡 Partially helped</span>
-            <span class="gs-outcome-choice" data-val="no">❌ Didn't help</span>
+            <button type="button" class="gs-outcome-choice" data-val="yes" aria-pressed="false">✅ Worked</button>
+            <button type="button" class="gs-outcome-choice" data-val="partial" aria-pressed="false">🟡 Partially helped</button>
+            <button type="button" class="gs-outcome-choice" data-val="no" aria-pressed="false">❌ Didn't help</button>
           </div>
           <button type="button" class="gs-outcome-mic" id="gsVoiceOutcome_${esc(b.id)}" title="Speak your outcome instead of typing" style="display:none;"></button>
           <textarea class="gs-textarea" placeholder="Optional — what happened? (helps other farmers)" rows="2" style="min-height:60px;"></textarea>
@@ -1458,8 +1502,9 @@
       const submitBtn = row.querySelector('.btn-submit-outcome');
       row.querySelectorAll('.gs-outcome-choice').forEach((chip) => {
         chip.addEventListener('click', () => {
-          row.querySelectorAll('.gs-outcome-choice').forEach((c) => c.classList.remove('selected'));
+          row.querySelectorAll('.gs-outcome-choice').forEach((c) => { c.classList.remove('selected'); c.setAttribute('aria-pressed', 'false'); });
           chip.classList.add('selected');
+          chip.setAttribute('aria-pressed', 'true');
           selected = chip.dataset.val;
           if (submitBtn) submitBtn.disabled = false;
         });
@@ -1700,7 +1745,16 @@
     if (!card || !head || !input || !canvas || !runBtn) return;
     const ctx = canvas.getContext('2d');
 
-    head.addEventListener('click', () => card.classList.toggle('open'));
+    function toggleScanCard() {
+      const isOpen = card.classList.toggle('open');
+      head.setAttribute('aria-expanded', String(isOpen));
+    }
+    head.addEventListener('click', toggleScanCard);
+    head.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      e.preventDefault();
+      toggleScanCard();
+    });
 
     input.addEventListener('change', (e) => {
       const file = e.target.files[0];
@@ -1781,20 +1835,29 @@
 
   // FAQ Accordion Functions
   const faqHeaders = document.querySelectorAll(".gs-faq-header");
+  function toggleFaqHeader(header) {
+    const item = header.parentElement;
+    const isOpen = item.classList.contains("open");
+
+    // Height comes from the grid-template-rows transition in CSS now, so
+    // there is nothing to measure or reset here.
+    document.querySelectorAll(".gs-faq-item").forEach(other => {
+      other.classList.remove("open");
+      const otherHeader = other.querySelector(".gs-faq-header");
+      if (otherHeader) otherHeader.setAttribute("aria-expanded", "false");
+    });
+
+    if (!isOpen) {
+      item.classList.add("open");
+      header.setAttribute("aria-expanded", "true");
+    }
+  }
   faqHeaders.forEach(header => {
-    header.addEventListener("click", function () {
-      const item = this.parentElement;
-      const isOpen = item.classList.contains("open");
-
-      // Height comes from the grid-template-rows transition in CSS now, so
-      // there is nothing to measure or reset here.
-      document.querySelectorAll(".gs-faq-item").forEach(other => {
-        other.classList.remove("open");
-      });
-
-      if (!isOpen) {
-        item.classList.add("open");
-      }
+    header.addEventListener("click", function () { toggleFaqHeader(this); });
+    header.addEventListener("keydown", function (e) {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      e.preventDefault();
+      toggleFaqHeader(this);
     });
   });
 

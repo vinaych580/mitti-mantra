@@ -619,8 +619,13 @@
   scene.add(shadowPlane);
 
   /* ---------- Interactivity ---------- */
+  // The global CSS prefers-reduced-motion kill-switch (style.css) only zeroes
+  // CSS animation/transition durations -- it has no effect on this rAF loop,
+  // so a vestibular-sensitive visitor gets a continuously spinning globe
+  // regardless of their OS setting unless it's checked here directly.
+  const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let isDragging = false, didDrag = false, lastX = 0, lastY = 0;
-  let autoRotate = true;
+  let autoRotate = !prefersReducedMotion;
   let zoom = 9.5;
   let targetZoom = zoom;
 
@@ -800,6 +805,7 @@
 
   let autoTimer;
   function resumeAuto() {
+    if (prefersReducedMotion) return;
     clearTimeout(autoTimer);
     autoTimer = setTimeout(() => { if (!selected) autoRotate = true; }, 6000);
   }

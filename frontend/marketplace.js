@@ -37,11 +37,53 @@
   const inr = (v) => (window.MM && window.MM.fmt) ? window.MM.fmt.inr(v, { compact: false }) : '₹' + Number(v || 0).toLocaleString('en-IN');
   const toast = (window.MM && window.MM.toast) || function (msg) { console.log(msg); };
 
+  /* ----------------------------------------------------------------------
+     On-demand script/style loading — Chart.js and Leaflet are only needed
+     for the price-trend chart and the Nearby Demand map respectively, not
+     on every page view, so they're fetched the first time either is
+     actually used instead of unconditionally in <head>.
+  ---------------------------------------------------------------------- */
+  const scriptLoadPromises = new Map();
+  function loadScriptOnce(src, attrs) {
+    if (scriptLoadPromises.has(src)) return scriptLoadPromises.get(src);
+    const p = new Promise((resolve, reject) => {
+      const el = document.createElement('script');
+      el.src = src;
+      Object.entries(attrs || {}).forEach(([k, v]) => el.setAttribute(k, v));
+      el.onload = resolve;
+      el.onerror = () => reject(new Error('Failed to load ' + src));
+      document.head.appendChild(el);
+    });
+    scriptLoadPromises.set(src, p);
+    return p;
+  }
+  function loadStyleOnce(href) {
+    if (document.querySelector(`link[href="${href}"]`)) return;
+    const el = document.createElement('link');
+    el.rel = 'stylesheet';
+    el.href = href;
+    document.head.appendChild(el);
+  }
+  function ensureChartJs() {
+    if (window.Chart) return Promise.resolve();
+    return loadScriptOnce('https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js');
+  }
+  function ensureLeaflet() {
+    if (window.L) return Promise.resolve();
+    loadStyleOnce('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css');
+    return loadScriptOnce('https://unpkg.com/leaflet@1.9.4/dist/leaflet.js', {
+      integrity: 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=',
+      crossorigin: '',
+    });
+  }
+
   /* Same palette dashboard.js uses for its charts, kept in sync for visual consistency. */
   const BRAND = '#2f6b3a', ACCENT = '#c88a3a';
   const CHART_REGISTRY = new Map();
-  function makeMktChart(canvasEl, config) {
-    if (!canvasEl || !window.Chart) return null;
+  async function makeMktChart(canvasEl, config) {
+    if (!canvasEl) return null;
+    await ensureChartJs();
+    if (!window.Chart) return null;
     const prev = CHART_REGISTRY.get(canvasEl);
     if (prev) prev.destroy();
     const chart = new window.Chart(canvasEl.getContext('2d'), config);
@@ -497,7 +539,15 @@
 
     const search = document.getElementById('mktSearch');
     if (search) {
-      search.addEventListener('input', () => { state.filters.q = search.value.trim(); state.page = 1; renderGrid(); });
+      let searchDebounce = null;
+      search.addEventListener('input', () => {
+        clearTimeout(searchDebounce);
+        searchDebounce = setTimeout(() => {
+          state.filters.q = search.value.trim();
+          state.page = 1;
+          renderGrid();
+        }, 250);
+      });
     }
 
     const clearBtn = document.getElementById('fClear');
@@ -776,9 +826,9 @@
     </div>`;
   }
 
-  function renderPriceTrendChart(chartId, insight) {
+  async function renderPriceTrendChart(chartId, insight) {
     const canvas = document.getElementById(chartId);
-    if (!canvas || !window.Chart) return;
+    if (!canvas) return;
     const hist = (insight.chart && insight.chart.history) || [];
     const fcst = (insight.chart && insight.chart.forecast) || [];
     if (hist.length < 2) return;
@@ -791,7 +841,7 @@
       .concat([hist[hist.length - 1].price])
       .concat(fcst.map((f) => f.price));
 
-    makeMktChart(canvas, {
+    await makeMktChart(canvas, {
       type: 'line',
       data: {
         labels,
@@ -2002,8 +2052,8 @@
           <span>${esc(l.sellerName)} · ${inr(l.pricePerUnit)}/${esc(l.unit)}</span>
         </div>
         <div class="mkt-cart-row__qty">
-          <input type="number" min="${l.minOrderQty}" step="1" value="${c.quantity}" data-qty-for="${esc(l.id)}">
-          <span>${esc(l.unit)}</span>
+          <input type="number" min="${l.minOrderQty}" step="1" value="${c.quantity}" data-qty-for="${esc(l.id)}" aria-label="Quantity of ${esc(l.name)} (${esc(l.unit)})">
+          <span aria-hidden="true">${esc(l.unit)}</span>
         </div>
         <div class="mkt-cart-row__total" data-total-for="${esc(l.id)}">${inr(c.quantity * l.pricePerUnit)}</div>
         <button type="button" class="btn btn-ghost mkt-btn-sm mkt-btn-danger" data-remove="${esc(l.id)}">Remove</button>
@@ -2131,11 +2181,13 @@
      Nearby Demand (demo signals)
   ---------------------------------------------------------------------- */
   let demandMapInstance = null;
-  function renderDemandMap() {
+  async function renderDemandMap() {
     const mapEl = document.getElementById('mktDemandMap');
-    if (!mapEl || !window.L) return;
+    if (!mapEl) return;
     const withCoords = DEMAND.filter((d) => typeof d.lat === 'number' && typeof d.lon === 'number');
     if (!withCoords.length) { mapEl.style.display = 'none'; return; }
+    await ensureLeaflet();
+    if (!window.L) return;
 
     // Leaflet throws if you re-init a container that already has a map —
     // this view can be re-rendered (tab revisits), so tear down first.

@@ -4612,9 +4612,15 @@ section {
 
 /* ---- Buttons: press feedback + sheen ---- */
 .btn {
-  will-change: transform;
   position: relative;
   overflow: hidden;
+}
+
+/* Scoped to the states that actually animate a transform, rather than a
+   permanent compositor layer on every button on screen at rest. */
+.btn:hover,
+.btn:active {
+  will-change: transform;
 }
 
 .btn:active {
@@ -5244,8 +5250,8 @@ html {
 }
 
 .login__error {
-  background: #fef2f2;
-  color: #b91c1c;
+  background: var(--danger-soft, #fef2f2);
+  color: var(--danger, #b91c1c);
   font-size: .84rem;
   padding: 10px 14px;
   border-radius: var(--r-sm);
@@ -5279,7 +5285,7 @@ html {
 .login__footer {
   margin-top: 20px;
   font-size: .75rem;
-  color: var(--ink-faint);
+  color: var(--ink-soft);
   text-align: center;
 }
 

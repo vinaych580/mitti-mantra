@@ -981,13 +981,94 @@ DISEASE_METADATA = {
     }
 }
 
+# ---------------------------------------------------------------------------
+# D-8: minimal per-IP rate limit for /api/disease/predict.
+#
+# This endpoint is fully public and farmer-facing by design (unlike the
+# admin-gated training/expense endpoints elsewhere in this file, which use
+# an X-Admin-Key check) -- it must keep working with no login. It also does
+# real per-request work (base64 decode + image feature extraction), so it's
+# the one public ML endpoint worth throttling. There is no rate-limiting
+# library anywhere in requirements.txt, so this is a small dependency-free
+# fixed-window counter keyed by client IP.
+#
+# Honest limitation: `_disease_rate_limit_log` is a plain process-local
+# dict, not a shared store. It resets on every cold start and is NOT
+# shared across concurrent serverless instances, so this only throttles
+# repeat calls that land on the *same* warm instance -- it is a best-effort
+# speed bump against casual/accidental abuse, not a hard guarantee against
+# a determined or distributed caller. A real guarantee would need a shared
+# store (e.g. Redis) fronting all instances.
+# ---------------------------------------------------------------------------
+# `time`/`threading` are imported here (rather than assumed from the
+# `import time` / `import threading` further down in this file's "Phase 6"
+# section) so this block works correctly regardless of where in the file
+# it lives -- re-importing an already-imported stdlib module is a cheap,
+# safe no-op.
+import time
+import threading
+
+_DISEASE_RATE_LIMIT_WINDOW_SEC = 60
+_DISEASE_RATE_LIMIT_MAX_REQUESTS = 15
+_disease_rate_limit_lock = threading.Lock()
+_disease_rate_limit_log: Dict[str, List[float]] = {}
+
+
+def _disease_rate_limit_check(client_ip: str) -> bool:
+    """Record a call from `client_ip` and report whether it's within budget.
+
+    Returns True (and records the call) if `client_ip` has made fewer than
+    `_DISEASE_RATE_LIMIT_MAX_REQUESTS` calls in the trailing
+    `_DISEASE_RATE_LIMIT_WINDOW_SEC` seconds; False if it should be
+    rejected with 429 (in which case the call is NOT recorded again).
+    """
+    now = time.time()
+    window_start = now - _DISEASE_RATE_LIMIT_WINDOW_SEC
+    with _disease_rate_limit_lock:
+        # Cap distinct tracked IPs so a long-lived warm instance seeing many
+        # unique callers can't grow this dict without bound.
+        if len(_disease_rate_limit_log) >= 5000:
+            _disease_rate_limit_log.clear()
+        timestamps = [t for t in _disease_rate_limit_log.get(client_ip, []) if t > window_start]
+        if len(timestamps) >= _DISEASE_RATE_LIMIT_MAX_REQUESTS:
+            _disease_rate_limit_log[client_ip] = timestamps
+            return False
+        timestamps.append(now)
+        _disease_rate_limit_log[client_ip] = timestamps
+        return True
+
+
 @app.post("/api/disease/predict")
-async def predict_disease_api(req: DiseasePredictQuery):
+async def predict_disease_api(req: DiseasePredictQuery, request: Request):
     """
     Preliminary visual screening using HSV colour and texture heuristics.
     This is not a validated diagnostic model and must not be used as a basis
     for pesticide use or other irreversible farm decisions.
     """
+    # D-8: enforced *before* the try/except below -- that except clause
+    # catches Exception broadly and re-raises everything as a 400, which
+    # would otherwise swallow a 429 (HTTPException is itself an Exception)
+    # and turn it into a misleading "Inference failure" 400.
+    #
+    # Prefer X-Forwarded-For: on Vercel (where this actually runs) the edge
+    # sets/overwrites this header itself and explicitly does not forward a
+    # caller-supplied value, specifically to prevent IP spoofing -- see
+    # https://vercel.com/docs/headers/request-headers#x-forwarded-for -- so
+    # it reflects the real client there. `request.client.host` is the
+    # correct fallback for local/dev runs and tests, where there's no
+    # Vercel edge in front and this header is simply absent.
+    _xff = request.headers.get("x-forwarded-for")
+    client_ip = _xff.split(",")[0].strip() if _xff else (request.client.host if request.client else "unknown")
+    if not _disease_rate_limit_check(client_ip):
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail=(
+                f"Too many disease-scan requests from this address. Limit is "
+                f"{_DISEASE_RATE_LIMIT_MAX_REQUESTS} per {_DISEASE_RATE_LIMIT_WINDOW_SEC}s "
+                f"-- please wait a moment and try again."
+            ),
+        )
+
     import base64
     import io
     import hashlib
@@ -1358,7 +1439,7 @@ async def get_yield_prediction_api(q: YieldPredQuery = Depends()):
         return cached
         
     try:
-        from ml.predict import predict_yield_kg_per_acre, _load_weather_by_region, _load_soil_by_region
+        from ml.predict import _predict_yield_with_source, _load_weather_by_region, _load_soil_by_region
         weather_data = _load_weather_by_region()
         soil_data = _load_soil_by_region()
         
@@ -1376,7 +1457,18 @@ async def get_yield_prediction_api(q: YieldPredQuery = Depends()):
             "k_kg_per_acre": float(soil_data.get(region_id, {}).get("k_kg_per_acre", 20)),
             "organic_carbon_percent": float(soil_data.get(region_id, {}).get("organic_carbon_percent", 0.5))
         }
-        yld = predict_yield_kg_per_acre(crop_id, region_id, season, weather, soil, irrigation_level)
+        # FIX (B-15): predict_yield_kg_per_acre() discarded whether ML actually
+        # fired for *this* call (it silently falls back to the heuristic
+        # formula per-call, e.g. for a crop/region/season combo unseen by the
+        # model's encoder) -- so the response below used to hardcode the ML
+        # algorithm name even on a heuristic-fallback call. Call the
+        # source-reporting variant instead, the same one /api/crop's
+        # per-crop scorer already uses (see ml/predict.py's `used_ml_for_yield`
+        # in `_score_single_crop`), so this endpoint's "algorithm" claim
+        # reflects what actually happened for this specific call.
+        yld, used_ml_for_yield = _predict_yield_with_source(
+            crop_id, region_id, season, weather, soil, irrigation_level
+        )
 
         # 95% confidence interval: ±1.96 * RMSE, RMSE read live from the
         # yield model's audit report so the band tracks whatever model is
@@ -1395,7 +1487,12 @@ async def get_yield_prediction_api(q: YieldPredQuery = Depends()):
                 "lower_bound": round(lower_bound, 2),
                 "upper_bound": round(upper_bound, 2)
             },
-            "algorithm": "RandomForestRegressor (Tuned)",
+            # Honest per-call label instead of a hardcoded claim -- mirrors the
+            # prediction_source convention already used by /api/crop,
+            # /api/disease/predict, rotation, and optimal-mix (AUDIT_REPORT.md
+            # H-11 / B-15).
+            "algorithm": "RandomForestRegressor (Tuned)" if used_ml_for_yield else "Heuristic Formula (agronomic calculation)",
+            "prediction_source": "ml_model" if used_ml_for_yield else "heuristic",
             "intelligence_report": explanation
         }
         set_cached_response(cache_key, res)

@@ -1,251 +1,179 @@
-# Independent Code Audit — Mitti Mantra / AgriSim
+# Independent Code Audit — Mitti Mantra / AgriSim (Pass 2)
 
-**Scope:** full repository (~30,700 lines of frontend JS, ~9,800 lines of backend/ML Python) — FastAPI backend, vanilla-JS multi-page frontend, sklearn ML pipeline, data-ingestion layer, intent-based chatbot with i18n.
-**Method:** seven parallel deep-read audits (not grep-sampling) tracing real request/response/state flows, cross-checked against actual running code — several ML/chatbot findings were empirically reproduced by executing the real functions against the real dataset and models, not inferred from reading alone. The full test suite was run (49/49 passing).
-**Posture:** the codebase was treated as untrusted regardless of comments, docstrings, or architecture-doc claims. Every claim below was checked against the code that actually runs.
+**Scope:** full repository, re-audited after two fix commits (`618100a`, `1dd2bdd`) addressed Pass 1's findings, plus one new feature commit (`7b83908` — regional benchmark panel, mandi arbitrage globe, spoken daily briefing) that had not been audited at all.
+**Method:** five independent parallel audits (backend/ML, chatbot/i18n, frontend dashboard/state, marketplace/booking/Gyan Seva, data-ingestion/deployment/security/tests), each doing full deep-reads of its files — not grep-sampling — and empirically verifying claims by executing real code against real data/models wherever possible, cross-checked against `git diff`/`git show` on the actual fix commits rather than trusting commit messages. The full test suite was run fresh: **49/49 passing**.
+**Posture:** same as Pass 1 — every claim below was checked against the code that actually runs, including the fixes themselves.
 
 ---
 
 ## 1. Executive Summary
 
-This is a substantially more honest codebase than the marketing-flavored commit history ("real fleet diversity", "AI pre-screening", "verified outcomes") suggests — most large feature areas (tractor booking, marketplace, Gyan Seva consultations, offline mode, synthetic NDVI) **disclose their own limitations in-code and in-UI**. That said, the audit surfaced three **critical, empirically-confirmed defects in the ML/chatbot core** that undermine the product's central value proposition, plus a cluster of high-severity bugs in state management, deployment configuration, and input handling.
+The two fix commits did real, verifiable work. Of Pass 1's ~40 numbered findings, roughly **30 are cleanly fixed** — including the two most damning ones: the crop-recommendation model now covers all 32 crops (was 12), and the audit pipeline's train/test leakage is now empirically **0.0%** row-hash overlap (was 83.6%). Several fixes are traceable in-code, with the finding ID cited directly in a comment next to the change — a good practice worth continuing.
 
-**The three critical findings, in one sentence each:**
+But three patterns recur across the five reports that are worth naming before the individual findings:
 
-1. The crop-recommendation ML model **structurally never predicts rice, wheat, maize, cotton, soybean, sugarcane, potato, or tomato** — 20 of 32 crops are absent from its training labels, confirmed by loading the deployed model and inspecting `.classes_` (12 crops only). Every recommendation call for a staple crop is permanently handicapped by 15% of its smart-score for reasons that have nothing to do with soil or climate fit.
-2. The chatbot's language auto-detection treats the platform's own English vocabulary word **"mandi"** as a Hindi trigger, and once triggered the session is **permanently locked into Hindi** — confirmed by executing `detect_lang()` and `answer()` against real messages, including the bot's own suggestion chips.
-3. `/api/ml/status`, the public endpoint meant to report deployed-model quality, serves metrics from a **different model with a different algorithm** (CatBoost, from an unwired evaluation script) than what is actually loaded and serving predictions (RandomForest) — and the audit pipeline behind those numbers has **83.6% train/test leakage**, empirically measured by re-deriving both splits and hashing row overlap.
+1. **Some fixes patched the instance, not the class of bug.** C-4 removed "mandi"/"kisan" from the Hindi false-positive word list; the audit found "hum" and "aap" — ordinary English words — still in the same list, causing the identical failure mode (an English message about a borewell "hum" gets answered entirely in Hindi). H-11's `prediction_source` honesty fix reached three endpoints but not its sibling `/api/yield`, which still hardcodes an algorithm name even when it silently used the heuristic fallback.
+2. **One fix from today doesn't actually run.** Commit `1dd2bdd` (today) added a new MSP-vs-market comparison handler to the chatbot, but an earlier, unconditional branch intercepts the message first — the new code is dead. `/mspvsmarket` and "msp vs market for rice" both still return a raw JSON dump instead of the intended comparison.
+3. **A partial fix can still ship the core defect.** Tractor booking now has a same-device date-conflict check, but it checks a different data structure than the one (`.availability`) the UI actually reads to show "Available" — so cards still show availability that isn't enforced, and cross-device double-booking is completely open, same as Pass 1.
 
-Beyond the ML core, high-severity issues include: a broken `/marketplace` route in the actual Vercel deployment (works locally, 404s in production), a frontend error handler that silently converts real backend validation errors into a fabricated "you're offline" message, a tractor-booking flow that never actually blocks double-booking, and 4 of 12 documented chatbot slash-commands that are dead on arrival. None of these are hypothetical — each was reproduced or directly evidenced in code.
+The newest feature work (`7b83908`, one day old, not yet audited before now) came back clean on the "did it fabricate anything" question — it reuses real endpoints, fails gracefully, and doesn't invent numbers. It did introduce one real bug (a spoken-briefing double-click race) and had one side effect nobody was watching for: fixing the crop-recommendation model to cover all 32 crops nearly doubled the deployed model bundle (60MB → 112.7MB) against an unchanged 1024MB Vercel memory cap.
 
-**No critical security vulnerabilities** were found (no auth bypass, no injection, no exposed secrets, sensible CORS, admin-gated training/expense endpoints fail closed). Security findings are real but Medium/Low (an unauthenticated image-decoding endpoint with no dimension cap, inconsistent client-input trust between `crop_id` and `region_id/season` in the chatbot, an XSS-consistency gap on one static field).
-
-**Test suite:** 49/49 tests pass, but coverage is concentrated almost entirely in the user-facing request path; roughly **57–60% of backend/engine/ML/data-ingestion modules have zero direct test coverage**, concentrated in the data-ingestion/fetcher layer and the ML training/audit scripts — which is exactly where two of the three critical findings live.
+**The single most important finding is C-23** (below): it's not a subtle edge case, it's the bot's own UI leading a first-class-supported-language user into an unrecoverable loop.
 
 ---
 
-## 2. Architecture Assessment
+## 2. Findings — Backend & ML (`B-`)
 
-The documented architecture (`docs/ARCHITECTURE.md`) is mostly accurate to the code — single FastAPI process, mtime-based CSV cache, three lazily-loaded sklearn models with heuristic fallbacks, intent-based (non-LLM) chatbot, zero-build vanilla-JS frontend, service-worker PWA shell. Verified true. Where it diverges from reality:
+*Scope: `backend/main.py`, `backend/models.py`, `ml/predict.py`, `ml/train_models.py`, `ml/evaluate_models.py`, `ml/audit_models.py`, `utils/calculations.py`, `utils/csv_cache.py`, `engine/simulator.py`, `engine/features.py`.*
 
-- **The ML "heuristic fallback" safety net is not as protective as documented.** The architecture doc frames `prediction_source` as an honest signal of ML-vs-heuristic provenance. In practice (§ Finding E-4) it reflects whether a model *object* is loaded in the process, not whether that specific prediction actually used it — so a caller cannot trust the field for what it's documented to mean.
-- **A second, substantial subsystem — the entire `data_ingestion/etl_pipeline.py` / `feature_pipeline.py` stack and 7 of 10 fetchers — is dead code**, disconnected from every production request path and from the actual training pipeline (`ml/train_models.py` reads CSVs directly and never touches this pipeline's output). This isn't documented as deprecated anywhere; a maintainer would reasonably assume it's live.
-- **Two independent, disagreeing "audit trails" exist for ML model quality** (`ml/evaluate_models.py`/`audit_models.py` vs. `ml/train_models.py`), and the public status endpoint reads from the wrong one (Finding E-2).
-- **The frontend's "zero build" philosophy is real and consistently applied**, but it has a real cost: no shared error-handling layer, no shared HTML-escaping discipline (some files rigorously escape, others don't), and a 2,778-line "god file" (`dashboard.js`) with duplicated per-tool wiring patterns that have already begun to drift (4 of ~20 forms null-guard their DOM lookup, the rest don't).
-- **State persistence is client-only (localStorage) for every major transactional feature** — tractor bookings, marketplace listings, consultation bookings. This is disclosed in-UI for most of these, but it means "Marketplace" and "Book a Tractor" are not yet multi-party systems; they're same-device simulations of one, which is the single most consequential fact for anyone evaluating those features as complete.
+| ID | Severity | Status | Finding | file:line | Evidence |
+|---|---|---|---|---|---|
+| B-1 | Critical | FIXED | `/api/ml/status` reads the manifest for the model actually loaded, not an orphaned eval script's manifest | main.py:711-748 | live manifest.json mtime current; orphaned evaluation_manifest.json ~92hr stale and unread elsewhere |
+| B-2 | Critical | FIXED | Train/test leakage in the audit pipeline eliminated | train_models.py:94-123, audit_models.py:36-113 | rebuilt split + row-hash overlap: **0/12000 (0.0%)**, was 83.6% |
+| B-3 | High | FIXED | numpy pin matches installed/tested version | requirements.txt:11 | `numpy==2.5.1` pinned and installed, exact match |
+| B-4 / B-15 | Medium | PARTIALLY-FIXED | `prediction_source` honesty fix didn't reach `/api/yield` — it still hardcodes `"RandomForestRegressor (Tuned)"` even when the heuristic silently fired | ml/predict.py:372-437 (fixed) vs backend/main.py:1398 (not) | forced an unseen region → `used_ml_for_yield=False`, but the endpoint discards that flag and always claims the ML algorithm |
+| B-5 | Medium | FIXED | `/api/crop-comparison` rejects non-positive budget/area | main.py:278-279 | validation guard present |
+| B-6 | Medium | FIXED | All 4 previously-unwired Pydantic query models now wired via `Depends()` | main.py:1298,1348,1434,1455 | confirmed on all 4 endpoints |
+| B-7 | Medium | FIXED | NDVI docstring and payload both disclose it's not satellite imagery | main.py:324-333 | explicit "NOT real Sentinel-2" docstring + `is_estimate:true` payload field |
+| B-8 | Medium | FIXED | CSV cache write is now compare-and-swap, can't be clobbered by a stale slow parse | csv_cache.py:62-74 | mtime guard added around the write |
+| B-9 | Medium | PARTIALLY-FIXED | Disease-outbreak risk now genuinely scoped by `crop_id`; `region_id` is still accepted but never used to fetch regional weather | features.py:852-951 | two climatically opposite regions still produce byte-identical risk output |
+| B-10 | Medium | FIXED | Fabricated rainfall/12 humidity proxy replaced with a documented constant | features.py:874-883 | `DEFAULT_HUMIDITY_PCT = 65.0` with IMD-climatology rationale |
+| B-11 | Medium | FIXED | Audit manifest now auto-regenerates every training run | train_models.py:706-749 | manifest + audit_metrics.json mtimes 0.14s apart |
+| B-12, B-13 | Medium | FIXED | `catboost` and `pandas` moved to requirements-dev.txt, out of the production bundle | requirements*.txt | confirmed via `pip show` in venv |
+| B-14 | Medium (potential) | STILL-PRESENT, WORSE | Joblib bundle nearly doubled (60MB→112.7MB) fixing B-1's sibling (32-crop retrain), same unchanged 1024MB Vercel cap | vercel.json:5,7 | recommend_model.joblib alone: 30.7MB → 82.5MB |
+| B-16 | Low | NEW | Two dev-only holdout joblib files (920KB combined) get bundled into the production Lambda by the `*.joblib` glob | vercel.json:5 | only read by dev-only audit script, never on the live request path |
+| B-17 | Low | NEW | `audit_models.py` unconditionally imports pandas; a strict `requirements.txt`-only install would silently stop the audit-manifest refresh (swallowed exception) rather than error loudly | audit_models.py:8; train_models.py:712-718 | masked today only because pandas happens to be present in the dev venv |
+| B-18 | Medium | NEW | `/api/yield`'s "95% confidence interval" is statistically correct but practically useless — routinely 3-6x the predicted value, always clamped to 0 on the low end | main.py:1384-1398 | wheat/UP: predicted 1471.5 → CI [0, 6190.1] (421% width) |
 
----
+## 3. Findings — Chatbot & i18n (`C-`)
 
-## 3. Complete Findings List (ranked by severity)
+*Scope: `backend/chatbot.py`, `engine/chatbot_i18n.py`, `frontend/chatbot.js`, `tests/test_chatbot.py`. All verified by executing real code against realistic EN/HI/TE/KN input.*
 
-Severity legend: **Critical** (breaks a core value proposition or causes silent data/financial corruption) · **High** (broken user-facing flow, or a defect a user will hit in normal use) · **Medium** (real but narrower-impact defect) · **Low** (cosmetic, hygiene, or narrow-condition defect). Confidence is CONFIRMED (reproduced or read to certainty) unless marked POTENTIAL.
+| ID | Severity | Status | Finding | file:line | Evidence |
+|---|---|---|---|---|---|
+| C-4 | Critical | FIXED (see C-21) | "mandi"/"kisan" removed from Hindi-trigger word list | chatbot_i18n.py:55-61 | `detect_lang("mandi price of wheat")→"en"` |
+| C-5 | High | FIXED | Generic direction words no longer silently resolve to a wrong specific region | chatbot.py:174-220 | `_find_region("west")→None` (honest fallback, not fake district data) |
+| C-6 | High | FIXED | `/pest`, `/irrigate`, `/calendar`, `/sell` all now have a "which crop?" branch | chatbot.py:1216-1284 | all 4 bare commands prompt for a crop instead of falling through |
+| C-7 | High | FIXED | Budget/area extraction now bound by nearest keyword, immune to sentence reordering | chatbot.py:256-327 | both phrasing orders produce identical, correct values |
+| C-13 | Medium | FIXED | `context.region_id`/`season` validated before reaching engine calls | chatbot.py:1170-1180 | forged values → clean reply, no raw `ValueError` leak |
+| C-14 | Medium | PARTIALLY-FIXED | English "suggest(ion)" trigger now requires a crop/grow/plant/sow word; the Hindi equivalent (सुझाव) was never given the same restriction | chatbot.py:1201-1209 (fixed) vs chatbot_i18n.py:283 (not) | Hindi "suggestion for pest in rice" still misroutes to "which region?" |
+| C-15 | Medium | FIXED | Greeting only short-circuits on a whole-message match | chatbot.py:1142-1153 | "hey what is msp" returns real MSP data, not a canned greeting |
+| C-16 | Medium | FIXED | "paddy"/"basmati"/"sarson" now resolve to their real crops | chatbot.py:140-144 | confirmed for all three |
+| C-17 | Medium | FIXED | Pest/irrigation replies now use real per-region weather instead of a fixed 28°C/800mm default | chatbot.py:81-105 | two regions produce genuinely different, dataset-derived numbers |
+| C-18 | Low | STILL-PRESENT | Chatbot's first-open greeting hardcoded in English regardless of site language | chatbot.js:399-405 | never reads the page's `lang` attribute, unlike its own TTS/speech code two lines away |
+| C-19 | Low | PARTIALLY-FIXED | i18n catalog now covers 4 chatbot strings; ~6 more still missing (aria-labels, TTS button, error strings) | i18n-data.js:288-292 | |
+| C-20 | Low | STILL-PRESENT | Dynamically-injected chat DOM is never re-translated on a language switch | chatbot.js (whole file) | unlike 4 sibling files that all call `retranslate()` after mutating DOM |
+| **C-21** | **High** | **NEW — same bug class as C-4** | `_HINGLISH_WORDS` still contains real English words ("hum", "aap") that force an entire English reply into Hindi | chatbot_i18n.py:55-61 | `"I hear a hum from the borewell motor"→"hi"`; bare `"Namaste"` (also a valid EN greeting) → full Hindi wall of text |
+| **C-22** | **High** | **NEW — today's own fix is dead code** | The MSP-vs-market comparison handler added *today* (`1dd2bdd`) never executes — an earlier unconditional "plain MSP" branch intercepts first | chatbot.py:1196-1199 (blocks) vs 1221-1229 (new, unreachable) | `/mspvsmarket` and "msp vs market for rice" both return a raw JSON dump, not a comparison |
+| **C-23** | **Critical** | **NEW — self-inflicted, unrecoverable in-product** | `STATE_SYNONYMS` is missing several states per language; Kannada is missing **Telangana** — the flagship demo region used in every language's own greeting/suggestion chips | chatbot_i18n.py:219-239 | KN user clicks the bot's own suggested chip ("recommend for Telangana Medak") → identical unresolved "which region?" reply with the identical chip again. **Infinite loop, self-triggered by the product's own UI.** |
+| C-24 | Medium | NEW | The crop/grow/plant/sow gate added for C-14 is exact-word only, doesn't match "-ing" forms | chatbot.py:1207 | "suggestions for growing rice" dead-ends despite naming a real crop |
+| C-25 | Medium | NEW | When no season is stated (the common case), weather is averaged across kharif+rabi even though the irrigation schedule is hardcoded to a kharif sowing date | chatbot.py:81-105 vs 726 | ~50% rainfall understatement for an implicitly-kharif schedule |
+| C-26 | Low | NEW | Zero regression-test coverage for any of the 9 previously-fixed bugs | test_chatbot.py | 7 tests are all "reply is non-empty" smoke checks — exactly the kind of test that would have caught C-21/C-22 as regressions and didn't exist to do so |
 
-### CRITICAL
+## 4. Findings — Frontend Dashboard & State (`F-`)
 
-| # | Area | Finding |
-|---|---|---|
-| **C-1** | ML | Crop-recommendation model never predicts 20/32 crops incl. rice/wheat/maize/cotton/soybean/sugarcane — `ml/train_models.py:444-517`, `ml/predict.py:796-807`. **Empirically confirmed** by loading `recommend_model.joblib` and inspecting `.classes_` (only 12 crops present). |
-| **C-2** | ML / API | `/api/ml/status` reports quality metrics for a different, unwired model (CatBoost) than the one actually loaded and serving (RandomForest) — `backend/main.py:672-705,678`. **Confirmed** via file mtimes and direct joblib loading. |
-| **C-3** | ML | `ml/evaluate_models.py`/`audit_models.py`'s "test" data is 83.6% identical (by row hash) to the currently-deployed model's own training data — train/test leakage inflates every reported R²/accuracy figure. **Empirically confirmed** by reconstructing both splits. |
-| **C-4** | Chatbot | `detect_lang()` treats the English word **"mandi"** — the platform's own vocabulary — as a Hindi trigger; once triggered, `context.lang` is sticky for the rest of the session, permanently flipping an English conversation to Hindi. `engine/chatbot_i18n.py:45-65`, `backend/chatbot.py:794,800`. **Empirically confirmed** by executing `detect_lang()`/`answer()`. |
+*Scope: `dashboard.js` (3043 lines, read in full), `dashboard.html`, `mm-core.js`, `mm-enhance.js`, `mm-plots.js`, `farm-state.js`, `toolbar.js`, `india-globe.js`, `sw.js`.*
 
-### HIGH
+| ID | Severity | Status | Finding | file:line | Evidence |
+|---|---|---|---|---|---|
+| F-1 | High | FIXED | `api()` no longer folds real HTTP errors into the fake-offline fallback path | dashboard.js:143-197 | `HttpError` explicitly excluded from the offline branch |
+| F-2 | High | FIXED | Switching farm plots now refreshes all dependent dashboard state | dashboard.js:2579-2625 | `mm:plot-changed` listener added, re-renders farm context |
+| F-3 | Medium | FIXED | Farm bar now reacts to cross-tab storage events like the plot dropdown already did | mm-core.js:368-381 | listener mirrors the pre-existing one |
+| F-4 | Medium | FIXED | Farm-state writes report persistence failure instead of always claiming success | farm-state.js:258-292 | `_writeStore()` returns a real `persisted` boolean, propagated up |
+| F-5 | Medium | PARTIALLY-FIXED | Disease-log queue no longer silently deleted; still isn't synced anywhere (no backend endpoint exists to sync to) | dashboard.js:2804-2830 | capped at 50 entries instead of deleted; still just `console.log`s |
+| F-6 | Medium | PARTIALLY-FIXED | Every tool now shows an honest offline message; computed offline fallback still limited to 2 of 22 tools | dashboard.js:179-244 | by-design scope limit, not a bug, but still a real gap vs. the product's offline-resilience positioning |
+| F-7 | Low | STILL-PRESENT, WORSE | Tool-count comment now contradicts itself in 3 places in the same file (14 / 22 / 21) | dashboard.js:2,287,425 | true count verified against markup: **22** |
+| F-8 | Low | STILL-PRESENT | 2 of ~22 DOM lookups still skip the null-guard every other binding uses | dashboard.js:2337,2418 | works today, would throw and silently break later wiring on a future rename |
+| F-9 | Low | STILL-PRESENT | Escaping helper now used twice instead of once, but dozens of `innerHTML` sites still interpolate raw API text, including one raw `href` interpolation | dashboard.js:1466,1528,1836-1837,1968-1969 | `s.url` written straight into an `href` attribute |
+| F-10 | Low | STILL-PRESENT | Disease-scan "Run scan" still isn't disabled during its own in-flight request | dashboard.js:2897-3040 | repeated clicks fire concurrent predict calls |
+| F-11 | Low | STILL-PRESENT | Floating popovers still don't manage focus on open/close | toolbar.js:623-687 | no `.focus()`/`aria-modal`/`role="dialog"` anywhere |
+| **F-12** | **Medium** | **NEW** | Spoken daily briefing's stop-toggle doesn't cover its own fetch window — a second click mid-load queues a duplicate instead of stopping | toolbar.js:943-976 | stop-guard only arms *after* `await composeBriefing()` resolves; two quick clicks can queue overlapping audio |
+| F-13 | Low | NEW | Arbitrage globe silently renders zero arcs if a region falls outside its centroid table, without adjusting the "arcs = price gap" legend | india-globe.js:415-478 | currently dormant — today's centroid table happens to cover every region |
+| F-14 | Low | NEW | Arbitrage globe's fetch error handling doesn't distinguish offline vs. server error, unlike the rest of the app | india-globe.js:419-426 | consistency gap, not an honesty violation — never fabricates numbers |
 
-| # | Area | Finding |
-|---|---|---|
-| **H-1** | Deployment | `/marketplace` route works locally but 404s on the actual Vercel deployment — missing from `vercel.json` rewrites while 6 sibling routes are present. `backend/main.py:1551-1553` vs `vercel.json`. |
-| **H-2** | Deployment | `ml/models/*.json` (audit/manifest metadata) is not included in `vercel.json`'s `includeFiles` glob — provenance/ML-status endpoints silently degrade to generic fallback values in production with no visible signal. |
-| **H-3** | Frontend/API contract | `dashboard.js`'s central `api()` wrapper catches HTTP error responses (400/422/500) in the *same* catch block as network failures, and for `/api/simulate` and `/api/crop` **silently replaces real backend errors with fabricated offline-heuristic numbers**, showing a "backend unreachable" banner that is false. `frontend/dashboard.js:139-179`. |
-| **H-4** | Frontend/State | Switching the active farm plot mid-session leaves `dashboard.js` reading stale soil/region data — no listener for the `mm:plot-changed` event that the plot-picker itself dispatches — silently feeding wrong data into Simulate/Compare/Mix and the disease-scan region sync. `frontend/dashboard.js:14-24, 2266-2454`. |
-| **H-5** | Chatbot | Generic English words ("north", "west") in a message silently resolve to an unrelated specific region (`goa_north`, `tripura_west`) via a district-suffix fallback match, returning confident, real-looking dataset numbers bound to the wrong place with no disclosure. `backend/chatbot.py:111-130`. **Confirmed** by execution. |
-| **H-6** | Chatbot | 4 of 12 documented slash-commands (`/pest`, `/irrigate`, `/calendar`, `/sell`) are dead on arrival — their handlers are gated on a crop being extracted with no "missing crop" fallback branch, so they fall through to the generic "I didn't catch that" message, which itself recommends trying `/pest`. `backend/chatbot.py:718-731, 855-875`. **Confirmed** by execution. |
-| **H-7** | Chatbot | Budget/area/cost/profit are extracted from free text purely by **position**, with no unit/keyword disambiguation — reordering a sentence naturally ("3 acres and 15000 budget" vs "15000 budget for 3 acres") silently swaps the values, producing outputs like "profit ₹882,457,500, ROI 1,961,016.67%" with no sanity check anywhere. `backend/chatbot.py:144-154, 340-353`. **Confirmed** by execution, exact reproduction included in source report. |
-| **H-8** | Frontend/Booking | Tractor booking never actually enforces exclusivity — `t.availability` is read in 8 places to gate the UI but never mutated after a successful booking; the same tractor/date can be booked indefinitely. `frontend/book-a-tractor.js` (booking-save block, no write-site for `.availability` in the whole file). |
-| **H-9** | Frontend/Auth | `login.html` is a fully-built sign-in UI wired to a **stub** `auth.js` (`Promise.reject(new Error('Auth removed'))`) with no matching entry in the error-message map — every login attempt displays the raw string **"Auth removed"** to the user. `frontend/auth.js`, `frontend/login.html:135-146`. Page is unreferenced from nav but still service-worker precached and reachable by URL. |
-| **H-10** | Dependencies | Installed `numpy==2.5.1` violates the project's own `requirements.txt` pin (`&lt;2.5`); a clean install from the lockfile would not reproduce the environment the tests actually ran against, and 2,618 numpy/joblib `DeprecationWarning`s already fire during chatbot tests as a symptom. |
-| **H-11** | ML | `prediction_source: "ml_model"` reflects whether a model *object* is loaded in the process, not whether ML was actually used for that specific prediction — `predict_yield_kg_per_acre` silently falls back to a heuristic on any unseen label, but the source tag doesn't follow. `ml/predict.py:809-819`. Contrast with the correct pattern already used in `engine/features.py:802-848`. |
+**New-feature scrutiny (commit `7b83908`, audited for the first time here):** the regional benchmark panel and mandi arbitrage globe both reuse real, existing endpoints, fail gracefully (remove the card / show a generic error rather than fabricate), and the spoken briefing correctly omits rather than invents figures when data is missing. No regressions found in shared files (`mm-core.js`, `mm-plots.js`, `toolbar.js`) — diffed changes were dead CSS removal only. F-12 is the one real bug this commit introduced.
 
-### MEDIUM
+## 5. Findings — Marketplace, Booking & Gyan Seva (`T-`)
 
-| # | Area | Finding |
-|---|---|---|
-| **M-1** | API | `GET /api/crop-comparison/{region}/{season}` accepts negative/zero `budget_per_acre`/`area_acres` with no validation, unlike its `POST /api/recommend` sibling. `backend/main.py:245-251`. |
-| **M-2** | API | Four fully-defined Pydantic query models (`CropRecQuery`, `YieldPredQuery`, `IrrigationQuery`, `FertilizerQuery`) are never wired to their endpoints — hand-rolled duplicate validation exists instead and has already drifted (fertilizer accepts negative-only, no upper bound). `backend/models.py:185-214` vs `backend/main.py:1243-1411`. |
-| **M-3** | API/Docs | `/api/field/ndvi`'s docstring claims real Sentinel-2 satellite data; the implementation is a deterministic hash of lat/lon with no external call (the JSON payload itself is honest — `is_estimate: true` — but the docstring/Swagger surface is not). `backend/main.py:292-303` vs `utils/calculations.py:180-245`. |
-| **M-4** | Data layer | CSV cache's mtime-capture happens outside the lock while the file re-read also happens outside the lock — a concurrent CSV rewrite during live traffic can transiently serve/store a stale row-set despite the module's "thread-safe" docstring claim. `utils/csv_cache.py:40-65`. Self-corrects on the next call; real but narrow. |
-| **M-5** | Security | `/api/disease/predict` is unauthenticated and caps `image_b64` only by string length (~7.3MB decoded), not pixel dimensions — a compressed high-resolution image is a classic decompression-bomb / CPU-exhaustion vector against a 1024MB serverless function with no rate limiting anywhere in the app. `backend/main.py:941-1199`. |
-| **M-6** | Frontend/State | Cross-tab sync is inconsistent: the plot-name dropdown listens for the `storage` event, but the adjacent farm-bar (region/season/budget fields, `mm-core.js`) does not — two open tabs disagree about the active farm's settings after a plot switch in one of them. |
-| **M-7** | Frontend/State | `FarmState._writeStore()` swallows `localStorage.setItem` quota-exceeded failures and still dispatches a "changed" event and shows a success toast — a farmer can be told a boundary was saved when it silently wasn't. `frontend/farm-state.js:258-280`. |
-| **M-8** | Frontend | Disease-scan's `syncOfflineLogs()` doesn't sync anything to any backend (only `console.log`s) and then **unconditionally deletes** the local queue the moment the device is next online — collected scan history is guaranteed to be discarded with no record kept anywhere. `frontend/dashboard.js:2554-2565`. |
-| **M-9** | Frontend | Only 2 of ~20 dashboard tools (`/api/simulate`, `/api/crop`) have any offline/graceful-failure path; the other 18 surface a raw "Failed to fetch"-style error to the user, in an app whose stated differentiator is rural/offline resilience. |
-| **M-10** | Frontend/Booking | Buyer-side "simulate complete" purchase lifecycle in the marketplace never decrements `listing.quantityAvailable`, while the seller-side "Record a Sale"/"Mark Sold" actions on the same listing do — the two pathways maintain inconsistent inventory state for the same listing. `frontend/marketplace.js:1732-1889`. |
-| **M-11** | Booking | Tractor booking date field has no `min` attribute — a booking can be placed for a date in the past and is accepted with a normal success screen. `frontend/book-a-tractor.js:1081`. |
-| **M-12** | Product framing | All transactional state (bookings, listings, consultation requests) lives only in per-device `localStorage`, with no shared backend — mostly disclosed in-UI, but is the single most consequential architectural fact for evaluating "Marketplace"/"Book a Tractor"/"Gyan Seva" as complete, multi-party products. |
-| **M-13** | Chatbot | `context.region_id` and `context.season`, sent by the client and round-tripped via `localStorage`, are **not validated** server-side before reaching engine calls — unlike `context.crop_id`, which is checked against the real crop table first. A forged/stale value surfaces a raw internal `ValueError` string in the chat reply rather than a clean prompt. `backend/chatbot.py:829-837`. |
-| **M-14** | Chatbot | The recommend-intent's bare "suggest(ion)" trigger fires on unrelated questions ("any suggestion for pest control on rice" gets routed to "which region?" instead of pest info). `backend/chatbot.py:850`. |
-| **M-15** | Chatbot | Short greeting-word check doesn't require the greeting to be the whole message — "hey what is msp" returns only a canned greeting, dropping the real question. `backend/chatbot.py:808-814`. |
-| **M-16** | Chatbot | Common real crop synonyms ("paddy", "basmati") aren't recognized despite being literally in the crop's own display name — combined with H-6's missing-crop fallback gaps, this produces dead-end fallback replies for very ordinary phrasing. `backend/chatbot.py:93-108`. |
-| **M-17** | Chatbot | Pest-alert and irrigation-schedule chatbot replies ignore the region the user just supplied and always use fixed generic weather assumptions (28°C, 800mm) — climatically opposite regions get byte-identical advice. `backend/chatbot.py:459-463, 507-511`. |
-| **M-18** | Engine | `calculate_disease_outbreak_risk` accepts `crop_id`/`region_id` parameters but never uses them in its computation — identical late-blight/rust/whitefly risk output for every crop regardless of relevance. `engine/features.py:852-913`. |
-| **M-19** | Engine | Seasonal rainfall (mm) is divided by an unexplained constant (12) and used as a relative-humidity (%) proxy when `humidity_pct` isn't supplied — a unit conversion with no physical basis. `engine/features.py:861-863`. |
-| **M-20** | ML | Audit/evaluation manifest JSON files are stale relative to the currently-loaded models (7.5 hours older than the last successful retrain) and nothing invalidates or re-derives them — compounds C-2/C-3. |
-| **M-21** | Data ingestion | `SoilHealthCardClient.retrieve_card` fabricates 6 of 9 nutrient values via unseeded `random.random()` while its docstring claims integration with state registries — contained today because the whole pipeline is orphaned (see H/M dead-code findings below), but would be a serious data-integrity issue if ever wired live. `data_ingestion/fetchers/soil_health_card.py:29-44`. |
-| **M-22** | Data ingestion | The entire ETL/feature-pipeline stack (`etl_pipeline.py`, `feature_pipeline.py`, `prepare_data.py`, `refresh_data.py`, 7 of 10 fetchers) is disconnected dead code — nothing in the live request path or in `ml/train_models.py` imports or reads its output; no cron/CI wires it in either. |
-| **M-23** | Data ingestion | `/api/data-freshness` can never report mandi prices as "live" — the function that records a live-fetch timestamp (`get_mandi_price`) has no caller anywhere in the live app (all real lookups bypass it via the CSV cache), so the freshness badge is permanently stuck on "seed / not queried yet" regardless of configuration. `data_ingestion/fetchers/mandi.py:117-143`, `utils/provenance.py:131-163`. |
-| **M-24** | Data ingestion | `etl_pipeline.clean_and_normalize()` looks up lowercase JSON field names (`"district"`, `"modal_price"`) against an API that actually returns capitalized keys (confirmed elsewhere in the same codebase, `mandi.py:102` uses `"Modal_Price"`) — the match is always empty and price silently falls back to a hardcoded ₹24.50/kg constant. Contained by M-22 today; a real bug if revived. |
-| **M-25** | Data ingestion | `data_ingestion/cache.py`'s disk cache has no eviction — one file per unique call signature, forever, only cleared by an explicit (and itself-unreachable) admin script. |
-| **M-26** | Deployment | `catboost` is imported by `ml/evaluate_models.py` but entirely absent from `requirements.txt` — a clean install followed by running that (documented dev-workflow) script fails with `ModuleNotFoundError`; currently masked only because the local venv happens to have it installed already. |
-| **M-27** | Deployment | `pandas` ships into the production Vercel bundle via `requirements.txt` but is never imported by any code on the live request path (only by scripts already excluded via `.vercelignore` or never invoked) — pure deployment bloat given the ML endpoints are already memory-sensitive (see M-28). |
-| **M-28** | Deployment (POTENTIAL) | `vercel.json`'s `memory: 1024`MB is plausibly tight for the first cold-start request that must import numpy/pandas/sklearn/Pillow **and** deserialize ~60MB of joblib model files simultaneously; not verified by an actual deploy, flagged as a capacity risk backed by concrete file sizes. |
+*Scope: `marketplace.js/html`, `book-a-tractor.js/html`, `gyan-seva.js/html`, `auth.js`, `login.html`.*
 
-### LOW
+| ID | Severity | Status | Finding | file:line | Evidence |
+|---|---|---|---|---|---|
+| T-1 | High | PARTIALLY-FIXED | Tractor `.availability` still never mutated after booking — no real exclusivity. A same-device date-conflict check was added, but checks a separate list, never touching the field the UI actually reads | book-a-tractor.js (whole file) | 17 reads of `.availability`, zero writes; code comment admits cross-device double-booking is unguarded |
+| T-2 | High | PARTIALLY-FIXED | Auth stub still rejects every login (by design — no real auth backend exists), but the raw `"Auth removed"` string no longer reaches the user | auth.js:9-11 (unchanged), login.html:147-151 (fixed) | error now maps to "Sign-in isn't available in this build yet."; page still has no nav link, still SW-precached |
+| T-3 | Medium | FIXED | Marketplace buyer-complete and seller-sale paths now share one inventory-decrement function | marketplace.js:1717-1738 | single `applySaleToListingQuantity()` used by both paths |
+| T-4 | Medium | FIXED | Tractor booking date now has both HTML `min` and JS re-validation | book-a-tractor.js:1191-1300 | past dates rejected at both layers |
+| T-5 | Medium | PARTIALLY-FIXED | "No live backend" disclosure is strong on Marketplace/Gyan Seva, materially weaker on Book-a-Tractor — hero says "Live Now," booking confirmation has no equivalent caveat | book-a-tractor.html:879 vs marketplace.js:963 | direct inconsistency between three sibling surfaces |
+| T-6 | Low | FIXED | Consultant photos now render from locally-generated initials, not a raw field into `innerHTML` | gyan-seva.js:40-53 | old `.photo` field no longer read anywhere in the file |
+| **T-7** | **Medium** | **NEW — concrete broken promise** | Tractor waitlist form promises "we'll send one SMS" after collecting a phone number — the number is validated, then discarded. Nothing is stored, nothing is sent | book-a-tractor.html:1136-1182 | `handleNotify()` has no `localStorage` write and no `fetch`/XHR anywhere — unlike every other disclosed local-only limitation, this data isn't even kept |
 
-A representative selection (full detail in the per-area agent reports, condensed here to avoid repetition):
+## 6. Findings — Data Ingestion, Deployment, Security, Tests (`D-`)
 
-- **API:** in-memory route cache treats falsy results (e.g. an empty recommendation list) as a cache miss and recomputes every time (`if cached:` should be `if cached is not None:`); Swagger/OpenAPI docs are publicly reachable with no `docs_url=None`; `/api/ml/status` discloses internal file-layout details to unauthenticated callers; a blanket `except Exception → HTTPException(400, str(e))` pattern collapses genuinely different failure classes (bad input vs. server bug) into the same status code across nearly every route; usage-collection event-name cardinality is technically unbounded (requires an explicit opt-in, off by default).
-- **Frontend:** `dashboard.js`'s own header comment says "14 tools," actual count is ~20 (stale docs, not a bug); inconsistent null-guarding on DOM lookups across ~20 form bindings (works today, brittle to future edits); dozens of `innerHTML` sites interpolate API-sourced text without the escaping helper that's already used in exactly one place elsewhere in the same file; disease-scan's "Run scan" button isn't disabled during the in-flight request, allowing duplicate concurrent submissions; committed `firebase-config.js` contains real (but non-secret-by-design) project identifiers for a completely dead auth feature; floating toolbar/freshness popovers don't manage focus on open/close (keyboard-reachable, just not guided); offline simulator's crop catalogue is missing 3 crops (`jowar`, `potato`, `onion`) that the dashboard itself offers, producing an unhandled "unknown crop" error if a network hiccup hits one of them; Gyan Seva has one inconsistent unescaped `innerHTML` interpolation (`e.photo`) against an otherwise-careful codebase, not currently exploitable (static seed data only).
-- **ML/Engine:** synthetic-NDVI is honestly disclosed in its own response payload (not a bug, noted for completeness); the platform's `loan_calculator` DSCR formula is conceptually loose relative to a textbook debt-service-coverage ratio (not proven wrong, worth a second look); yield-model feature importances are dominated by a season-category encoding far more than crop identity or literal base yield (POTENTIAL — may just indicate legitimate collinearity, flagged for a permutation-importance follow-up, not confirmed as a defect).
-- **Chatbot/i18n:** the chatbot's own first-open greeting is hardcoded English client-side and never reads the site's selected language, so a user who has switched the whole site to Hindi/Telugu/Kannada still gets an English greeting and English suggestion chips on first open; five chatbot-panel UI strings (header subtitle, drag hint, TTS button label, etc.) are absent from the i18n catalog; dynamically-injected chat DOM content is never passed through the app's own `retranslate()` helper (mostly moot since replies are already localized server-side); concurrent sends are correctly mutex-guarded but the dropped second message gives the user no feedback that it was ignored.
-- **Data ingestion:** `data_ingestion/cache.py`'s disk read/write paths swallow all exceptions silently with no logging, hiding a persistent permissions/disk-full failure from any operator; zero test coverage exists for any of the 10 fetcher modules or the ETL/clean-and-normalize logic — exactly the layer where M-21/M-24 live undetected.
-- **Deployment:** 528MB of unused `torch`/`torchvision` sitting in the dev venv (not shipped, but a sign the venv wasn't built cleanly from `requirements.txt`, undermining confidence that "installed" matches "declared" — see H-10); `docs/API.md` omits documentation for 7 of the newest, most heavily-tested endpoints (`/api/disease/predict`, `/api/farm-score`, `/api/field/ndvi`, `/api/climate/alerts`, `/api/carbon-credits`, `/api/iot/telemetry`, `/api/iot/pump-trigger`); `scripts/gen-firebase-config.js` documents itself as a Vercel build step that never actually runs (no `package.json`/`buildCommand` wires it in) — misleading to a future contributor, not a functional defect since the config file it would generate is hand-maintained instead.
+*Scope: `data_ingestion/**`, `vercel.json`, `requirements.txt`, `tests/**`, general security posture.*
 
----
+| ID | Severity | Status | Finding | file:line | Evidence |
+|---|---|---|---|---|---|
+| D-1, D-2 | High | FIXED | `/marketplace` route and `ml/models/*.json` both now correctly present in `vercel.json` | vercel.json | confirmed |
+| D-3 | Medium | PARTIALLY-FIXED | Soil Health Card fabrication (6/9 nutrients via unseeded random) unchanged, but now honestly disclosed in its own docstring instead of claiming real registry integration | soil_health_card.py:9-90 | still contained — only reachable via dead code (D-4) |
+| D-4 | Medium | STILL-PRESENT | Entire ETL/feature-pipeline stack (10 files) remains fully disconnected — now explicitly labeled "NOT WIRED INTO PRODUCTION" in every file header rather than silently orphaned | data_ingestion/etl_pipeline.py etc. | zero references outside its own directory and tests |
+| D-5 | Medium | PARTIALLY-FIXED | `/api/data-freshness` still can never report mandi "live" (root cause unchanged), but no longer silently misleads — explicitly always reports "seed" with a stated reason | provenance.py:131-163 | honest-by-construction fix, underlying gap unresolved |
+| D-6 | Medium | FIXED | ETL field-name case-mismatch bug corrected (still only exercised in dead code) | etl_pipeline.py:142-157 | now matches the real API's capitalized keys |
+| D-7 | Medium | FIXED | Disk cache now has TTL-based eviction | cache.py:36-142 | reviewed, no bugs found; itself untested (D-13) |
+| D-8 | Medium | PARTIALLY-FIXED | Disease-predict endpoint now caps pixel dimensions (decompression-bomb fix); still fully unauthenticated with no rate limiting anywhere in the app | main.py:984-1080 | only size cap added, no auth/`Depends()`, no rate-limit library anywhere in the repo |
+| D-9, D-10 | Medium | FIXED | `catboost`/`pandas` correctly isolated to dev-only requirements | requirements*.txt | confirmed via `pip show` |
+| D-11 | Low | FIXED (re-confirmed) | Independent re-check found no new critical/exploitable security issues | main.py, repo-wide | CORS, secrets, injection, admin-gating all re-verified clean |
+| D-12 | Medium | STILL-PRESENT | Test-coverage gap persists: zero direct tests for all 10 `data_ingestion/fetchers/*` files and the ML training/audit scripts | tests/ | 49/49 passing, but coverage shape unchanged from Pass 1 |
+| D-13 | Low | NEW | The new disk-cache eviction logic (D-7's fix) itself has no test coverage | cache.py:102-142 vs test_cache.py | only hit/TTL/clear are tested, not sweep behavior |
 
-## 4. UI/UX Findings
-
-- **H-3** — the offline-mode banner lies about *why* the app fell back to heuristics; a validation error is not "backend unreachable," and showing the wrong message actively misdirects debugging and user trust.
-- **H-4 / M-6** — plot-switching and cross-tab state produce silently stale UI (wrong soil/region shown in the farm banner, map, and disease-scan context) with zero user-visible indication that anything is wrong.
-- **M-7** — a save can silently fail (quota exceeded) while the UI still shows a success toast — the worst kind of UX bug because it actively tells the user the opposite of what happened.
-- **M-9** — 18 of ~20 dashboard tools show a raw technical error string on any network hiccup, inconsistent with the product's stated rural/offline-resilience positioning; only 2 tools have a considered fallback.
-- **H-9** — a fully-built, professional-looking login form that always fails and displays the literal internal string "Auth removed" is the kind of broken flow that would immediately read as unfinished/buggy to any user who finds it, even though it isn't linked from navigation.
-- **M-11** — booking a tractor for a date in the past succeeds with a normal-looking confirmation screen; a small but real trust-eroding data-integrity gap in a transactional flow.
-- Chatbot UX (M-14, M-15, M-16, H-6, H-7): the cumulative effect of these findings is that a first-time user typing natural, unremarkable phrasing ("hey what is msp", "any suggestion for pest control", "/pest", "paddy") has a meaningfully worse-than-expected chance of hitting a dead-end or a wrong answer, despite the bot's design being fundamentally sound (grounded in real engine data, no hallucination once an intent correctly routes).
-- Accessibility: interactive custom elements (toolbar FAB, chat panel, popovers) use real buttons with `aria-expanded`/`aria-label` — a genuinely better baseline than "div soup" — but none of them manage focus on open/close, a specific, fixable gap rather than a systemic accessibility failure.
-
----
-
-## 5. Backend/API Findings
-
-See **H-1, H-2, H-10, H-11, M-1 through M-5, M-20, M-26 through M-28**, and the Low-severity API items in §3. Summary: input validation is *inconsistent* rather than *absent* — the codebase clearly knows the right pattern (`RecommendationRequest`, `ProfitEstRequest`, the crop-id validation in the chatbot) and simply didn't apply it uniformly to every sibling endpoint. The admin/training/expense-storage gating is genuinely well-built (fails closed, `secrets.compare_digest`, explicit 503 rather than silent unscoped writes) and should be held up as the pattern the rest of the codebase should match, not an area needing rework.
-
----
-
-## 6. Database/Data-Integrity Findings
-
-There is no database — the "source of truth" is CSV files behind `utils/csv_cache.py`, a deliberate MVP choice documented and largely sound (M-4 is its only real defect, and it's narrow/self-correcting). The actual data-integrity risks are elsewhere:
-
-- **C-1, C-2, C-3** — the ML artifacts themselves are the "data" that's corrupted/misrepresented here, and it's the most serious integrity problem in the whole system.
-- **M-21, M-24** — the (currently dead) data-ingestion pipeline would silently fabricate or mis-parse real-world agricultural data if it were ever wired back into the live app; flag this explicitly before anyone does that reconnection work.
-- **M-10** — the marketplace's two inventory-mutation pathways (buyer-lifecycle vs. seller-report) disagree about the same number, a genuine "two writers, no reconciliation" data-integrity pattern, currently low-stakes only because both live in the same localStorage blob rather than a shared store.
+**Test suite:** `venv/Scripts/python.exe -m pytest -q tests` → **49 passed, 0 failed, 6.04s.**
 
 ---
 
-## 7. Security Findings
+## 7. Prioritized Fix List
 
-No critical/exploitable vulnerabilities found. Specifically verified and ruled out: no auth bypass, no SQL/command injection (no SQL, no `eval`/`exec`/`subprocess`/`pickle` on any user-reachable path), no `allow_origins=["*"]` + credentials CORS misconfiguration, no secrets committed to git, no path-disclosure/stack-trace leakage in exception responses, no `.env` tracked, admin-gated endpoints fail closed. Real findings, all Medium or below:
+### P0 — Fix before anything else (small, surgical, demo-risk) — **ALL FIXED, see §8**
 
-- **M-5** — unauthenticated, unbounded-pixel-dimension image decoding (`/api/disease/predict`) is a legitimate CPU/memory-exhaustion vector against an unthrottled endpoint; the only genuinely actionable security finding in the audit.
-- **M-13** — inconsistent trust of client-supplied chatbot context (`crop_id` validated, `region_id`/`season` not) is not exploitable beyond surfacing an internal error string, but is worth fixing for consistency and to stop leaking raw `ValueError` text to end users.
-- **Low** — Swagger UI/OpenAPI publicly reachable (recon-surface only, all sensitive routes remain properly gated behind it); `/api/ml/status` discloses internal directory layout to anonymous callers (low-impact info disclosure).
-- One inconsistently-unescaped `innerHTML` interpolation in `gyan-seva.js` (static seed data today, would become exploitable the moment that field becomes user- or backend-editable) and a broader pattern in `dashboard.js` of API-sourced text reaching `innerHTML` without the escaping helper that exists and is used exactly once elsewhere in the same file — not proven exploitable today (no current backend endpoint echoes attacker-controlled text into a response), but there is no systemic escaping discipline standing between the app and the next backend change that does.
+1. ~~**C-23**~~ **FIXED.** Missing states added to `STATE_SYNONYMS` for Telugu and Kannada (incl. Telangana). Bonus: a stray Telugu Unicode codepoint in Kannada's "recommend" intent pattern (visually identical, never matched) found and fixed while verifying the repro.
+2. ~~**C-21**~~ **FIXED.** "hum"/"aap" removed, plus a full systematic re-audit removed "namaste"/"namaskar" (self-contradicted the bot's own English greeting) and "paani" (same Indian-English-loanword class as mandi/kisan).
+3. ~~**C-22**~~ **FIXED.** Branch order consolidated; the MSP-vs-market comparison handler is reachable for both `/mspvsmarket` and natural comparison phrasing.
+4. ~~**T-7**~~ **FIXED.** Waitlist phone number now persisted to `localStorage`; copy no longer promises an SMS mechanism that doesn't exist.
+5. ~~**F-12**~~ **FIXED.** Stop-guard now arms synchronously before the async fetch, with a post-await staleness check and error-path reset.
 
----
+### P1 — Real, worth doing given the runway — **5 of 6 code-fixed, 1 investigated (see §8)**
 
-## 8. Concurrency/Reliability Findings
+6. ~~**T-5**~~ **FIXED.** Book-a-Tractor's hero and booking-confirmation copy now disclose the no-live-backend reality, matching Marketplace/Gyan Seva. Bonus: two other instances of the same false "operator will be contacted automatically" promise found and fixed in the same flow.
+7. ~~**T-1**~~ **PARTIALLY FIXED, deliberately scoped.** Booking now downgrades a tractor's badge to "Limited" (not "Booked", to avoid regressing the existing per-date conflict check). Honestly doesn't survive a page reload for the auto-generated fleet-data file, and cross-device double-booking remains architecturally open with no backend — both stated explicitly rather than overclaimed.
+8. ~~**B-15**~~ **FIXED.** `/api/yield` now reports honest `algorithm`/`prediction_source` via the same low-level function its siblings already use.
+9. **B-14** — **Investigated, not code-fixed (see §8).** The real lever may not be `vercel.json`'s `memory` field at all — flagged for the user to check the Vercel dashboard directly.
+10. ~~**D-8**~~ **FIXED.** Dependency-free in-memory per-IP rate limit (15 req/60s) added ahead of the endpoint's exception handler.
+11. ~~**C-14**~~ **FIXED.** Hindi सुझाव trigger now requires a nearby crop/grow/plant/sow word, mirroring the English gate.
 
-- **M-4** — CSV cache mtime-check-then-read race (narrow, self-correcting, but the "thread-safe" docstring overclaims).
-- **M-7** — unhandled `localStorage` quota exceptions cause silent data loss.
-- **Low** — disease-scan "Run scan" has no in-flight guard, allowing duplicate concurrent submissions where the later response silently wins.
-- **Low (confirmed clean)** — the chatbot frontend's concurrent-send handling is actually correct (mutex-guarded, no stale-response-overwrite bug), a case where the audit's hypothesis was disproven by reading the code — noted so it isn't mistakenly re-flagged elsewhere.
-- **M-25** — unbounded disk-cache growth in the (currently dead) data-ingestion layer.
+### P2 — Worth doing if time allows
 
----
+12. B-18 (yield CI is too wide to be useful), C-24/C-25 (chatbot matching edge cases), F-7 through F-11 (dashboard.js hygiene), C-18/C-19/C-20 (chatbot i18n polish), C-26 (regression tests for the 9 previously-fixed chatbot bugs — would have caught C-21/C-22 as regressions).
 
-## 9. Performance Findings
+### P3 — Backlog, not judging-relevant
 
-- **M-27, M-28** — unused `pandas` in the production bundle and a plausible (unverified) memory-pressure risk from ~60MB of joblib models plus a full numpy/pandas/sklearn/Pillow import stack on cold start, against a 1024MB serverless cap.
-- **M-9** — not a performance defect per se, but the near-total absence of graceful-degradation paths means any latency/network hiccup reads to the user as a hard failure rather than a soft one, which matters more in this app's stated rural/low-connectivity target context than in a typical web app.
-- No N+1 query problems (no database), no unindexed-scan issues found — the CSV-index-by-region pattern in `utils/csv_cache.py` is a reasonable, correctly-applied O(1)-after-first-access design.
-
----
-
-## 10. Testing Gaps
-
-- Full suite run: **49/49 passing**, no errors. Test *quality* varies meaningfully by file — `test_disease_api.py`, `test_ml_predict.py`, `test_optimal_mix.py`, and `test_safety_guards.py` are genuinely strong (real assertions on computed values, deliberate edge-case/regression coverage, honest-failure-mode testing). `test_chatbot.py` and parts of `test_engine_features.py` are shallow (existence/non-null checks rather than content verification) — notably, **none of the chatbot tests would have caught C-4, H-5, H-6, or H-7**, all of which were found only by actually executing realistic user phrasing against the live function.
-- **Coverage gap, concretely:** of ~46 non-`__init__` modules, roughly 26–28 (57–60%) have zero direct test coverage — concentrated almost entirely in `data_ingestion/fetchers/*` (all 10 files, 0 tests) and the ML training/audit scripts (`train_models.py`, `evaluate_models.py`, `audit_models.py` — exactly where C-1, C-2, and C-3 live). This is not a coincidence: the two areas with the least test coverage are the two areas with the most serious confirmed defects.
-- `backend/routers/data.py`'s CRUD-style read endpoints (`/api/crops`, `/api/regions`, `/api/soil/{id}`, etc.) have no test coverage at all beyond the satellite endpoint in the same file.
-- `utils/provenance.py` (powers `/api/data-freshness`) and `utils/usage_store.py` (powers 3 `/api/usage/*` endpoints) are entirely untested — the M-23 defect (mandi "live" status permanently unreachable) would have been caught by a single integration test asserting the freshness endpoint's mode field under a realistic scenario.
-
-**Recommended new tests, prioritized:**
-1. `assert set(all_crop_ids) &lt;= set(recommend_model.classes_ via label encoder)` — a CI gate that would have caught C-1 outright and prevent regression.
-2. A leakage-detection test: zero row-hash overlap between whatever `audit_models.py` calls "test" and the actual training rows used by the currently-saved model (catches C-3).
-3. `detect_lang()` parametrized over every English string in the app's own suggestion chips/help text, asserting `"en"` (catches C-4).
-4. Table-driven test running every `_SLASH_ALIASES` entry bare through `answer()`, asserting the reply isn't the generic fallback (catches H-6).
-5. An integration test hitting `/api/ml/status` and asserting the reported algorithm/accuracy matches `type(loaded_model).__name__` and the on-disk model's own hash/mtime (catches C-2).
-6. A mocked-`fetch` test asserting a 400/422 response from `/api/simulate` triggers the real error path, not the offline-fallback path (catches H-3).
+13. Dead ETL pipeline (D-4, already well-labeled), zero fetcher test coverage (D-12), dev-only artifacts bundled into production (B-16, B-17), arbitrage globe edge cases (F-13, F-14), disk-cache eviction test coverage (D-13).
 
 ---
 
-## 11. Architecture/Maintainability Issues
+---
 
-- **Two disagreeing sources of truth for ML model quality** (train_models.py's manifest vs. evaluate_models.py's manifest) is the kind of divergence that will keep re-manifesting as new bugs every time either script is touched independently — they should be unified into one pipeline before anything else is built on top of `/api/ml/status`.
-- **`dashboard.js` at 2,778 lines** is already showing early signs of the maintenance cost of a "no bundler, no framework" choice: inconsistent null-guarding, duplicated per-tool boilerplate, and only 2 of ~20 tools sharing a common error-handling path. The zero-build philosophy is a reasonable tradeoff for this project's constraints, but the file would benefit from extracting a shared "tool wiring" helper (bind form → call `api()` → render `output` → handle error) that all ~20 tools go through identically, which would also make H-3/M-9 trivial to fix once, everywhere.
-- **Orphaned subsystems left in the tree with no deprecation marker** (the entire `data_ingestion/etl_pipeline.py` stack, `login.html`/`auth.js`, `scripts/gen-firebase-config.js`) are a real cost to a future maintainer or auditor who has to independently rediscover that they're dead, exactly as this audit had to. Recommend either deleting them or adding an explicit `# DEPRECATED / not wired into production` marker at the top of each.
-- **`requirements.txt` doesn't match the actual dev environment** (H-10, M-26) undermines the basic guarantee that a fresh `pip install -r requirements.txt` reproduces what's running — worth fixing before it causes a harder-to-diagnose production incident.
+## 8. Remediation — Pass 2 Fixes Applied
+
+All P0 items and 5 of 6 P1 items were fixed same-day as this audit, verified, and merged. Full test suite: **62 passed, 0 failed** (baseline 49 → 52 after backend fixes → 62 after chatbot fixes; every increment added regression tests for the bug it fixed, directly addressing the C-26 finding that these bugs previously had zero coverage).
+
+**Chatbot** (`backend/chatbot.py`, `engine/chatbot_i18n.py`, `tests/test_chatbot.py`) — C-23, C-21, C-22, C-14 fixed. Canonical region list pulled from `dataset/soil.csv` rather than assumed. 10 new tests added (`*_c23`, `*_c21`, `*_c22`, `*_c14` suffixes). Two bonus fixes found while verifying repros: a Kannada Unicode codepoint mismatch (U+0C41 Telugu vs. U+0CC1 Kannada vowel sign) that silently broke Kannada crop-recommendation matching, and a self-contradiction where "namaste"/"namaskar" forced Hindi-lock despite being the bot's own English greeting.
+
+**Booking** (`frontend/book-a-tractor.html`, `frontend/book-a-tractor.js`) — T-7, T-5, T-1 fixed/addressed. T-1 deliberately scoped to avoid a regression (badge downgrades to "Limited," not "Booked," so the existing per-date conflict check isn't defeated); doesn't survive reload for auto-generated fleet data, cross-device booking remains open by architecture (no backend). While fixing T-5's disclosure gap, two more instances of the same false "operator will be contacted automatically" promise were found and fixed in the same confirmation flow.
+
+**Toolbar** (`frontend/toolbar.js`) — F-12 fixed. Guard now arms synchronously before the async fetch; verified against single-click, double-click-during-fetch, and error-mid-flow scenarios by code trace (no JS test runner in this project).
+
+**Backend** (`backend/main.py`, `tests/test_disease_api.py`, `tests/test_safety_guards.py`) — B-15 and D-8 fixed with new tests. B-14 investigated rather than blindly patched: `vercel.json`'s `memory: 1024` field may be entirely unenforced under Vercel's Fluid Compute (default for new projects since April 2025, dashboard-controlled, typical default tier 2GB); the actual constraint worth watching is the platform's 500MB Python bundle-size cap, estimated at ~340-350MB today with scipy/scikit-learn alone accounting for over half the headroom. **Action needed from you:** check Project Settings → Functions in the Vercel dashboard to confirm which regime is active before deciding whether `vercel.json`'s memory value needs touching.
+
+**Design-lint housekeeping:** two pre-existing bounce-easing CSS values in `book-a-tractor.html` (predating this session by 6+ weeks) recorded as sanctioned exceptions in `.impeccable/config.json`, following this repo's own established precedent (commit `f048405`). A separate, larger batch (73 pre-existing font-size/color deviations in the same file, also predating this session) was left standing rather than bulk-ignored or fixed — flagged to the user as a real design-debt question rather than a mechanical exception, decision pending.
 
 ---
 
-## 12. Features That Are Incomplete or Improperly Implemented
-
-- **Crop recommendation ML** (C-1) — the flagship "smart" feature is structurally biased against staple crops; effectively improperly implemented despite looking complete end-to-end.
-- **ML status/audit reporting** (C-2, C-3, M-20) — the entire "here's how good our model is" surface is unreliable.
-- **Chatbot language handling** (C-4, M-14 through M-17) — multilingual support, a headline feature, has a session-breaking auto-detection bug plus several intent-routing gaps that make it materially less reliable than the "grounded, no-hallucination" framing implies.
-- **Tractor booking exclusivity** (H-8) — the booking flow doesn't book anything in the sense of reserving a resource; it only logs a request.
-- **Marketplace inventory tracking** (M-10) — the two halves of the buy/sell lifecycle don't agree on stock levels.
-- **Disease-scan offline sync** (M-8) — a feature that visibly presents itself as "syncing" data actually only logs and discards it; effectively a fake feature.
-- **Login/auth** (H-9) — present in the UI, entirely non-functional under the hood; should either be finished or removed.
-- **Data-ingestion pipeline** (M-21 through M-25) — an entire, sizeable subsystem (10 fetchers, ETL, feature pipeline) that appears designed to be the platform's "real data" layer is disconnected and, where checked, contains its own bugs (fabricated nutrient data, wrong field-name lookups) that would surface immediately if it were ever reconnected.
-
----
-
-## 13. Prioritized Fix List
-
-### P0 — Critical / release blockers
-1. **C-1** — Fix the crop-recommendation training label generation so all 32 crops can appear (multi-label/ranked targets or per-crop profit regression instead of winner-take-all classification); until fixed, do not present `smart_score`/ML confidence as trustworthy for staple crops.
-2. **C-4** — Remove "mandi" (and audit the rest of `_HINGLISH_WORDS` for other English-adopted loanwords) from the Hindi-detection trigger list; stop making `context.lang` permanently sticky once set from a single ambiguous message.
-3. **C-2** — Point `/api/ml/status` at `manifest.json` (the file that actually corresponds to the loaded models), not `evaluation_manifest.json`.
-4. **C-3** — Fix the train/test leakage in `evaluate_models.py`/`audit_models.py` by sharing one canonical dataset-builder and persisted split with the actual training pipeline.
-5. **H-1** — Add `/marketplace` to `vercel.json`'s rewrites (one-line fix, currently 404s in production).
-6. **H-2** — Add `ml/models/*.json` to `vercel.json`'s `includeFiles`.
-
-### P1 — High priority
-7. **H-3** — Split `dashboard.js`'s `api()` error handling: only fall back to offline heuristics on a true network-level failure, never on an HTTP error response.
-8. **H-4** — Wire `dashboard.js` to listen for `mm:plot-changed` and refresh cached farm data.
-9. **H-5, H-6, H-7** — Chatbot: restrict the district-suffix region-matching fallback, add missing-crop fallback branches to `/pest`/`/irrigate`/`/calendar`/`/sell`, bind extracted numbers to roles via nearby keywords instead of position, and add basic sanity bounds before calling into the recommendation/loan engines.
-10. **H-8** — Add booking-conflict checking (even client-side/localStorage) before confirming a tractor booking.
-11. **H-9** — Either restore a real login flow or remove `login.html`/`auth.js`/the Firebase remnants and drop `login.html` from the service-worker precache list.
-12. **H-10, M-26** — Re-pin `requirements.txt` to match what's actually tested against; add `catboost`; rebuild the dev venv from the lockfile to confirm reproducibility.
-13. **H-11** — Make `prediction_source` reflect whether ML actually fired for that specific call, not whether the model object is loaded.
-
-### P2 — Important improvements
-14. **M-1 through M-3, M-5** — Add the missing input-validation guard on `/api/crop-comparison`, wire the unused Pydantic query models to their endpoints, correct or fix the `/api/field/ndvi` docstring, add an image-dimension cap to `/api/disease/predict`.
-15. **M-6, M-7** — Add a shared `storage`-event listener for cross-tab farm state; detect and surface localStorage quota failures instead of showing a false success toast.
-16. **M-8** — Either implement the real backend sync for disease-scan logs or stop calling the no-op "sync" and stop deleting the local queue.
-17. **M-9** — Extend graceful offline/error handling to the other ~18 dashboard tools (ideally via the shared-helper refactor noted in §11).
-18. **M-10, M-11** — Decrement marketplace stock on the buyer-completion path too; add a `min` date to the tractor booking date field.
-19. **M-13 through M-17** — Validate `context.region_id`/`season` server-side in the chatbot; narrow the "suggest(ion)" trigger; require greeting-only messages for the greeting short-circuit; add common crop synonyms; pass the extracted region into pest/irrigation engine calls instead of fixed defaults.
-20. **M-18, M-19** — Scope disease-outbreak risk by crop, or rename it honestly as a generic weather index; stop deriving humidity from rainfall via an unexplained divisor.
-21. **M-20, M-22 through M-25** — Either delete the orphaned data-ingestion pipeline or reconnect and fix it (field-name bug, fabricated nutrient data, cache eviction) before relying on it; keep audit manifests fresh/invalidated.
-22. **M-27, M-28** — Move `pandas`/dev-only dependencies out of the production bundle; verify actual cold-start memory behavior against a real Vercel deploy.
-
-### P3 — Nice-to-have / technical debt
-23. Add the missing chatbot-panel i18n keys; localize the client-side chatbot greeting; wire `retranslate()` into dynamically-injected chat content.
-24. Systematize `innerHTML`-interpolation escaping across `dashboard.js`/`gyan-seva.js` rather than the current one-off usage.
-25. Add focus management to the floating toolbar/freshness popovers.
-26. Clean up stale doc comments (`dashboard.js` "14 tools", `docs/API.md`'s missing endpoint sections, the dead `gen-firebase-config.js` build script), and mark orphaned modules as deprecated rather than leaving them ambiguous.
-27. Extract a shared "tool wiring" helper in `dashboard.js` to stop the null-guard/error-handling drift from getting worse as more tools are added.
-28. Backfill test coverage for the two most under-tested layers: `data_ingestion/fetchers/*` and the ML training/audit scripts — precisely where this audit's three Critical findings were hiding.
-
----
-
-*End of report. All findings above were traced to specific files/functions and, where marked CONFIRMED, reproduced by executing the actual code against the real dataset/models rather than inferred from reading alone.*
+*End of Pass 2. All P0 items and 5 of 6 P1 items are fixed and merged as of this remediation pass. Remaining open item: B-14 needs a Vercel-dashboard check from the user, not more code. This clears the runway for the two planned feature builds (guided decision flow, voice-first interaction).*
