@@ -19,8 +19,13 @@
   const mPanel = document.getElementById('mPanel');
   const mBackdrop = document.getElementById('mBackdrop');
   const mClose = document.getElementById('mClose');
-  const openMenu = () => { mPanel?.classList.add('open'); mBackdrop?.classList.add('open'); document.body.style.overflow = 'hidden'; };
-  const closeMenu = () => { mPanel?.classList.remove('open'); mBackdrop?.classList.remove('open'); document.body.style.overflow = ''; };
+  // The chat and quick-tools FABs float at z-index 9998/9999 -- above the
+  // mobile-panel's 200 -- so without this they stay visible and tappable
+  // on top of the open nav menu, reading as two unrelated buttons stuck to
+  // someone else's panel. Hiding them for the duration keeps the open menu
+  // the one thing on screen.
+  const openMenu = () => { mPanel?.classList.add('open'); mBackdrop?.classList.add('open'); document.body.classList.add('mm-menu-open'); document.body.style.overflow = 'hidden'; };
+  const closeMenu = () => { mPanel?.classList.remove('open'); mBackdrop?.classList.remove('open'); document.body.classList.remove('mm-menu-open'); document.body.style.overflow = ''; };
   burger?.addEventListener('click', openMenu);
   mClose?.addEventListener('click', closeMenu);
   mBackdrop?.addEventListener('click', closeMenu);
@@ -157,9 +162,20 @@
   /* ---------- Subtle parallax on hero image ---------- */
   const heroBgImg = document.querySelector('.hero__bg img');
   if (heroBgImg && window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+    // Scroll fires far more often than the display repaints -- writing the
+    // style straight from the handler (as this used to) forces a style
+    // recalc on every one of those events instead of once per frame, which
+    // is what made scrolling anywhere on the page feel like it was
+    // stuttering on mobile. Coalescing through rAF, the same pattern the
+    // pointermove handler above uses, caps the writes at one per frame.
+    let parallaxFrame = 0;
     window.addEventListener('scroll', () => {
-      const y = window.scrollY;
-      if (y < 900) heroBgImg.style.transform = `translateY(${y * 0.2}px) scale(${1 + y * 0.0002})`;
+      if (parallaxFrame) return;
+      parallaxFrame = requestAnimationFrame(() => {
+        parallaxFrame = 0;
+        const y = window.scrollY;
+        if (y < 900) heroBgImg.style.transform = `translateY(${y * 0.2}px) scale(${1 + y * 0.0002})`;
+      });
     }, { passive: true });
   }
 

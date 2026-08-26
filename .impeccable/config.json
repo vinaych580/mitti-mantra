@@ -71,6 +71,102 @@
         ],
         "createdAt": "2026-08-22T13:52:45.861Z",
         "reason": "Agent: reuses the exact dark-mode gold already sanctioned for .kpi--warn .kpi__val (toolbar.js:242) for the same purpose - the only text color proven >4.5:1 on dark --accent-soft, since --clay itself has no dark remap (computes to ~2.55:1)"
+      },
+      {
+        "rule": "design-system-radius",
+        "value": "4px",
+        "createdAt": "2026-08-22T16:05:52.828Z",
+        "reason": "decorative micro-element radius (skeleton loaders, active-state bars, chip icons) - proportional to its own thin thickness, not a container/panel governed by the DESIGN.md 8/14/22/36 corner scale"
+      },
+      {
+        "rule": "design-system-radius",
+        "value": "3px",
+        "createdAt": "2026-08-22T16:05:57.809Z",
+        "reason": "decorative micro-element radius (chart bar caps, swatches, focus-adjacent accents, scrollbar thumb) - same exemption as 4px, sized to its own thin element"
+      },
+      {
+        "rule": "design-system-radius",
+        "value": "2px",
+        "createdAt": "2026-08-22T16:06:02.028Z",
+        "reason": "decorative micro-element radius (small swatches/legend dots) - same exemption, not a container"
+      },
+      {
+        "rule": "design-system-radius",
+        "value": "6px",
+        "createdAt": "2026-08-22T16:06:06.983Z",
+        "reason": "decorative micro-element radius (global focus ring, skeleton pill) - same exemption, not a container"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "1.15rem",
+        "createdAt": "2026-08-22T16:06:13.016Z",
+        "reason": "one-off hero-subhead size, single use - below the 3-use threshold for tokenizing"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "1.85rem",
+        "createdAt": "2026-08-22T16:06:13.175Z",
+        "reason": "one-off stat display size, single use"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "3.8rem",
+        "createdAt": "2026-08-22T16:06:13.371Z",
+        "reason": "one-off large hero stat number, single use"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "3rem",
+        "createdAt": "2026-08-22T16:06:13.524Z",
+        "reason": "one-off dashboard h1 size, single use"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "1.5rem",
+        "createdAt": "2026-08-22T16:06:20.598Z",
+        "reason": "one-off tool-header size, single use"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "1.2rem",
+        "createdAt": "2026-08-22T16:06:20.735Z",
+        "reason": "distinct rank/stat-number size used twice, exact duplicate already (no drift) but below 3-use tokenize threshold"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "1.35rem",
+        "createdAt": "2026-08-22T16:06:20.880Z",
+        "reason": "one-off card-heading size, single use"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "1.65rem",
+        "createdAt": "2026-08-22T16:06:21.104Z",
+        "reason": "one-off dashboard tool-header size, single use"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "1.55rem",
+        "createdAt": "2026-08-22T16:06:21.338Z",
+        "reason": "one-off dashboard KPI value size, single use"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "1.8rem",
+        "createdAt": "2026-08-22T16:06:27.942Z",
+        "reason": "gyan-seva-promo__title uses clamp(1.8rem, 3.5vw, 2.5rem) - a responsive clamp, not a static literal; the other three static 1.8rem uses were converted to var(--fs-xl)"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#22c55e",
+        "createdAt": "2026-08-22T16:06:28.148Z",
+        "reason": "intentional brighter live-status pulse dot (promo badge), deliberately distinct from the muted brand green for visibility; single use, not drift"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#d8ebd9",
+        "createdAt": "2026-08-22T16:06:28.388Z",
+        "reason": "single-use subtle gradient endpoint within the brand-green family for sidebar active state, not an off-palette color"
       }
     ]
   }

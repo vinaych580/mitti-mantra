@@ -313,6 +313,20 @@
      search is wired up, though the search's descendant queries keep working
      through the wrapper either way. */
   const groupEls = $$('.sidebar__group');
+
+  // Real ARIA tabs, not just styled buttons: role=tablist wraps the seven
+  // groups (leaving the search box and "no matches" status outside it, since
+  // neither is a tab), each button becomes role=tab with a roving tabindex,
+  // and each .tool panel becomes its labelled tabpanel. This is what lets
+  // Up/Down move between tools directly instead of tabbing through all 22.
+  const tablist = document.createElement('div');
+  tablist.className = 'sidebar__tablist';
+  tablist.setAttribute('role', 'tablist');
+  tablist.setAttribute('aria-orientation', 'vertical');
+  tablist.setAttribute('aria-label', 'Dashboard tools');
+  groupEls[0]?.parentNode.insertBefore(tablist, groupEls[0]);
+  groupEls.forEach(group => tablist.appendChild(group));
+
   groupEls.forEach(group => {
     const label = group.querySelector('.sidebar__label');
     const groupBtns = group.querySelectorAll('.sidebar__btn');
@@ -371,16 +385,136 @@
   /* ---------- Sidebar tool switcher ---------- */
   const btns = $$('.sidebar__btn');
   const tools = $$('.tool');
-  btns.forEach(b => b.addEventListener('click', () => {
+
+  // Wire the tab/tabpanel relationship once. aria-selected is what a real
+  // tab announces (not aria-current, which is for landmark-style "you are
+  // here" and would double up with role=tab's own selected state).
+  btns.forEach(b => {
+    const tool = b.dataset.tool;
+    b.setAttribute('role', 'tab');
+    b.id = `tool-tab-${tool}`;
+    b.setAttribute('aria-controls', `tool-panel-${tool}`);
+    b.setAttribute('aria-selected', String(b.classList.contains('active')));
+    // Roving tabindex: exactly one tab is a Tab stop; arrow keys move among
+    // the rest without pulling Tab through all 22 of them.
+    b.tabIndex = b.classList.contains('active') ? 0 : -1;
+  });
+  tools.forEach(t => {
+    const tool = t.dataset.tool;
+    t.setAttribute('role', 'tabpanel');
+    t.id = `tool-panel-${tool}`;
+    t.setAttribute('aria-labelledby', `tool-tab-${tool}`);
+  });
+
+  // Only buttons in a currently-reachable group: not search-filtered out,
+  // and not sitting inside a collapsed mobile group.
+  function reachableTabs() {
+    return btns.filter(b => {
+      if (b.hidden) return false;
+      const group = b.closest('.sidebar__group');
+      if (!group || group.hidden) return false;
+      if (sidebarMq.matches && !group.classList.contains('is-open')) return false;
+      return true;
+    });
+  }
+
+  function activateTool(b, { focusButton = false } = {}) {
+    // Re-activating the tool you're already on shouldn't re-run the switch --
+    // without this, a habitual double-click (or an arrow key that lands back
+    // on the same tab) replays the scroll and the toolIn fade on content
+    // that never actually changed.
+    if (b.classList.contains('active')) return;
     const target = b.dataset.tool;
-    btns.forEach(x => x.classList.toggle('active', x === b));
+    btns.forEach(x => {
+      const isActive = x === b;
+      x.classList.toggle('active', isActive);
+      x.setAttribute('aria-selected', String(isActive));
+      x.tabIndex = isActive ? 0 : -1;
+    });
+    // Capture the outgoing tool before the active class moves, so it can fade
+    // out instead of vanishing the instant the incoming one appears.
+    const outgoing = tools.find(t => t.classList.contains('active') && t.dataset.tool !== target);
     tools.forEach(t => t.classList.toggle('active', t.dataset.tool === target));
+    if (outgoing) {
+      outgoing.classList.add('tool--leaving');
+      // Reading offsetHeight forces the browser to commit the display:block,
+      // opacity:1 state to a frame before the next line changes opacity --
+      // without this the two style changes coalesce into one and there's
+      // nothing for the transition to animate from.
+      void outgoing.offsetHeight;
+      outgoing.style.opacity = '0';
+      const cleanup = () => {
+        outgoing.classList.remove('tool--leaving');
+        outgoing.style.opacity = '';
+      };
+      outgoing.addEventListener('transitionend', cleanup, { once: true });
+      setTimeout(cleanup, 250); // backstop if transitionend never fires
+    }
     // Keep the open group in step when a tool is chosen programmatically
     // (several call sites click these buttons directly).
     groupEls.forEach(g => g.classList.toggle('is-open', g.contains(b)));
     syncSidebarGroups();
-    if (window.innerWidth < 860) tools.find(t => t.dataset.tool === target)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }));
+    // The rail scrolls independently of the page (it has its own max-height
+    // and overflow), so a selection made programmatically -- a deep link, an
+    // "open the irrigation schedule" cross-link from inside another tool --
+    // can land on a button that's currently scrolled out of view in the rail
+    // itself. 'nearest' only moves it when it's actually offscreen, so a
+    // plain visible click never triggers any motion here.
+    b.scrollIntoView({ block: 'nearest' });
+    if (focusButton) b.focus();
+    // Deep-linking already reads ?tool= on first paint (mm-core.js), but
+    // switching tools never wrote it back -- refreshing, copying the URL, or
+    // sharing a link always returned to whatever tool the page happened to
+    // load with, not the one on screen. replaceState (not pushState) keeps
+    // the current view bookmarkable/shareable without turning every tool
+    // click into its own back-button stop.
+    const url = new URL(location.href);
+    url.searchParams.set('tool', target);
+    history.replaceState(history.state, '', url);
+    // Every tool is display:none except the active one, so the panel that
+    // just appeared always starts at the top of .toolbox -- but the window's
+    // scroll position doesn't know that. Left alone, switching tools while
+    // scrolled deep into a long one (e.g. a filled-out simulator) drops the
+    // user into whatever happens to occupy that same pixel offset in the new
+    // tool: often blank space, sometimes an unrelated section. Scrolling the
+    // new tool's top edge just clear of the sticky nav on every switch, on
+    // every breakpoint, is what makes tool-switching read as a tab change
+    // rather than a broken page jump; it's a no-op scroll (and therefore
+    // invisible) whenever the user was already near the top.
+    const nextTool = tools.find(t => t.dataset.tool === target);
+    if (nextTool) {
+      const navH = document.getElementById('nav')?.offsetHeight || 72;
+      const y = nextTool.getBoundingClientRect().top + window.scrollY - navH - 20;
+      window.scrollTo({ top: Math.max(y, 0), behavior: 'smooth' });
+    }
+  }
+
+  btns.forEach(b => b.addEventListener('click', () => activateTool(b)));
+
+  // Arrow-key roving navigation, automatic-activation model: moving focus
+  // with an arrow key activates that tab immediately, matching the click
+  // behavior instead of requiring a separate confirm step. Left/Right are
+  // included alongside Up/Down since a vertical rail full of icon+label
+  // buttons reads like a list either way, and supporting both costs nothing.
+  tablist.addEventListener('keydown', (e) => {
+    const current = e.target.closest('.sidebar__btn');
+    if (!current) return;
+    const forward = e.key === 'ArrowDown' || e.key === 'ArrowRight';
+    const backward = e.key === 'ArrowUp' || e.key === 'ArrowLeft';
+    if (!forward && !backward && e.key !== 'Home' && e.key !== 'End') return;
+    e.preventDefault();
+
+    const reachable = reachableTabs();
+    const i = reachable.indexOf(current);
+    if (i === -1) return;
+    let next;
+    if (e.key === 'Home') next = reachable[0];
+    else if (e.key === 'End') next = reachable[reachable.length - 1];
+    else if (forward) next = reachable[(i + 1) % reachable.length];
+    else next = reachable[(i - 1 + reachable.length) % reachable.length];
+
+    if (next) activateTool(next, { focusButton: true });
+  });
 
   /* ---------- Tool empty states ----------
      Each .output starts empty, so a freshly-opened tool was just a form

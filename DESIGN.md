@@ -19,6 +19,9 @@ colors:
   info-soft: "#e3f0f8"
   danger: "#8b2f2f"
   danger-soft: "#fce4e4"
+  accent-deep: "#8a5a1e"
+  viz-blue: "#4a7db8"
+  viz-olive: "#6b8e23"
   dark-bg: "#141110"
   dark-bg-soft: "#1d1815"
   dark-surface: "#23201c"
@@ -64,10 +67,21 @@ typography:
     letterSpacing: "0.18em"
 rounded:
   sm: "8px"
+  icon: "10px"
   md: "14px"
   lg: "22px"
   xl: "36px"
   pill: "999px"
+utilityFontSizes:
+  3xs: "0.68rem"
+  2xs: "0.82rem"
+  xs: "0.92rem"
+  sm: "1.08rem"
+  2xl: "1.4rem"
+  xl: "1.8rem"
+borders:
+  hairline: "rgba(29, 26, 21, .06)"
+  strong: "rgba(29, 26, 21, .1)"
 spacing:
   xs: "6px"
   sm: "10px"
@@ -168,6 +182,11 @@ An agricultural palette named for what it depicts: the ground is paper, the ink 
 - **Soft Ink** (`#4a4339`): Body copy, secondary text, and any small supporting label.
 - **Faint Ink** (`#8a8376`): Reserved for large or decorative text only.
 
+### Utility Extensions
+
+- **Deep Gold** (`--accent-deep`, `#8a5a1e`): a darkened Wheat Gold used only for text sitting on a Wheat Wash chip, where Wheat Gold itself fails contrast. Follows the same "-deep" pattern as Deep Leaf.
+- **Data-viz spectrum** (`--viz-blue` `#4a7db8`, `--viz-olive` `#6b8e23`): a two-color extension to the Wheat Gold → Soil Clay pair, used only in the 3D scene legend bar's continuous low-to-high scale. Deliberately distinct from the four brand accents — a chart spectrum needs perceptual range a semantic palette doesn't provide — and not for use in UI chrome.
+
 ### Named Rules
 
 **The Legibility Over Palette Rule.** When an accent cannot carry text at the required contrast, the text goes high-contrast and the accent moves to a dot, bar, or border instead. The stylesheet already enforces this in two places and says so in comments: `--ink-faint` is rejected for small supporting text because it only reaches 3.5:1 on paper, and diagnosis confidence numbers stay `--ink` because Monsoon Blue on paper is 2.4:1. Colour signals category; it does not get to cost legibility.
@@ -196,6 +215,19 @@ A genuine second palette exists and is normative: paper inverts to `#141110`, su
 - **Body** (Inter 400, 16px, 1.6): All prose, set in Soft Ink rather than full Ink.
 - **Label** (Inter 600, `0.72rem`, `0.1em`, uppercase): KPI labels and preview captions. Small, wide-tracked, and always in Soft Ink or darker.
 - **Eyebrow** (Inter 600, `0.78rem`, `0.18em`, uppercase, Leaf Green): Section kickers, prefixed by a 24px leaf-green rule via `::before`.
+
+### Utility Scale
+
+The six hierarchy steps above are semantic (one job each). Everything smaller and denser — chip text, meta lines, form hints, table cells, card sub-labels — draws from a six-step utility scale instead, consolidated from what had drifted into ~40 near-duplicate one-off sizes:
+
+- **`--fs-3xs`** (`0.68rem`): micro labels — stat units, small badges.
+- **`--fs-2xs`** (`0.82rem`): meta and support text — card sub-lines, footer text, hints.
+- **`--fs-xs`** (`0.92rem`): compact UI text — nav links, form inputs, button-adjacent copy.
+- **`--fs-sm`** (`1.08rem`): emphasized small text — logo mark, promo sub-heads.
+- **`--fs-2xl`** (`1.4rem`): prominent inline numbers — hero-card values.
+- **`--fs-xl`** (`1.8rem`): large result/stat numbers below Title weight.
+
+A handful of genuinely one-off display numbers (dashboard `h1` at `3rem`, a hero stat at `3.8rem`, scattered KPI values between `1.2rem` and `1.65rem`) stay literal — each is a single, distinct hierarchy step, not drift, and doesn't clear the 3-use bar for tokenizing.
 
 ### Named Rules
 
@@ -235,11 +267,13 @@ This keeps the surface calm at rest while making the interface feel physically r
 
 ## Shapes
 
-**Soft-edged and tactile.** The corner scale runs 8 / 14 / 22 / 36px plus a full 999px pill, and each step has a job: 8px for inputs and small inset elements, 14px for KPI tiles and preview panels, 22px for cards, 36px for large hero surfaces.
+**Soft-edged and tactile.** The corner scale runs 8 / 14 / 22 / 36px plus a full 999px pill, and each step has a job: 8px for inputs and small inset elements, 14px for KPI tiles and preview panels, 22px for cards, 36px for large hero surfaces. A fifth step, **`--r-icon` (10px)**, sits between the input and KPI-tile steps for small square icon-badge containers (38–54px glyph tiles) — visually distinct from an input's corner but too small to read as a panel.
+
+Thin decorative elements — progress fills, swatches, focus rings, scrollbar thumbs, skeleton-loader bars, chart-bar caps — are exempt from this scale. Their radius is proportional to their own thickness (a 3–4px bar gets a 2–4px radius to look like a rounded cap or pill), not a reference to the container scale.
 
 Buttons are **always fully round** (`999px`) — this is the most recognisable shape signature in the system. Chips are round for the same reason, at 5×12px padding.
 
-Borders are hairlines, not structure: 1px at `rgba(29, 26, 21, .06)` on cards, stepping up to 1.5px at `rgba(29, 26, 21, .1)` on form controls, which need the extra definition to read as interactive. Cards carry `overflow: hidden` so accent bars and hover washes clip cleanly to the radius.
+Borders are hairlines, not structure: 1px at `rgba(29, 26, 21, .06)` (token `--border`) on cards, stepping up to 1.5px at `rgba(29, 26, 21, .1)` (token `--border-strong`) on form controls, which need the extra definition to read as interactive. Cards carry `overflow: hidden` so accent bars and hover washes clip cleanly to the radius.
 
 **The Pill and the Panel Rule.** Anything you press is a pill. Anything that holds content is a panel at 14–22px. A square-cornered button or a pill-shaped content card both break the system's most legible convention.
 
