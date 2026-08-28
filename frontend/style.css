@@ -6317,7 +6317,11 @@ body {
 
 /* --- Farm boundary pickup bar --- */
 .farm-pickup {
-  background: linear-gradient(135deg, #e8f3ea 0%, #f7ecd7 100%);
+  /* Tokens, not literals -- these already double as the dark-mode values via
+     html[data-theme="dark"], so the card inverts instead of staying a light
+     cream card under dark ink text (see toolbar.js for the .fp-* text-color
+     follow-up that's still needed once this background actually goes dark). */
+  background: linear-gradient(135deg, var(--brand-soft) 0%, var(--accent-soft) 100%);
   border: 1.5px solid rgba(47, 107, 58, 0.2);
   border-radius: var(--r-md);
   box-shadow: 0 4px 15px rgba(47, 107, 58, 0.08);

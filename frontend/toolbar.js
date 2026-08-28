@@ -281,6 +281,20 @@
       html[data-theme="dark"] .feature--cta {
         background: linear-gradient(135deg, var(--brand-soft), var(--surface) 70%) !important;
       }
+      /* Farm pickup card (dashboard.js): same brand-on-brand-soft collapse as
+         .chip--leaf/.mkt-alert--info above -- .fp-chip, .fp-meta__item--region,
+         and .fp-note all render --brand/--brand-deep text, which goes
+         dark-green-on-dark-green now that .farm-pickup's own background
+         inverts to the dark brand tokens too. */
+      html[data-theme="dark"] .fp-chip {
+        background: rgba(47,107,58,0.22) !important;
+        border-color: rgba(47,107,58,0.35);
+        color: #9ed2a7;
+      }
+      html[data-theme="dark"] .fp-meta__item--region,
+      html[data-theme="dark"] .fp-note {
+        color: #9ed2a7;
+      }
       html[data-theme="dark"] .features__ambient { opacity: 0.45; }
 
       /* Dashboard empty states — dark-ink hairlines vanish on dark. */
