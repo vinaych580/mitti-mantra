@@ -98,16 +98,16 @@ def test_disease_predict_fallback_maize_lesions(monkeypatch):
     assert "rust" in data["disease"].lower() or "blight" in data["disease"].lower()
 
 def test_disease_predict_ml_path_schema():
-    """When a trained disease_model.joblib is present, the ML path must return
+    """When a trained disease_model.onnx is present, the ML path must return
     the same response schema as the heuristic, tagged accordingly. Doesn't
     assert an exact class for this degenerate 1x1 image — a real classifier's
     prediction on an out-of-distribution single-pixel input isn't a
     meaningful thing to pin down, only that the plumbing is correct."""
     import ml.predict as pred
     pred._load_ml_models()
-    if pred._ml_disease_model is None:
+    if pred._ml_disease_session is None:
         import pytest
-        pytest.skip("No trained disease_model.joblib present in ml/models/")
+        pytest.skip("No trained disease_model.onnx present in ml/models/")
 
     img_b64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
     payload = {"image_b64": img_b64, "crop_id": "tomato", "region_id": "up_lucknow"}

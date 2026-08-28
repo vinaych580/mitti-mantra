@@ -669,7 +669,7 @@ def train_all() -> dict[str, Any]:
     The disease classifier trains only if dataset/plantvillage/ has enough
     labeled images per class; otherwise it reports NOT_APPLICABLE and the
     live endpoint falls back to its HSV/texture heuristic — see
-    ml/training/disease_model.py.
+    ml/training/disease_cnn.py.
     """
     print("=" * 60)
     print("Training Yield Prediction Model...")
@@ -686,11 +686,11 @@ def train_all() -> dict[str, Any]:
 
     print("Training Crop Disease Classifier (or reporting heuristic-only status)...")
     try:
-        from ml.training.disease_model import train_disease_model
-        disease_report = train_disease_model()
+        from ml.training.disease_cnn import train_disease_cnn
+        disease_report = train_disease_cnn()
         if disease_report.get("status") == "TRAINED":
             print(f"  Test accuracy = {disease_report['metrics']['test_accuracy']}  "
-                  f"CV mean = {disease_report['metrics']['cv_mean_accuracy']}")
+                  f"Macro F1 = {disease_report['metrics']['macro_f1']}")
         else:
             print(f"  {disease_report['note']}")
     except Exception as e:

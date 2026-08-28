@@ -83,16 +83,14 @@
     },
     {
       "model": "crop_disease",
-      "algorithm": "RandomForestClassifier",
+      "algorithm": "MobileNetV3-Small (fine-tuned, ImageNet-pretrained)",
       "status": "TRAINED",
-      "note": "Trained on a small real-photo sample from the public PlantVillage research benchmark (see scripts/fetch_plantvillage_sample.py) -- a curated academic dataset shot under controlled conditions, not this platform's own field photos. Treat accuracy as a lab-bench figure. The hand-tuned HSV heuristic remains the fallback whenever this model file is unavailable, and both paths carry the same 'not a diagnosis' disclaimer at inference time.",
+      "note": "Trained on a small real-photo sample from the public PlantVillage research benchmark (see scripts/fetch_plantvillage_sample.py) -- a curated academic dataset shot under controlled conditions, not this platform's own field photos. Treat accuracy as a lab-bench figure. The hand-tuned HSV heuristic remains the fallback whenever the exported model is unavailable, and both paths carry the same 'not a diagnosis' disclaimer at inference time.",
       "metrics": {
-        "test_accuracy": 0.7185,
-        "macro_f1": 0.7038,
-        "cv_mean_accuracy": 0.6771,
-        "cv_folds": 5,
-        "train_samples": 404,
-        "test_samples": 135,
+        "test_accuracy": 0.8037,
+        "macro_f1": 0.7646,
+        "train_samples": 432,
+        "val_samples": 107,
         "classes_covered": [
           "maize_common_rust",
           "maize_gray_leaf_spot",
@@ -113,26 +111,13 @@
           "tomato_target_spot",
           "tomato_yellow_leaf_curl_virus"
         ],
-        "classes_dropped_insufficient_data": []
-      },
-      "feature_importances": {
-        "hue_yellow": 0.081,
-        "hue_green": 0.0675,
-        "hue_orange": 0.021,
-        "hue_brown": 0.0906,
-        "hue_gray": 0.0934,
-        "hue_dark": 0.1123,
-        "hue_bright": 0.0679,
-        "sat_mean": 0.075,
-        "val_mean": 0.0842,
-        "hue_mean": 0.143,
-        "texture_score": 0.103,
-        "lesion_frac": 0.0612
+        "classes_dropped_insufficient_data": [],
+        "epochs": 12
       }
     }
   ],
   "model_dir": "ml/models",
-  "trained_at": 1786949173.6240854,
+  "trained_at": 1787940053.677779,
   "model_hashes": {
     "yield_model.joblib": "ec9e60994840bcee1d4ae9ed43fad36d",
     "price_model.joblib": "c03c3227a88978c42f57b01dd2502f58",

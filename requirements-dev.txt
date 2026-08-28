@@ -7,6 +7,14 @@
 # Used by ml/audit_models.py, ml/evaluate_models.py, data_ingestion/feature_pipeline.py.
 pandas>=2.0.0
 
+# Used only by ml/training/disease_cnn.py to fine-tune and export the disease
+# classifier. The live request path never imports torch/torchvision -- it
+# loads the exported ml/models/disease_model.onnx via onnxruntime instead
+# (a production dependency, see requirements.txt).
+torch>=2.5.0
+torchvision>=0.20.0
+onnx>=1.17.0
+
 # Imported by ml/evaluate_models.py behind a try/except (CATBOOST_AVAILABLE guard),
 # so it is optional even for evaluation -- but when present, pin to what has been
 # verified to work with the rest of this file's pins. Not currently installed in

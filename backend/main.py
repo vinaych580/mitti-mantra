@@ -737,7 +737,7 @@ def model_status():
         "yield_model_loaded": pred._ml_yield_model is not None,
         "price_model_loaded": pred._ml_price_model is not None,
         "recommend_model_loaded": pred._ml_recommend_model is not None,
-        "disease_model_loaded": pred._ml_disease_model is not None,
+        "disease_model_loaded": pred._ml_disease_session is not None,
         "disease_screening_available": True,
         "model_dir": "ml/models",
         "model_provenance": "Development planning artifacts trained from the repository seed data and synthetic augmentation; not independently validated field models.",
@@ -1258,7 +1258,7 @@ async def predict_disease_api(req: DiseasePredictQuery, request: Request):
         # entirely rather than let it report an overconfident "healthy" with
         # no disclosure of the coverage gap. The heuristic below already
         # floors confidence and the coverage_note always fires for soybean.
-        ml_result = predict_disease_ml(leaf_features, crop) if crop != "soybean" else None
+        ml_result = predict_disease_ml(image, crop) if crop != "soybean" else None
         if ml_result is not None:
             best_class, raw_conf = ml_result
             prediction_source = "ml_model"
@@ -1305,8 +1305,9 @@ async def predict_disease_api(req: DiseasePredictQuery, request: Request):
             "analysis_type": "trained_classifier_screening" if prediction_source == "ml_model" else "heuristic_screening",
             "prediction_source": prediction_source,
             "model_provenance": (
-                "RandomForestClassifier trained on a small real-photo sample from the public "
-                "PlantVillage research benchmark (lab-bench accuracy, not field-validated)."
+                "MobileNetV3-Small (fine-tuned, ImageNet-pretrained) trained on a small "
+                "real-photo sample from the public PlantVillage research benchmark "
+                "(lab-bench accuracy, not field-validated)."
                 if prediction_source == "ml_model"
                 else "Rule-based HSV colour/texture heuristic, not a trained model."
             ),

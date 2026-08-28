@@ -115,22 +115,28 @@ a warm cache: **222× faster** than the naïve re-parse-every-time pattern.
 
 ## ML integration
 
-Three models live in `ml/models/*.joblib` and load lazily:
+Three tabular models live in `ml/models/*.joblib`, plus one vision model in
+`ml/models/disease_model.onnx` — all load lazily:
 
 | Model | Algorithm | Purpose | Fallback |
 |---|---|---|---|
 | `yield_model` | `RandomForestRegressor` (200 trees) | Predict kg/acre yield given crop × soil × weather × inputs | Heuristic: `base_yield × soil_factor × climate_factor` from `utils/calculations.py` |
 | `price_model` | `GradientBoostingRegressor` (300 trees) | Autoregressive 1–6 month price forecast with lag features | Seasonal decomposition × linear trend |
 | `recommend_model` | `RandomForestClassifier` (200 trees) | `predict_proba` confidence per crop class | Heuristic ROI + risk + budget + soil scoring |
+| `disease_model` | MobileNetV3-Small, fine-tuned (ONNX, `onnxruntime`) | Classify a leaf photo into one of 18 crop/disease classes | Rule-based HSV colour/texture decision tree in `backend/main.py` |
 
 All ML results include a `prediction_source` field (`"ml_model"` or
 `"heuristic"`) so the UI can tag confidence honestly. If `ml/models/`
 directory is missing, the system **still works**, just on heuristics —
 the UI transparently shows the downgrade.
 
-Retraining is a POST away: `POST /api/ml/train` rebuilds all three from
-current CSVs, writes new `.joblib` files + `manifest.json`, and subsequent
-requests pick up the new models.
+Retraining is a POST away: `POST /api/ml/train` rebuilds all four from
+current CSVs/images, writes new model files + `manifest.json`, and
+subsequent requests pick up the new models. The disease model trains
+separately with `python -m ml.training.disease_cnn` (needs `torch` +
+`torchvision`, dev-only dependencies — see `requirements-dev.txt`); it
+exports straight to ONNX so production only ever depends on the lightweight
+`onnxruntime` package, not the full torch stack.
 
 ---
 

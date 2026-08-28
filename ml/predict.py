@@ -9,6 +9,7 @@ from statistics import mean
 from typing import Any
 
 import numpy as np
+from PIL import Image
 
 from utils.calculations import (
     CropParameter,
@@ -37,9 +38,14 @@ _ml_recommend_model = None
 _ml_label_encoders = None
 _ml_price_encoders = None
 _ml_recommend_encoders = None
-_ml_disease_model = None
-_ml_disease_label_encoder = None
+_ml_disease_session = None
+_ml_disease_labels: list[str] | None = None
 _ml_models_loaded = False
+
+# Must match ml/training/disease_cnn.py's preprocessing exactly.
+_DISEASE_IMAGE_SIZE = 224
+_DISEASE_IMAGENET_MEAN = np.array([0.485, 0.456, 0.406], dtype=np.float32)
+_DISEASE_IMAGENET_STD = np.array([0.229, 0.224, 0.225], dtype=np.float32)
 
 # FIX (2.1): Thread-safe locks for model loading and cache writes
 _ml_load_lock = threading.Lock()
@@ -50,7 +56,7 @@ def _load_ml_models():
     """Load trained ML models from disk. Silent no-op if models don't exist."""
     global _ml_yield_model, _ml_price_model, _ml_recommend_model
     global _ml_label_encoders, _ml_price_encoders, _ml_recommend_encoders
-    global _ml_disease_model, _ml_disease_label_encoder
+    global _ml_disease_session, _ml_disease_labels
     global _ml_models_loaded
     if _ml_models_loaded:
         return
@@ -78,12 +84,20 @@ def _load_ml_models():
             re_ = MODEL_DIR / "recommend_encoders.joblib"
             if re_.exists():
                 _ml_recommend_encoders = joblib.load(re_)
-            dm = MODEL_DIR / "disease_model.joblib"
-            if dm.exists():
-                _ml_disease_model = joblib.load(dm)
-            dle = MODEL_DIR / "disease_label_encoder.joblib"
-            if dle.exists():
-                _ml_disease_label_encoder = joblib.load(dle)
+
+            # Disease detection: lightweight ONNX inference (fine-tuned
+            # MobileNetV3-Small), not a joblib/scikit-learn model -- trained
+            # offline by ml/training/disease_cnn.py.
+            onnx_path = MODEL_DIR / "disease_model.onnx"
+            labels_path = MODEL_DIR / "disease_labels.json"
+            if onnx_path.exists() and labels_path.exists():
+                import json as _json
+                import onnxruntime as _ort
+                _ml_disease_session = _ort.InferenceSession(
+                    str(onnx_path), providers=["CPUExecutionProvider"]
+                )
+                with open(labels_path) as f:
+                    _ml_disease_labels = _json.load(f)
 
             # The forests were fitted with n_jobs=-1 and scikit-learn pickles
             # that setting, so every serve-time predict() spun up a joblib
@@ -92,8 +106,7 @@ def _load_ml_models():
             # which was the entire reason /api/recommend took seconds and
             # /api/rotation-plan took ~7 s. A single-row traversal is
             # microseconds of real work; do it on the calling thread.
-            for _m in (_ml_yield_model, _ml_price_model,
-                       _ml_recommend_model, _ml_disease_model):
+            for _m in (_ml_yield_model, _ml_price_model, _ml_recommend_model):
                 if _m is not None and hasattr(_m, "n_jobs"):
                     _m.n_jobs = 1
         except Exception as e:
@@ -102,33 +115,47 @@ def _load_ml_models():
         _ml_models_loaded = True
 
 
-def predict_disease_ml(features: dict[str, float], crop: str = "") -> tuple[str, float] | None:
-    """Classify a leaf feature vector with the trained disease model, if loaded.
+def _preprocess_leaf_image(image: Image.Image) -> np.ndarray:
+    """Resize/normalize a leaf photo into the disease model's NCHW input layout.
+
+    Must exactly match the eval-time transform in ml/training/disease_cnn.py
+    (resize to 224x224, scale to [0,1], ImageNet mean/std normalize, CHW).
+    """
+    resized = image.convert("RGB").resize((_DISEASE_IMAGE_SIZE, _DISEASE_IMAGE_SIZE))
+    arr = np.asarray(resized, dtype=np.float32) / 255.0  # HWC, [0, 1]
+    arr = (arr - _DISEASE_IMAGENET_MEAN) / _DISEASE_IMAGENET_STD
+    chw = np.transpose(arr, (2, 0, 1))  # CHW
+    return chw[np.newaxis, ...].astype(np.float32)  # NCHW, batch=1
+
+
+def predict_disease_ml(image: Image.Image, crop: str = "") -> tuple[str, float] | None:
+    """Classify a leaf photo with the fine-tuned disease model, if loaded.
 
     When `crop` is given, only that crop's classes are considered (mirrors the
     heuristic fallback's crop-bound behaviour) -- otherwise defaults to the
     tomato_* classes, the most comprehensive set, matching the heuristic's
     own no-crop-selected default.
 
-    Returns (class_name, confidence) or None if no trained model is present --
+    Returns (class_name, confidence) or None if no exported model is present --
     callers must fall back to the heuristic decision tree in that case.
     """
     _load_ml_models()
-    if _ml_disease_model is None or _ml_disease_label_encoder is None:
+    if _ml_disease_session is None or not _ml_disease_labels:
         return None
-    from engine.disease_features import feature_vector as _fv
-    x = np.array([_fv(features)])
-    proba = _ml_disease_model.predict_proba(x)[0]
-    classes = _ml_disease_label_encoder.classes_
+
+    x = _preprocess_leaf_image(image)
+    (logits,) = _ml_disease_session.run(None, {"image": x})
+    logits = logits[0]
+    exp = np.exp(logits - np.max(logits))
+    proba = exp / exp.sum()
 
     prefix = (crop or "tomato") + "_"
-    candidate_idxs = [i for i, c in enumerate(classes) if str(c).startswith(prefix)]
+    candidate_idxs = [i for i, c in enumerate(_ml_disease_labels) if c.startswith(prefix)]
     if not candidate_idxs:
-        candidate_idxs = list(range(len(classes)))
+        candidate_idxs = list(range(len(_ml_disease_labels)))
 
     best_idx = max(candidate_idxs, key=lambda i: proba[i])
-    class_name = classes[best_idx]
-    return str(class_name), float(proba[best_idx])
+    return _ml_disease_labels[best_idx], float(proba[best_idx])
 
 
 # FIX (2.2): Cache invalidation function for use after model retraining
@@ -138,7 +165,7 @@ def invalidate_caches():
     global _cache_soil, _cache_mandi
     global _ml_yield_model, _ml_price_model, _ml_recommend_model
     global _ml_label_encoders, _ml_price_encoders, _ml_recommend_encoders
-    global _ml_disease_model, _ml_disease_label_encoder
+    global _ml_disease_session, _ml_disease_labels
     global _ml_models_loaded
     with _cache_lock:
         _cache_crop_params = None
@@ -153,8 +180,8 @@ def invalidate_caches():
         _ml_label_encoders = None
         _ml_price_encoders = None
         _ml_recommend_encoders = None
-        _ml_disease_model = None
-        _ml_disease_label_encoder = None
+        _ml_disease_session = None
+        _ml_disease_labels = None
         _ml_models_loaded = False
     logger.info("All predict module caches invalidated.")
 
