@@ -167,6 +167,12 @@
         "value": "#d8ebd9",
         "createdAt": "2026-08-22T16:06:28.388Z",
         "reason": "single-use subtle gradient endpoint within the brand-green family for sidebar active state, not an off-palette color"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "18px",
+        "createdAt": "2026-08-28T18:05:00.606Z",
+        "reason": "html.mm-lg root font-size for the Large Text a11y toggle -- a user-controlled root-scale multiplier (112.5% of the 16px base), not a content type-ramp step, so it intentionally sits outside DESIGN.md's typography scale"
       }
     ]
   }

@@ -140,7 +140,8 @@
   };
 
   // ------------------------------------------------------------------
-  // A11y (applied as <body> classes)
+  // A11y (applied as <html> classes -- see the mm-lg font-size note below
+  // for why this can't live on <body>)
   // ------------------------------------------------------------------
   const a11y = {
     get() { try { return JSON.parse(localStorage.getItem(LS.a11y) || "{}"); } catch (_) { return {}; } },
@@ -153,8 +154,8 @@
   };
   function apply() {
     const a = a11y.get();
-    document.body.classList.toggle("mm-hc", !!a.highContrast);
-    document.body.classList.toggle("mm-lg", !!a.largeText);
+    document.documentElement.classList.toggle("mm-hc", !!a.highContrast);
+    document.documentElement.classList.toggle("mm-lg", !!a.largeText);
   }
 
   // ------------------------------------------------------------------
@@ -226,15 +227,19 @@
     font-family:Inter,system-ui,sans-serif;}
   .mm-toast.show{opacity:1;transform:translateX(-50%) translateY(-4px);}
 
-  /* ---- A11y modes ---- */
-  body.mm-lg{font-size:17px;}
-  body.mm-lg .kpi__val{font-size:1.6rem;}
-  body.mm-hc{filter:contrast(1.15) saturate(1.15);}
+  /* ---- A11y modes ----
+     Applied on <html> rather than <body>: nearly every font-size in this
+     codebase is set in rem, which is relative to the root element's
+     font-size and ignores body's -- a body.mm-lg rule here was a near
+     no-op for all of that text. */
+  html.mm-lg{font-size:18px;}
+  html.mm-lg .kpi__val{font-size:1.6rem;}
+  html.mm-hc{filter:contrast(1.15) saturate(1.15);}
   /* var(--ink) rather than a fixed rgba so the outline stays visible against
      the KPI tile's own background in both themes — a black outline vanishes
      against the dark-mode tile it's meant to highlight. */
-  body.mm-hc .kpi{outline:2px solid color-mix(in srgb, var(--ink) 35%, transparent);}
-  body.mm-hc a,body.mm-hc .btn-primary{text-decoration:underline;}
+  html.mm-hc .kpi{outline:2px solid color-mix(in srgb, var(--ink) 35%, transparent);}
+  html.mm-hc a,html.mm-hc .btn-primary{text-decoration:underline;}
 
   /* ---- Print / PDF ---- */
   @media print{

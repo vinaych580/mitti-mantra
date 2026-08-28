@@ -1074,6 +1074,16 @@
                   || document.querySelector('.farmmap__panel')
                   || document.querySelector('main')
                   || document.body;
+      // Tool panels fade/slide in via a CSS entrance animation (see .tool.active
+      // in style.css). html2canvas reads computed style synchronously, so a
+      // capture that lands mid-animation -- e.g. right after switching tabs --
+      // freezes at whatever opacity the animation was at, producing a blank or
+      // washed-out page. Snap any in-flight animation/transition on the target
+      // to its end state first, then force a synchronous style flush (the same
+      // reflow trick dashboard.js uses for .tool--leaving) so html2canvas is
+      // guaranteed to read the settled, post-animation styles.
+      target.getAnimations({ subtree: true }).forEach(a => a.finish());
+      void target.offsetHeight;
       const canvas = await window.html2canvas(target, {
         backgroundColor: getComputedStyle(document.body).backgroundColor || '#fff',
         scale: Math.min(2, window.devicePixelRatio || 1),
