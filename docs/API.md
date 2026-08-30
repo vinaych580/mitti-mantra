@@ -235,21 +235,20 @@ benefit, application URL.
 
 ## Farm management
 
-### `POST /api/expense/log`
+### `POST /api/expense/log`, `GET /api/expense/{farm_id}`
 
-Record a single expense for a farm.
+**Disabled — always returns `503`.** The original implementation wrote
+every farm's expenses to one shared server-side file keyed by a
+client-supplied `farm_id`, with no auth: any client could read or write
+any other farm's entries by guessing or supplying its ID. Both endpoints
+were switched off until real, tenant-scoped storage exists — see
+`backend/main.py`'s `post_expense`/`get_expenses` and `engine/features.py`'s
+`log_expense`/`get_expense_summary` for the disabled implementation.
 
-**Request**
-```json
-{ "farm_id": "alice_farm_1", "category": "fertilizer", "amount": 3200,
-  "date": "2025-07-12", "note": "Urea 2 bags" }
-```
-
-### `GET /api/expense/{farm_id}?planned_budget=15000`
-
-Sum by category with optional variance analysis against `planned_budget`.
-
-_In-memory store only; a production deployment would back this with a DB._
+Expense tracking now lives entirely client-side instead: the "Expense
+tracker" dashboard tool stores entries in `localStorage` (`mm_expenses`),
+scoped to one browser, the same pattern the Farm Profile and disease-scan
+log already use. See `docs/FRONTEND.md`.
 
 ### `GET /api/location-insights/{region_id}?season=kharif`
 

@@ -209,6 +209,23 @@
       'Biochar Application': 'बायोचार अनुप्रयोग',
       'Farmer profile': 'किसान प्रोफ़ाइल',
 
+      // Expense tracker
+      'Expense tracker': 'खर्च ट्रैकर',
+      'Log real spend by category and see it against your farm budget. Saved on this device only.':
+        'श्रेणी अनुसार वास्तविक खर्च दर्ज करें और अपने खेत के बजट से तुलना देखें। केवल इस डिवाइस पर सहेजा गया।',
+      'Category': 'श्रेणी',
+      'Amount (₹)': 'राशि (₹)',
+      'Date': 'तारीख़',
+      'Note (optional)': 'टिप्पणी (वैकल्पिक)',
+      'Add expense': 'खर्च जोड़ें',
+      'Seeds': 'बीज',
+      'Fertilizer': 'उर्वरक',
+      'Pesticide': 'कीटनाशक',
+      'Labor': 'श्रम',
+      'Irrigation': 'सिंचाई',
+      'Equipment': 'उपकरण',
+      'Other': 'अन्य',
+
       // Option values
       'Kharif': 'खरीफ़',
       'Rabi': 'रबी',
@@ -513,6 +530,23 @@
       'Biochar Application': 'బయోచార్ వినియోగం',
       'Farmer profile': 'రైతు ప్రొఫైల్',
 
+      // Expense tracker
+      'Expense tracker': 'ఖర్చు ట్రాకర్',
+      'Log real spend by category and see it against your farm budget. Saved on this device only.':
+        'వర్గం వారీగా వాస్తవ ఖర్చును నమోదు చేయండి మరియు మీ వ్యవసాయ బడ్జెట్‌తో పోల్చి చూడండి. ఇది ఈ పరికరంలో మాత్రమే సేవ్ చేయబడుతుంది.',
+      'Category': 'వర్గం',
+      'Amount (₹)': 'మొత్తం (₹)',
+      'Date': 'తేదీ',
+      'Note (optional)': 'గమనిక (ఐచ్ఛికం)',
+      'Add expense': 'ఖర్చు జోడించండి',
+      'Seeds': 'విత్తనాలు',
+      'Fertilizer': 'ఎరువు',
+      'Pesticide': 'పురుగుమందు',
+      'Labor': 'కూలీ',
+      'Irrigation': 'నీటిపారుదల',
+      'Equipment': 'పరికరాలు',
+      'Other': 'ఇతర',
+
       'Kharif': 'ఖరీఫ్',
       'Rabi': 'రబీ',
       'Zaid': 'జాయద్',
@@ -806,6 +840,23 @@
       'Cover Crop': 'ಕವರ್ ಬೆಳೆ',
       'Biochar Application': 'ಬಯೋಚಾರ್ ಬಳಕೆ',
       'Farmer profile': 'ರೈತ ಪ್ರೊಫೈಲ್',
+
+      // Expense tracker
+      'Expense tracker': 'ವೆಚ್ಚ ಟ್ರ್ಯಾಕರ್',
+      'Log real spend by category and see it against your farm budget. Saved on this device only.':
+        'ವರ್ಗದ ಪ್ರಕಾರ ನಿಜವಾದ ವೆಚ್ಚವನ್ನು ದಾಖಲಿಸಿ ಮತ್ತು ನಿಮ್ಮ ಕೃಷಿ ಬಜೆಟ್‌ಗೆ ಹೋಲಿಸಿ ನೋಡಿ. ಇದು ಈ ಸಾಧನದಲ್ಲಿ ಮಾತ್ರ ಉಳಿಸಲಾಗುತ್ತದೆ.',
+      'Category': 'ವರ್ಗ',
+      'Amount (₹)': 'ಮೊತ್ತ (₹)',
+      'Date': 'ದಿನಾಂಕ',
+      'Note (optional)': 'ಟಿಪ್ಪಣಿ (ಐಚ್ಛಿಕ)',
+      'Add expense': 'ವೆಚ್ಚ ಸೇರಿಸಿ',
+      'Seeds': 'ಬೀಜಗಳು',
+      'Fertilizer': 'ಗೊಬ್ಬರ',
+      'Pesticide': 'ಕೀಟನಾಶಕ',
+      'Labor': 'ಕೂಲಿ',
+      'Irrigation': 'ನೀರಾವರಿ',
+      'Equipment': 'ಉಪಕರಣಗಳು',
+      'Other': 'ಇತರೆ',
 
       'Kharif': 'ಖರೀಫ್',
       'Rabi': 'ರಬಿ',

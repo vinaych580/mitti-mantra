@@ -73,6 +73,11 @@ Tool categories (see the left sidebar in `dashboard.html`):
 | Finance | Loan calculator · Expense tracker · Government schemes |
 | System | ML model status |
 
+Expense tracker (`data-tool="expense"`) is the one tool with no backend
+call at all: entries are stored in `localStorage` (`mm_expenses`), scoped
+to the browser. `/api/expense/*` is disabled server-side (see
+`docs/API.md`) because the old shared-file store had no tenant isolation.
+
 ### `mm-enhance.js` — non-invasive UX layer
 
 Uses a `MutationObserver` on every `.output[data-out]` container. When

@@ -296,13 +296,14 @@
 
   ---- Farm Management ----
 
-  5.29 Log Expense                   POST /api/expense/log
-       Records actual expenses by farm_id, category, amount, date, notes.
-       In-memory store (production would use database).
-
-  5.30 Expense Summary               GET  /api/expense/{farm_id}?planned_budget=15000
-       Returns expense totals by category with optional variance analysis
-       against planned budget (over/under budget with percentage).
+  5.29 Log Expense                   POST /api/expense/log            [DISABLED, 503]
+  5.30 Expense Summary               GET  /api/expense/{farm_id}      [DISABLED, 503]
+       The old implementation wrote every farm's expenses to one shared
+       server-side file keyed by a client-supplied farm_id, with no auth,
+       so any client could read or write any other farm's entries. Both
+       endpoints are disabled until real tenant-scoped storage exists.
+       Expense tracking now lives entirely client-side in localStorage
+       (`mm_expenses`) — see docs/API.md and docs/FRONTEND.md.
 
   5.31 Strategy Templates            GET  /api/strategy-templates?profile=small
        8 pre-built strategy presets: conservative, aggressive, balanced,

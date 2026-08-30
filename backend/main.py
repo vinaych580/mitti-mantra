@@ -46,8 +46,6 @@ from engine.features import (
     cross_mandi_arbitrage,
     get_strategy_templates,
     region_benchmark,
-    log_expense,
-    get_expense_summary,
     match_government_schemes,
     calculate_disease_outbreak_risk,
     calculate_carbon_credits,

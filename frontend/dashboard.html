@@ -26,7 +26,7 @@
   <nav class="nav scrolled" id="nav">
     <div class="nav__wrap">
       <a href="index.html" class="logo" aria-label="Mitti Mantra home">
-        <img src="assets/logo-192.png" alt="Mitti Mantra — Growing the future" class="logo__img">
+        <img src="assets/logo-128.png" alt="Mitti Mantra — Growing the future" class="logo__img" width="128" height="128">
       </a>
       <ul class="nav__links">
         <li><a href="index.html">Home</a></li>
@@ -211,6 +211,14 @@
               <path d="M2 10h20" />
             </svg>
             Loan feasibility
+          </button>
+          <button class="sidebar__btn" data-tool="expense">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <path d="M14 2v6h6" />
+              <path d="M9 15h6M9 11h3" />
+            </svg>
+            Expense tracker
           </button>
           <button class="sidebar__btn" data-tool="schemes">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -875,6 +883,43 @@
             <button class="btn btn-primary" type="submit">Check feasibility</button>
           </form>
           <div class="output" data-out="loan"></div>
+        </section>
+
+        <!-- 12b. EXPENSE TRACKER -->
+        <section class="tool" data-tool="expense">
+          <div class="tool__head">
+            <div class="tool__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <path d="M14 2v6h6" />
+                <path d="M9 15h6M9 11h3" />
+              </svg></div>
+            <div>
+              <h2>Expense tracker</h2>
+              <p>Log real spend by category and see it against your farm budget. Saved on this device only.</p>
+            </div>
+          </div>
+          <form data-form="expense">
+            <div class="form-row form-row--3">
+              <div class="field"><label>Category</label>
+                <select name="category">
+                  <option value="seeds">Seeds</option>
+                  <option value="fertilizer">Fertilizer</option>
+                  <option value="pesticide">Pesticide</option>
+                  <option value="labor">Labor</option>
+                  <option value="irrigation">Irrigation</option>
+                  <option value="equipment">Equipment</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div class="field"><label>Amount (₹)</label><input name="amount" type="number" min="0" step="any" required></div>
+              <div class="field"><label>Date</label><input name="date" type="date"></div>
+            </div>
+            <div class="form-row">
+              <div class="field"><label>Note (optional)</label><input name="note" type="text" maxlength="200" placeholder="e.g. Urea 2 bags"></div>
+            </div>
+            <button class="btn btn-primary" type="submit">Add expense</button>
+          </form>
+          <div class="output" data-out="expense"></div>
         </section>
 
         <!-- 13. SCHEMES -->

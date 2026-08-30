@@ -2088,6 +2088,130 @@
   });
 
   /* ==========================================================
+     TOOL 12b: Expense tracker — localStorage only, no backend call.
+     /api/expense/* used to do this server-side, keyed by a client-supplied
+     farm_id with no auth (anyone could read/write anyone else's expenses),
+     so it's disabled in backend/main.py until real tenant-scoped storage
+     exists. This keeps the same category/amount/date/note shape but scopes
+     it to this browser, the same way the Farm Profile and the disease-scan
+     log (mittimantra_disease_logs, below) already do.
+     ========================================================== */
+  const EXPENSE_KEY = 'mm_expenses';
+  const EXPENSE_CATEGORY_LABELS = {
+    seeds: 'Seeds', fertilizer: 'Fertilizer', pesticide: 'Pesticide',
+    labor: 'Labor', irrigation: 'Irrigation', equipment: 'Equipment', other: 'Other'
+  };
+
+  function loadExpenses() {
+    try { return JSON.parse(localStorage.getItem(EXPENSE_KEY) || '[]'); }
+    catch (_) { return []; }
+  }
+  function saveExpenses(list) {
+    try { localStorage.setItem(EXPENSE_KEY, JSON.stringify(list)); } catch (_) { }
+  }
+  function expenseBudget() {
+    const profile = (window.MM && window.MM.profile && window.MM.profile.get()) || {};
+    const areaAcres = +profile.area_acres || +(savedFarm && savedFarm.acres) || 0;
+    const perAcre = +profile.budget_per_acre || 0;
+    return areaAcres * perAcre;
+  }
+
+  function renderExpenses() {
+    const out = $('[data-out="expense"]');
+    if (!out) return;
+    const entries = loadExpenses().slice().sort((a, b) => (b.date || '').localeCompare(a.date || '') || b.id - a.id);
+
+    if (!entries.length) {
+      const items = ['Total spend vs. your farm budget', 'Spend by category', 'A running log you can edit'];
+      out.innerHTML = `<div class="tool__empty">
+           <div class="tool__empty__ico">${SPARK_SVG}</div>
+           <div>
+             <div class="tool__empty__label">What you'll get</div>
+             <ul>${items.map(t => `<li>${CHECK_SVG}<span>${t}</span></li>`).join('')}</ul>
+             <p class="tool__empty__hint">Add your first expense above.</p>
+           </div>
+         </div>`;
+      return;
+    }
+
+    const total = entries.reduce((s, e) => s + (Number(e.amount) || 0), 0);
+    const budget = expenseBudget();
+    const variance = budget - total;
+    const varianceCls = budget ? (variance >= 0 ? 'kpi--good' : 'kpi--warn') : '';
+
+    const byCategory = {};
+    entries.forEach(e => { byCategory[e.category] = (byCategory[e.category] || 0) + (Number(e.amount) || 0); });
+    const catKeys = Object.keys(byCategory).sort((a, b) => byCategory[b] - byCategory[a]);
+
+    out.innerHTML = `
+      <div class="kpi-grid">
+        <div class="kpi"><div class="kpi__lbl">Total spent</div><div class="kpi__val">${INR(total)}</div>
+          <div class="kpi__sub">${entries.length} ${entries.length === 1 ? 'entry' : 'entries'}</div></div>
+        ${budget ? `
+        <div class="kpi"><div class="kpi__lbl">Farm budget</div><div class="kpi__val">${INR(budget)}</div></div>
+        <div class="kpi ${varianceCls}"><div class="kpi__lbl">${variance >= 0 ? 'Remaining' : 'Over budget'}</div>
+          <div class="kpi__val">${INR(Math.abs(variance))}</div></div>` : ''}
+      </div>
+
+      <div class="chart-grid">
+        <div class="chart-box">
+          <div class="chart-box__title">Spend by category</div>
+          <canvas data-chart="expense-cat"></canvas>
+        </div>
+      </div>
+
+      ${entries.map(e => `
+        <div class="alert" data-expense-row="${e.id}">
+          <div class="alert__body">
+            <strong>${EXPENSE_CATEGORY_LABELS[e.category] || e.category} — ${INR(e.amount)}</strong>
+            <span>${e.date || ''}${e.note ? ' · ' + e.note : ''}</span>
+          </div>
+          <button type="button" class="btn btn-ghost" data-expense-delete="${e.id}">Delete</button>
+        </div>`).join('')}`;
+
+    makeChart($('[data-chart="expense-cat"]'), {
+      type: 'bar',
+      data: {
+        labels: catKeys.map(k => EXPENSE_CATEGORY_LABELS[k] || k),
+        datasets: [{ label: 'Spend', data: catKeys.map(k => byCategory[k]), backgroundColor: BRAND, borderRadius: 4 }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        scales: { y: { beginAtZero: true, grid: { color: 'rgba(29,26,21,.06)' }, ticks: { callback: v => '₹' + (v / 1000).toFixed(0) + 'K' } }, x: { grid: { display: false } } },
+        plugins: { legend: { display: false } }
+      }
+    });
+  }
+
+  $('[data-form="expense"]')?.addEventListener('submit', e => {
+    e.preventDefault();
+    const f = formToObj(e.target);
+    const amount = +f.amount;
+    if (!f.category || !(amount > 0)) return;
+    const entries = loadExpenses();
+    const nextId = entries.reduce((m, x) => Math.max(m, x.id || 0), 0) + 1;
+    entries.push({
+      id: nextId,
+      category: f.category,
+      amount: Math.round(amount * 100) / 100,
+      date: f.date || new Date().toISOString().slice(0, 10),
+      note: (f.note || '').slice(0, 200)
+    });
+    saveExpenses(entries);
+    e.target.reset();
+    renderExpenses();
+  });
+
+  $('[data-out="expense"]')?.addEventListener('click', e => {
+    const btn = e.target.closest('[data-expense-delete]');
+    if (!btn) return;
+    saveExpenses(loadExpenses().filter(x => x.id !== (+btn.dataset.expenseDelete)));
+    renderExpenses();
+  });
+
+  renderExpenses();
+
+  /* ==========================================================
      TOOL 13: Govt schemes — eligible_schemes[]
      ========================================================== */
   $('[data-form="schemes"]')?.addEventListener('submit', async e => {
