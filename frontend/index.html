@@ -20,7 +20,7 @@
   <nav class="nav" id="nav">
     <div class="nav__wrap">
       <a href="index.html" class="logo" aria-label="Mitti Mantra home">
-        <img src="assets/logo-192.png" alt="Mitti Mantra — Growing the future" class="logo__img">
+        <img src="assets/logo-128.png" alt="Mitti Mantra — Growing the future" class="logo__img" width="128" height="128">
       </a>
 
       <ul class="nav__links">
@@ -68,7 +68,14 @@
   <!-- ============= HERO ============= -->
   <header class="hero">
     <div class="hero__bg">
-      <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=1920&q=80" alt="Wheat fields at sunrise" loading="eager">
+      <img
+        src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=1920&q=80"
+        srcset="
+          https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=800&q=80 800w,
+          https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=1200&q=80 1200w,
+          https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=1920&q=80 1920w"
+        sizes="100vw"
+        alt="Wheat fields at sunrise" loading="eager" fetchpriority="high">
     </div>
     <div class="hero__grain"></div>
 
@@ -453,7 +460,13 @@
     <div class="container">
       <div class="showcase__grid">
         <div class="showcase__media reveal">
-          <img src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=1000&q=80" alt="Farmer walking through wheat field">
+          <img
+            src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=1000&q=80"
+            srcset="
+              https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=500&q=80 500w,
+              https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=1000&q=80 1000w"
+            sizes="(max-width: 640px) 100vw, 50vw"
+            alt="Farmer walking through wheat field" loading="lazy">
           <div class="showcase__badge">
             <div class="showcase__badge__ico">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
@@ -678,7 +691,13 @@
     <div class="container">
       <div class="showcase__grid showcase__grid--reverse">
         <div class="showcase__media reveal">
-          <img src="https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=1000&q=80" alt="Farmer checking mobile phone in field">
+          <img
+            src="https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=1000&q=80"
+            srcset="
+              https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=500&q=80 500w,
+              https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=1000&q=80 1000w"
+            sizes="(max-width: 640px) 100vw, 50vw"
+            alt="Farmer checking mobile phone in field" loading="lazy">
           <div class="showcase__badge">
             <div class="showcase__badge__ico" style="background: var(--accent-soft); color: var(--accent);">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
@@ -782,7 +801,7 @@
       <div class="footer__grid">
         <div class="footer__about">
           <a href="#" class="logo" aria-label="Mitti Mantra home">
-            <img src="assets/logo-192.png" alt="Mitti Mantra — Growing the future" class="logo__img">
+            <img src="assets/logo-128.png" alt="Mitti Mantra — Growing the future" class="logo__img" width="128" height="128">
           </a>
           <p class="footer__tagline">Growing the future — AI-powered farm intelligence, built with care for Indian kisans. Open-source, data-first, and designed to work on a 2G phone.</p>
         </div>
@@ -831,15 +850,13 @@
   </footer>
 
 
-  <script defer src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-
   <script defer src="mm-core.js"></script>
   <script defer src="mm-analytics.js"></script>
   <script defer src="mm-freshness.js"></script>
   <script defer src="site-ui.js"></script>
   <script defer src="state-data.js"></script>
   <script defer src="farm-state.js"></script>
-  <script defer src="india-globe.js"></script>
+  <script defer src="scene3d-loader.js"></script>
   <script defer src="demo-recommender.js"></script>
   <script defer src="i18n-data.js"></script>
   <script defer src="i18n.js"></script>

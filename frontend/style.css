@@ -279,9 +279,12 @@ section {
 
 /* --- Brand logo ---
    Single image (mark + wordmark baked in), served from
-   frontend/assets/logo-192.png -- the 729px original was 468 KB for a mark
-   rendered ~53px wide. Height is fixed; width scales by the image's natural
-   aspect ratio. */
+   frontend/assets/logo-128.png -- the 729px original was 468 KB for a mark
+   rendered ~53px wide; logo-192.png (41 KB) was itself still 3-4x the pixel
+   density this nav size needs, so logo-128.png (22 KB) is the <img> source
+   here. logo-192.png/logo-512.png remain for favicon/apple-touch-icon/PWA
+   manifest, which need the larger real sizes. Height is fixed; width scales
+   by the image's natural aspect ratio. */
 .logo {
   display: inline-flex;
   align-items: center;

@@ -6,7 +6,7 @@
      • Network-only for API calls to the backend.
 */
 
-const VERSION = 'mittimantra-v49';
+const VERSION = 'mittimantra-v50';
 const CORE = [
   './',
   './index.html',
@@ -17,11 +17,13 @@ const CORE = [
   './book-a-tractor.html',
   './login.html',
   './style.css',
+  './assets/logo-128.png',
   './assets/logo-192.png',
   './assets/logo-512.png',
   './site-ui.js',
   './state-data.js',
   './india-globe.js',
+  './scene3d-loader.js',
   './demo-recommender.js',
   './dashboard.js',
   './offline-simulator.js',
