@@ -45,18 +45,18 @@
 
   /* ── Drawing hints ─────────────────────────────────── */
   // leaflet-draw ships its own English strings, and i18n.js only walks the DOM,
-  // so the live hints shown while drawing — the most important text on this
-  // page — would stay English in hi/te/kn. L.drawLocal is read when a handler
-  // starts, so re-applying it on every language change is enough. The wording
-  // is also touch-first ("tap"), since that is how this page is actually used.
+  // so the live hint tooltip that follows the cursor while drawing — the most
+  // important text on this page — would stay English in hi/te/kn. L.drawLocal
+  // is read when the polygon handler starts, so re-applying it on every
+  // language change is enough. The wording is also touch-first ("tap"), since
+  // that is how this page is actually used. (The Finish / Delete last point /
+  // Cancel actions below live in the .fb-drawbar buttons instead, which are
+  // plain DOM text and pick up translations the same way the rest of the
+  // page's copy does.)
   const DRAW_STRINGS = {
-    start:  'Tap each corner of your plot.',
-    cont:   'Keep tapping to add corners.',
-    end:    'Tap the first corner again to finish.',
-    rect:   'Drag to draw a rectangle.',
-    finish: 'Finish',
-    cancel: 'Cancel',
-    undo:   'Delete last point',
+    start: 'Tap each corner of your plot.',
+    cont:  'Keep tapping to add corners.',
+    end:   'Tap the first corner again to finish.',
   };
 
   function localiseDrawTooltips() {
@@ -68,15 +68,6 @@
     poly.start = t(DRAW_STRINGS.start);
     poly.cont  = t(DRAW_STRINGS.cont);
     poly.end   = t(DRAW_STRINGS.end);
-    L.drawLocal.draw.handlers.rectangle.tooltip.start = t(DRAW_STRINGS.rect);
-
-    const actions = L.drawLocal.draw.toolbar;
-    actions.finish.text = t(DRAW_STRINGS.finish);
-    actions.finish.title = t(DRAW_STRINGS.finish);
-    actions.actions.text = t(DRAW_STRINGS.cancel);
-    actions.actions.title = t(DRAW_STRINGS.cancel);
-    actions.undo.text = t(DRAW_STRINGS.undo);
-    actions.undo.title = t(DRAW_STRINGS.undo);
   }
 
   // i18n-data.js loads after this file, so wait for the document to finish.
@@ -89,22 +80,100 @@
   const STROKE = '#2f6b3a'; // MittiMantra brand green
   const SKY    = '#6ea7c7'; // design-system sky — GPS accuracy halo, distinct from the plot
 
+  const POLYGON_OPTIONS = {
+    allowIntersection: false,
+    showArea: true,
+    shapeOptions: { color: STROKE, weight: 2.5, fillColor: STROKE, fillOpacity: 0.18 }
+  };
+
+  // Editing an existing shape's vertices still uses leaflet-draw's own icon —
+  // it's the one tool that genuinely has no other affordance. Drawing itself
+  // no longer goes through this toolbar (see fb-drawbar below): the rectangle
+  // tool is dropped (it was undocumented and redundant with polygon), and
+  // "delete" is dropped since the "Clear" button in the results panel already
+  // removes the one shape a farmer can have on the map at a time.
   const drawControl = new L.Control.Draw({
     position: 'topleft',
-    draw: {
-      polygon: {
-        allowIntersection: false,
-        showArea: true,
-        shapeOptions: { color: STROKE, weight: 2.5, fillColor: STROKE, fillOpacity: 0.18 }
-      },
-      rectangle: {
-        shapeOptions: { color: STROKE, weight: 2.5, fillColor: STROKE, fillOpacity: 0.18 }
-      },
-      polyline: false, circle: false, circlemarker: false, marker: false
-    },
-    edit: { featureGroup: drawnItems, remove: true }
+    draw: { polygon: false, rectangle: false, polyline: false, circle: false, circlemarker: false, marker: false },
+    edit: { featureGroup: drawnItems, remove: false }
   });
   map.addControl(drawControl);
+
+  /* ── Primary "Draw plot boundary" control ──────────────────────────
+     A single labelled button that starts the same polygon handler
+     leaflet-draw's toolbar would have, plus a full-size Undo / Finish /
+     Cancel row while drawing — see the .fb-drawbar rule in style.css for
+     why this exists instead of the stock icon toolbar. */
+  const polygonDrawer = new L.Draw.Polygon(map, POLYGON_OPTIONS);
+
+  const DrawBar = L.Control.extend({
+    options: { position: 'topleft' },
+    onAdd() {
+      const bar = L.DomUtil.create('div', 'fb-drawbar');
+
+      this.startBtn = L.DomUtil.create('button', 'btn btn-primary fb-drawbar__start', bar);
+      this.startBtn.type = 'button';
+      this.startBtn.innerHTML =
+        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" ' +
+        'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+        '<path d="M4 19 10 6 16 15 20 9 20 19Z"/></svg> Draw plot boundary';
+
+      this.activeRow = L.DomUtil.create('div', 'fb-drawbar__active', bar);
+      this.activeRow.hidden = true;
+
+      this.undoBtn = L.DomUtil.create('button', 'btn btn-ghost fb-drawbar__undo', this.activeRow);
+      this.undoBtn.type = 'button';
+      this.undoBtn.textContent = 'Delete last point';
+
+      this.finishBtn = L.DomUtil.create('button', 'btn btn-primary fb-drawbar__finish', this.activeRow);
+      this.finishBtn.type = 'button';
+      this.finishBtn.textContent = 'Finish';
+      this.finishBtn.disabled = true;
+
+      this.cancelBtn = L.DomUtil.create('button', 'fb-drawbar__cancel', this.activeRow);
+      this.cancelBtn.type = 'button';
+      this.cancelBtn.textContent = 'Cancel';
+
+      L.DomEvent.disableClickPropagation(bar);
+      L.DomEvent.disableScrollPropagation(bar);
+
+      L.DomEvent.on(this.startBtn, 'click', () => {
+        if (currentLayer) { drawnItems.removeLayer(currentLayer); currentLayer = null; }
+        polygonDrawer.enable();
+      });
+      L.DomEvent.on(this.undoBtn, 'click', () => polygonDrawer.deleteLastVertex());
+      L.DomEvent.on(this.finishBtn, 'click', () => {
+        // leaflet-draw has no public "finish now" method; _finishShape is the
+        // long-standing, widely-used way to close the shape programmatically
+        // (the alternative is tapping the first vertex again, which stays
+        // available too). Guarded so a future leaflet-draw upgrade that drops
+        // it fails safe — the button just does nothing instead of throwing.
+        if (this.finishBtn.disabled) return;
+        if (typeof polygonDrawer._finishShape === 'function') polygonDrawer._finishShape();
+      });
+      L.DomEvent.on(this.cancelBtn, 'click', () => polygonDrawer.disable());
+
+      return bar;
+    }
+  });
+  const drawBar = new DrawBar();
+  map.addControl(drawBar);
+
+  map.on(L.Draw.Event.DRAWSTART, (e) => {
+    if (e.layerType !== 'polygon') return;
+    drawBar.startBtn.hidden = true;
+    drawBar.activeRow.hidden = false;
+    drawBar.finishBtn.disabled = true;
+  });
+  map.on(L.Draw.Event.DRAWVERTEX, (e) => {
+    const count = e.layers.getLayers().length;
+    drawBar.finishBtn.disabled = count < 3;
+  });
+  map.on(L.Draw.Event.DRAWSTOP, (e) => {
+    if (e.layerType && e.layerType !== 'polygon') return;
+    drawBar.startBtn.hidden = false;
+    drawBar.activeRow.hidden = true;
+  });
 
   /* ── State ─────────────────────────────────────────── */
   const summaryEl  = document.getElementById('farmSummary');
@@ -132,6 +201,11 @@
   // On desktop the sheet styles are inert, so these calls are harmless there.
   function setSheetOpen(open) {
     resultEl.classList.toggle('is-open', open);
+    // Mirrored onto <body> so the global tools FAB (added outside this
+    // page's own DOM by toolbar.js) can hide itself while the sheet
+    // covers the screen — see body.page-farm-boundary.fb-sheet-open in
+    // style.css.
+    document.body.classList.toggle('fb-sheet-open', open);
     sheetToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
   }
 

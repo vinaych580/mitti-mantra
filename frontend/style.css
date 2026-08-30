@@ -201,6 +201,14 @@ section {
   white-space: nowrap;
 }
 
+/* A class selector's display always outranks the [hidden] attribute's
+   display:none in the UA stylesheet, so any .btn toggled via the hidden
+   property (e.g. fbQuickSave) renders anyway. This restores the browser's
+   default hidden behaviour for every button that uses it. */
+.btn[hidden] {
+  display: none;
+}
+
 .btn svg {
   width: 16px;
   height: 16px;
@@ -3606,10 +3614,18 @@ body.mm-menu-open .qw-panel {
 }
 
 /* ---------- Farm map page ---------- */
-.farmmap {
+/* Declared on body, not .farmmap: the global tools FAB (toolbar.js) is
+   appended directly to <body>, a sibling of .farmmap rather than a
+   descendant, so it can't see a custom property scoped to .farmmap — the
+   var() would resolve invalid and the FAB's offset below would silently
+   fall back to its initial value instead of erroring. */
+body.page-farm-boundary {
   /* Visible height of the collapsed mobile result sheet — the map reserves
      exactly this much room so the readout never covers the plot. */
   --fb-peek: 76px;
+}
+
+.farmmap {
   padding-top: var(--nav-h);
   min-height: 100vh;
   background: var(--bg);
@@ -3938,6 +3954,12 @@ body.mm-menu-open .qw-panel {
 }
 
 .farmmap__map {
+  /* Leaflet positions its panes with position:absolute and expects the
+     container to establish the positioning context itself; without this,
+     an absolutely-positioned ancestor elsewhere on the page (or none at
+     all) can become the reference instead, and tiles render shifted out
+     of the map entirely, bleeding into the panel next to it. */
+  position: relative;
   border-radius: var(--r-lg);
   overflow: hidden;
   box-shadow: var(--shadow-md);
@@ -3945,6 +3967,71 @@ body.mm-menu-open .qw-panel {
 
 .leaflet-container {
   border-radius: var(--r-lg);
+}
+
+/* ---- Primary draw control ----
+   leaflet-draw's own toolbar is a stack of unlabeled sprite icons next to
+   the zoom buttons — nothing on the map says which glyph starts a plot.
+   This is a real Leaflet control (so it stacks correctly with zoom and
+   stays put on pan/zoom) carrying one labelled button that starts the
+   same polygon handler, plus a full-size Undo / Finish / Cancel row once
+   drawing is under way, replacing leaflet-draw's own tiny text-link
+   actions. */
+.fb-drawbar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0 0 10px;
+}
+
+.fb-drawbar__start {
+  box-shadow: var(--shadow-md);
+}
+
+.fb-drawbar__start svg {
+  flex-shrink: 0;
+}
+
+/* :not([hidden]) rather than a bare selector — .btn/.fb-drawbar__active
+   both set their own `display`, which otherwise beats the `[hidden]`
+   attribute's display:none in the UA stylesheet (a class selector always
+   outranks an attribute selector) and the row shows up before drawing
+   ever starts. */
+.fb-drawbar__active:not([hidden]) {
+  display: flex;
+  gap: 6px;
+  background: var(--surface);
+  padding: 6px;
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-md);
+}
+
+.fb-drawbar__active .btn {
+  padding: 9px 14px;
+  font-size: var(--fs-xs);
+  white-space: nowrap;
+}
+
+.fb-drawbar__finish:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.fb-drawbar__cancel {
+  border: 0;
+  background: transparent;
+  color: var(--ink-faint);
+  font: inherit;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  padding: 9px 10px;
+  cursor: pointer;
+  border-radius: var(--r-sm);
+}
+
+.fb-drawbar__cancel:hover {
+  color: var(--ink);
+  background: var(--bg-soft);
 }
 
 /* =========================================================
@@ -4025,6 +4112,12 @@ body.mm-menu-open .qw-panel {
 
   .fb-sheet__grip {
     flex: 1;
+    /* min-width:0 lets this flex child shrink below its text's natural
+       width, which .fb-sheet__peek's ellipsis below depends on — without
+       it a long "X.XX acres · Village" reading grows the whole header
+       past --fb-peek and the Save button gets clipped by the collapsed
+       sheet's fold. */
+    min-width: 0;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -4047,9 +4140,14 @@ body.mm-menu-open .qw-panel {
   }
 
   .fb-sheet__peek {
+    display: block;
+    width: 100%;
     font-size: 1rem;
     font-weight: 600;
     color: var(--ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .fb-sheet__cta {
@@ -4068,19 +4166,47 @@ body.mm-menu-open .qw-panel {
 
   /* Leaflet's own controls ship at 26–30px — below the 44px touch minimum.
      Scoped through #farmMap so it outweighs leaflet-draw.css, which is linked
-     after this stylesheet and would otherwise win the tie. */
-  #farmMap .leaflet-bar a,
-  #farmMap .leaflet-draw-toolbar a {
+     after this stylesheet and would otherwise win the tie. Scoped to the zoom
+     control specifically (not the broader .leaflet-bar, which the edit
+     toolbar below also carries) — its <a> is plain text ("+"/"−"), not a
+     sprite icon, so resizing it directly is safe. */
+  #farmMap .leaflet-control-zoom a {
     width: 44px;
     height: 44px;
     line-height: 44px;
-    background-position: 50% 50%;
+  }
+
+  /* leaflet-draw's icons are one shared sprite sheet, positioned per tool
+     via background-position values calibrated for its native 26x26 box.
+     Resizing that box directly (as this rule used to) shifts every icon
+     off its calibrated offset, so every tool ends up showing the same
+     off-centre sliver of the sprite. Growing the box with padding instead
+     — and re-anchoring the sprite to the original content box — enlarges
+     the tap target without moving the icon inside it. */
+  #farmMap .leaflet-draw-toolbar a {
+    box-sizing: content-box;
+    background-origin: content-box;
+    padding: 9px;
   }
 
   #farmMap .leaflet-draw-actions a {
     min-height: 44px;
     line-height: 44px;
     font-size: 1rem;
+  }
+
+  /* The global tools FAB (toolbar.js) sits bottom-right on every page; on
+     this one it collides with the result sheet's peek row and its "Save"
+     button. Lift it clear of the peek strip, and hide it outright while
+     the sheet is expanded so it never sits over the summary content. */
+  body.page-farm-boundary .qw-fab,
+  body.page-farm-boundary .qw-panel {
+    bottom: calc(var(--fb-peek) + 12px);
+  }
+
+  body.page-farm-boundary.fb-sheet-open .qw-fab,
+  body.page-farm-boundary.fb-sheet-open .qw-panel {
+    display: none;
   }
 }
 
