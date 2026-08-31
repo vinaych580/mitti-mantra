@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Get your answer · Mitti Mantra</title>
+  <meta name="description"
+    content="Tell us your farm's location, season, and budget — get one ranked crop recommendation with reasoning, in under a minute.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="assets/logo-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/logo-192.png">
+
+  <style>
+    .decide-main { max-width: 640px; margin: 0 auto; padding: 100px 20px 80px; }
+    .decide-progress { display: flex; gap: 8px; justify-content: center; margin-bottom: 24px; }
+    .decide-progress__dot { width: 9px; height: 9px; border-radius: 999px; background: var(--ink-faint); opacity: .35; }
+    .decide-progress__dot.is-active { background: var(--brand); opacity: 1; }
+    .decide-progress__dot.is-done { background: var(--brand); opacity: .6; }
+    .decide-step { display: none; }
+    .decide-step.is-active { display: block; }
+    .decide-actions { display: flex; justify-content: space-between; gap: 12px; margin-top: 24px; }
+    .decide-status { margin-top: 10px; font-size: .88rem; color: var(--ink-soft); min-height: 1.4em; }
+    .decide-status--busy { color: var(--ink-faint); }
+    .decide-status--warn { color: var(--accent-deep); }
+    .decide-status--error { color: var(--danger); }
+    .decide-status--ok { color: var(--brand-deep); }
+    .decide-inline-btn { background: none; border: none; color: var(--brand); text-decoration: underline; cursor: pointer; font: inherit; padding: 0; }
+    .decide-badge { display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent-deep); font-size: .72rem; font-weight: 600; letter-spacing: .04em; }
+    .decide-runnerups { margin-top: 16px; }
+    .decide-slider-row { margin-bottom: 18px; }
+    .decide-slider-row label { display: flex; justify-content: space-between; font-size: .85rem; font-weight: 600; margin-bottom: 6px; }
+    .decide-handoff { display: grid; gap: 12px; margin-top: 8px; }
+  </style>
+</head>
+
+<body>
+
+  <nav class="nav scrolled" id="nav">
+    <div class="nav__wrap">
+      <a href="index.html" class="logo" aria-label="Mitti Mantra home">
+        <img src="assets/logo-128.png" alt="Mitti Mantra — Growing the future" class="logo__img" width="128" height="128">
+      </a>
+      <ul class="nav__links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="dashboard.html">Full dashboard</a></li>
+      </ul>
+      <div class="nav__cta">
+        <a href="index.html" class="btn btn-ghost">Back to site</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="decide-main">
+    <div class="decide-progress" id="decideProgress" aria-hidden="true">
+      <span class="decide-progress__dot" data-dot="1"></span>
+      <span class="decide-progress__dot" data-dot="2"></span>
+      <span class="decide-progress__dot" data-dot="3"></span>
+      <span class="decide-progress__dot" data-dot="4"></span>
+      <span class="decide-progress__dot" data-dot="5"></span>
+    </div>
+
+    <!-- STEP 1: Location -->
+    <section class="decide-step is-active" data-step="1">
+      <div class="tool__head">
+        <div class="tool__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <div>
+          <h2>Where's your farm?</h2>
+          <p>Pick your region, or let us find it.</p>
+        </div>
+      </div>
+      <div class="field">
+        <label>Region</label>
+        <select name="region_id" id="decideRegionSelect" data-regions></select>
+      </div>
+      <button type="button" class="btn btn-ghost" id="decideLocate">📍 Use my location</button>
+      <div class="decide-status" id="decideLocateStatus" role="status"></div>
+      <div class="decide-actions">
+        <span></span>
+        <button type="button" class="btn btn-primary" id="decideStep1Next" disabled>Next</button>
+      </div>
+    </section>
+
+    <!-- STEP 2: filled in Task 2 -->
+    <section class="decide-step" data-step="2"></section>
+
+    <!-- STEP 3: filled in Task 3 -->
+    <section class="decide-step" data-step="3"></section>
+
+    <!-- STEP 4: filled in Task 4 -->
+    <section class="decide-step" data-step="4"></section>
+
+    <!-- STEP 5: filled in Task 5 -->
+    <section class="decide-step" data-step="5"></section>
+  </main>
+
+  <script src="mm-core.js" defer></script>
+  <script src="site-ui.js" defer></script>
+  <script src="offline-simulator.js" defer></script>
+  <script src="region-geo.js" defer></script>
+  <script src="decide.js" defer></script>
+  <script src="mm-enhance.js" defer></script>
+  <script src="i18n-data.js" defer></script>
+  <script src="i18n.js" defer></script>
+  <script src="toolbar.js" defer></script>
+  <script src="chatbot.js" defer></script>
+</body>
+
+</html>
