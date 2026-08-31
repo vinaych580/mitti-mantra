@@ -169,9 +169,41 @@
     $('#decideStep1Next').addEventListener('click', goNext);
   }
 
+  /* ---------- Step 2: season, budget, area ---------- */
+  function wireStep2() {
+    const form = $('#decideStep2Form');
+
+    document.addEventListener('decide:step-shown', (e) => {
+      if (e.detail.step !== 2) return;
+      const profile = (window.MM && window.MM.profile && window.MM.profile.get()) || {};
+      if (profile.season) form.season.value = profile.season;
+      if (profile.area_acres) form.area_acres.value = profile.area_acres;
+      if (profile.budget_per_acre) form.budget_per_acre.value = profile.budget_per_acre;
+    });
+
+    $('[data-step2-back]').addEventListener('click', goBack);
+
+    $('#decideStep2Next').addEventListener('click', () => {
+      if (!form.reportValidity()) return;
+      state.season = form.season.value;
+      state.area_acres = parseFloat(form.area_acres.value);
+      state.budget_per_acre = parseFloat(form.budget_per_acre.value);
+      if (window.MM && window.MM.profile) {
+        window.MM.profile.set({
+          region_id: state.region_id,
+          season: state.season,
+          area_acres: state.area_acres,
+          budget_per_acre: state.budget_per_acre
+        });
+      }
+      goNext();
+    });
+  }
+
   /* ---------- boot ---------- */
   document.addEventListener('DOMContentLoaded', () => {
     wireStep1();
+    wireStep2();
   });
 
   // Exposed for later tasks (2-5) to extend without redefining shared plumbing.
