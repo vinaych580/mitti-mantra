@@ -173,6 +173,36 @@
         "value": "18px",
         "createdAt": "2026-08-28T18:05:00.606Z",
         "reason": "html.mm-lg root font-size for the Large Text a11y toggle -- a user-controlled root-scale multiplier (112.5% of the 16px base), not a content type-ramp step, so it intentionally sits outside DESIGN.md's typography scale"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": ".88rem",
+        "createdAt": "2026-08-31T13:32:55.326Z",
+        "reason": "Matches dashboard.js's existing 'Agronomic suitability & reasoning' reasons-list markup exactly (dashboard.js:1070), reused verbatim in decide.html's Step 3 so mm-enhance.js's decoration and visual treatment stay identical."
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": ".85rem",
+        "createdAt": "2026-08-31T13:32:55.408Z",
+        "reason": "Matches dashboard.js's existing 'Ranked alternatives' heading markup exactly (dashboard.js:1087) -- reused verbatim in decide.html's Step 3 'Other options' heading, same design intent."
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": ".76rem",
+        "createdAt": "2026-08-31T13:32:55.496Z",
+        "reason": "Matches dashboard.js's existing runner-up reason-snippet markup exactly (dashboard.js:1093), reused verbatim in decide.html's Step 3."
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "1.3rem",
+        "createdAt": "2026-08-31T13:32:55.572Z",
+        "reason": "Matches dashboard.js's existing 'Top pick' KPI value markup exactly (dashboard.js:1049), reused verbatim in decide.html's Step 3."
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": ".5em",
+        "createdAt": "2026-08-31T13:32:55.643Z",
+        "reason": "Matches dashboard.js's existing kg/ac unit-suffix markup exactly (dashboard.js:1052), reused verbatim in decide.html's Step 3."
       }
     ]
   }
