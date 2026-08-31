@@ -156,9 +156,9 @@
         (err) => {
           locateBtn.disabled = false;
           const msg = err.code === err.PERMISSION_DENIED
-            ? 'Location permission denied. Allow it in your browser, or search for your region instead.'
+            ? 'Location permission denied. Allow it in your browser, or search for your region.'
             : err.code === err.TIMEOUT
-            ? 'Could not get a GPS fix in time. Try again, or search for your region instead.'
+            ? 'Could not get a GPS fix in time. Try again outdoors, or search for your region.'
             : 'Location unavailable. Search for your region instead.';
           setLocateStatus(msg, 'error');
         },
