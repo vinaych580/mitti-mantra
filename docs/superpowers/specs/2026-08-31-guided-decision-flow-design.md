@@ -126,6 +126,7 @@ No backend files change. No new endpoints are added.
 | `GET /api/soil/{region_id}` | Auto-fill for the inline simulate call |
 | `GET /api/weather/{region_id}?season=` | Auto-fill for the inline simulate call |
 | `POST /api/crop` | Step 3's headline answer + runner-ups + `reasons` text |
+| `GET /api/price-analytics/{region_id}/{crop_id}` | Step 4's `mandi_price_per_kg` — `SimulationRequest` requires it with no default, and it's sourced from the same real mandi observations rather than the manual text entry `dashboard.js`'s own simulate tool uses (see plan Task 4) |
 | `POST /api/simulate` | Step 4's tweak-and-re-run |
 
 `/api/crop` (not the plainer `/api/recommend`, which exists but returns no
