@@ -249,7 +249,7 @@ MM_REGION_GEO_UTIL.nearestRegion(19.0, 72.8)  // Mumbai — not one of the 30 re
       <div class="decide-status" id="decideLocateStatus" role="status"></div>
       <div class="decide-actions">
         <span></span>
-        <button type="button" class="btn btn-primary" id="decideStep1Next" disabled>Next →</button>
+        <button type="button" class="btn btn-primary" id="decideStep1Next" disabled>Next</button>
       </div>
     </section>
 
@@ -471,8 +471,8 @@ Start the backend (`uvicorn backend.main:app --reload --port 8000`) and open `ht
 
 Expected:
 - Region dropdown populates with 30 options (e.g. "Telangana · Medak").
-- "Next →" stays disabled until a region is chosen.
-- Picking a region from the dropdown enables "Next →".
+- "Next" stays disabled until a region is chosen.
+- Picking a region from the dropdown enables "Next".
 - Clicking "Use my location" and denying the browser's permission prompt shows: "Location permission denied. Allow it in your browser, or search for your region instead." — and the dropdown remains usable.
 - In the browser console, `MMDecide.state.region_id` reflects the chosen region after selection.
 
@@ -525,7 +525,7 @@ Replace `<section class="decide-step" data-step="2"></section>` with:
         </div>
       </form>
       <div class="decide-actions">
-        <button type="button" class="btn btn-ghost" data-step2-back>← Back</button>
+        <button type="button" class="btn btn-ghost" data-step2-back>Back</button>
         <button type="button" class="btn btn-primary" id="decideStep2Next">Run recommendation</button>
       </div>
     </section>
@@ -578,7 +578,7 @@ Update the boot block:
 
 - [ ] **Step 3: Verify in the browser**
 
-Reload `decide.html`, complete Step 1, click "Next →". Expected:
+Reload `decide.html`, complete Step 1, click "Next". Expected:
 - Step 2 shows Season/Area/Budget fields, pre-filled with defaults (4 acres, ₹15,000).
 - Leaving Area blank and clicking "Run recommendation" shows the browser's native "fill out this field" validation and does not advance.
 - With valid values, clicking "Run recommendation" advances to (currently empty) Step 3.
@@ -621,11 +621,13 @@ Replace `<section class="decide-step" data-step="3"></section>` with:
       </div>
       <div class="output" data-out="recommend" id="decideAnswerOut"></div>
       <div class="decide-actions">
-        <button type="button" class="btn btn-ghost" data-step3-back>← Back</button>
-        <button type="button" class="btn btn-primary" id="decideStep3Next">Next →</button>
+        <button type="button" class="btn btn-ghost" data-step3-back>Back</button>
+        <button type="button" class="btn btn-primary" id="decideStep3Next" disabled>Next</button>
       </div>
     </section>
 ```
+
+"Next" starts disabled — a fast double-click can't skip past a failed recommendation call. `renderAnswer()` (Step 2 below) re-enables it once a real result renders; if the call fails, the catch block never calls `renderAnswer()`, so it stays disabled.
 
 - [ ] **Step 2: Wire Step 3 in `frontend/decide.js`**
 
@@ -720,12 +722,6 @@ Update the boot block:
   });
 ```
 
-Also disable "Next →" on Step 3 until a recommendation exists, so a fast double-click can't skip past a failed call — change the button's initial markup to `disabled` (the `renderAnswer` code above already enables it once a real result renders):
-
-```html
-<button type="button" class="btn btn-primary" id="decideStep3Next" disabled>Next →</button>
-```
-
 - [ ] **Step 3: Verify in the browser**
 
 Complete Steps 1–2 with a real region (e.g. Telangana · Medak, kharif, 4 acres, ₹15,000/acre). On Step 3, expected:
@@ -733,7 +729,7 @@ Complete Steps 1–2 with a real region (e.g. Telangana · Medak, kharif, 4 acre
 - A "Why this crop" reasons block with real sentences (not placeholder text) — confirms `/api/crop`'s `reasons` field is flowing through.
 - Two runner-up crops listed below.
 - Open the browser's element inspector on the top-pick's rendered row and confirm a `<details class="mm-why">` element was injected by `mm-enhance.js` — click it and confirm the "Why this crop?" bar chart renders with real numbers, not all "—". This is the concrete proof the `data-out="recommend"` + exact-text-format reuse actually works, not just that it looks plausible.
-- "Next →" is disabled until the answer finishes loading.
+- "Next" is disabled until the answer finishes loading.
 
 - [ ] **Step 4: Commit**
 
@@ -785,8 +781,8 @@ Replace `<section class="decide-step" data-step="4"></section>` with:
       </div>
       <div class="output" data-out="simulate" id="decideTweakOut"></div>
       <div class="decide-actions">
-        <button type="button" class="btn btn-ghost" data-step4-back>← Back</button>
-        <button type="button" class="btn btn-primary" id="decideStep4Next">Next →</button>
+        <button type="button" class="btn btn-ghost" data-step4-back>Back</button>
+        <button type="button" class="btn btn-primary" id="decideStep4Next">Next</button>
       </div>
     </section>
 ```
@@ -935,11 +931,11 @@ Replace `<section class="decide-step" data-step="5"></section>` with:
         <button type="button" class="btn btn-ghost" disabled title="Reserved for a future feature: run this strategy under +1°C / +2°C / -20% rainfall scenarios.">
           How does this hold up in a bad year? <span class="decide-badge">Upcoming</span>
         </button>
-        <a class="btn btn-primary" id="decideOpenDashboard" href="dashboard.html">Open full dashboard →</a>
+        <a class="btn btn-primary" id="decideOpenDashboard" href="dashboard.html">Open full dashboard</a>
         <button type="button" class="btn btn-ghost" id="decideAskChat">Ask the chatbot</button>
       </div>
       <div class="decide-actions">
-        <button type="button" class="btn btn-ghost" data-step5-back>← Back</button>
+        <button type="button" class="btn btn-ghost" data-step5-back>Back</button>
         <span></span>
       </div>
     </section>
@@ -1023,8 +1019,8 @@ In `frontend/dashboard.html`, immediately after `<aside class="sidebar">` (aroun
 
 - From `index.html`, click the hero's primary CTA — it should land on `decide.html`, not `dashboard.html`.
 - From `dashboard.html`, confirm the new "New here? Get one answer →" link appears above the first sidebar group and navigates to `decide.html`.
-- Complete the full 5-step flow. On Step 5: the disabled "bad year" button shows an "Upcoming" badge and a tooltip on hover; "Open full dashboard →" navigates to `dashboard.html` with `tool=simulate` and the chosen region/season/crop pre-filled — confirm the simulate tool actually shows those values on arrival; "Ask the chatbot" opens the floating chat widget without navigating away.
-- Click "← Back" from Step 5 through to Step 1 and confirm every step still shows its previously-entered values (state was never cleared).
+- Complete the full 5-step flow. On Step 5: the disabled "bad year" button shows an "Upcoming" badge and a tooltip on hover; "Open full dashboard" navigates to `dashboard.html` with `tool=simulate` and the chosen region/season/crop pre-filled — confirm the simulate tool actually shows those values on arrival; "Ask the chatbot" opens the floating chat widget without navigating away.
+- Click "Back" from Step 5 through to Step 1 and confirm every step still shows its previously-entered values (state was never cleared).
 
 - [ ] **Step 6: Commit**
 
@@ -1108,6 +1104,8 @@ const CORE = [
 (The remaining entries below this point — the `.webp` marketplace images and anything after — are unchanged; only the three new lines and the bumped `VERSION` are new.)
 
 - [ ] **Step 2: Add new-string translations to `frontend/i18n-data.js`**
+
+`i18n.js` looks up each DOM text node by its exact trimmed string (`i18n.js:80-90`) — a button rendered as `Next →` will never match a catalog entry keyed `'Next'`. This is why Tasks 1-5's Next/Back/"Open full dashboard" buttons carry no arrow character: an arrow icon would need to be a separate element (the pattern `index.html`'s own buttons already use — an inline `<svg>`, never a literal `→`/`←` in the text), and plain text is the simpler fix here. Don't reintroduce arrow characters into these three labels — doing so silently breaks their translation with no error anywhere.
 
 For each string below, check whether the exact English key already exists anywhere in `CATALOG.hi`/`.te`/`.kn` first (several form-field labels this page reuses — `'Region'`, `'Season'`, `'Area (acres)'`, `'Budget / acre (₹)'`, `'Kharif'`, `'Rabi'`, `'Run recommendation'`, `'Upcoming'` — already exist and need no new entry; `decide.html`/`decide.js` reuse those exact strings verbatim rather than inventing new wording). Add only the entries below, which are genuinely new, to the `hi`, `te`, and `kn` blocks of `CATALOG` (one key/value pair per language block, matching the file's existing structure). These are a first-pass translation of short, common UI phrases — worth a native-speaker review pass before this ships to real farmers, same bar the file's own header comment holds the rest of the catalog to.
 
