@@ -77,7 +77,10 @@ async function api(url, opts = {}) {
 function tryParseJSON(s) { try { return JSON.parse(s); } catch { return null; } }
 ```
 
-Region geolocation copy comes from `farm-boundary.js:454-492` — reuse the exact three status messages (device unsupported / permission denied / timeout), which Step 1 needs verbatim.
+Region geolocation copy comes from `farm-boundary.js:461-487` — reuse the three status messages (device unsupported / permission denied / timeout) verbatim except swapping "village" for "region" (this page's fallback is a region picker, not a village search, so that one substitution is a real adaptation, not drift). The exact source strings, confirmed by direct read, are:
+- Unsupported: `'This device cannot share its location. Search for your village instead.'`
+- Permission denied: `'Location permission denied. Allow it in your browser, or search for your village.'` (no "instead")
+- Timeout: `'Could not get a GPS fix in time. Try again outdoors, or search for your village.'` (has "outdoors", no "instead")
 
 The 30 `region_id`s (from `dataset/soil.csv`) and their real district-headquarters centroid coordinates — sourced from public geographic records, cross-checked against three ground-truth points already embedded in this repo's own training-data filenames (`dataset/training/features_30.9_75.85_wheat.json` → `punjab_ludhiana`; `features_23.2_77.08_soybean.json` → `mp_sehore`; `features_17.61_78.26_rice.json` → `telangana_medak`) — are listed in Step 1 of this task below. These are approximate town centroids for "nearest of 30" routing, not survey coordinates; that's sufficient given Step 1's 150km sanity threshold.
 
@@ -442,9 +445,9 @@ MM_REGION_GEO_UTIL.nearestRegion(19.0, 72.8)  // Mumbai — not one of the 30 re
         (err) => {
           locateBtn.disabled = false;
           const msg = err.code === err.PERMISSION_DENIED
-            ? 'Location permission denied. Allow it in your browser, or search for your region instead.'
+            ? 'Location permission denied. Allow it in your browser, or search for your region.'
             : err.code === err.TIMEOUT
-            ? 'Could not get a GPS fix in time. Try again, or search for your region instead.'
+            ? 'Could not get a GPS fix in time. Try again outdoors, or search for your region.'
             : 'Location unavailable. Search for your region instead.';
           setLocateStatus(msg, 'error');
         },
@@ -473,7 +476,7 @@ Expected:
 - Region dropdown populates with 30 options (e.g. "Telangana · Medak").
 - "Next" stays disabled until a region is chosen.
 - Picking a region from the dropdown enables "Next".
-- Clicking "Use my location" and denying the browser's permission prompt shows: "Location permission denied. Allow it in your browser, or search for your region instead." — and the dropdown remains usable.
+- Clicking "Use my location" and denying the browser's permission prompt shows: "Location permission denied. Allow it in your browser, or search for your region." — and the dropdown remains usable.
 - In the browser console, `MMDecide.state.region_id` reflects the chosen region after selection.
 
 - [ ] **Step 6: Commit**
@@ -1116,8 +1119,8 @@ For each string below, check whether the exact English key already exists anywhe
 'Use my location': 'मेरा स्थान उपयोग करें',
 'Finding your location…': 'आपका स्थान खोजा जा रहा है…',
 'This device cannot share its location. Search for your region instead.': 'यह डिवाइस अपना स्थान साझा नहीं कर सकता। इसके बजाय अपना क्षेत्र खोजें।',
-'Location permission denied. Allow it in your browser, or search for your region instead.': 'स्थान की अनुमति नहीं दी गई। इसे अपने ब्राउज़र में अनुमति दें, या इसके बजाय अपना क्षेत्र खोजें।',
-'Could not get a GPS fix in time. Try again, or search for your region instead.': 'समय पर GPS सिग्नल नहीं मिला। फिर से कोशिश करें, या इसके बजाय अपना क्षेत्र खोजें।',
+'Location permission denied. Allow it in your browser, or search for your region.': 'स्थान की अनुमति नहीं दी गई। इसे अपने ब्राउज़र में अनुमति दें, या अपना क्षेत्र खोजें।',
+'Could not get a GPS fix in time. Try again outdoors, or search for your region.': 'समय पर GPS सिग्नल नहीं मिला। बाहर फिर से कोशिश करें, या अपना क्षेत्र खोजें।',
 'Location unavailable. Search for your region instead.': 'स्थान उपलब्ध नहीं है। इसके बजाय अपना क्षेत्र खोजें।',
 'Use this': 'इसे उपयोग करें',
 'When and how much?': 'कब और कितना?',
@@ -1142,8 +1145,8 @@ For each string below, check whether the exact English key already exists anywhe
 'Use my location': 'నా లొకేషన్ ఉపయోగించండి',
 'Finding your location…': 'మీ లొకేషన్ కనుగొంటోంది…',
 'This device cannot share its location. Search for your region instead.': 'ఈ పరికరం తన లొకేషన్‌ను షేర్ చేయలేదు. బదులుగా మీ ప్రాంతాన్ని వెతకండి.',
-'Location permission denied. Allow it in your browser, or search for your region instead.': 'లొకేషన్ అనుమతి తిరస్కరించబడింది. మీ బ్రౌజర్‌లో అనుమతించండి, లేదా బదులుగా మీ ప్రాంతాన్ని వెతకండి.',
-'Could not get a GPS fix in time. Try again, or search for your region instead.': 'సమయానికి GPS సిగ్నల్ లభించలేదు. మళ్ళీ ప్రయత్నించండి, లేదా బదులుగా మీ ప్రాంతాన్ని వెతకండి.',
+'Location permission denied. Allow it in your browser, or search for your region.': 'లొకేషన్ అనుమతి తిరస్కరించబడింది. మీ బ్రౌజర్‌లో అనుమతించండి, లేదా మీ ప్రాంతాన్ని వెతకండి.',
+'Could not get a GPS fix in time. Try again outdoors, or search for your region.': 'సమయానికి GPS సిగ్నల్ లభించలేదు. బయట మళ్ళీ ప్రయత్నించండి, లేదా మీ ప్రాంతాన్ని వెతకండి.',
 'Location unavailable. Search for your region instead.': 'లొకేషన్ అందుబాటులో లేదు. బదులుగా మీ ప్రాంతాన్ని వెతకండి.',
 'Use this': 'దీన్ని ఉపయోగించండి',
 'When and how much?': 'ఎప్పుడు మరియు ఎంత?',
@@ -1168,8 +1171,8 @@ For each string below, check whether the exact English key already exists anywhe
 'Use my location': 'ನನ್ನ ಸ್ಥಳ ಬಳಸಿ',
 'Finding your location…': 'ನಿಮ್ಮ ಸ್ಥಳ ಹುಡುಕಲಾಗುತ್ತಿದೆ…',
 'This device cannot share its location. Search for your region instead.': 'ಈ ಸಾಧನವು ತನ್ನ ಸ್ಥಳವನ್ನು ಹಂಚಿಕೊಳ್ಳಲು ಸಾಧ್ಯವಿಲ್ಲ. ಬದಲಿಗೆ ನಿಮ್ಮ ಪ್ರದೇಶವನ್ನು ಹುಡುಕಿ.',
-'Location permission denied. Allow it in your browser, or search for your region instead.': 'ಸ್ಥಳದ ಅನುಮತಿ ನಿರಾಕರಿಸಲಾಗಿದೆ. ನಿಮ್ಮ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಅನುಮತಿಸಿ, ಅಥವಾ ಬದಲಿಗೆ ನಿಮ್ಮ ಪ್ರದೇಶವನ್ನು ಹುಡುಕಿ.',
-'Could not get a GPS fix in time. Try again, or search for your region instead.': 'ಸಮಯಕ್ಕೆ GPS ಸಿಗ್ನಲ್ ಸಿಗಲಿಲ್ಲ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ, ಅಥವಾ ಬದಲಿಗೆ ನಿಮ್ಮ ಪ್ರದೇಶವನ್ನು ಹುಡುಕಿ.',
+'Location permission denied. Allow it in your browser, or search for your region.': 'ಸ್ಥಳದ ಅನುಮತಿ ನಿರಾಕರಿಸಲಾಗಿದೆ. ನಿಮ್ಮ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಅನುಮತಿಸಿ, ಅಥವಾ ನಿಮ್ಮ ಪ್ರದೇಶವನ್ನು ಹುಡುಕಿ.',
+'Could not get a GPS fix in time. Try again outdoors, or search for your region.': 'ಸಮಯಕ್ಕೆ GPS ಸಿಗ್ನಲ್ ಸಿಗಲಿಲ್ಲ. ಹೊರಗೆ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ, ಅಥವಾ ನಿಮ್ಮ ಪ್ರದೇಶವನ್ನು ಹುಡುಕಿ.',
 'Location unavailable. Search for your region instead.': 'ಸ್ಥಳ ಲಭ್ಯವಿಲ್ಲ. ಬದಲಿಗೆ ನಿಮ್ಮ ಪ್ರದೇಶವನ್ನು ಹುಡುಕಿ.',
 'Use this': 'ಇದನ್ನು ಬಳಸಿ',
 'When and how much?': 'ಯಾವಾಗ ಮತ್ತು ಎಷ್ಟು?',
