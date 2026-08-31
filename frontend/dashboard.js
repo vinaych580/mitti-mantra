@@ -1055,6 +1055,15 @@
             <div class="kpi__sub">ROI ${PCT(top.roi_percent)}</div></div>
         </div>
 
+        ${top.budget_adequate === false ? `
+        <div class="alert alert--gold" style="margin-top:12px;">
+          <div class="alert__body">
+            <strong>⚠ Budget below what ${cropLabel(top.crop_id)} typically needs.</strong>
+            ${top.reason || 'Yield and ROI above are already scaled down to what this budget can realistically achieve — not the full-funding potential.'}
+            ${top.potential_yield_kg_per_acre ? ` With adequate funding, yield could reach ~${Math.round(top.potential_yield_kg_per_acre)} kg/ac.` : ''}
+          </div>
+        </div>` : ''}
+
         <div class="alert alert--green" style="margin-top:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--brand-soft);border:1px solid color-mix(in srgb, var(--brand) 35%, transparent);">
           <div class="alert__body" style="color:var(--brand-deep);">
             <strong>🌾 Ready to sell?</strong> List ${cropLabel(top.crop_id)} on the Marketplace once it's harvested — buyers can see it alongside real mandi price context.

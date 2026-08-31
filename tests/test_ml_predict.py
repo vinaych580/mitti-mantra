@@ -41,6 +41,9 @@ def test_smart_risk_score_validation():
 
 
 def test_profit_estimator_calculations():
+    # wheat's avg_input_cost_inr_per_acre is 22000, so a 12000 budget only covers
+    # part of the crop's typical input cost and the achievable yield is scaled
+    # down accordingly -- see _budget_yield_multiplier.
     res = profit_estimator(
         crop_id="wheat",
         predicted_yield_kg_per_acre=1500.0,
@@ -48,9 +51,52 @@ def test_profit_estimator_calculations():
         budget_per_acre=12000.0,
         mandi_price_per_kg=22.75,
     )
+    multiplier = res["budget_yield_multiplier"]
+    assert 0.0 < multiplier < 1.0
+    achievable_yield = round(1500.0 * multiplier, 2)
+    assert res["achievable_yield_kg_per_acre"] == achievable_yield
+    assert res["expected_revenue"] == round(achievable_yield * 4.0 * 22.75, 2)
+    assert res["expected_profit"] == round(res["expected_revenue"] - (12000.0 * 4.0), 2)
+    assert res["break_even_price_per_kg"] == round(
+        (12000.0 * 4.0) / (achievable_yield * 4.0), 2
+    )
+
+
+def test_profit_estimator_full_budget_uses_full_yield():
+    # A budget at or above the crop's avg input cost should not derate yield.
+    res = profit_estimator(
+        crop_id="wheat",
+        predicted_yield_kg_per_acre=1500.0,
+        area_acres=4.0,
+        budget_per_acre=22000.0,
+        mandi_price_per_kg=22.75,
+    )
+    assert res["budget_yield_multiplier"] == 1.0
+    assert res["achievable_yield_kg_per_acre"] == 1500.0
     assert res["expected_revenue"] == 1500.0 * 4.0 * 22.75
-    assert res["expected_profit"] == res["expected_revenue"] - (12000.0 * 4.0)
-    assert res["break_even_price_per_kg"] == round((12000.0 * 4.0) / (1500.0 * 4.0), 2)
+
+
+def test_profit_estimator_token_budget_no_longer_shows_absurd_roi():
+    # Regression test: a token budget (e.g. Rs 10/acre) used to produce 700%+ ROI
+    # because cost collapsed to near-zero while revenue stayed at the full,
+    # budget-independent predicted yield. A budget this far below wheat's
+    # avg_input_cost_inr_per_acre (22000) should now be honest: near-total crop
+    # failure and a near-total loss of the (tiny) money spent, not a preserved
+    # profit ratio.
+    res = profit_estimator(
+        crop_id="wheat",
+        predicted_yield_kg_per_acre=2000.0,
+        area_acres=4.0,
+        budget_per_acre=10.0,
+        mandi_price_per_kg=22.75,
+    )
+    assert res["roi_percent"] < -90.0
+    # achievable_yield_kg_per_acre rounds to 0.0 at this budget, so total_yield
+    # is 0 -- break_even_price_per_kg must reflect that break-even is
+    # unreachable (>= total cost), never the misleading "Rs 0/kg" a naive
+    # zero-yield ternary would report.
+    assert res["achievable_yield_kg_per_acre"] == 0.0
+    assert res["break_even_price_per_kg"] == 40.0
 
 
 def test_mandi_price_analytics_structure():

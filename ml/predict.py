@@ -508,6 +508,34 @@ def smart_risk_score(
     }
 
 
+def _budget_yield_multiplier(budget_per_acre: float, avg_input_cost_inr_per_acre: float) -> float:
+    """Estimate what fraction of the fully-funded predicted yield a given budget can
+    realistically achieve.
+
+    `predicted_yield_kg_per_acre` always represents the yield a crop would reach with
+    adequate seed, fertilizer, irrigation, and labour spend (the crop's
+    `avg_input_cost_inr_per_acre`). A budget far below that cannot buy the same
+    inputs, so it cannot realistically produce the same yield -- treating the full
+    yield as achievable on a token budget is what previously let a ₹10/acre budget
+    show 700%+ ROI (near-zero cost divided into a full-size, budget-independent
+    revenue).
+
+    Yield scales with the *square* of the funding ratio rather than linearly. A
+    linear (proportional) scaling keeps revenue/cost -- and therefore ROI --
+    roughly constant no matter how tiny the budget gets, which is exactly as
+    dishonest as not scaling yield at all: it still reports a healthy ROI on a
+    token budget. Squaring the ratio makes revenue fall faster than cost as
+    budget shrinks, so ROI correctly collapses toward a near-total loss (not a
+    preserved profit ratio) once budget is far below what the crop needs, while
+    still reaching the full predicted yield once budget meets the crop's typical
+    input cost.
+    """
+    if avg_input_cost_inr_per_acre <= 0:
+        return 1.0
+    ratio = clamp(budget_per_acre / avg_input_cost_inr_per_acre, 0.0, 1.0)
+    return round(ratio ** 2, 6)
+
+
 def profit_estimator(
     crop_id: str,
     predicted_yield_kg_per_acre: float,
@@ -526,7 +554,10 @@ def profit_estimator(
         raise ValueError(f"Unsupported crop_id: {crop_id}")
     crop = crop_params[crop_id]
     price = mandi_price_per_kg or ((crop.mandi_price_min_inr_per_kg + crop.mandi_price_max_inr_per_kg) / 2.0)
-    total_yield = predicted_yield_kg_per_acre * area_acres
+
+    yield_multiplier = _budget_yield_multiplier(budget_per_acre, crop.avg_input_cost_inr_per_acre)
+    achievable_yield_kg_per_acre = round(predicted_yield_kg_per_acre * yield_multiplier, 2)
+    total_yield = achievable_yield_kg_per_acre * area_acres
     total_cost = budget_per_acre * area_acres
     expected_revenue = total_yield * price
     expected_profit = expected_revenue - total_cost
@@ -536,12 +567,18 @@ def profit_estimator(
     pessimistic_profit = (total_yield * 0.88 * price * 0.9) - total_cost
 
     return {
+        "achievable_yield_kg_per_acre": achievable_yield_kg_per_acre,
+        "budget_yield_multiplier": yield_multiplier,
         "expected_revenue": round(expected_revenue, 2),
         "expected_profit": round(expected_profit, 2),
         "roi_percent": round(roi_percent, 2),
         "optimistic_profit": round(optimistic_profit, 2),
         "pessimistic_profit": round(pessimistic_profit, 2),
-        "break_even_price_per_kg": round((total_cost / total_yield) if total_yield else 0.0, 2),
+        # max(total_yield, 1.0) avoids the div-by-zero *and* the misleading "you
+        # break even at Rs 0/kg" that a zero-yield ternary would report when an
+        # underfunded budget scales achievable yield down to ~0 -- mirrors
+        # engine/simulator.py's break_even_price calculation.
+        "break_even_price_per_kg": round(total_cost / max(total_yield, 1.0), 2),
     }
 
 
@@ -884,17 +921,29 @@ def _score_single_crop(
         100.0,
     )
 
+    budget_adequate = profit["budget_yield_multiplier"] >= 1.0
     rec_entry = {
         "crop_id": crop_id,
         "crop_name": crop.crop_name,
-        "predicted_yield_kg_per_acre": predicted_yield,
+        # Achievable yield/profit/ROI already account for whether budget_per_acre
+        # can actually buy the inputs this crop needs; potential_yield_kg_per_acre
+        # is what full, adequate funding (avg_input_cost_inr_per_acre) would reach.
+        "predicted_yield_kg_per_acre": profit["achievable_yield_kg_per_acre"],
+        "potential_yield_kg_per_acre": predicted_yield,
         "expected_profit": profit["expected_profit"],
         "roi_percent": profit["roi_percent"],
         "risk_score": risk["risk_score"],
         "smart_score": round(smart_score, 2),
         "prediction_source": "ml_model" if used_ml_for_yield else "heuristic",
         "crop_cycle": "perennial" if _is_perennial(crop.season) else "seasonal",
-        "reason": "Ranked using ML models + location, soil, season fit, budget fit, profit, and risk confidence.",
+        "budget_adequate": budget_adequate,
+        "reason": (
+            "Ranked using ML models + location, soil, season fit, budget fit, profit, and risk confidence."
+            if budget_adequate else
+            f"Budget covers only {round(profit['budget_yield_multiplier'] * 100)}% of this crop's typical "
+            "input cost, so yield and ROI below are scaled down to what's realistically achievable, not "
+            "the full-funding potential."
+        ),
     }
     if crop_id in ml_conf_map:
         rec_entry["ml_confidence"] = ml_conf_map[crop_id]
