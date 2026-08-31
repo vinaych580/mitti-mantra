@@ -642,6 +642,8 @@ Add the formatting helpers (module scope, near the top, alongside the other shar
   const PCT = n => FIX(n, 1) + '%';
 ```
 
+The "Full ranking" list below always includes `top` itself, not just `runnerUps` — this is required, not decorative. `mm-enhance.js`'s "Why this crop?" drawer and risk gauge only attach to `.list-row` elements (`mm-enhance.js:101`); the top pick's `.kpi-grid` card is not a `.list-row` and would never get decorated on its own. Including `top` as the first row of the ranked list is what makes the decoration actually appear on the crop that matters most — the same pattern `dashboard.js`'s own "Ranked alternatives" list already uses (it lists all ranks, including #1, for the identical reason).
+
 ```js
   function renderAnswer(top, runnerUps) {
     const out = $('#decideAnswerOut');
@@ -668,9 +670,9 @@ Add the formatting helpers (module scope, near the top, alongside the other shar
           <div class="kpi__val">${Math.round(top.risk_score)}/100</div></div>
       </div>
       ${reasonsList}
-      ${runnerUps.length ? '<h4 style="font-size:.85rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin:16px 0 12px;">Other options</h4>' : ''}
+      <h4 style="font-size:.85rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin:16px 0 12px;">Full ranking</h4>
       <div class="decide-runnerups">
-        ${runnerUps.map(r => `
+        ${[top, ...runnerUps].map(r => `
           <div class="list-row">
             <div class="list-row__name">${r.crop_name}
               <small>Yield ${Math.round(r.predicted_yield_kg_per_acre)} kg/ac · Risk ${Math.round(r.risk_score)}/100 · Score ${FIX(r.smart_score, 1)}</small>
@@ -1126,7 +1128,7 @@ For each string below, check whether the exact English key already exists anywhe
 'When and how much?': 'कब और कितना?',
 'Tell us your season, budget, and land.': 'अपना मौसम, बजट और ज़मीन बताएं।',
 'Your answer': 'आपका जवाब',
-'Other options': 'अन्य विकल्प',
+'Full ranking': 'पूरी रैंकिंग',
 'Tweak it': 'इसे समायोजित करें',
 'See how budget and irrigation change the outcome.': 'देखें कि बजट और सिंचाई परिणाम को कैसे बदलते हैं।',
 'Irrigation level': 'सिंचाई स्तर',
@@ -1152,7 +1154,7 @@ For each string below, check whether the exact English key already exists anywhe
 'When and how much?': 'ఎప్పుడు మరియు ఎంత?',
 'Tell us your season, budget, and land.': 'మీ సీజన్, బడ్జెట్ మరియు భూమిని తెలియజేయండి.',
 'Your answer': 'మీ సమాధానం',
-'Other options': 'ఇతర ఎంపికలు',
+'Full ranking': 'పూర్తి ర్యాంకింగ్',
 'Tweak it': 'దీన్ని సర్దుబాటు చేయండి',
 'See how budget and irrigation change the outcome.': 'బడ్జెట్ మరియు నీటిపారుదల ఫలితాన్ని ఎలా మారుస్తాయో చూడండి.',
 'Irrigation level': 'నీటిపారుదల స్థాయి',
@@ -1178,7 +1180,7 @@ For each string below, check whether the exact English key already exists anywhe
 'When and how much?': 'ಯಾವಾಗ ಮತ್ತು ಎಷ್ಟು?',
 'Tell us your season, budget, and land.': 'ನಿಮ್ಮ ಋತು, ಬಜೆಟ್ ಮತ್ತು ಭೂಮಿಯನ್ನು ತಿಳಿಸಿ.',
 'Your answer': 'ನಿಮ್ಮ ಉತ್ತರ',
-'Other options': 'ಇತರ ಆಯ್ಕೆಗಳು',
+'Full ranking': 'ಪೂರ್ಣ ಶ್ರೇಣಿ',
 'Tweak it': 'ಇದನ್ನು ಹೊಂದಿಸಿ',
 'See how budget and irrigation change the outcome.': 'ಬಜೆಟ್ ಮತ್ತು ನೀರಾವರಿ ಫಲಿತಾಂಶವನ್ನು ಹೇಗೆ ಬದಲಾಯಿಸುತ್ತವೆ ಎಂದು ನೋಡಿ.',
 'Irrigation level': 'ನೀರಾವರಿ ಮಟ್ಟ',
