@@ -277,96 +277,11 @@
     });
   }
 
-  /* ---------- Step 4: tweak & resimulate ---------- */
-  const budgetSplit = budget_per_acre => ({
-    seed_cost_per_acre: Math.round(budget_per_acre * 0.12),
-    fertilizer_cost_per_acre: Math.round(budget_per_acre * 0.30),
-    labour_cost_per_acre: Math.round(budget_per_acre * 0.25),
-    other_costs_per_acre: Math.round(budget_per_acre * 0.33)
-  });
-
-  const coerceNumeric = obj => Object.fromEntries(Object.entries(obj || {}).map(([k, v]) =>
-    [k, (typeof v === 'string' && v.trim() !== '' && !isNaN(Number(v))) ? Number(v) : v]));
-
-  async function runTweakSimulation() {
-    const out = $('#decideTweakOut');
-    out.innerHTML = '<div class="loading"><div class="spinner"></div><span>Simulating…</span></div>';
-    try {
-      const budget = parseFloat($('#decideTweakBudget').value);
-      const area = parseFloat($('#decideTweakArea').value);
-      const irrigation = parseFloat($('#decideTweakIrrigation').value);
-      const cropId = state.recommendation.top.crop_id;
-
-      const [soilRaw, weatherRaw] = await Promise.all([
-        api(`/api/soil/${state.region_id}`).catch(() => ({})),
-        api(`/api/weather/${state.region_id}?season=${state.season}`).catch(() => ({}))
-      ]);
-      // Required by SimulationRequest (backend/models.py:7, no default) — sourced
-      // from the same real mandi observations dashboard.js's own price tools use,
-      // not typed by hand like the dashboard's simulate form does (that pattern
-      // doesn't fit a sliders-only step). A genuine failure here (no price data
-      // for this crop/region) is allowed to fall through to the catch block below
-      // rather than silently substituting a guessed price.
-      const priceInfo = await api(`/api/price-analytics/${state.region_id}/${cropId}`);
-
-      const body = {
-        crop_id: cropId,
-        region_id: state.region_id,
-        area_acres: area,
-        mandi_price_per_kg: priceInfo.current_price,
-        irrigation_level: irrigation,
-        soil: coerceNumeric(soilRaw),
-        weather: coerceNumeric(weatherRaw),
-        input_plan: budgetSplit(budget)
-      };
-
-      const res = await api('/api/simulate', { method: 'POST', body: JSON.stringify(body) });
-      out.innerHTML = `
-        <div class="kpi-grid">
-          <div class="kpi kpi--good"><div class="kpi__lbl">Profit</div><div class="kpi__val">${INR(res.profit)}</div>
-            <div class="kpi__sub">ROI ${PCT(res.roi_percent)}</div></div>
-          <div class="kpi"><div class="kpi__lbl">Yield</div><div class="kpi__val">${Math.round(res.yield_kg_per_acre)} <span style="font-size:.5em;color:var(--ink-faint)">kg/ac</span></div></div>
-          <div class="kpi"><div class="kpi__lbl">Risk</div><div class="kpi__val">${Math.round(res.risk_score)}/100</div></div>
-        </div>
-        <div style="font-size:.76rem;color:var(--ink-faint);margin-top:8px;">Priced at ${INR(priceInfo.current_price)}/kg — latest mandi observation for ${regionLabel(state.region_id)}.</div>`;
-    } catch (err) {
-      out.innerHTML = `<div class="alert alert--red"><div class="alert__body"><strong>Could not simulate.</strong><p>${err && err.message ? err.message : 'Please try again.'}</p></div></div>`;
-    }
-  }
-
-  let tweakDebounce = null;
-  function scheduleTweakSimulation() {
-    $('#decideBudgetVal').textContent = INR($('#decideTweakBudget').value);
-    $('#decideAreaVal').textContent = `${$('#decideTweakArea').value} ac`;
-    $('#decideIrrigationVal').textContent = PCT(parseFloat($('#decideTweakIrrigation').value) * 100);
-    clearTimeout(tweakDebounce);
-    tweakDebounce = setTimeout(runTweakSimulation, 400);
-  }
-
-  function wireStep4() {
-    document.addEventListener('decide:step-shown', (e) => {
-      if (e.detail.step !== 4) return;
-      $('#decideTweakBudget').value = state.budget_per_acre;
-      $('#decideTweakArea').value = state.area_acres;
-      $('#decideTweakIrrigation').value = state.irrigation_level;
-      scheduleTweakSimulation();
-    });
-    ['decideTweakBudget', 'decideTweakArea', 'decideTweakIrrigation'].forEach((id) => {
-      $(`#${id}`).addEventListener('input', () => {
-        state.irrigation_level = parseFloat($('#decideTweakIrrigation').value);
-        scheduleTweakSimulation();
-      });
-    });
-    $('[data-step4-back]').addEventListener('click', goBack);
-    $('#decideStep4Next').addEventListener('click', goNext);
-  }
-
   /* ---------- boot ---------- */
   document.addEventListener('DOMContentLoaded', () => {
     wireStep1();
     wireStep2();
     wireStep3();
-    wireStep4();
   });
 
   // Exposed for later tasks (2-5) to extend without redefining shared plumbing.
