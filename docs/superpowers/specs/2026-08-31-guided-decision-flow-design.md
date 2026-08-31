@@ -52,7 +52,7 @@ drawer already carries that explanatory weight — see §6.4).
   data file.
 - Geolocation-to-region matching against a small, real district-centroid
   table, with a dropdown fallback.
-- Reuse of `/api/recommend` and `/api/simulate` exactly as they exist
+- Reuse of `/api/crop` and `/api/simulate` exactly as they exist
   today — no backend changes.
 - Entry-point links from `index.html` (hero CTA) and `dashboard.html`
   (sidebar).
@@ -81,11 +81,14 @@ UI paradigm to learn from the existing codebase.
 2. **When and how much?** Season, budget/acre, area/acres — the same
    three fields the Farm Profile already tracks everywhere else in the
    app.
-3. **Your answer.** Top crop from `/api/recommend`, rendered through the
+3. **Your answer.** Top crop from `/api/crop` (POST), rendered through the
    existing `.output[data-out]` convention so `mm-enhance.js` attaches its
-   "Why this crop?" reasoning drawer and risk gauge automatically (§6.4).
-   Two runner-up crops are shown collapsed beneath the headline answer —
-   `/api/recommend` already returns them in one call.
+   "Why this crop?" reasoning drawer and risk gauge automatically (§6.4),
+   plus the plain-language `reasons` array that endpoint attaches per crop
+   (soil/weather/budget fit, in farmer-readable sentences — not just the
+   numeric-factor bar chart `mm-enhance.js` adds). Two runner-up crops are
+   shown collapsed beneath the headline answer — `/api/crop` already
+   returns them in one call, ranked.
 4. **Tweak it.** Budget, area, and irrigation-level controls re-run a real
    `/api/simulate` call inline, reusing the exact soil/weather auto-fetch
    and budget-split recipe `dashboard.js` already uses for its own
@@ -122,8 +125,19 @@ No backend files change. No new endpoints are added.
 | `GET /api/regions` | Populating the location dropdown |
 | `GET /api/soil/{region_id}` | Auto-fill for the inline simulate call |
 | `GET /api/weather/{region_id}?season=` | Auto-fill for the inline simulate call |
-| `POST /api/recommend` | Step 3's headline answer + runner-ups |
+| `POST /api/crop` | Step 3's headline answer + runner-ups + `reasons` text |
 | `POST /api/simulate` | Step 4's tweak-and-re-run |
+
+`/api/crop` (not the plainer `/api/recommend`, which exists but returns no
+`reasons`) is what `dashboard.js`'s own "Smart crop recommendations" tool
+actually calls (`dashboard.js:1041`) — it wraps the same `recommend_crops()`
+call with `engine/intelligence_layer.py`'s `explain_crop_recommendation()`
+to attach per-crop plain-language reasons, and server-side response caching
+keyed on the request params (`backend/main.py:1377-1425`). `decide.js` calls
+the same endpoint so the guided flow's answer is exactly as complete as the
+dashboard's, not a stripped-down copy. Request body is identical either
+way — both endpoints take `{region_id, season, budget_per_acre, area_acres}`
+(`backend/models.py:185-189`).
 
 ### 6.3 Mini-simulation reuse recipe
 
@@ -181,8 +195,17 @@ into a generic offline message. A true network failure shows the same
 
 ### 6.7 i18n
 
-All static strings ship with `data-i18n` attributes and entries added to
-`i18n.js` / `i18n-data.js` from the first commit — not retrofitted later.
+`FRONTEND.md`'s description of this ("`data-i18n` attributes") is stale —
+the real mechanism in `frontend/i18n.js` needs no per-element markup at
+all: it walks every text node and translatable attribute under
+`<body>` automatically and looks each exact English string up in
+`window.MM_I18N_CATALOG[lang]` (defined in `frontend/i18n-data.js`, which
+already covers `hi`/`te`/`kn` — Kannada is first-class too, not just
+Hindi/Telugu). Including `i18n-data.js` + `i18n.js` on `decide.html` gets
+translation and the language-switcher pill automatically; the only work
+needed is adding `hi`/`te`/`kn` entries to `MM_I18N_CATALOG`, keyed by the
+exact English strings `decide.html`/`decide.js` introduce, alongside the
+existing entries — done from the first commit, not retrofitted later.
 
 ### 6.8 Entry points
 
