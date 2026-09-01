@@ -126,7 +126,14 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js" crossorigin=""></script>
-  <script src="https://unpkg.com/@turf/turf@7.1.0/turf.min.js" crossorigin=""></script>
+  <!-- Turf is deliberately NOT loaded here. It is 543 KB (136 KB gzipped) and
+       costs ~190 ms just to parse on desktop V8 -- several times that on the
+       low-end Android this page is mostly opened on -- yet nothing needs it
+       until the user has finished drawing a plot. farm-boundary.js fetches it
+       in the background once the map is ready and awaits it in computeAndShow,
+       so the cost overlaps the seconds spent drawing instead of delaying the
+       map the user is waiting for. No preconnect is needed: the two unpkg
+       scripts above have already opened that connection by this point. -->
   <script src="site-ui.js"></script>
   <script src="farm-state.js"></script>
   <script src="farm-boundary.js"></script>

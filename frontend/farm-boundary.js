@@ -25,9 +25,39 @@
     console.error('[farm-boundary] FarmState not loaded. Did you include farm-state.js before farm-boundary.js?');
     return;
   }
-  if (typeof window.turf === 'undefined') {
-    console.error('[farm-boundary] Turf.js not loaded.');
-    return;
+  /* ── Turf: loaded on demand, not at page load ──────────
+     Turf is only used to measure a plot the user has drawn (see
+     computeAndShow), but at 543 KB / ~190 ms of parse it was previously the
+     single most expensive thing on this page's critical path -- paid by
+     everyone who opened the map, including those who never drew anything.
+     It is fetched in the background as soon as the map is up, so by the time
+     a plot is finished it is almost always already resident; computeAndShow
+     awaits it either way. */
+  const TURF_URL = 'https://unpkg.com/@turf/turf@7.1.0/turf.min.js';
+  const TURF_SRI = 'sha256-xFr0VRlS+kHwSTz0jDU5sYAHdPKr/AMexq9yrM8Yvp8=';
+  let turfPromise = null;
+
+  function loadTurf() {
+    if (window.turf) return Promise.resolve(window.turf);
+    // Memoised: two quick draws must not start two downloads.
+    if (turfPromise) return turfPromise;
+    turfPromise = new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = TURF_URL;
+      s.integrity = TURF_SRI;
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      s.onload = () => window.turf
+        ? resolve(window.turf)
+        : reject(new Error('Turf loaded but exposed no global'));
+      s.onerror = () => {
+        // Let a later attempt retry rather than caching the failure forever.
+        turfPromise = null;
+        reject(new Error('Turf failed to load'));
+      };
+      document.head.appendChild(s);
+    });
+    return turfPromise;
   }
 
   /* ── Map initialisation ────────────────────────────── */
@@ -98,6 +128,12 @@
     edit: { featureGroup: drawnItems, remove: false }
   });
   map.addControl(drawControl);
+
+  // Map is up and interactive — start pulling Turf down now, in the
+  // background, so the seconds the user spends placing vertices hide the
+  // download. A rejection here is not an error yet: computeAndShow retries
+  // and reports it only if a measurement is actually needed.
+  loadTurf().catch(() => {});
 
   /* ── Primary "Draw plot boundary" control ──────────────────────────
      A single labelled button that starts the same polygon handler
@@ -346,6 +382,22 @@
   /* ── Core compute ──────────────────────────────────── */
   async function computeAndShow(layer) {
     const gj      = layer.toGeoJSON();
+
+    // Normally already resolved from the warm-up kicked off at map init.
+    let turf;
+    try {
+      turf = await loadTurf();
+    } catch (_) {
+      summaryEl.innerHTML =
+        '<div class="farmmap__empty">Could not load the measurement library. ' +
+        'Check your connection and draw the plot again.</div>';
+      actionsEl.style.display = 'none';
+      setPeek('Measurement unavailable — check your connection', false);
+      setSheetOpen(true);
+      retranslate();
+      return;
+    }
+
     const sqm     = turf.area(gj);                          // m²
     const hectares = sqm / 10000;
     const acres   = sqm / 4046.8564224;

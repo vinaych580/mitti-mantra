@@ -6,7 +6,13 @@
      • Network-only for API calls to the backend.
 */
 
-const VERSION = 'mittimantra-v50';
+// v51: farm-boundary.html stopped loading Turf via a <script> tag and
+// farm-boundary.js started loading it on demand instead. HTML is network-first
+// but JS is stale-while-revalidate, so without a VERSION bump a returning
+// visitor would pair the new markup with the previous farm-boundary.js -- whose
+// startup guard aborts when window.turf is absent -- and lose plot drawing for
+// a load. Bumping drops the old cache on activate so both refresh together.
+const VERSION = 'mittimantra-v51';
 const CORE = [
   './',
   './index.html',
