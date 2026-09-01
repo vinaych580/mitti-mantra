@@ -256,6 +256,38 @@
   document.head.appendChild(styleEl);
 
   // ------------------------------------------------------------------
+  // Shared reference-data GET memo
+  // ------------------------------------------------------------------
+  /* dashboard.js caches its own reference GETs, but it loads after this file
+     and only on dashboard.html, so /api/regions was still fetched twice on the
+     page where it matters most: once by the farm bar below, once by
+     dashboard.js. The store lives here because mm-core is the one script on
+     every page, and it holds the in-flight promise rather than the settled
+     value so concurrent callers collapse into one request instead of racing.
+
+     The producer stays with the caller: dashboard.js's fetch wrapper has
+     offline fallbacks and error shaping that a bare fetch here does not, and
+     whichever caller arrives first should get to supply those. */
+  const memoStore = new Map();
+
+  function memoGet(key, ttlMs, producer) {
+    const hit = memoStore.get(key);
+    if (hit && Date.now() - hit.at < ttlMs) return hit.promise;
+    const promise = producer();
+    memoStore.set(key, { at: Date.now(), promise });
+    // Never remember a failure as if it were a result.
+    promise.catch(() => {
+      const current = memoStore.get(key);
+      if (current && current.promise === promise) memoStore.delete(key);
+    });
+    return promise;
+  }
+
+  // Reference tables come from CSVs that only change on a deploy, so nothing a
+  // user does in a session invalidates them. Matches dashboard.js's TTL.
+  const REFERENCE_TTL_MS = 5 * 60 * 1000;
+
+  // ------------------------------------------------------------------
   // HTML escaping
   // ------------------------------------------------------------------
   function escapeHtml(s) {
@@ -307,7 +339,10 @@
 
     // Populate regions from API (same endpoint dashboard.js uses)
     let regions = [];
-    try { regions = await fetch("/api/regions").then(r => r.json()); } catch (_) {}
+    try {
+      regions = await memoGet("/api/regions", REFERENCE_TTL_MS,
+        () => fetch("/api/regions").then(r => r.json()));
+    } catch (_) {}
     const regSel = bar.querySelector('[data-mm="region_id"]');
     if (Array.isArray(regions) && regions.length) {
       let opts = regions.map(r => `<option value="${r.id || r.region_id}">${r.name || r.id}</option>`).join("");
@@ -477,7 +512,7 @@
   // ------------------------------------------------------------------
   // Public API
   // ------------------------------------------------------------------
-  window.MM = { fmt, profile, units, a11y, share, toast, escapeHtml };
+  window.MM = { fmt, profile, units, a11y, share, toast, escapeHtml, memoGet };
 
   // ------------------------------------------------------------------
   // Boot

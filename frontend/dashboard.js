@@ -180,7 +180,29 @@
   // long enough to actually survive a user reading one tool's results before
   // opening the next. A page reload always starts clean.
   const GET_TTL_MS = 5 * 60 * 1000;
-  const getCache = new Map();
+
+  /* The store itself lives in mm-core, which loads before this file on every
+     page that has it. Sharing it is what stops /api/regions being fetched
+     twice on this page -- once for mm-core's farm bar, once for the region
+     <select> here. The local Map is the fallback for loading dashboard.js on
+     its own. Either way the memo holds the in-flight promise, not the settled
+     value, so concurrent callers collapse into one request. */
+  const localMemo = new Map();
+
+  function memoGet(key, ttlMs, producer) {
+    const shared = window.MM && window.MM.memoGet;
+    if (shared) return shared(key, ttlMs, producer);
+    const hit = localMemo.get(key);
+    if (hit && Date.now() - hit.at < ttlMs) return hit.promise;
+    const promise = producer();
+    localMemo.set(key, { at: Date.now(), promise });
+    // Never remember a failure as if it were a result.
+    promise.catch(() => {
+      const current = localMemo.get(key);
+      if (current && current.promise === promise) localMemo.delete(key);
+    });
+    return promise;
+  }
 
   function isCacheableGet(url, opts) {
     if (opts.body || (opts.method || 'GET').toUpperCase() !== 'GET') return false;
@@ -231,25 +253,9 @@
   }
 
   async function api(url, opts = {}) {
-    let data;
-
-    if (isCacheableGet(url, opts)) {
-      const hit = getCache.get(url);
-      if (hit && Date.now() - hit.at < GET_TTL_MS) {
-        data = await hit.promise;
-      } else {
-        const promise = apiRequest(url, opts);
-        getCache.set(url, { at: Date.now(), promise });
-        // Never remember a failure as if it were a result.
-        promise.catch(() => {
-          const current = getCache.get(url);
-          if (current && current.promise === promise) getCache.delete(url);
-        });
-        data = await promise;
-      }
-    } else {
-      data = await apiRequest(url, opts);
-    }
+    const data = isCacheableGet(url, opts)
+      ? await memoGet(url, GET_TTL_MS, () => apiRequest(url, opts))
+      : await apiRequest(url, opts);
 
     // Dispatched on cache hits too: mm-analytics counts tool runs off this
     // event, and the user ran the tool whether or not bytes crossed the wire.
