@@ -67,13 +67,29 @@ async def _warm_ml_models() -> None:
     clicked first paid ~8 s before seeing anything -- reliably the person
     demoing the product. Warm them on a daemon thread: startup stays instant,
     and by the time a human has filled in a form the models are resident. A
-    failure here is not fatal; `_load_ml_models` already falls back to the
-    heuristics and logs.
+    failure here is not fatal; the loaders already fall back to the heuristics
+    and log.
+
+    Only the three joblib groups are warmed. They share one ~1.5 s scikit-learn
+    import -- the real cost here, dwarfing the ~200 ms the forests spend
+    deserialising -- so warming them together is nearly free once the first one
+    has paid it. The leaf-disease model shares none of that: it is a separate
+    ONNX runtime costing ~165 ms and ~35 MB resident, on a path most sessions
+    never touch, so it stays lazy and loads on its first actual use.
     """
     import threading
-    from ml.predict import _load_ml_models
+    from ml.predict import (
+        _load_price_models,
+        _load_recommend_models,
+        _load_yield_models,
+    )
 
-    threading.Thread(target=_load_ml_models, name="ml-warmup", daemon=True).start()
+    def _warm() -> None:
+        _load_yield_models()
+        _load_recommend_models()
+        _load_price_models()
+
+    threading.Thread(target=_warm, name="ml-warmup", daemon=True).start()
 
 # Cross-origin access is only needed during local development or when the
 # static frontend is hosted separately. Same-origin production deployments do

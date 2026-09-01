@@ -47,6 +47,21 @@ _ml_price_encoders = None
 _ml_recommend_encoders = None
 _ml_disease_session = None
 _ml_disease_labels: list[str] | None = None
+
+# Each model group tracks its own load state so a request deserialises only what
+# it actually uses. This buys far more than the file sizes suggest: unpickling
+# any scikit-learn estimator drags in sklearn itself, which costs ~1.5 s on a
+# cold instance -- about 85% of the old 1.7 s cold start, and several times the
+# ~200 ms the two forests spend deserialising. Leaf-disease detection is pure
+# ONNX, so keeping its group separate is what lets that path skip the sklearn
+# import altogether rather than merely loading fewer bytes.
+_ml_yield_loaded = False
+_ml_price_loaded = False
+_ml_recommend_loaded = False
+_ml_disease_loaded = False
+# Set only once every group is resolved. Still honoured as a global
+# short-circuit by each group loader, so forcing it True keeps its old meaning
+# of "stop trying to load anything".
 _ml_models_loaded = False
 
 # Must match ml/training/disease_cnn.py's preprocessing exactly.
@@ -54,47 +69,110 @@ _DISEASE_IMAGE_SIZE = 224
 _DISEASE_IMAGENET_MEAN = np.array([0.485, 0.456, 0.406], dtype=np.float32)
 _DISEASE_IMAGENET_STD = np.array([0.229, 0.224, 0.225], dtype=np.float32)
 
-# FIX (2.1): Thread-safe locks for model loading and cache writes
-_ml_load_lock = threading.Lock()
+# FIX (2.1): Thread-safe locks for model loading and cache writes.
+# One lock per model group, not one shared lock: backend.main warms every group
+# on a startup daemon thread, and on a 1-vCPU serverless box a shared lock would
+# make a request for an already-resident group queue behind whichever unrelated
+# group the warm-up happens to be deserialising.
+_ml_yield_lock = threading.Lock()
+_ml_price_lock = threading.Lock()
+_ml_recommend_lock = threading.Lock()
+_ml_disease_lock = threading.Lock()
+_ML_LOAD_LOCKS = (_ml_yield_lock, _ml_price_lock, _ml_recommend_lock, _ml_disease_lock)
 _cache_lock = threading.Lock()
 
 
-def _load_ml_models():
-    """Load trained ML models from disk. Silent no-op if models don't exist."""
-    global _ml_yield_model, _ml_price_model, _ml_recommend_model
-    global _ml_label_encoders, _ml_price_encoders, _ml_recommend_encoders
-    global _ml_disease_session, _ml_disease_labels
-    global _ml_models_loaded
-    if _ml_models_loaded:
+def _tune_forest(model):
+    """Force a deserialised forest to predict on the calling thread.
+
+    The forests were fitted with n_jobs=-1 and scikit-learn pickles that
+    setting, so every serve-time predict() spun up a joblib worker pool --
+    roughly 150 ms of pool setup to do microseconds of real tree traversal.
+    """
+    if model is not None and hasattr(model, "n_jobs"):
+        model.n_jobs = 1
+    return model
+
+
+def _load_joblib(name: str):
+    """Deserialise MODEL_DIR/name, or return None when the file is absent."""
+    import joblib
+    path = MODEL_DIR / name
+    if not path.exists():
+        return None
+    return joblib.load(path)
+
+
+def _load_yield_models():
+    """Load the yield regressor and its label encoders. No-op if absent."""
+    global _ml_yield_model, _ml_label_encoders, _ml_yield_loaded
+    if _ml_yield_loaded or _ml_models_loaded:
         return
     # FIX (2.1): Double-checked locking for thread safety
-    with _ml_load_lock:
-        if _ml_models_loaded:
+    with _ml_yield_lock:
+        if _ml_yield_loaded or _ml_models_loaded:
             return
         try:
-            import joblib
-            ym = MODEL_DIR / "yield_model.joblib"
-            if ym.exists():
-                _ml_yield_model = joblib.load(ym)
-            le = MODEL_DIR / "label_encoders.joblib"
-            if le.exists():
-                _ml_label_encoders = joblib.load(le)
-            pm = MODEL_DIR / "price_model.joblib"
-            if pm.exists():
-                _ml_price_model = joblib.load(pm)
-            pe = MODEL_DIR / "price_encoders.joblib"
-            if pe.exists():
-                _ml_price_encoders = joblib.load(pe)
-            rm = MODEL_DIR / "recommend_model.joblib"
-            if rm.exists():
-                _ml_recommend_model = joblib.load(rm)
-            re_ = MODEL_DIR / "recommend_encoders.joblib"
-            if re_.exists():
-                _ml_recommend_encoders = joblib.load(re_)
+            _ml_yield_model = _tune_forest(_load_joblib("yield_model.joblib"))
+            _ml_label_encoders = _load_joblib("label_encoders.joblib")
+        except Exception as e:
+            # FIX (4.1): Log the actual error instead of silently swallowing
+            logger.warning("Failed to load yield model, falling back to heuristics: %s", e)
+        _ml_yield_loaded = True
 
-            # Disease detection: lightweight ONNX inference (fine-tuned
-            # MobileNetV3-Small), not a joblib/scikit-learn model -- trained
-            # offline by ml/training/disease_cnn.py.
+
+def _load_price_models():
+    """Load the mandi-price regressor and its encoders. No-op if absent."""
+    global _ml_price_model, _ml_price_encoders, _ml_price_loaded
+    if _ml_price_loaded or _ml_models_loaded:
+        return
+    with _ml_price_lock:
+        if _ml_price_loaded or _ml_models_loaded:
+            return
+        try:
+            _ml_price_model = _tune_forest(_load_joblib("price_model.joblib"))
+            _ml_price_encoders = _load_joblib("price_encoders.joblib")
+        except Exception as e:
+            logger.warning("Failed to load price model, falling back to heuristics: %s", e)
+        _ml_price_loaded = True
+
+
+def _load_recommend_models():
+    """Load the crop-recommendation classifier and its encoders. No-op if absent.
+
+    This is the expensive group -- 82 MB on disk and ~90 MB resident once
+    unpickled -- so it stays behind its own flag rather than riding along with
+    the yield model that the other endpoints actually want.
+    """
+    global _ml_recommend_model, _ml_recommend_encoders, _ml_recommend_loaded
+    if _ml_recommend_loaded or _ml_models_loaded:
+        return
+    with _ml_recommend_lock:
+        if _ml_recommend_loaded or _ml_models_loaded:
+            return
+        try:
+            _ml_recommend_model = _tune_forest(_load_joblib("recommend_model.joblib"))
+            _ml_recommend_encoders = _load_joblib("recommend_encoders.joblib")
+        except Exception as e:
+            logger.warning("Failed to load recommend model, falling back to heuristics: %s", e)
+        _ml_recommend_loaded = True
+
+
+def _load_disease_model():
+    """Load the ONNX leaf-disease classifier and its label list. No-op if absent.
+
+    Disease detection is a fine-tuned MobileNetV3-Small exported to ONNX and
+    trained offline by ml/training/disease_cnn.py -- no joblib, and crucially no
+    scikit-learn, which is why this group must never be folded back in with the
+    forests above.
+    """
+    global _ml_disease_session, _ml_disease_labels, _ml_disease_loaded
+    if _ml_disease_loaded or _ml_models_loaded:
+        return
+    with _ml_disease_lock:
+        if _ml_disease_loaded or _ml_models_loaded:
+            return
+        try:
             onnx_path = MODEL_DIR / "disease_model.onnx"
             labels_path = MODEL_DIR / "disease_labels.json"
             if onnx_path.exists() and labels_path.exists():
@@ -105,21 +183,26 @@ def _load_ml_models():
                 )
                 with open(labels_path) as f:
                     _ml_disease_labels = _json.load(f)
-
-            # The forests were fitted with n_jobs=-1 and scikit-learn pickles
-            # that setting, so every serve-time predict() spun up a joblib
-            # worker pool. Recommending one region means ~45 single-row
-            # predictions, i.e. ~45 pool spin-ups at roughly 150 ms each --
-            # which was the entire reason /api/recommend took seconds and
-            # /api/rotation-plan took ~7 s. A single-row traversal is
-            # microseconds of real work; do it on the calling thread.
-            for _m in (_ml_yield_model, _ml_price_model, _ml_recommend_model):
-                if _m is not None and hasattr(_m, "n_jobs"):
-                    _m.n_jobs = 1
         except Exception as e:
-            # FIX (4.1): Log the actual error instead of silently swallowing
-            logger.warning("Failed to load ML models, falling back to heuristics: %s", e)
-        _ml_models_loaded = True
+            logger.warning("Failed to load disease model, falling back to heuristics: %s", e)
+        _ml_disease_loaded = True
+
+
+def _load_ml_models():
+    """Load every model group.
+
+    Kept for callers that genuinely need all of them, and for tests. Request
+    paths should call the specific group loader instead -- see the comment on
+    the load flags for why pulling in a group you do not need is expensive.
+    """
+    global _ml_models_loaded
+    if _ml_models_loaded:
+        return
+    _load_yield_models()
+    _load_price_models()
+    _load_recommend_models()
+    _load_disease_model()
+    _ml_models_loaded = True
 
 
 def _preprocess_leaf_image(image: Image.Image) -> np.ndarray:
@@ -146,7 +229,7 @@ def predict_disease_ml(image: Image.Image, crop: str = "") -> tuple[str, float] 
     Returns (class_name, confidence) or None if no exported model is present --
     callers must fall back to the heuristic decision tree in that case.
     """
-    _load_ml_models()
+    _load_disease_model()
     if _ml_disease_session is None or not _ml_disease_labels:
         return None
 
@@ -173,6 +256,7 @@ def invalidate_caches():
     global _ml_yield_model, _ml_price_model, _ml_recommend_model
     global _ml_label_encoders, _ml_price_encoders, _ml_recommend_encoders
     global _ml_disease_session, _ml_disease_labels
+    global _ml_yield_loaded, _ml_price_loaded, _ml_recommend_loaded, _ml_disease_loaded
     global _ml_models_loaded
     with _cache_lock:
         _cache_crop_params = None
@@ -180,7 +264,9 @@ def invalidate_caches():
         _cache_weather = None
         _cache_soil = None
         _cache_mandi = None
-    with _ml_load_lock:
+    for _lock in _ML_LOAD_LOCKS:
+        _lock.acquire()
+    try:
         _ml_yield_model = None
         _ml_price_model = None
         _ml_recommend_model = None
@@ -189,7 +275,14 @@ def invalidate_caches():
         _ml_recommend_encoders = None
         _ml_disease_session = None
         _ml_disease_labels = None
+        _ml_yield_loaded = False
+        _ml_price_loaded = False
+        _ml_recommend_loaded = False
+        _ml_disease_loaded = False
         _ml_models_loaded = False
+    finally:
+        for _lock in reversed(_ML_LOAD_LOCKS):
+            _lock.release()
     logger.info("All predict module caches invalidated.")
 
 
@@ -398,7 +491,7 @@ def _ml_predict_yield(
     crop_params_dict: dict, soil: dict, weather: dict, irrigation: float,
 ) -> float | None:
     """Try ML model prediction; return None if model unavailable."""
-    _load_ml_models()
+    _load_yield_models()
     if _ml_yield_model is None or _ml_label_encoders is None:
         return None
     try:
@@ -446,7 +539,7 @@ def _ml_predict_yield_batch(
     unchanged — each row is still traversed independently by every tree — so
     this is purely the dispatch overhead going away.
     """
-    _load_ml_models()
+    _load_yield_models()
     if _ml_yield_model is None or _ml_label_encoders is None:
         return {}
     try:
@@ -848,7 +941,7 @@ def _ml_recommend_crop(
     budget: float, irrigation: float,
 ) -> list[dict[str, float]] | None:
     """Use ML classifier to get ranked crop probabilities. Returns None if unavailable."""
-    _load_ml_models()
+    _load_recommend_models()
     if _ml_recommend_model is None or _ml_recommend_encoders is None:
         return None
     try:
@@ -893,7 +986,7 @@ def _ml_predict_price(
     region_id: str, crop_id: str, recent_prices: list[float], target_month: int, target_year: int,
 ) -> float | None:
     """Use ML model to predict a single future price point. Returns None if unavailable."""
-    _load_ml_models()
+    _load_price_models()
     if _ml_price_model is None or _ml_price_encoders is None:
         return None
     try:
