@@ -15,7 +15,14 @@
     rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- Deferred, like every other script on this page. Undeferred it blocked
+       parsing and first paint on a cross-origin round-trip to unpkg for a
+       map that lives well below the fold. `defer` keeps execution in document
+       order, so Leaflet is still defined before dashboard.js (the only file
+       here that touches `L`) runs. Integrity hash matches book-a-tractor.html,
+       which already loads this exact file this way. -->
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <link rel="icon" href="assets/logo-192.png" type="image/png">
   <link rel="apple-touch-icon" href="assets/logo-192.png">
 </head>

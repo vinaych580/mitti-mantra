@@ -155,7 +155,41 @@
     }
   }
 
-  async function api(url, opts = {}) {
+  /* ---------- Reference-data GET cache ----------
+     This farm's /api/soil/{region} and /api/weather/{region} pair is fetched
+     independently by the simulate, batch-simulate and optimal-mix handlers, so
+     moving between tools re-requests the same unchanging rows every time.
+
+     Deliberately an allowlist of reference endpoints rather than "cache every
+     GET". A blanket GET cache has to guess when a write invalidates it, and
+     guessing wrong breaks things in both directions: /api/ml/status changes
+     after a retrain and /api/expense/* after a logged expense (both must never
+     be cached), while /api/simulate, /api/batch-simulate and /api/optimal-mix
+     are POSTs that compute rather than write, so treating them as mutations
+     would pointlessly discard the soil/weather entries the very flow this is
+     meant to help depends on. Restricting the cache to per-region reference
+     tables -- soil composition, seasonal weather averages, the region and crop
+     lists -- removes that whole question: nothing the user does in a session
+     changes them, so nothing needs invalidating.
+
+     Memoising the in-flight promise (not just the value) also collapses
+     concurrent duplicates, which HTTP caching alone does not do. */
+  const REFERENCE_GET = /^\/api\/(soil|weather|regions|crops)(\/|\?|$)/;
+  // These come from CSVs that only change on a deploy or a data refresh, so a
+  // few minutes is safe and, unlike the backend's blanket 30 s Cache-Control,
+  // long enough to actually survive a user reading one tool's results before
+  // opening the next. A page reload always starts clean.
+  const GET_TTL_MS = 5 * 60 * 1000;
+  const getCache = new Map();
+
+  function isCacheableGet(url, opts) {
+    if (opts.body || (opts.method || 'GET').toUpperCase() !== 'GET') return false;
+    // Relative URLs throughout; the base is only needed to parse the path.
+    try { return REFERENCE_GET.test(new URL(url, location.origin).pathname); }
+    catch (_) { return false; }
+  }
+
+  async function apiRequest(url, opts) {
     try {
       const res = await fetch(url, { headers: { 'Content-Type': 'application/json' }, ...opts });
       if (!res.ok) {
@@ -171,10 +205,7 @@
         throw new HttpError(res.status, `${res.status} · ${msg}`);
       }
 
-      const data = await res.json();
-      // Auto-save logic hooks into this event
-      window.dispatchEvent(new CustomEvent('mitti-api-success', { detail: { url, opts, data } }));
-      return data;
+      return await res.json();
     } catch (err) {
       // A real HTTP error response (400/422/500...) is not a "backend
       // unreachable" condition — surface it as-is via the normal error path
@@ -188,19 +219,42 @@
       if (offline) {
         if (url.includes('/api/simulate') && body) {
           flashOfflineBanner();
-          const data = offline.simulate(body);
-          window.dispatchEvent(new CustomEvent('mitti-api-success', { detail: { url, opts, data } }));
-          return data;
+          return offline.simulate(body);
         }
         if (url === '/api/crop' && body) {
           flashOfflineBanner();
-          const data = offline.recommend(body);
-          window.dispatchEvent(new CustomEvent('mitti-api-success', { detail: { url, opts, data } }));
-          return data;
+          return offline.recommend(body);
         }
       }
       throw err;
     }
+  }
+
+  async function api(url, opts = {}) {
+    let data;
+
+    if (isCacheableGet(url, opts)) {
+      const hit = getCache.get(url);
+      if (hit && Date.now() - hit.at < GET_TTL_MS) {
+        data = await hit.promise;
+      } else {
+        const promise = apiRequest(url, opts);
+        getCache.set(url, { at: Date.now(), promise });
+        // Never remember a failure as if it were a result.
+        promise.catch(() => {
+          const current = getCache.get(url);
+          if (current && current.promise === promise) getCache.delete(url);
+        });
+        data = await promise;
+      }
+    } else {
+      data = await apiRequest(url, opts);
+    }
+
+    // Dispatched on cache hits too: mm-analytics counts tool runs off this
+    // event, and the user ran the tool whether or not bytes crossed the wire.
+    window.dispatchEvent(new CustomEvent('mitti-api-success', { detail: { url, opts, data } }));
+    return data;
   }
   function tryParseJSON(s) { try { return JSON.parse(s); } catch { return null; } }
   let offlineBannerShown = false;
