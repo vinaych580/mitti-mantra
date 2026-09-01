@@ -21,6 +21,13 @@ from utils.calculations import (
 # FIX (4.1): Added structured logging for ML fallback diagnostics
 logger = logging.getLogger(__name__)
 
+
+class _Unset:
+    """Sentinel for optional arguments whose valid values include None."""
+
+
+_UNSET = _Unset()
+
 DATASET_DIR = Path(__file__).resolve().parents[1] / "dataset"
 MODEL_DIR = Path(__file__).resolve().parent / "models"
 
@@ -343,6 +350,49 @@ def _historical_yield_average(crop_id: str, region_id: str, history_rows: list[d
     return None
 
 
+def _yield_feature_row(
+    crop_code: float, region_code: float, season_code: float,
+    cp: CropParameter, soil: dict, weather: dict, irrigation: float,
+) -> list[float]:
+    """One row in the yield model's 20-column feature layout.
+
+    Shared by the single-crop and batched prediction paths below. Keeping the
+    column order in exactly one place is the point: two copies would let the
+    same crop get different predictions depending on which path the caller
+    happened to take, and nothing would fail loudly when they drifted.
+    """
+    return [
+        crop_code,
+        region_code,
+        season_code,
+        cp.base_yield_kg_per_acre,
+        cp.water_requirement_mm,
+        cp.temp_min_c,
+        cp.temp_max_c,
+        cp.npk_n_kg_per_acre,
+        cp.npk_p_kg_per_acre,
+        cp.npk_k_kg_per_acre,
+        float(soil.get("ph", 7.0)),
+        float(soil.get("n_kg_per_acre", 40)),
+        float(soil.get("p_kg_per_acre", 20)),
+        float(soil.get("k_kg_per_acre", 20)),
+        float(soil.get("organic_carbon_percent") if soil.get("organic_carbon_percent") is not None else soil.get("organic_carbon_pct", 0.5)),
+        float(weather.get("rainfall_mm", 800)),
+        float(weather.get("avg_temp_c", 28)),
+        float(weather.get("min_temp_c", 20)),
+        float(weather.get("max_temp_c", 35)),
+        irrigation,
+    ]
+
+
+def _encoded_season(season: str) -> str:
+    """Season label the encoder knows, defaulting to kharif for anything else."""
+    s = season.lower()
+    if s not in _ml_label_encoders["season"].classes_:
+        return "kharif"
+    return s
+
+
 def _ml_predict_yield(
     crop_id: str, region_id: str, season: str,
     crop_params_dict: dict, soil: dict, weather: dict, irrigation: float,
@@ -363,37 +413,76 @@ def _ml_predict_yield(
             return None
         if region_id not in region_le.classes_:
             return None
-        s = season.lower()
-        if s not in season_le.classes_:
-            s = "kharif"  # default
-        features = np.array([[
+        features = np.array([_yield_feature_row(
             crop_le.transform([crop_id])[0],
             region_le.transform([region_id])[0],
-            season_le.transform([s])[0],
-            cp.base_yield_kg_per_acre,
-            cp.water_requirement_mm,
-            cp.temp_min_c,
-            cp.temp_max_c,
-            cp.npk_n_kg_per_acre,
-            cp.npk_p_kg_per_acre,
-            cp.npk_k_kg_per_acre,
-            float(soil.get("ph", 7.0)),
-            float(soil.get("n_kg_per_acre", 40)),
-            float(soil.get("p_kg_per_acre", 20)),
-            float(soil.get("k_kg_per_acre", 20)),
-            float(soil.get("organic_carbon_percent") if soil.get("organic_carbon_percent") is not None else soil.get("organic_carbon_pct", 0.5)),
-            float(weather.get("rainfall_mm", 800)),
-            float(weather.get("avg_temp_c", 28)),
-            float(weather.get("min_temp_c", 20)),
-            float(weather.get("max_temp_c", 35)),
-            irrigation,
-        ]], dtype=np.float32)
+            season_le.transform([_encoded_season(season)])[0],
+            cp, soil, weather, irrigation,
+        )], dtype=np.float32)
         pred = _ml_yield_model.predict(features)[0]
         return round(float(pred), 2)
     except Exception as e:
         # FIX (4.2): Log error instead of silently returning None
         logger.debug("ML yield prediction failed for %s/%s: %s", crop_id, region_id, e)
         return None
+
+
+def _ml_predict_yield_batch(
+    crop_ids: list[str], region_id: str, season: str,
+    crop_params_dict: dict, soil: dict, weather: dict, irrigation: float,
+) -> dict[str, float]:
+    """Predict yield for many crops sharing one region/season in a single call.
+
+    Returns {crop_id: yield}, omitting any crop the model can't answer for —
+    an unknown crop label, a missing crop parameter row — so callers fall back
+    to the heuristic for exactly the crops `_ml_predict_yield` would have
+    returned None for.
+
+    Ranking a region means predicting ~22 crops that differ only in their crop
+    columns; the region, season, soil and weather columns are identical across
+    all of them. Asking per crop made the forest pay scikit-learn's per-tree
+    Python dispatch over all 200 trees once per crop, which measured ~189 ms
+    against ~8 ms for the same rows submitted as one matrix. The arithmetic is
+    unchanged — each row is still traversed independently by every tree — so
+    this is purely the dispatch overhead going away.
+    """
+    _load_ml_models()
+    if _ml_yield_model is None or _ml_label_encoders is None:
+        return {}
+    try:
+        crop_le = _ml_label_encoders["crop"]
+        region_le = _ml_label_encoders["region"]
+        season_le = _ml_label_encoders["season"]
+        if region_id not in region_le.classes_:
+            return {}
+
+        known_crops = set(crop_le.classes_)
+        eligible = [
+            c for c in crop_ids
+            if c in known_crops and crop_params_dict.get(c) is not None
+        ]
+        if not eligible:
+            return {}
+
+        region_code = region_le.transform([region_id])[0]
+        season_code = season_le.transform([_encoded_season(season)])[0]
+        crop_codes = crop_le.transform(eligible)
+
+        features = np.array([
+            _yield_feature_row(
+                crop_codes[i], region_code, season_code,
+                crop_params_dict[crop_id], soil, weather, irrigation,
+            )
+            for i, crop_id in enumerate(eligible)
+        ], dtype=np.float32)
+
+        preds = _ml_yield_model.predict(features)
+        return {c: round(float(preds[i]), 2) for i, c in enumerate(eligible)}
+    except Exception as e:
+        # Mirror the single-crop path: a failure here is not fatal, the caller
+        # falls back to the heuristic formula for every crop.
+        logger.debug("Batched ML yield prediction failed for %s: %s", region_id, e)
+        return {}
 
 
 def _predict_yield_with_source(
@@ -405,12 +494,20 @@ def _predict_yield_with_source(
     irrigation_level: float = 0.5,
     seed_variety: str | None = None,
     sowing_date: str | None = None,
+    ml_pred: float | None | _Unset = _UNSET,
 ) -> tuple[float, bool]:
     """Return (yield_kg_per_acre, used_ml_model).
 
     Callers that need to report provenance used to re-run `_ml_predict_yield`
     afterwards purely to find out whether the model had been used -- doubling
     the ML work for every crop in a ranking. Ask once, return both answers.
+
+    `ml_pred` lets a caller that has already predicted this crop hand the answer
+    in rather than have it predicted again. `recommend_crops` uses it to spend
+    one batched forest call on the whole candidate set instead of one call per
+    crop. Passing None means "the model had no answer for this crop", which is
+    what `_ml_predict_yield` returns in the same situation, so the fallback
+    below behaves identically either way. Leaving it unset predicts as before.
     """
     crop_params = _load_crop_parameters()
     # FIX (1.3): Raise clear ValueError instead of unhandled KeyError
@@ -421,9 +518,10 @@ def _predict_yield_with_source(
         return 0.0, False
 
     # Try ML model first
-    ml_pred = _ml_predict_yield(
-        crop_id, region_id, season, crop_params, soil, weather, irrigation_level,
-    )
+    if isinstance(ml_pred, _Unset):
+        ml_pred = _ml_predict_yield(
+            crop_id, region_id, season, crop_params, soil, weather, irrigation_level,
+        )
     if ml_pred is not None and ml_pred > 0:
         return round(ml_pred, 2), True
 
@@ -872,10 +970,14 @@ def _score_single_crop(
     area_acres: float,
     region_crop_price: dict[str, float],
     ml_conf_map: dict[str, float],
+    ml_yield: float | None | _Unset = _UNSET,
 ) -> dict[str, Any]:
     """Score a single crop candidate for the recommendation engine.
 
     Returns a dict containing yield, profit, risk, smart_score, and metadata.
+
+    `ml_yield` is this crop's share of a batched prediction, when the caller
+    made one; see `_predict_yield_with_source`.
     """
     # FIX (H-11): `prediction_source` used to reflect whether the ML model
     # *object* was loaded at all, not whether ML was actually used for this
@@ -885,7 +987,7 @@ def _score_single_crop(
     # followed by a second, identical `_ml_predict_yield` probe whose only
     # purpose was answering that question.
     predicted_yield, used_ml_for_yield = _predict_yield_with_source(
-        crop_id, region_id, season, weather, soil,
+        crop_id, region_id, season, weather, soil, ml_pred=ml_yield,
     )
     risk = smart_risk_score(crop_id, weather, soil, budget_per_acre)
     price = region_crop_price.get(
@@ -996,19 +1098,32 @@ def recommend_crops(
     # question about this season.
     seasonal_request = season.lower() in GROWING_SEASONS
 
-    recommendations: list[dict[str, Any]] = []
-    for crop_id, crop in crop_params.items():
-        if not _season_match(season, crop.season):
-            continue
-        if seasonal_request and _is_perennial(crop.season):
-            continue
+    candidates = [
+        (crop_id, crop)
+        for crop_id, crop in crop_params.items()
+        if _season_match(season, crop.season)
+        and not (seasonal_request and _is_perennial(crop.season))
+    ]
 
+    # Every candidate shares this region's soil, weather and season, so their
+    # yields come out of one batched forest call rather than one call each --
+    # the difference between ~190 ms and ~8 ms of model time per request.
+    # Crops the model has no answer for are simply absent from the map, and
+    # `_score_single_crop` falls back to the heuristic for those.
+    batched_yields = _ml_predict_yield_batch(
+        [crop_id for crop_id, _ in candidates],
+        region_id, season, crop_params, soil, weather, 0.5,
+    )
+
+    recommendations: list[dict[str, Any]] = []
+    for crop_id, crop in candidates:
         # FIX (3.2): Extracted per-crop scoring into reusable function
         rec_entry = _score_single_crop(
             crop_id, crop, weather, soil,
             region_id, season,
             budget_per_acre, area_acres,
             region_crop_price, ml_conf_map,
+            ml_yield=batched_yields.get(crop_id),
         )
         recommendations.append(rec_entry)
 
