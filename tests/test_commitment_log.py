@@ -63,3 +63,36 @@ def test_upsert_keeps_separate_rows_for_different_seasons():
     upsert(region_id="telangana_medak", crop_id="wheat", season="rabi", year=2026, area_acres=4.5, device_id="dev_a")
     rows = read_all()
     assert len(rows) == 2
+
+
+from fastapi.testclient import TestClient
+
+from backend.main import app
+
+client = TestClient(app)
+
+
+def test_commit_crop_endpoint_happy_path():
+    payload = {
+        "region_id": "telangana_medak", "crop_id": "cotton", "season": "kharif",
+        "area_acres": 4.5, "device_id": "dev_endpoint_test",
+    }
+    response = client.post("/api/commit-crop", json=payload)
+    assert response.status_code == 200
+    assert response.json() == {"status": "recorded"}
+
+    from utils.commitment_log import read_all
+    rows = read_all()
+    assert any(
+        r["device_id"] == "dev_endpoint_test" and r["crop_id"] == "cotton"
+        for r in rows
+    )
+
+
+def test_commit_crop_endpoint_rejects_non_positive_area():
+    payload = {
+        "region_id": "telangana_medak", "crop_id": "cotton", "season": "kharif",
+        "area_acres": 0, "device_id": "dev_endpoint_test",
+    }
+    response = client.post("/api/commit-crop", json=payload)
+    assert response.status_code == 422

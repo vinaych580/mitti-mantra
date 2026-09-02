@@ -46,6 +46,20 @@ class RecommendationRequest(BaseModel):
             raise ValueError("Value must be greater than 0")
         return v
 
+class CommitmentRequest(BaseModel):
+    region_id: str
+    crop_id: str
+    season: str
+    area_acres: float
+    device_id: str
+
+    @field_validator("area_acres")
+    @classmethod
+    def area_must_be_positive(cls, v: float) -> float:
+        if v <= 0:
+            raise ValueError("area_acres must be greater than 0")
+        return v
+
 class CompareRequest(BaseModel):
     strategies: List[SimulationRequest]
 

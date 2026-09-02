@@ -6,6 +6,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from pydantic import BaseModel, Field, field_validator
 from typing import Dict, Any, List, Optional
 from statistics import mean
+from datetime import datetime
 import sys
 import os
 import secrets
@@ -153,6 +154,7 @@ app.add_middleware(StaticCacheHeaders)
 from backend.models import (
     SimulationRequest,
     RecommendationRequest,
+    CommitmentRequest,
     CompareRequest,
     RotationRequest,
     BatchSimRequest,
@@ -243,6 +245,22 @@ def get_recommendations(req: RecommendationRequest):
             budget_per_acre=req.budget_per_acre,
             area_acres=req.area_acres
         )
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.post("/api/commit-crop")
+def commit_crop(req: CommitmentRequest):
+    try:
+        from utils.commitment_log import upsert as _commit_upsert
+        _commit_upsert(
+            region_id=req.region_id,
+            crop_id=req.crop_id,
+            season=req.season,
+            year=datetime.now().year,
+            area_acres=req.area_acres,
+            device_id=req.device_id,
+        )
+        return {"status": "recorded"}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
