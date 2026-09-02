@@ -115,7 +115,12 @@ In `_score_single_crop` (`ml/predict.py:1055`):
 ```python
 if historical_avg_acres is not None and historical_avg_acres > 0:
     saturation_ratio = clamp(committed_acres / historical_avg_acres, 0.0, 2.0)
-    saturation_penalty = clamp(saturation_ratio * 40.0, 0.0, 40.0)
+    # *20.0, not *40.0: this scale reaches its max (40) only at ratio=2.0
+    # (double the historical norm). *40.0 would saturate the penalty already
+    # at ratio=1.0 (merely at norm), losing signal across the 1.0-2.0 range
+    # that matters most -- an earlier draft of this snippet had that bug;
+    # the implementation (and this doc) use 20.0.
+    saturation_penalty = clamp(saturation_ratio * 20.0, 0.0, 40.0)
 else:
     saturation_ratio = None
     saturation_penalty = 0.0
@@ -230,3 +235,48 @@ for the top-ranked crop (`recs[0]`) only — not every candidate in the list:
   builds it).
 - Applying the same saturation signal to the rotation planner or crop-mix
   tools.
+
+## 12. Known Limitations (found during final review, not fixed in this build)
+
+- **§11's rotation-planner/crop-mix deferral is not actually honored in
+  practice.** `recommend_crops()`/`_score_single_crop()` are the one shared
+  scoring path this build modifies, and they are also called by
+  `rotation_planner()` (`/api/rotation-plan`), `/api/optimal-mix` (the
+  crop-mix allocator), `/api/crop-comparison`, and the chatbot's
+  recommendation intent — not just `/api/recommend`/`/api/crop`. There is no
+  way to honor the deferral without duplicating the scoring formula into a
+  separate code path (worse: DRY violation, drift risk between two copies of
+  the same math), so this was accepted rather than fixed. In practice the
+  effect is currently a no-op everywhere (see next point), but if/when real
+  commitment volume accumulates, all five surfaces will be affected, not just
+  the two named as in-scope in §4.
+- **The saturation signal is numerically inert at realistic near-term
+  usage.** `yield_history.csv`'s `area_acres` is district-wide historical
+  acreage (tens to hundreds of thousands of acres per region/crop/season);
+  one farmer's commitment is a handful of acres. Reaching the full -10-point
+  penalty cap requires roughly the same total acreage as the historical
+  norm being committed through this app in one region/season — i.e.
+  thousands of concurrent farmer commitments. Below that scale the ratio,
+  and the badge, are both real but too small to matter. This is not a bug in
+  the formula; it is the actual, and currently unresolved, cold-start
+  problem inherent to a crowd-sourced signal — the fix (if one is wanted) is
+  a product decision about what denominator would make the signal responsive
+  at the app's real adoption scale, not a code change.
+- **The commit log does not achieve cross-farmer visibility on the actual
+  production deployment target.** `vercel.json` bundles `dataset/*.csv`
+  read-only into the deployed serverless function; `utils/commitment_log.py`
+  avoids crashing on that read-only filesystem by redirecting writes to
+  `/tmp` when `VERCEL` is set, matching this codebase's existing pattern for
+  other runtime-write modules. But Vercel's `/tmp` is per-instance and
+  ephemeral (cleared on cold start, not shared across concurrent lambda
+  instances) — so in production, one farmer's commitment is often invisible
+  to the next farmer hitting a different warm instance, and is lost outright
+  on a cold start. §2's stated purpose of this feature is specifically
+  cross-farmer, cross-request visibility; on Vercel today that purpose is
+  not met. Fixing this requires a real shared datastore behind the commit
+  log (this app has none today — everything else is CSV-as-source-of-truth,
+  which is precisely what makes this feature different from the rest of the
+  app: it needs to be *written*, not just read, from multiple concurrent
+  requests). Until that exists, this feature should be understood as
+  functionally correct and demonstrable in local/single-instance
+  development, but not yet delivering its intended effect in production.
