@@ -11,6 +11,7 @@ seed CSVs, this file is written to at runtime.
 from __future__ import annotations
 
 import csv
+import os
 import threading
 import time
 import uuid
@@ -19,7 +20,23 @@ from typing import Any
 
 from utils.csv_cache import DATASET_DIR
 
-_COMMITMENTS_PATH: Path = DATASET_DIR / "dynamic" / "commitments.csv"
+
+def _resolve_commitments_path() -> Path:
+    """Resolve the commitments file path, honoring VERCEL and AGRISIM_CACHE_DIR env vars.
+
+    In production (VERCEL), writes redirect to /tmp to avoid read-only filesystem errors.
+    In test/dev, AGRISIM_CACHE_DIR can override the location.
+    Otherwise, defaults to dataset/dynamic/.
+    """
+    base = os.environ.get("AGRISIM_CACHE_DIR")
+    if os.environ.get("VERCEL"):
+        base = "/tmp/.cache"
+    if base:
+        return Path(base) / "dynamic" / "commitments.csv"
+    return DATASET_DIR / "dynamic" / "commitments.csv"
+
+
+_COMMITMENTS_PATH: Path = _resolve_commitments_path()
 _FIELDNAMES = [
     "commitment_id", "region_id", "crop_id", "season", "year",
     "area_acres", "device_id", "timestamp",

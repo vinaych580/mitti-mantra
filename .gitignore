@@ -41,6 +41,7 @@ urllib3-2.6.3.dist-info/
 
 .vercel
 .cache/
+dataset/dynamic/
 
 # OS
 .DS_Store
