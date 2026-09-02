@@ -1078,17 +1078,22 @@ def _compute_region_saturation(
 
     history_rows = _load_yield_history()
     season_lower = season.lower()
-    commit_rows = [
-        r for r in _read_commitments()
-        if r["region_id"] == region_id
-        and r["season"].lower() == season_lower
-        and r["year"] == str(year)
-    ]
     committed_by_crop: dict[str, float] = {}
-    for r in commit_rows:
-        committed_by_crop[r["crop_id"]] = (
-            committed_by_crop.get(r["crop_id"], 0.0) + float(r["area_acres"])
-        )
+    # A single malformed/truncated row (e.g. from a crash mid-write) must
+    # not raise and take down /api/recommend for every region -- skip just
+    # that row and keep processing the rest.
+    for r in _read_commitments():
+        try:
+            if (
+                r["region_id"] == region_id
+                and r["season"].lower() == season_lower
+                and r["year"] == str(year)
+            ):
+                committed_by_crop[r["crop_id"]] = (
+                    committed_by_crop.get(r["crop_id"], 0.0) + float(r["area_acres"])
+                )
+        except (KeyError, TypeError, ValueError):
+            continue
 
     saturation: dict[str, dict[str, Any]] = {}
     for crop_id in crop_ids:
@@ -1109,7 +1114,14 @@ def _compute_region_saturation(
         committed_acres = committed_by_crop.get(crop_id, 0.0)
         ratio = clamp(committed_acres / historical_avg_acres, 0.0, 2.0)
         label = None
-        if ratio > 0:
+        # Only show a label once the rounded percentage is meaningful -- at
+        # realistic single-farmer commitment scale against a district-wide
+        # historical baseline, round(ratio * 100) is frequently 0 even when
+        # ratio is technically nonzero, which would render an uninformative
+        # "0% ... already committed" badge. The ratio itself is still
+        # returned unchanged for scoring purposes; only label display is
+        # gated on this rounding threshold.
+        if round(ratio * 100) >= 1:
             crop_name = crop_params[crop_id].crop_name
             label = f"{round(ratio * 100)}% of typical {crop_name} acreage already committed this season"
         saturation[crop_id] = {"ratio": ratio, "label": label}

@@ -1125,15 +1125,18 @@
         </div>` : ''}
 
         ${top.saturation_label ? `
-        <div class="alert alert--gold" style="margin-top:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+        <div class="alert alert--gold" style="margin-top:12px;">
           <div class="alert__body">
             <strong>📊 ${top.saturation_label}</strong>
           </div>
+        </div>` : ''}
+
+        <div style="margin-top:12px;display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap;">
           <button type="button" class="btn btn-ghost" style="flex-shrink:0;" id="mm-commit-crop-btn"
             data-crop-id="${top.crop_id}" data-region-id="${body.region_id}" data-season="${body.season}" data-area="${area}">
             I'm planting this →
           </button>
-        </div>` : ''}
+        </div>
 
         <div class="alert alert--green" style="margin-top:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--brand-soft);border:1px solid color-mix(in srgb, var(--brand) 35%, transparent);">
           <div class="alert__body" style="color:var(--brand-deep);">
@@ -1171,6 +1174,7 @@
             <div class="list-row__name">${cropLabel(r.crop_id)}
               <small>Yield ${Math.round(r.predicted_yield_kg_per_acre)} kg/ac · Risk ${Math.round(r.risk_score)}/100 · Score ${FIX(r.smart_score, 1)}</small>
               ${r.reasons ? `<div style="font-size: 0.76rem; color: var(--brand-deep); margin-top: 4px;">• ${r.reasons[0]}</div>` : ''}
+              ${r.saturation_label ? `<div style="font-size: 0.76rem; color: var(--ink-soft); margin-top: 2px;">📊 ${r.saturation_label}</div>` : ''}
             </div>
             <div class="list-row__val">${INR(r.expected_profit)}<small>ROI ${PCT(r.roi_percent)}</small></div>
           </div>`).join('')}`;

@@ -58,6 +58,8 @@ class CommitmentRequest(BaseModel):
     def area_must_be_positive(cls, v: float) -> float:
         if v <= 0:
             raise ValueError("area_acres must be greater than 0")
+        if v > 10000:
+            raise ValueError("area_acres must not exceed 10,000 acres for a single commitment")
         return v
 
 class CompareRequest(BaseModel):

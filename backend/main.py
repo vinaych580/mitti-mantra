@@ -248,9 +248,70 @@ def get_recommendations(req: RecommendationRequest):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+# ---------------------------------------------------------------------------
+# Minimal per-IP rate limit for /api/commit-crop, mirroring the
+# `_disease_rate_limit_check` pattern used for /api/disease/predict below.
+# A farmer legitimately commits a handful of times per session at most, so
+# this is deliberately tighter than the disease-scan limit. Same honest
+# limitation applies: this is a process-local, best-effort speed bump, not
+# a distributed guarantee (see the disease rate-limit comment for details).
+# ---------------------------------------------------------------------------
+import time as _commit_time_mod
+import threading as _commit_threading_mod
+
+_COMMIT_RATE_LIMIT_WINDOW_SEC = 60
+_COMMIT_RATE_LIMIT_MAX_REQUESTS = 10
+_commit_rate_limit_lock = _commit_threading_mod.Lock()
+_commit_rate_limit_log: Dict[str, List[float]] = {}
+
+
+def _commit_rate_limit_check(client_ip: str) -> bool:
+    """Record a call from `client_ip` and report whether it's within budget.
+
+    Returns True (and records the call) if `client_ip` has made fewer than
+    `_COMMIT_RATE_LIMIT_MAX_REQUESTS` calls in the trailing
+    `_COMMIT_RATE_LIMIT_WINDOW_SEC` seconds; False if it should be rejected
+    with 429 (in which case the call is NOT recorded again).
+    """
+    now = _commit_time_mod.time()
+    window_start = now - _COMMIT_RATE_LIMIT_WINDOW_SEC
+    with _commit_rate_limit_lock:
+        if len(_commit_rate_limit_log) >= 5000:
+            _commit_rate_limit_log.clear()
+        timestamps = [t for t in _commit_rate_limit_log.get(client_ip, []) if t > window_start]
+        if len(timestamps) >= _COMMIT_RATE_LIMIT_MAX_REQUESTS:
+            _commit_rate_limit_log[client_ip] = timestamps
+            return False
+        timestamps.append(now)
+        _commit_rate_limit_log[client_ip] = timestamps
+        return True
+
+
 @app.post("/api/commit-crop")
-def commit_crop(req: CommitmentRequest):
+def commit_crop(req: CommitmentRequest, request: Request):
+    # Prefer X-Forwarded-For (see _disease_rate_limit_check above for why);
+    # request.client.host is the correct fallback for local/dev and tests.
+    _xff = request.headers.get("x-forwarded-for")
+    client_ip = _xff.split(",")[0].strip() if _xff else (request.client.host if request.client else "unknown")
+    if not _commit_rate_limit_check(client_ip):
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail=(
+                f"Too many commit requests from this address. Limit is "
+                f"{_COMMIT_RATE_LIMIT_MAX_REQUESTS} per {_COMMIT_RATE_LIMIT_WINDOW_SEC}s "
+                f"-- please wait a moment and try again."
+            ),
+        )
+
     try:
+        from ml.predict import _load_crop_parameters, _load_soil_by_region, GROWING_SEASONS
+        if req.crop_id not in _load_crop_parameters():
+            raise HTTPException(status_code=400, detail=f"Unrecognized crop_id: {req.crop_id!r}")
+        if req.region_id not in _load_soil_by_region():
+            raise HTTPException(status_code=400, detail=f"Unrecognized region_id: {req.region_id!r}")
+        if req.season.lower() not in GROWING_SEASONS:
+            raise HTTPException(status_code=400, detail=f"Unrecognized season: {req.season!r}")
+
         from utils.commitment_log import upsert as _commit_upsert
         _commit_upsert(
             region_id=req.region_id,
@@ -261,6 +322,8 @@ def commit_crop(req: CommitmentRequest):
             device_id=req.device_id,
         )
         return {"status": "recorded"}
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
