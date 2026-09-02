@@ -189,8 +189,12 @@ for the top-ranked crop (`recs[0]`) only — not every candidate in the list:
   from the form plus the existing per-browser `device_id`.
 - On success, the button swaps to a confirmation state: "✓ Recorded —
   thanks, this helps other farmers nearby."
-- i18n strings added to `frontend/i18n-data.js` (EN/HI/TE) following the
-  existing pattern for other recommend-card strings.
+- No `frontend/i18n-data.js` entries: that catalog explicitly scopes itself
+  to static site chrome and documents the free-form JSON the ML tools
+  render as out of scope (the existing "Sell this produce →" CTA in this
+  same card is not translated either) — the badge and button follow that
+  established precedent and stay English-only, consistent with the rest of
+  this card's dynamic output.
 
 ## 9. Edge Cases
 
