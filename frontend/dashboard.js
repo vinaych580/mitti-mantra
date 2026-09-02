@@ -1124,6 +1124,17 @@
           </div>
         </div>` : ''}
 
+        ${top.saturation_label ? `
+        <div class="alert alert--gold" style="margin-top:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+          <div class="alert__body">
+            <strong>📊 ${top.saturation_label}</strong>
+          </div>
+          <button type="button" class="btn btn-ghost" style="flex-shrink:0;" id="mm-commit-crop-btn"
+            data-crop-id="${top.crop_id}" data-region-id="${body.region_id}" data-season="${body.season}" data-area="${area}">
+            I'm planting this →
+          </button>
+        </div>` : ''}
+
         <div class="alert alert--green" style="margin-top:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--brand-soft);border:1px solid color-mix(in srgb, var(--brand) 35%, transparent);">
           <div class="alert__body" style="color:var(--brand-deep);">
             <strong>🌾 Ready to sell?</strong> List ${cropLabel(top.crop_id)} on the Marketplace once it's harvested — buyers can see it alongside real mandi price context.
@@ -1163,6 +1174,30 @@
             </div>
             <div class="list-row__val">${INR(r.expected_profit)}<small>ROI ${PCT(r.roi_percent)}</small></div>
           </div>`).join('')}`;
+
+      const commitBtn = out.querySelector('#mm-commit-crop-btn');
+      if (commitBtn) {
+        commitBtn.addEventListener('click', async () => {
+          commitBtn.disabled = true;
+          commitBtn.textContent = 'Recording…';
+          try {
+            await api('/api/commit-crop', {
+              method: 'POST',
+              body: JSON.stringify({
+                region_id: commitBtn.dataset.regionId,
+                crop_id: commitBtn.dataset.cropId,
+                season: commitBtn.dataset.season,
+                area_acres: parseFloat(commitBtn.dataset.area),
+                device_id: window.MM.deviceId(),
+              }),
+            });
+            commitBtn.textContent = '✓ Recorded — thanks, this helps other farmers nearby.';
+          } catch (err) {
+            commitBtn.disabled = false;
+            commitBtn.textContent = "I'm planting this →";
+          }
+        });
+      }
 
       // Bar chart — smart score
       const top5 = recs.slice(0, 5);
