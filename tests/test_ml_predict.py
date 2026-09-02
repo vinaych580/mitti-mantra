@@ -120,3 +120,98 @@ def test_location_based_insights():
     assert res["region_id"] == "up_lucknow"
     assert "rainfall_trend_hint" in res
     assert len(res["best_priced_local_crops"]) > 0
+
+
+def test_compute_region_saturation_zero_when_no_commitments():
+    from ml.predict import _compute_region_saturation, _load_crop_parameters
+    crop_params = _load_crop_parameters()
+    result = _compute_region_saturation("telangana_medak", "kharif", ["rice"], crop_params, year=2099)
+    assert result["rice"]["ratio"] == 0.0
+    assert result["rice"]["label"] is None
+
+
+def test_compute_region_saturation_no_baseline_omits_crop():
+    from ml.predict import _compute_region_saturation, _load_crop_parameters
+    crop_params = _load_crop_parameters()
+    result = _compute_region_saturation("telangana_medak", "kharif", ["dragonfruit_unknown"], crop_params, year=2099)
+    assert "dragonfruit_unknown" not in result
+
+
+def test_compute_region_saturation_ratio_from_real_commitment(monkeypatch, tmp_path):
+    from utils import commitment_log
+    monkeypatch.setattr(commitment_log, "_COMMITMENTS_PATH", tmp_path / "commitments.csv")
+
+    from ml.predict import _compute_region_saturation, _load_crop_parameters
+    crop_params = _load_crop_parameters()
+
+    # telangana_medak/rice/kharif historical area_acres: 170887 (2022), 94356
+    # (2023), 111410 (2024) -> average exactly 125551.0.
+    commitment_log.upsert(
+        region_id="telangana_medak", crop_id="rice", season="kharif",
+        year=2099, area_acres=125551.0, device_id="dev_test",
+    )
+    result = _compute_region_saturation("telangana_medak", "kharif", ["rice"], crop_params, year=2099)
+    assert result["rice"]["ratio"] == pytest.approx(1.0)
+    assert result["rice"]["label"] == "100% of typical Rice (Paddy) acreage already committed this season"
+
+
+def test_compute_region_saturation_ratio_clamped_at_two(monkeypatch, tmp_path):
+    from utils import commitment_log
+    monkeypatch.setattr(commitment_log, "_COMMITMENTS_PATH", tmp_path / "commitments.csv")
+
+    from ml.predict import _compute_region_saturation, _load_crop_parameters
+    crop_params = _load_crop_parameters()
+
+    commitment_log.upsert(
+        region_id="telangana_medak", crop_id="rice", season="kharif",
+        year=2099, area_acres=125551.0 * 5, device_id="dev_test",
+    )
+    result = _compute_region_saturation("telangana_medak", "kharif", ["rice"], crop_params, year=2099)
+    assert result["rice"]["ratio"] == pytest.approx(2.0)
+
+
+def test_score_single_crop_applies_capped_saturation_penalty():
+    from ml.predict import _score_single_crop, _load_crop_parameters, _prepare_region_data
+
+    crop_params = _load_crop_parameters()
+    weather, soil = _prepare_region_data("telangana_medak", "kharif")
+    crop = crop_params["rice"]
+    common_kwargs = dict(
+        crop_id="rice", crop=crop, weather=weather, soil=soil,
+        region_id="telangana_medak", season="kharif",
+        budget_per_acre=15000.0, area_acres=3.0,
+        region_crop_price={}, ml_conf_map={},
+    )
+
+    baseline = _score_single_crop(**common_kwargs, region_saturation={})
+    half_saturated = _score_single_crop(
+        **common_kwargs, region_saturation={"rice": {"ratio": 1.0, "label": "x"}},
+    )
+    fully_saturated = _score_single_crop(
+        **common_kwargs, region_saturation={"rice": {"ratio": 2.0, "label": "x"}},
+    )
+
+    assert baseline["smart_score"] == pytest.approx(half_saturated["smart_score"] + 5.0, abs=0.01)
+    assert baseline["smart_score"] == pytest.approx(fully_saturated["smart_score"] + 10.0, abs=0.01)
+    # Cap holds even past ratio=2.0 (defensive -- _compute_region_saturation
+    # already clamps to [0, 2], but _score_single_crop must not trust that).
+    over_saturated = _score_single_crop(
+        **common_kwargs, region_saturation={"rice": {"ratio": 5.0, "label": "x"}},
+    )
+    assert baseline["smart_score"] == pytest.approx(over_saturated["smart_score"] + 10.0, abs=0.01)
+
+
+def test_score_single_crop_no_baseline_means_no_penalty():
+    from ml.predict import _score_single_crop, _load_crop_parameters, _prepare_region_data
+
+    crop_params = _load_crop_parameters()
+    weather, soil = _prepare_region_data("telangana_medak", "kharif")
+    crop = crop_params["rice"]
+    entry = _score_single_crop(
+        crop_id="rice", crop=crop, weather=weather, soil=soil,
+        region_id="telangana_medak", season="kharif",
+        budget_per_acre=15000.0, area_acres=3.0,
+        region_crop_price={}, ml_conf_map={}, region_saturation={},
+    )
+    assert entry["saturation_ratio"] is None
+    assert entry["saturation_label"] is None

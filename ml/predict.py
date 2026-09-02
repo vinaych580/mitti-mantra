@@ -4,6 +4,7 @@ from __future__ import annotations
 import logging
 import math
 import threading
+from datetime import datetime
 from pathlib import Path
 from statistics import mean
 from typing import Any
@@ -1051,6 +1052,70 @@ def _prepare_region_data(
     return weather, soil
 
 
+def _compute_region_saturation(
+    region_id: str,
+    season: str,
+    crop_ids: list[str],
+    crop_params: dict[str, CropParameter],
+    year: int | None = None,
+) -> dict[str, dict[str, Any]]:
+    """Build a per-crop regional saturation map for this region/season.
+
+    Compares this season's live planting commitments
+    (utils.commitment_log) against each crop's historical planted acreage
+    in this region (yield_history.csv, averaged over up to its 3 most
+    recent years for this exact region/crop/season) to flag crops the
+    region is already over-planting relative to its own norm.
+
+    A crop absent from the returned dict has no historical baseline to
+    judge against and must not be penalized for it -- see
+    _score_single_crop.
+    """
+    from utils.commitment_log import read_all as _read_commitments
+
+    if year is None:
+        year = datetime.now().year
+
+    history_rows = _load_yield_history()
+    season_lower = season.lower()
+    commit_rows = [
+        r for r in _read_commitments()
+        if r["region_id"] == region_id
+        and r["season"].lower() == season_lower
+        and r["year"] == str(year)
+    ]
+    committed_by_crop: dict[str, float] = {}
+    for r in commit_rows:
+        committed_by_crop[r["crop_id"]] = (
+            committed_by_crop.get(r["crop_id"], 0.0) + float(r["area_acres"])
+        )
+
+    saturation: dict[str, dict[str, Any]] = {}
+    for crop_id in crop_ids:
+        matching = [
+            r for r in history_rows
+            if r["region_id"] == region_id
+            and r["crop_id"] == crop_id
+            and r["season"].lower() == season_lower
+        ]
+        if not matching:
+            continue
+        matching.sort(key=lambda r: int(r["year"]), reverse=True)
+        recent_acres = [float(r["area_acres"]) for r in matching[:3]]
+        historical_avg_acres = mean(recent_acres)
+        if historical_avg_acres <= 0:
+            continue
+
+        committed_acres = committed_by_crop.get(crop_id, 0.0)
+        ratio = clamp(committed_acres / historical_avg_acres, 0.0, 2.0)
+        label = None
+        if ratio > 0:
+            crop_name = crop_params[crop_id].crop_name
+            label = f"{round(ratio * 100)}% of typical {crop_name} acreage already committed this season"
+        saturation[crop_id] = {"ratio": ratio, "label": label}
+    return saturation
+
+
 # FIX (3.2): Extracted per-crop scoring into its own function
 def _score_single_crop(
     crop_id: str,
@@ -1063,6 +1128,7 @@ def _score_single_crop(
     area_acres: float,
     region_crop_price: dict[str, float],
     ml_conf_map: dict[str, float],
+    region_saturation: dict[str, dict[str, Any]],
     ml_yield: float | None | _Unset = _UNSET,
 ) -> dict[str, Any]:
     """Score a single crop candidate for the recommendation engine.
@@ -1106,12 +1172,27 @@ def _score_single_crop(
     # Blend ML confidence into smart_score if available
     ml_score = ml_conf_map.get(crop_id, 0.0) * 100.0
     ml_term = ml_score if _ml_recommend_model is not None else roi_normalized
+
+    sat = region_saturation.get(crop_id)
+    saturation_ratio = sat["ratio"] if sat is not None else None
+    saturation_label = sat["label"] if sat is not None else None
+    # Linear 0-40 scale reaching its max at ratio=2.0 (double this region's
+    # historical norm), then a further *0.25 caps the score impact at -10
+    # points -- a nudge among close candidates, never an override of a
+    # farmer's own soil/ROI/risk/budget fit. clamp() here is defensive:
+    # region_saturation entries are expected pre-clamped to [0, 2] by
+    # _compute_region_saturation, but this function must not trust that.
+    saturation_penalty = (
+        clamp(saturation_ratio * 20.0, 0.0, 40.0) if saturation_ratio is not None else 0.0
+    )
+
     smart_score = clamp(
         0.35 * roi_normalized
         + 0.20 * risk["confidence_score"]
         + 0.15 * budget_fit
         + 0.15 * soil_health
-        + 0.15 * ml_term,
+        + 0.15 * ml_term
+        - saturation_penalty * 0.25,
         0.0,
         100.0,
     )
@@ -1129,6 +1210,8 @@ def _score_single_crop(
         "roi_percent": profit["roi_percent"],
         "risk_score": risk["risk_score"],
         "smart_score": round(smart_score, 2),
+        "saturation_ratio": saturation_ratio,
+        "saturation_label": saturation_label,
         "prediction_source": "ml_model" if used_ml_for_yield else "heuristic",
         "crop_cycle": "perennial" if _is_perennial(crop.season) else "seasonal",
         "budget_adequate": budget_adequate,
@@ -1198,6 +1281,10 @@ def recommend_crops(
         and not (seasonal_request and _is_perennial(crop.season))
     ]
 
+    region_saturation = _compute_region_saturation(
+        region_id, season, [crop_id for crop_id, _ in candidates], crop_params,
+    )
+
     # Every candidate shares this region's soil, weather and season, so their
     # yields come out of one batched forest call rather than one call each --
     # the difference between ~190 ms and ~8 ms of model time per request.
@@ -1215,7 +1302,7 @@ def recommend_crops(
             crop_id, crop, weather, soil,
             region_id, season,
             budget_per_acre, area_acres,
-            region_crop_price, ml_conf_map,
+            region_crop_price, ml_conf_map, region_saturation,
             ml_yield=batched_yields.get(crop_id),
         )
         recommendations.append(rec_entry)
