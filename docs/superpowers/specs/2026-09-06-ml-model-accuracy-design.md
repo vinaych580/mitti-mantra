@@ -44,6 +44,20 @@ split, are the trustworthy thing to evaluate against):
   0.15·ml_term`, each term clamped/normalized to a comparable 0–100 scale).
   The classifier is being trained to reproduce a proxy that isn't what
   "good recommendation" means anywhere else in this codebase.
+- **A second, larger divergence found while prototyping the fix:**
+  `ml/predict.py::recommend_crops` already excludes true perennial crops
+  (cashew, coconut, coffee, mango, tea) from the candidate pool entirely
+  for a kharif/rabi request — `_is_perennial` + `_season_match` +
+  `seasonal_request`, with a comment explaining exactly why: "Cashew (Rs
+  800-1100/kg) consequently won almost every ranking with a ~290% 'ROI'
+  that no first-year planting can deliver: the trees take 3-5 years to
+  fruit." `ml/train_models.py::_build_recommendation_dataset` was never
+  updated to match — it still lets perennials compete in every seasonal
+  sample. A working prototype of the fix (below) confirms this is the
+  dominant effect: aligning the score formula alone, without also
+  excluding perennials, made cashew's share of all labels *worse* (38%→
+  47%) because argmax has no randomness left to let non-dominant crops
+  occasionally win. Both fixes are required together.
 - **This isn't just a training-time number — it's live.** `smart_score`
   blends this classifier's `predict_proba` back in as `ml_term` (15%
   weight). A farmer asking about wheat or rice today gets that 15% slice
@@ -91,13 +105,16 @@ retraining on the corrected pipeline:
 
 - No crop that is a genuinely plausible recommendation somewhere in the
   sampled budget/soil/weather range — in particular the current zero-F1
-  staples rice, wheat, maize, cotton, and soybean — should remain
-  structurally unrecommendable. F1-macro should rise substantially from
-  0.117. (This is deliberately not phrased as "all 32 crops get non-zero
-  F1": a crop that is genuinely never ROI-competitive in this dataset's
-  budget range, e.g. coffee at ₹180k/acre input cost, legitimately
-  earning near-zero representation is correct behavior, not a bug — §7.3
-  is how this gets told apart from the bug this spec fixes.)
+  staples rice, wheat, maize, and soybean — should remain structurally
+  unrecommendable. Verified in a working prototype (§6.4): F1-macro
+  0.117→0.678, accuracy 0.56→0.85, and every one of the 23 crops that ever
+  wins at least once as best-fit reaches non-zero F1 (was 21 stuck at
+  0.00). This is deliberately not phrased as "all 32 crops get non-zero
+  F1": cotton, ginger, and potato are individually verified (§6.4) to be
+  genuinely never the top-ranked choice under `smart_score` itself in this
+  dataset's budget range, not victims of the bug this spec fixes — the 9
+  true perennials (§6.2) are correctly excluded from seasonal
+  recommendations entirely, by design, not a gap.
 - Yield MAPE is reported split by row provenance (real-history-derived vs.
   synthetic climate-mismatch), and the real-rows MAPE (baseline: 113.6%)
   should materially improve. R² (0.8115) and drought-robustness R²
@@ -144,15 +161,15 @@ retraining on the corrected pipeline:
   existing synthetic-simulation paradigm (correcting its internal
   consistency), not replacing simulation with real outcomes data, none of
   which exists for crop recommendation.
-- Rebalancing season-eligibility sampling exposure (perennial/multi-season
-  crops currently get evaluated in every seasonal round, season-locked
-  crops in only one). This is a real, secondary contributor (§2), but the
-  primary fix — aligning the score formula itself — is expected to
-  substantially reduce its effect on its own. Re-measure after §6/§7; only
-  build explicit exposure-balancing as a follow-up if skew toward
-  multi-season crops still looks structural, not as a pre-emptive change
-  here (deliberately not committing to a fix for a problem not yet
-  confirmed to survive the formula correction).
+- Reintroducing softmax-sampling noise on top of argmax labeling. Prototyped
+  and measured instead of assumed (§6.4): argmax + the perennial-exclusion
+  fix + `class_weight="balanced"` already brings every always-eligible crop
+  off zero F1. The 3 that remain unrepresented (cotton, ginger, potato) were
+  individually verified to be a faithful reflection of `smart_score`'s own
+  ROI-weighted ranking, not a sampling artifact — see §6.4. Reintroducing
+  softmax noise would let them win occasionally despite never actually
+  ranking best, which would make the labels *less* faithful to what
+  production says, not more.
 - Vercel bundle-size remediation. §9 measures and reports the delta if a
   new algorithm is promoted; actually fixing deployment/bundling (already
   flagged and left open as B-14 in `AUDIT_REPORT.md`) is a separate
@@ -160,7 +177,7 @@ retraining on the corrected pipeline:
 - Any change to the regional-saturation commit log or `/api/commit-crop`
   (shipped immediately prior to this spec). Saturation is a real-time,
   live-commitment-log signal with no meaning for a synthetic what-if
-  sample — see §6.2, it's simply passed as absent (zero penalty) during
+  sample — see §6.3, it's simply passed as absent (zero penalty) during
   label generation, matching its real behavior for any region/crop/season
   combination nobody has committed to yet.
 
@@ -176,6 +193,8 @@ retraining on the corrected pipeline:
 | `evaluate_models.py`'s yield dataset omits the climate-mismatch injection entirely | `evaluate_models.py::_build_yield_dataset` vs `train_models.py`'s | code diff |
 | `evaluate_models.py`'s recommendation dataset uses raw `profit`, the pre-FIX-C-1 formula | `evaluate_models.py:256` vs `train_models.py`'s FIX (C-1) comment | code diff |
 | Both pipelines write to the same `ml/models/*.joblib` filenames | both files' `joblib.dump()` calls | code read |
+| `recommend_crops` already excludes true perennials from seasonal candidate pools; the label generator doesn't | `predict.py:1289-1294` (`_is_perennial`/`_season_match`/`seasonal_request`) vs `train_models.py`'s eligibility check | code read |
+| Fix, prototyped end-to-end against the real dataset: accuracy 0.56→0.85, F1-macro 0.117→**0.678**, robustness (no weather) 0.157→0.212, 0 of 23 always-eligible crops left at 0.00 F1 (was 21) | working prototype using real `smart_risk_score`/`profit_estimator`/`calculate_yield_kg_per_acre`/`compute_smart_score` formula, perennial exclusion, argmax, `class_weight="balanced"` | trained `RandomForestClassifier` on the corrected dataset, measured against a held-out split |
 
 ## 6. Design — Fixing the Recommendation Labels
 
@@ -216,22 +235,63 @@ This is deliberately narrower than making the label generator call
 `_score_single_crop` itself: that function also pulls in batched ML-yield
 lookups, cached live mandi prices, and the region-saturation dict — all
 meaningful for a real request, none of them meaningful for a synthetic
-what-if sample. §6.2 covers how each of `compute_smart_score`'s five inputs
-is supplied during label generation instead.
+what-if sample. §6.3 covers how each of `compute_smart_score`'s five inputs
+is supplied during label generation instead, and §6.2 covers a required
+companion fix to which crops are even considered.
 
-### 6.2 Supplying `compute_smart_score`'s inputs during label generation
+### 6.2 Candidate eligibility: excluding perennials from seasonal sampling
+
+Before scoring any crop for a sampled (region, season) pair, apply
+`recommend_crops`'s own candidate filter (`ml/predict.py:1287-1294`),
+imported directly rather than reimplemented:
+
+```python
+from ml.predict import _season_match, _is_perennial
+
+eligible = [
+    (cid, cp) for cid, cp in crop_params.items()
+    if _season_match(season, cp["season"]) and not _is_perennial(cp["season"])
+]
+```
+
+Since the label generator only ever samples `season in ("kharif", "rabi")`
+(both are always a `seasonal_request`), this is equivalent to production's
+own `not (seasonal_request and _is_perennial(...))` check for every sample
+it generates. `_is_perennial` matches only the literal "Perennial" season
+string (cashew, coconut, coffee, mango, tea) — "Annual" crops (banana,
+sugarcane) are correctly *not* excluded, matching production exactly.
+
+This is not optional polish on top of §6.3's formula fix — it's necessary
+for it. Prototyping the formula fix *without* this filter first made
+cashew's dominance worse, not better (38%→47% of all labels): argmax has
+no randomness left to let a non-dominant crop occasionally win, so any
+crop still structurally permitted to compete in every season sweeps even
+harder once softmax's noise is removed. Both changes ship together.
+
+### 6.3 Supplying `compute_smart_score`'s inputs during label generation
 
 For each synthetic sample (region, season, budget, irrigation, ph, rainfall,
-temp — same sampling as today) and each eligible crop:
+temp — same sampling as today) and each eligible crop (§6.2):
 
 | Input | Source during label generation |
 |---|---|
-| `roi_normalized` | `clamp(roi_percent / 3.0, 0.0, 100.0)` — same formula as production, fed by the same `calculate_climate_factor`/`calculate_soil_factor`-based yield estimate and profit calc already used today |
-| `confidence_score` | `calculate_risk_score_and_subscores(...)`'s output, called directly (same function `smart_risk_score` wraps in production) — **new**, not used by today's label formula at all |
-| `budget_fit` | same formula as production, already computed today |
+| `roi_normalized` | `clamp(roi_percent / 3.0, 0.0, 100.0)`, where `roi_percent` comes from calling the real `profit_estimator()` (`ml/predict.py`) with `area_acres=1.0` — not a reimplementation. `roi_percent` is scale-invariant in `area_acres` (revenue and cost both scale by it), so this is exact, not an approximation, and it inherits `_budget_yield_multiplier`'s squared-funding-ratio curve for free instead of the label generator's old, cruder `budget/cost*0.5` linear stand-in. The yield fed into it is `calculate_yield_kg_per_acre()` (`utils/calculations.py`) — the same deterministic heuristic production falls back to, not a bespoke approximation of it. |
+| `confidence_score` | the real `smart_risk_score()` (`ml/predict.py`), called the same way `_score_single_crop` calls it — **new**, not used by today's label formula at all |
+| `budget_fit` | same one-line formula as production, already computed today |
 | `soil_health` | the same n/p/k-ratio formula `_score_single_crop` uses — **new**, today's label formula only feeds soil ph/N into `calculate_soil_factor`'s yield-multiplier, not this separate ratio term |
 | `ml_term` | **forced to equal `roi_normalized`** (production's own fallback value when no recommend_model is loaded — see below) |
 | `saturation_penalty` | **forced to `0.0`** (no commitment-log data exists for a synthetic scenario — equivalent to production's real "no baseline for this region/crop/season yet" case) |
+
+**`smart_risk_score` is called without an explicit `irrigation_level`,
+deliberately.** `_score_single_crop` calls it as `smart_risk_score(crop_id,
+weather, soil, budget_per_acre)` — no fifth argument — so it always uses
+the function's own default (0.5) regardless of the request's actual
+irrigation level. That looks like an inconsistency in `ml/predict.py` (the
+yield estimate elsewhere does use the sampled irrigation level), but it's
+what production actually computes, and labels must match production's
+actual behavior, not an idealized version of it. Fixing that inconsistency
+would be a separate, unrequested change to live scoring — out of scope
+here.
 
 **Why `ml_term` is forced, not computed from whatever model happens to be
 loaded:** production's `ml_term` already falls back to `roi_normalized`
@@ -245,7 +305,7 @@ four deterministic components, and at inference time the trained model's
 `predict_proba` becomes a genuine, independent 15%-weight signal on top —
 not something it was ever asked to reproduce.
 
-### 6.3 Label assignment: argmax, not softmax-sampling
+### 6.4 Label assignment: argmax, not softmax-sampling — and `class_weight="balanced"`
 
 Today's softmax-with-temperature=15 sampling (`train_models.py` FIX C-1)
 was a workaround for the *old* unbounded `roi_percent * budget_fit` scale,
@@ -257,15 +317,53 @@ what "the top recommendation" already means everywhere else in this
 codebase, and it removes an arbitrary hyperparameter tuned for a formula
 this spec is replacing.
 
-This is a prediction, not a guarantee. Regenerate the dataset, rerun the
-same per-class F1 diagnostic behind §2's numbers, and check specifically
-whether rice/wheat/maize/cotton/soybean move off zero. If some crop is
-still structurally at ~0% representation, determine from the same
-diagnostic whether that's a genuine "never ROI-competitive in this budget
-range" result (acceptable — §3) or a residual formula/sampling artifact
-(not acceptable — reintroduce softmax noise, retuned for the 0–100 scale,
-as a follow-up). Don't pre-build that fallback speculatively before
-confirming it's still needed.
+**Verified, not just argued.** A working prototype (§6.2's exclusion +
+§6.3's formula, argmax-labeled, trained as today's
+`RandomForestClassifier(n_estimators=200, max_depth=10,
+min_samples_split=4)`) measured against a held-out split:
+
+| Metric | Before | After argmax+formula fix | After adding `class_weight="balanced"` |
+|---|---|---|---|
+| Accuracy | 0.56 | 0.85 | 0.85 |
+| F1-macro | 0.117 | 0.50 | **0.678** |
+| Crops at 0.00 F1 (of 23 ever eligible*) | 21 | 6 (rice, maize, arhar, barley, chilli, groundnut) | **0** |
+| Robustness (weather zeroed) | 0.157 | 0.210 | 0.212 |
+
+\* 32 total crops; 9 are true perennials correctly excluded per §6.2
+(cashew, coconut, coffee, mango, tea) or never win even once as argmax
+across 30,000 sampled scenarios (cotton, ginger, potato, banana — banana
+is also perennial-adjacent by season string but excluded on eligibility,
+not competitiveness).
+
+`class_weight="balanced"` is the difference between "no crop is
+structurally unrecommendable" (0 crops at 0.00 F1 among those with any
+representation) and merely "much better than before" (6 crops still at
+0.00 F1). It's a standard, one-line, well-understood answer to the class
+imbalance that remains even after the formula fix (jute/jowar/mustard
+still get thousands of labels, rice gets dozens) — not a second attempt to
+patch the label formula itself. Task 4 of the implementation plan adds it
+to `train_recommendation_model()`'s `RandomForestClassifier` constructor.
+
+**Cotton, ginger, and potato get zero label representation even after
+this fix — verified to be genuine, not a residual bug.** Spot-checking
+cotton's rank under generous, near-ideal sampled conditions (ample budget,
+good soil, comfortable temperature) places it 9th of 22 eligible crops at
+a respectable-but-not-winning score of 58/100 — it is consistently, not
+narrowly, out-ranked by tobacco/chilli/tomato/turmeric, whose much higher
+price-per-kg drives a higher `roi_normalized` under the *same real
+`smart_score` formula production uses*. Ginger's ₹95,000/acre input cost
+exceeds every sampled budget ceiling (₹35,000), guaranteeing severe
+underfunding — and a correspondingly weak `budget_fit`/ROI — in 100% of
+samples. Potato's ₹42,000 cost against a ₹20/kg price is a genuinely weak
+ROI profile in this dataset. In each case, this is `smart_score` itself
+saying "not this one" — for the same conditions production would say it
+too — not an artifact of how labels are sampled. Reintroducing softmax
+noise to force these three into the label space would misrepresent what
+production actually ranks; this spec does not do that (§4). Their
+`ml_term` simply stays a neutral `0.0` in production's blend, same as any
+crop `ml_conf_map` has no entry for — the other 85% of `smart_score`
+(real ROI, risk, budget-fit, soil-health) is entirely unaffected and
+continues to score them normally.
 
 ## 7. Design — Yield Metric Honesty
 
@@ -344,9 +442,13 @@ for the user at promotion time, not something to route around silently.
 ## 10. Testing
 
 - `_build_recommendation_dataset` (new module): assert that
-  rice/wheat/maize/cotton/soybean each appear as the argmax label at least
-  once across a fixed-seed sample — the concrete regression test for §2's
-  bug.
+  rice/wheat/maize/soybean each appear as the argmax label at least once
+  across a fixed-seed sample, and that true perennials (cashew, coconut,
+  coffee, mango, tea) never do — the concrete regression test for §2's bug
+  and §6.2's fix. Cotton/ginger/potato are deliberately not asserted
+  either way: §6.4 found their absence genuine, and a test asserting
+  "never appears" would start failing the moment someone improves the
+  formula in a way that legitimately changes that.
 - `compute_smart_score`: a shared-fixture test asserting `_score_single_crop`
   and the dataset-builder's label generator produce byte-identical scores
   given the same five inputs — guards §6.1's "can't drift apart again"
@@ -371,11 +473,13 @@ for the user at promotion time, not something to route around silently.
 ## 11. Explicitly Deferred (not this build)
 
 - Everything listed as out-of-scope in §4.
-- Retuning or reintroducing softmax-sampling noise for label generation
-  (§6.3) — only if the empirical re-check shows it's still needed.
-- Explicit season-eligibility exposure balancing (§4) — only if the
-  empirical re-check shows multi-season crops are still structurally
-  over-represented after the formula fix.
+- Retuning or reintroducing softmax-sampling noise for label generation.
+  §6.4's prototype resolved this rather than leaving it open: don't —
+  cotton/ginger/potato's absence is genuine per `smart_score`'s own
+  ranking, and forcing them into the label space would misrepresent it.
+  Listed here only in case a *different* crop is found structurally
+  absent for reasons that turn out not to be genuine when the real,
+  full-scale training run happens in the implementation plan.
 
 ## 12. Known Limitations (accepted, not fixed in this build)
 
@@ -388,9 +492,15 @@ for the user at promotion time, not something to route around silently.
   deterministic formula didn't already know. A perfectly-fit model after
   this change still only ties `compute_smart_score`'s deterministic
   components — it cannot exceed them.
-- **Season-eligibility exposure asymmetry is measured, not eliminated,
-  by this build** (§4, §11) — if it turns out to still matter after the
-  formula fix, it's a follow-up.
+- **Three crops (cotton, ginger, potato) get no representation in the
+  recommendation classifier at all, even after this fix** (§6.4) — each
+  individually verified as a genuine "never top-ranked by `smart_score` in
+  this dataset's sampled range," not a bug. Their `ml_term` in production
+  stays a neutral `0.0`; the other 85% of their `smart_score` (real ROI,
+  risk, budget-fit, soil-health) is unaffected and continues to work
+  normally. Widening this would mean widening the sampled budget range or
+  reconsidering the ROI weighting itself — a scope change, not a bug fix,
+  and not something this build does reflexively just because it's possible.
 - **Yield's real-rows MAPE may still be materially above a "good" bar
   even after the bake-off.** `yield_history.csv` has 566 real rows total
   spread across many crop/region/season combinations; some combinations
