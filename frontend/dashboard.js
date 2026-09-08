@@ -1,5 +1,5 @@
 /* =========================================================
-   AgriSim Dashboard — 14 interactive tools, Chart.js visualisations
+   AgriSim Dashboard — 22 interactive tools, Chart.js visualisations
    Renderers match live API response shapes (verified 2026-04-17).
    ========================================================= */
 
@@ -633,7 +633,7 @@
   renderEmptyStates();
 
   /* ---------- Sidebar tool filter ----------
-     21 tools in a list that overflows the viewport by ~400px, with no
+     22 tools in a list that overflows the viewport by ~400px, with no
      way to jump to one by name. */
   (function initSidebarFilter() {
     const sidebar = document.querySelector('.sidebar');
@@ -2065,6 +2065,7 @@
       const f = formToObj(e.target);
       const r = await api(`/api/pest-alerts/${f.crop_id}?avg_temp_c=${f.avg_temp_c}&rainfall_mm=${f.rainfall_mm}`);
       const alerts = r.alerts || [];
+      const esc = (window.MM && window.MM.escapeHtml) ? window.MM.escapeHtml : (s => String(s));
 
       if (!alerts.length) {
         out.innerHTML = `<div class="alert alert--green">
@@ -2090,10 +2091,10 @@
         return `<div class="alert ${cls}">
             <svg class="alert__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01"/></svg>
             <div class="alert__body">
-              <strong>${a.pest_disease} <span class="chip ${chipCls}">${a.risk_level || a.severity}</span></strong>
-              <p>${a.description || ''}</p>
-              <p style="font-size:.82rem;margin-top:4px;color:var(--ink-faint);"><strong>Trigger:</strong> ${a.trigger || ''} · <strong>Now:</strong> ${a.current_conditions || ''}</p>
-              ${a.management || a.treatment ? `<p style="margin-top:6px;"><strong>Action:</strong> ${a.management || a.treatment}</p>` : ''}
+              <strong>${esc(a.pest_disease)} <span class="chip ${chipCls}">${esc(a.risk_level || a.severity)}</span></strong>
+              <p>${esc(a.description || '')}</p>
+              <p style="font-size:.82rem;margin-top:4px;color:var(--ink-faint);"><strong>Trigger:</strong> ${esc(a.trigger || '')} · <strong>Now:</strong> ${esc(a.current_conditions || '')}</p>
+              ${a.management || a.treatment ? `<p style="margin-top:6px;"><strong>Action:</strong> ${esc(a.management || a.treatment)}</p>` : ''}
             </div></div>`;
       }).join('')}`;
     } catch (err) { showError(out, err); }
@@ -2325,6 +2326,7 @@
   $('[data-form="schemes"]')?.addEventListener('submit', async e => {
     e.preventDefault();
     const out = $('[data-out="schemes"]');
+    if (!out) return;
     showLoading(out);
     try {
       const f = formToObj(e.target);
@@ -2336,6 +2338,7 @@
       }).toString();
       const r = await api(`/api/government-schemes?${q}`);
       const schemes = r.eligible_schemes || [];
+      const esc = (window.MM && window.MM.escapeHtml) ? window.MM.escapeHtml : (s => String(s));
       if (!schemes.length) {
         out.innerHTML = `<div class="alert"><div class="alert__body"><strong>No matching schemes</strong><p>Try widening the filters.</p></div></div>`;
         return;
@@ -2346,10 +2349,10 @@
           <div class="alert alert--green">
             <svg class="alert__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M9 15l2 2 4-4"/></svg>
             <div class="alert__body">
-              <strong>${s.scheme_name} ${(s.benefit_type_label || s.benefit_type) ? `<span class="chip chip--gold">${s.benefit_type_label || s.benefit_type}</span>` : ''}</strong>
-              <p>${s.description || ''}</p>
-              ${(s.benefit_label || s.benefit_value) ? `<p style="margin-top:4px;"><strong>Benefit:</strong> ${s.benefit_label || s.benefit_value}</p>` : ''}
-              ${(s.url || s.application_url) ? `<p style="margin-top:6px;"><a href="${s.url || s.application_url}" target="_blank" rel="noopener" style="color:var(--brand);font-weight:600;">Apply →</a></p>` : ''}
+              <strong>${esc(s.scheme_name)} ${(s.benefit_type_label || s.benefit_type) ? `<span class="chip chip--gold">${esc(s.benefit_type_label || s.benefit_type)}</span>` : ''}</strong>
+              <p>${esc(s.description || '')}</p>
+              ${(s.benefit_label || s.benefit_value) ? `<p style="margin-top:4px;"><strong>Benefit:</strong> ${esc(s.benefit_label || s.benefit_value)}</p>` : ''}
+              ${(s.url || s.application_url) ? `<p style="margin-top:6px;"><a href="${esc(s.url || s.application_url)}" target="_blank" rel="noopener" style="color:var(--brand);font-weight:600;">Apply →</a></p>` : ''}
             </div></div>`).join('')}`;
     } catch (err) { showError(out, err); }
   });
@@ -2360,11 +2363,13 @@
   $('[data-form="templates"]')?.addEventListener('submit', async e => {
     e.preventDefault();
     const out = $('[data-out="templates"]');
+    if (!out) return;
     showLoading(out, 'Loading templates…');
     try {
       const profile = formToObj(e.target).profile;
       const url = profile ? `/api/strategy-templates?profile=${profile}` : '/api/strategy-templates';
       const list = await api(url);
+      const esc = (window.MM && window.MM.escapeHtml) ? window.MM.escapeHtml : (s => String(s));
       if (!Array.isArray(list) || !list.length) {
         out.innerHTML = '<div class="alert"><div class="alert__body"><strong>No templates found.</strong></div></div>';
         return;
@@ -2373,17 +2378,17 @@
         <div class="kpi-grid">
           <div class="kpi kpi--good"><div class="kpi__lbl">Templates</div>
             <div class="kpi__val">${list.length}</div>
-            <div class="kpi__sub">${profile ? profile + ' profile' : 'All profiles'}</div></div>
+            <div class="kpi__sub">${profile ? esc(profile) + ' profile' : 'All profiles'}</div></div>
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;">
           ${list.map(t => {
         const c = t.config || {};
         return `<div style="background:var(--bg-soft);padding:18px;border-radius:var(--r-md);display:flex;flex-direction:column;gap:10px;">
               <div>
-                <div style="font-family:'Fraunces',serif;font-size:1.15rem;font-weight:600;line-height:1.2;">${t.name || t.template_id}</div>
-                <div style="font-size:.82rem;color:var(--ink-faint);margin-top:3px;">${t.template_id}</div>
+                <div style="font-family:'Fraunces',serif;font-size:1.15rem;font-weight:600;line-height:1.2;">${esc(t.name || t.template_id)}</div>
+                <div style="font-size:.82rem;color:var(--ink-faint);margin-top:3px;">${esc(t.template_id)}</div>
               </div>
-              <p style="font-size:.9rem;color:var(--ink-soft);margin:0;flex:1;">${t.description || ''}</p>
+              <p style="font-size:.9rem;color:var(--ink-soft);margin:0;flex:1;">${esc(t.description || '')}</p>
               <div style="display:flex;flex-wrap:wrap;gap:6px;">
                 ${c.crop_id ? `<span class="chip chip--green">${cropLabel(c.crop_id)}</span>` : ''}
                 ${c.season ? `<span class="chip">${c.season}</span>` : ''}
@@ -2391,7 +2396,7 @@
                 ${c.irrigation_level !== undefined ? `<span class="chip chip--blue">irrig ${c.irrigation_level}</span>` : ''}
                 ${c.budget_per_acre ? `<span class="chip chip--gold">${INR(c.budget_per_acre)}/ac</span>` : ''}
               </div>
-              <div style="font-size:.78rem;color:var(--ink-faint);border-top:1px dashed rgba(29,26,21,.1);padding-top:8px;">${t.profile || ''}</div>
+              <div style="font-size:.78rem;color:var(--ink-faint);border-top:1px dashed rgba(29,26,21,.1);padding-top:8px;">${esc(t.profile || '')}</div>
               <button class="btn btn-ghost" data-apply-template='${JSON.stringify(t).replace(/'/g, "&#39;")}' style="padding:8px 14px;font-size:.85rem;">Use in simulator →</button>
             </div>`;
       }).join('')}
@@ -2428,6 +2433,7 @@
   $('[data-form="compare"]')?.addEventListener('submit', async e => {
     e.preventDefault();
     const out = $('[data-out="compare"]');
+    if (!out) return;
     const form = e.target;
     // Pull multi-select values directly (FormData gives only one value)
     const selected = Array.from(form.crop_ids.selectedOptions).map(o => o.value);
@@ -3287,6 +3293,7 @@
       const regionId = $('#diseaseRegionSelect').value;
 
       try {
+        runScanBtn.disabled = true;
         // 1. Compute Severity Bucket client-side via Leaf Pixel Segmentation & Color Thresholding
         const imgData = resizeCtx.getImageData(0, 0, 224, 224);
         const pixelBytes = imgData.data;
@@ -3418,6 +3425,8 @@
         `;
       } catch (err) {
         showError(resultsBox, err);
+      } finally {
+        runScanBtn.disabled = false;
       }
     });
   }
