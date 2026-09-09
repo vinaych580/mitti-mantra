@@ -27,6 +27,9 @@ def test_build_yield_dataset_tags_row_provenance():
 def test_build_yield_dataset_augmented_rows_inherit_non_real_source():
     _, _, source, _, _, _ = _build_yield_dataset()
     counts = Counter(source)
-    # augmented rows = 6x (real + synthetic_mismatch) base rows
-    base_total = counts["real"] + counts["synthetic_mismatch"]
-    assert counts["augmented"] == base_total * 6
+    # Augmented copies of real rows are tagged "augmented" (6x per real row);
+    # augmented copies of synthetic_mismatch rows stay tagged
+    # "synthetic_mismatch" to preserve the provenance signal for
+    # audit_models._split_yield_mape() -- a noised copy of a deliberately-
+    # tiny value is still not a realistic observed yield.
+    assert counts["augmented"] == counts["real"] * 6

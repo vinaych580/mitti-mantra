@@ -243,10 +243,12 @@ def _build_yield_dataset() -> tuple[np.ndarray, np.ndarray, list[str], LabelEnco
             noised[:3] = rows_X[i][:3]
             aug_X.append(noised.tolist())
             aug_y.append(rows_y[i] * rng.uniform(0.92, 1.08))
-            # All augmented copies, whether from real or synthetic_mismatch
-            # sources, are tagged "augmented" -- they are noise-perturbed
-            # versions created for training variety, not actual observations.
-            aug_source.append("augmented")
+            # A noised copy of a synthetic_mismatch row (deliberately tiny
+            # yield to expose model overfitting) stays tagged that way rather
+            # than being promoted to "augmented" -- preserves the provenance
+            # signal used by audit_models._split_yield_mape() to exclude
+            # non-realistic rows from honest MAPE reporting.
+            aug_source.append("augmented" if rows_source[i] == "real" else rows_source[i])
     rows_X.extend(aug_X)
     rows_y.extend(aug_y)
     rows_source.extend(aug_source)
