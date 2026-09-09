@@ -33,3 +33,27 @@ def test_build_yield_dataset_augmented_rows_inherit_non_real_source():
     # audit_models._split_yield_mape() -- a noised copy of a deliberately-
     # tiny value is still not a realistic observed yield.
     assert counts["augmented"] == counts["real"] * 6
+
+
+from ml.dataset_builders import _build_recommendation_dataset
+
+
+def test_build_recommendation_dataset_staples_are_recommendable():
+    X, y, crop_le, region_le, season_le = _build_recommendation_dataset()
+    labeled_crops = {crop_le.classes_[i] for i in set(y.tolist())}
+    # The concrete regression test for the bug this task fixes: these
+    # staples used to never win a single sample (0.00 F1 on the deployed
+    # model's real holdout) because the old label formula had no risk/
+    # soil-fit term and let perennials compete in every seasonal sample.
+    for staple in ("rice", "wheat", "maize", "soybean"):
+        assert staple in labeled_crops, f"{staple} should be recommendable at least once"
+
+
+def test_build_recommendation_dataset_excludes_true_perennials():
+    X, y, crop_le, region_le, season_le = _build_recommendation_dataset()
+    labeled_crops = {crop_le.classes_[i] for i in set(y.tolist())}
+    # cashew/coconut/coffee/mango/tea are "Perennial" season crops -- a
+    # kharif/rabi request must never recommend a tree that takes 3-5 years
+    # to fruit, matching ml/predict.py::recommend_crops's own filter.
+    for perennial in ("cashew", "coconut", "coffee", "mango", "tea"):
+        assert perennial not in labeled_crops, f"{perennial} is perennial and must not be a seasonal label"

@@ -21,7 +21,15 @@ import joblib
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
 
-from utils.calculations import CropParameter, calculate_climate_factor, calculate_soil_factor
+from ml.predict import smart_risk_score, profit_estimator, _season_match, _is_perennial
+from utils.calculations import (
+    CropParameter,
+    calculate_climate_factor,
+    calculate_soil_factor,
+    calculate_yield_kg_per_acre,
+    clamp,
+    compute_smart_score,
+)
 
 DATASET_DIR = Path(__file__).resolve().parents[1] / "dataset"
 MODEL_DIR = Path(__file__).resolve().parent / "models"
@@ -256,4 +264,193 @@ def _build_yield_dataset() -> tuple[np.ndarray, np.ndarray, list[str], LabelEnco
     return (np.array(rows_X, dtype=np.float32),
             np.array(rows_y, dtype=np.float32),
             rows_source,
+            crop_le, region_le, season_le)
+
+
+_RECOMMEND_SAMPLES_PER_REGION_SEASON = 500
+
+RECOMMEND_FEATURE_NAMES = [
+    "region_enc", "season_enc",
+    "soil_ph", "soil_n", "soil_p", "soil_k", "soil_oc",
+    "rainfall", "avg_temp", "min_temp", "max_temp",
+    "budget", "irrigation",
+]
+
+
+def _build_recommendation_dataset() -> tuple[np.ndarray, np.ndarray, LabelEncoder, LabelEncoder, LabelEncoder]:
+    """
+    Build crop recommendation training data: for each (region, season),
+    simulate randomized conditions and label the best crop using the same
+    compute_smart_score() weighting ml/predict.py's _score_single_crop
+    uses to rank crops for a real farmer -- see
+    docs/superpowers/specs/2026-09-06-ml-model-accuracy-design.md section 6.
+
+    Candidate eligibility matches recommend_crops's own filter exactly:
+    true perennials (season == "Perennial") are excluded from kharif/rabi
+    sampling, since a request for "this season" can't recommend a tree
+    that takes years to fruit.
+
+    Returns (X, y, crop_le, region_le, season_le).
+    """
+    crop_params_list = _load_csv("crop_parameters.csv", required=True)
+    crop_params = {r["crop_id"]: r for r in crop_params_list}
+    crop_params_objs = {r["crop_id"]: make_crop_param(r) for r in crop_params_list}
+    soil_data = {r["region_id"]: r for r in _load_csv("soil.csv", required=True)}
+    weather_rows = _load_csv("weather.csv", required=True)
+    weather_data = {}
+    for r in weather_rows:
+        weather_data[(r["region_id"], r["season"].lower())] = r
+    mandi_rows = _load_csv("mandi_prices.csv", required=True)
+
+    mandi_latest: dict[tuple[str, str], float] = {}
+    for r in sorted(mandi_rows, key=lambda x: x["date"]):
+        mandi_latest[(r["region_id"], r["crop_id"])] = float(r["price_inr_per_kg"])
+
+    all_regions = sorted(soil_data.keys())
+    all_seasons = ["kharif", "rabi"]
+
+    crop_le = LabelEncoder().fit(sorted(crop_params.keys()))
+    region_le = LabelEncoder().fit(all_regions)
+    season_le = LabelEncoder().fit(ALL_SEASONS)
+
+    rng = np.random.RandomState(42)
+    X_all, y_all = [], []
+
+    def sf(d, k, default=0.0):
+        try:
+            return float(d.get(k, default))
+        except (ValueError, TypeError):
+            return default
+
+    budget_choices = [8000, 12000, 18000, 25000, 35000]
+
+    for rid in all_regions:
+        base_soil = soil_data[rid]
+        for season in all_seasons:
+            for _ in range(_RECOMMEND_SAMPLES_PER_REGION_SEASON):
+                budget = float(rng.choice(budget_choices))
+                irr = float(rng.uniform(0.05, 0.95))
+                ph = float(rng.uniform(5.0, 8.5))
+                rain = float(rng.uniform(200, 2500))
+                temp = float(rng.uniform(15, 40))
+
+                soil_sim = {
+                    "ph": ph,
+                    "n_kg_per_acre": sf(base_soil, "n_kg_per_acre", 40),
+                    "p_kg_per_acre": sf(base_soil, "p_kg_per_acre", 20),
+                    "k_kg_per_acre": sf(base_soil, "k_kg_per_acre", 20),
+                    "organic_carbon_percent": sf(base_soil, "organic_carbon_percent", 0.5),
+                }
+                weather_sim = {"rainfall_mm": rain, "avg_temp_c": temp}
+
+                scores: dict[str, float] = {}
+                for cid, cp in crop_params.items():
+                    crop_season = cp["season"]
+                    # Match recommend_crops's own candidate filter exactly
+                    # (ml/predict.py): a seasonal request excludes true
+                    # perennials outright, not just down-weights them.
+                    if not _season_match(season, crop_season):
+                        continue
+                    if _is_perennial(crop_season):
+                        continue
+
+                    cp_obj = crop_params_objs[cid]
+
+                    # Same deterministic heuristic production falls back to
+                    # when no ML yield model is consulted -- not a bespoke
+                    # approximation of it.
+                    yield_est = calculate_yield_kg_per_acre(cp_obj, soil_sim, weather_sim, irrigation_level=irr)
+
+                    price = mandi_latest.get(
+                        (rid, cid),
+                        (float(cp["mandi_price_min_inr_per_kg"]) +
+                         float(cp["mandi_price_max_inr_per_kg"])) / 2.0,
+                    )
+
+                    # Real profit_estimator from ml/predict.py. roi_percent
+                    # is scale-invariant in area_acres (revenue and cost
+                    # both scale by it), so area_acres=1.0 is exact here,
+                    # not an approximation, and this inherits
+                    # _budget_yield_multiplier's squared-funding-ratio
+                    # curve instead of a cruder linear stand-in.
+                    profit = profit_estimator(
+                        crop_id=cid, predicted_yield_kg_per_acre=yield_est,
+                        area_acres=1.0, budget_per_acre=budget, mandi_price_per_kg=price,
+                    )
+
+                    # smart_risk_score is called exactly as _score_single_crop
+                    # calls it -- no irrigation_level argument, so it uses
+                    # the function's own 0.5 default regardless of the
+                    # sampled `irr`. This looks inconsistent with the yield
+                    # estimate above (which does use `irr`), but it's what
+                    # production actually computes, and labels must reflect
+                    # that, not an idealized version of it.
+                    risk = smart_risk_score(cid, weather_sim, soil_sim, budget)
+
+                    budget_fit = clamp(
+                        (budget / max(cp_obj.avg_input_cost_inr_per_acre, 1.0)) * 100.0, 0.0, 120.0
+                    )
+                    roi_normalized = clamp(profit["roi_percent"] / 3.0, 0.0, 100.0)
+                    n_ratio = soil_sim["n_kg_per_acre"] / max(cp_obj.npk_n_kg_per_acre, 1.0)
+                    p_ratio = soil_sim["p_kg_per_acre"] / max(cp_obj.npk_p_kg_per_acre, 1.0)
+                    k_ratio = soil_sim["k_kg_per_acre"] / max(cp_obj.npk_k_kg_per_acre, 1.0)
+                    soil_health = clamp(((n_ratio + p_ratio + k_ratio) / 3.0) * 100.0, 0.0, 120.0)
+
+                    # ml_term forced to roi_normalized (production's own
+                    # no-model-loaded fallback) and saturation_penalty
+                    # forced to 0.0 (no commitment-log data exists for a
+                    # synthetic scenario) -- breaks the circularity of a
+                    # classifier partly trained on its own prior
+                    # predictions. See spec section 6.3.
+                    score = compute_smart_score(
+                        roi_normalized=roi_normalized,
+                        confidence_score=risk["confidence_score"],
+                        budget_fit=budget_fit,
+                        soil_health=soil_health,
+                        ml_term=roi_normalized,
+                        saturation_penalty=0.0,
+                    )
+                    scores[cid] = score
+
+                if not scores:
+                    continue
+
+                # Argmax, not softmax-sampling: once labels come from
+                # compute_smart_score's calibrated 0-100 scale -- the same
+                # scale recommend_crops() ranks real farmers' results on --
+                # the top-scoring crop *is* the correct label, matching
+                # what "the top recommendation" means everywhere else in
+                # this codebase.
+                best_crop = max(scores, key=scores.get)
+
+                features = [
+                    region_le.transform([rid])[0],
+                    season_le.transform([season])[0],
+                    ph,
+                    soil_sim["n_kg_per_acre"],
+                    soil_sim["p_kg_per_acre"],
+                    soil_sim["k_kg_per_acre"],
+                    soil_sim["organic_carbon_percent"],
+                    rain,
+                    temp,
+                    temp - 8,
+                    temp + 7,
+                    budget,
+                    irr,
+                ]
+                X_all.append(features)
+                y_all.append(crop_le.transform([best_crop])[0])
+
+    # Light augmentation (unchanged from the pre-fix formula).
+    base_len = len(X_all)
+    for i in range(base_len):
+        noised = np.array(X_all[i])
+        noised[2:11] *= rng.uniform(0.92, 1.08, size=9)
+        noised[11] *= rng.uniform(0.9, 1.1)
+        noised[12] = np.clip(noised[12] + rng.uniform(-0.1, 0.1), 0.05, 1.0)
+        X_all.append(noised.tolist())
+        y_all.append(y_all[i])
+
+    return (np.array(X_all, dtype=np.float32),
+            np.array(y_all, dtype=np.int32),
             crop_le, region_le, season_le)
