@@ -17,6 +17,7 @@ from utils.calculations import (
     calculate_risk_score_and_subscores,
     calculate_yield_kg_per_acre,
     clamp,
+    compute_smart_score,
 )
 
 # FIX (4.1): Added structured logging for ML fallback diagnostics
@@ -1198,15 +1199,13 @@ def _score_single_crop(
         clamp(saturation_ratio * 20.0, 0.0, 40.0) if saturation_ratio is not None else 0.0
     )
 
-    smart_score = clamp(
-        0.35 * roi_normalized
-        + 0.20 * risk["confidence_score"]
-        + 0.15 * budget_fit
-        + 0.15 * soil_health
-        + 0.15 * ml_term
-        - saturation_penalty * 0.25,
-        0.0,
-        100.0,
+    smart_score = compute_smart_score(
+        roi_normalized=roi_normalized,
+        confidence_score=risk["confidence_score"],
+        budget_fit=budget_fit,
+        soil_health=soil_health,
+        ml_term=ml_term,
+        saturation_penalty=saturation_penalty,
     )
 
     budget_adequate = profit["budget_yield_multiplier"] >= 1.0
