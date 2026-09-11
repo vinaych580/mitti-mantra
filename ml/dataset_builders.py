@@ -269,6 +269,21 @@ def _build_yield_dataset() -> tuple[np.ndarray, np.ndarray, list[str], LabelEnco
 
 _RECOMMEND_SAMPLES_PER_REGION_SEASON = 500
 
+# Weather sampling for training: a mixture of (a) each region+season's own
+# observed rainfall/temp range (widened, to cover years the 3-year record
+# didn't happen to include) and (b) a minority "tail" drawn from the old
+# shared range, standing in for real-but-unobserved extreme years. See
+# docs/superpowers/specs/2026-09-11-rabi-rainfall-sampling-design.md for why
+# a pure widened-real-range fix over-corrects (it makes wheat/maize/barley
+# unrecommendable outright, since their ROI disadvantage in
+# compute_smart_score was only ever overcome by the old range's occasional,
+# unrealistic near-ideal rainfall draws).
+_RAIN_WIDEN_FRAC = 0.25   # +/-25% of the observed rainfall range
+_TEMP_WIDEN_C = 3.0       # +/-3 degrees C around the observed temp range
+_WEATHER_TAIL_FRAC = 0.35             # fraction of samples drawn from the tail
+_WEATHER_TAIL_RAIN_RANGE = (200.0, 2500.0)
+_WEATHER_TAIL_TEMP_RANGE = (15.0, 40.0)
+
 RECOMMEND_FEATURE_NAMES = [
     "region_enc", "season_enc",
     "soil_ph", "soil_n", "soil_p", "soil_k", "soil_oc",
@@ -297,9 +312,16 @@ def _build_recommendation_dataset() -> tuple[np.ndarray, np.ndarray, LabelEncode
     crop_params_objs = {r["crop_id"]: make_crop_param(r) for r in crop_params_list}
     soil_data = {r["region_id"]: r for r in _load_csv("soil.csv", required=True)}
     weather_rows = _load_csv("weather.csv", required=True)
-    weather_data = {}
+    # All observed years per (region, season) -- not just one -- so sampling
+    # below reflects each region's actual seasonal climate. See
+    # docs/superpowers/specs/2026-09-11-rabi-rainfall-sampling-design.md:
+    # a flat U(200, 2500)mm range covers real kharif rainfall but not real
+    # rabi rainfall (most regions are well under 200mm in rabi), so the
+    # model never saw realistic rabi conditions during training.
+    weather_by_region_season: dict[tuple[str, str], list[dict]] = {}
     for r in weather_rows:
-        weather_data[(r["region_id"], r["season"].lower())] = r
+        key = (r["region_id"], r["season"].lower())
+        weather_by_region_season.setdefault(key, []).append(r)
     mandi_rows = _load_csv("mandi_prices.csv", required=True)
 
     mandi_latest: dict[tuple[str, str], float] = {}
@@ -327,12 +349,32 @@ def _build_recommendation_dataset() -> tuple[np.ndarray, np.ndarray, LabelEncode
     for rid in all_regions:
         base_soil = soil_data[rid]
         for season in all_seasons:
+            # Sample rainfall/temp from THIS region+season's own observed
+            # envelope (3 years, dataset/weather.csv), widened to allow for
+            # years outside the 3 sampled, rather than one hard-coded range
+            # shared across every region and both seasons.
+            weather_hist = weather_by_region_season[(rid, season)]
+            rain_hist = [float(w["rainfall_mm"]) for w in weather_hist]
+            temp_hist = [float(w["avg_temp_c"]) for w in weather_hist]
+            # Rainfall is ratio-scale (0mm is meaningful), so widen it
+            # proportionally; floor at 0 since rainfall can't go negative.
+            rain_lo = max(0.0, min(rain_hist) * (1.0 - _RAIN_WIDEN_FRAC))
+            rain_hi = max(rain_hist) * (1.0 + _RAIN_WIDEN_FRAC)
+            # Temperature is interval-scale (0C isn't "no temperature"), so
+            # widen it by a fixed additive margin instead of a percentage.
+            temp_lo = min(temp_hist) - _TEMP_WIDEN_C
+            temp_hi = max(temp_hist) + _TEMP_WIDEN_C
+
             for _ in range(_RECOMMEND_SAMPLES_PER_REGION_SEASON):
                 budget = float(rng.choice(budget_choices))
                 irr = float(rng.uniform(0.05, 0.95))
                 ph = float(rng.uniform(5.0, 8.5))
-                rain = float(rng.uniform(200, 2500))
-                temp = float(rng.uniform(15, 40))
+                if rng.uniform() < _WEATHER_TAIL_FRAC:
+                    rain = float(rng.uniform(*_WEATHER_TAIL_RAIN_RANGE))
+                    temp = float(rng.uniform(*_WEATHER_TAIL_TEMP_RANGE))
+                else:
+                    rain = float(rng.uniform(rain_lo, rain_hi))
+                    temp = float(rng.uniform(temp_lo, temp_hi))
 
                 soil_sim = {
                     "ph": ph,
