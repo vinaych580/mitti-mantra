@@ -31,7 +31,8 @@ broken in others.
   cucumber, muskmelon), each with a matching `CROP_CALENDAR` entry.
 - Real zaid weather data (Open-Meteo archive, same method as this
   session's earlier kharif/rabi refresh) for all 30 regions.
-- `zaid` added to `ml/dataset_builders.py`'s `ALL_SEASONS`.
+- `zaid` added to `ml/train_models.py`'s `ALL_SEASONS` (see §6 for why
+  not `ml/dataset_builders.py`, this spec's original target).
 - Frontend: zaid option added to every season `<select>` currently
   missing it; zaid recognized by the mini-chatbot's text parser; the two
   new crops added to the offline/demo season maps.
@@ -94,8 +95,15 @@ zaid, since that crash is caused by zaid rows being entirely absent from
 
 ## 6. Design — ML Season Vocabulary
 
-Add `"zaid"` to `ml/dataset_builders.py`'s `ALL_SEASONS` (currently
-`{"kharif", "rabi", "annual", "perennial", "perenn"}`).
+Add `"zaid"` to `ml/train_models.py`'s `ALL_SEASONS` (currently
+`{"kharif", "rabi", "annual", "perennial", "perenn"}`) — **not**
+`ml/dataset_builders.py`, which was assumed to already exist when this
+spec was drafted but turns out to only exist on a different, unmerged
+branch another session is using for an unrelated plan. `ALL_SEASONS`'s
+duplicate copy in `ml/evaluate_models.py` (a comparison-only script,
+already slated for consolidation by that other plan) is deliberately
+left untouched — see the implementation plan's Task 3 for the full
+reasoning.
 
 **What this does and doesn't fix:** `ALL_SEASONS` only affects the season
 encoder built the *next time* `ml/train_models.py` runs. The currently
@@ -126,9 +134,17 @@ retrain.
 - `toolbar.js`'s mini-chatbot season parser
   (`/rabi/.test(text) ? 'rabi' : /kharif/.test(text) ? 'kharif' : null`)
   gets a third branch for `/zaid/`.
-- `demo-recommender.js` and `offline-simulator.js`'s hardcoded per-crop
-  season maps get entries for watermelon/cucumber/muskmelon tagged
-  `'zaid'`, so the no-backend offline/demo path can recommend them too.
+- `offline-simulator.js`'s hardcoded per-crop `CROPS` table gets entries
+  for watermelon/cucumber/muskmelon tagged `'zaid'`, so the dashboard's
+  no-backend offline Simulate/recommend path can recommend them too.
+  `demo-recommender.js` (the landing-page live-demo widget) turns out
+  *not* to be fixable the same way once checked at implementation time:
+  its `CROP_SEASON` map only supplies a season-fit multiplier for crop
+  names that already appear in a given state's `topCrops` array inside
+  `frontend/state-data.js`, and populating that file's ~30 per-state
+  crop lists with 3 new crops is a much larger, unscoped
+  content-authoring task. Left untouched — see the implementation plan's
+  File Structure section for the full reasoning.
 
 ## 8. Explicitly Deferred (not this build)
 
