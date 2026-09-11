@@ -779,7 +779,7 @@
         if (opt) activeForm.crop_id.value = crop;
       }
 
-      const season = /rabi/.test(text) ? 'rabi' : /kharif/.test(text) ? 'kharif' : null;
+      const season = /zaid/.test(text) ? 'zaid' : /rabi/.test(text) ? 'rabi' : /kharif/.test(text) ? 'kharif' : null;
       if (season && activeForm.season) activeForm.season.value = season;
 
       const acres = text.match(/(\d+(?:\.\d+)?)\s*(acre|acres|ac|bigha)/);
