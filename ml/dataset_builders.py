@@ -39,7 +39,14 @@ MODEL_DIR.mkdir(exist_ok=True)
 
 # Single canonical season list used consistently across training and
 # inference to prevent encoder mismatch.
-ALL_SEASONS = sorted({"kharif", "rabi", "annual", "perennial", "perenn"})
+#
+# Note: adding "zaid" here only affects the *next* model retrain -- the
+# currently-deployed recommend_model.joblib/yield_model.joblib were
+# trained before this change and their saved encoders still don't have
+# "zaid" in classes_, so ml/predict.py's existing fallback-to-kharif
+# logic (_encoded_season, _ml_recommend_crop) keeps applying to zaid
+# requests on the ML path until the next retrain happens.
+ALL_SEASONS = sorted({"kharif", "rabi", "zaid", "annual", "perennial", "perenn"})
 
 
 def make_crop_param(r: dict) -> CropParameter:
