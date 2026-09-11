@@ -117,7 +117,7 @@
     }
   ],
   "model_dir": "ml/models",
-  "trained_at": 1789110647.241804,
+  "trained_at": 1789117485.4698908,
   "model_hashes": {
     "yield_model.joblib": "ec9e60994840bcee1d4ae9ed43fad36d",
     "price_model.joblib": "c03c3227a88978c42f57b01dd2502f58",
