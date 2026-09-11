@@ -46,3 +46,63 @@ def test_zaid_crops_recommendable_via_heuristic_path():
     assert recommended_ids & set(ZAID_CROPS), (
         f"expected at least one of {ZAID_CROPS} in {recommended_ids}"
     )
+
+
+def test_zaid_weather_rows_exist_for_all_regions():
+    with (DATASET_DIR / "weather.csv").open(newline="", encoding="utf-8") as f:
+        rows = list(csv.DictReader(f))
+    zaid_regions = {r["region_id"] for r in rows if r["season"] == "zaid"}
+    all_regions = {r["region_id"] for r in rows}
+    assert zaid_regions == all_regions, (
+        f"missing zaid weather for: {all_regions - zaid_regions}"
+    )
+
+
+def test_location_based_insights_does_not_crash_for_zaid():
+    from ml.predict import location_based_insights
+
+    # Should not raise -- previously crashed because weather.csv had zero
+    # zaid rows for any region.
+    result = location_based_insights("telangana_medak", "zaid")
+    assert result is not None
+
+
+def test_zaid_in_all_seasons_vocabulary():
+    from ml.dataset_builders import ALL_SEASONS
+
+    assert "zaid" in ALL_SEASONS
+
+
+def test_zaid_encodable_by_a_freshly_fit_season_encoder():
+    from ml.dataset_builders import ALL_SEASONS, _fit_label_encoders
+
+    _, _, season_le = _fit_label_encoders(["wheat"], ["telangana_medak"], ALL_SEASONS)
+    # Must not raise -- a season LabelEncoder fit on the current
+    # ALL_SEASONS must recognize "zaid" as a known class.
+    encoded = season_le.transform(["zaid"])
+    assert encoded[0] >= 0
+
+
+def test_dashboard_html_season_selects_all_offer_zaid():
+    frontend_dir = Path(__file__).resolve().parents[1] / "frontend"
+    html = (frontend_dir / "dashboard.html").read_text(encoding="utf-8")
+    kharif_blocks = html.count('<option value="kharif">Kharif</option>')
+    zaid_blocks = html.count('<option value="zaid">Zaid</option>')
+    assert kharif_blocks > 0, "sanity check: expected pattern not found at all"
+    assert zaid_blocks == kharif_blocks, (
+        f"{kharif_blocks} Kharif options but only {zaid_blocks} Zaid options in dashboard.html"
+    )
+
+
+def test_index_html_landing_season_select_offers_zaid():
+    frontend_dir = Path(__file__).resolve().parents[1] / "frontend"
+    html = (frontend_dir / "index.html").read_text(encoding="utf-8")
+    assert 'id="ldSeason"' in html
+    assert 'value="zaid"' in html
+
+
+def test_offline_simulator_has_zaid_crops():
+    frontend_dir = Path(__file__).resolve().parents[1] / "frontend"
+    js = (frontend_dir / "offline-simulator.js").read_text(encoding="utf-8")
+    for crop_id in ZAID_CROPS:
+        assert f"{crop_id}:" in js, f"{crop_id} missing from offline-simulator.js CROPS"

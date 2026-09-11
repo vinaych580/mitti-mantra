@@ -70,11 +70,16 @@ REGION_COORDS: dict[str, tuple[float, float]] = {
 def _season_range(season: str, year: int) -> tuple[date, date]:
     """Kharif `year` runs Jun-Oct of `year`; rabi `year` runs Nov `year` to
     Mar `year+1` -- matching the existing CSV's agricultural-year convention,
-    where "kharif Y" is immediately followed by "rabi Y" for the same crop year."""
+    where "kharif Y" is immediately followed by "rabi Y" for the same crop
+    year. Zaid `year` runs Mar-May of `year` -- the summer season between
+    rabi's harvest and the next kharif's sowing, entirely within one
+    calendar year unlike rabi."""
     if season == "kharif":
         return date(year, 6, 1), date(year, 10, 31)
     if season == "rabi":
         return date(year, 11, 1), date(year + 1, 3, 31)
+    if season == "zaid":
+        return date(year, 3, 1), date(year, 5, 31)
     raise ValueError(f"unknown season: {season}")
 
 
@@ -82,7 +87,7 @@ def _completed_seasons(today: date) -> list[tuple[str, int]]:
     """(season, year) pairs whose season has fully ended as of `today`."""
     seasons = []
     for year in range(2022, today.year + 1):
-        for season in ("kharif", "rabi"):
+        for season in ("kharif", "rabi", "zaid"):
             _, end = _season_range(season, year)
             if end < today:
                 seasons.append((season, year))
