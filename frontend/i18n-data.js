@@ -243,6 +243,12 @@
 
       // Buttons
       'Run recommendation': 'सिफ़ारिश चलाएं',
+      "I'm planting this →": 'मैं यह बो रहा हूं →',
+      'Choose this →': 'इसे चुनें →',
+      '✓ Planting this': '✓ यह बोया जा रहा है',
+      'Recording…': 'दर्ज हो रहा है…',
+      '✓ Recorded — thanks, this helps other farmers nearby.': '✓ दर्ज हो गया — धन्यवाद, इससे आसपास के अन्य किसानों को मदद मिलती है।',
+      "Ranked alternatives · pick the one you're planting": 'क्रमबद्ध विकल्प · जो बो रहे हैं उसे चुनें',
       'Simulate': 'अनुकरण करें',
       'Plan rotation': 'चक्र योजना बनाएं',
       'Load templates': 'टेम्पलेट लोड करें',
@@ -562,6 +568,12 @@
       'No-Till (Regenerative)': 'దుక్కి లేని (పునరుత్పత్తి)',
 
       'Run recommendation': 'సిఫారసు అమలు చేయండి',
+      "I'm planting this →": 'నేను దీన్ని వేస్తున్నాను →',
+      'Choose this →': 'దీన్ని ఎంచుకోండి →',
+      '✓ Planting this': '✓ దీన్ని వేస్తున్నారు',
+      'Recording…': 'నమోదవుతోంది…',
+      '✓ Recorded — thanks, this helps other farmers nearby.': '✓ నమోదైంది — ధన్యవాదాలు, ఇది సమీపంలోని ఇతర రైతులకు సహాయపడుతుంది.',
+      "Ranked alternatives · pick the one you're planting": 'ర్యాంక్ చేసిన ప్రత్యామ్నాయాలు · మీరు వేస్తున్నదాన్ని ఎంచుకోండి',
       'Simulate': 'అనుకరించండి',
       'Plan rotation': 'మార్పిడి ప్రణాళిక',
       'Load templates': 'మూసలు లోడ్ చేయండి',
@@ -873,6 +885,12 @@
       'No-Till (Regenerative)': 'ಉಳುಮೆ ಇಲ್ಲದ (ಪುನರುತ್ಪಾದಕ)',
 
       'Run recommendation': 'ಶಿಫಾರಸು ಚಲಾಯಿಸಿ',
+      "I'm planting this →": 'ನಾನು ಇದನ್ನು ಬೆಳೆಯುತ್ತಿದ್ದೇನೆ →',
+      'Choose this →': 'ಇದನ್ನು ಆಯ್ಕೆಮಾಡಿ →',
+      '✓ Planting this': '✓ ಇದನ್ನು ಬೆಳೆಯಲಾಗುತ್ತಿದೆ',
+      'Recording…': 'ದಾಖಲಿಸಲಾಗುತ್ತಿದೆ…',
+      '✓ Recorded — thanks, this helps other farmers nearby.': '✓ ದಾಖಲಾಗಿದೆ — ಧನ್ಯವಾದಗಳು, ಇದು ಹತ್ತಿರದ ಇತರ ರೈತರಿಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ.',
+      "Ranked alternatives · pick the one you're planting": 'ಶ್ರೇಣೀಕೃತ ಪರ್ಯಾಯಗಳು · ನೀವು ಬೆಳೆಯುತ್ತಿರುವುದನ್ನು ಆಯ್ಕೆಮಾಡಿ',
       'Simulate': 'ಸಿಮ್ಯುಲೇಟ್ ಮಾಡಿ',
       'Plan rotation': 'ಸರದಿ ಯೋಜನೆ ಮಾಡಿ',
       'Load templates': 'ಟೆಂಪ್ಲೇಟ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡಿ',

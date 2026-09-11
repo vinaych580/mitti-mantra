@@ -1198,6 +1198,13 @@
             <div class="list-row__val">${INR(r.expected_profit)}<small>ROI ${PCT(r.roi_percent)}</small></div>
           </div>`).join('')}`;
 
+      // Re-run the static-catalog i18n pass (see i18n.js) whenever this panel's
+      // button text changes — it only translates DOM text present at the time
+      // it runs, so newly-set textContent stays English until this fires.
+      const retranslate = () => {
+        if (window.AgriSimI18n && window.AgriSimI18n.getLanguage() !== 'en') window.AgriSimI18n.retranslate();
+      };
+
       /* Every recommendation row (plus the top-pick banner button) shares this
          commit flow: record the pick for the regional-saturation signal, then
          remember it on the active plot so fertilizer/irrigation/other tools
@@ -1210,6 +1217,7 @@
             ? (b.id === 'mm-commit-crop-btn' ? '✓ Recorded — thanks, this helps other farmers nearby.' : '✓ Planting this')
             : (b.id === 'mm-commit-crop-btn' ? "I'm planting this →" : 'Choose this →');
         });
+        retranslate();
       };
 
       out.querySelectorAll('.mm-commit-btn').forEach(btn => {
@@ -1218,6 +1226,7 @@
           const cropName = btn.dataset.cropName;
           out.querySelectorAll('.mm-commit-btn').forEach(b => { b.disabled = true; });
           btn.textContent = 'Recording…';
+          retranslate();
           try {
             await api('/api/commit-crop', {
               method: 'POST',
@@ -1236,9 +1245,12 @@
           } catch (err) {
             out.querySelectorAll('.mm-commit-btn').forEach(b => { b.disabled = false; });
             btn.textContent = btn.id === 'mm-commit-crop-btn' ? "I'm planting this →" : 'Choose this →';
+            retranslate();
           }
         });
       });
+
+      retranslate();
 
       // Bar chart — smart score
       const top5 = recs.slice(0, 5);
