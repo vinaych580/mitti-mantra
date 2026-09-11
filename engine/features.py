@@ -526,6 +526,45 @@ CROP_CALENDAR = {
             "duration_days": 100,
         },
     },
+    "watermelon": {
+        "zaid": {
+            "land_prep": "Jan 20 - Feb 05",
+            "sowing_transplant": "Feb 05 - Feb 25",
+            "first_fertilizer": "At sowing (basal N+P+K)",
+            "second_fertilizer": "25-30 DAS (vine growth N top-dress)",
+            "third_fertilizer": "45-50 DAS (flowering/fruit-set K top-dress)",
+            "critical_irrigation": "Flowering to fruit development (35-70 DAS) — avoid water stress at fruit-fill",
+            "pest_watch": "Fruit fly (45-75 DAS), powdery mildew in humid spells",
+            "harvest_window": "May 01 - May 25",
+            "duration_days": 90,
+        },
+    },
+    "cucumber": {
+        "zaid": {
+            "land_prep": "Feb 01 - Feb 15",
+            "sowing_transplant": "Feb 15 - Mar 05",
+            "first_fertilizer": "At sowing (basal N+P+K)",
+            "second_fertilizer": "20-25 DAS (vine growth N top-dress)",
+            "third_fertilizer": "35-40 DAS (flowering K top-dress)",
+            "critical_irrigation": "Flowering to fruit picking (25-55 DAS), frequent light irrigation",
+            "pest_watch": "Fruit fly and downy mildew throughout fruiting",
+            "harvest_window": "Apr 10 - May 05",
+            "duration_days": 65,
+        },
+    },
+    "muskmelon": {
+        "zaid": {
+            "land_prep": "Jan 25 - Feb 10",
+            "sowing_transplant": "Feb 10 - Mar 01",
+            "first_fertilizer": "At sowing (basal N+P+K)",
+            "second_fertilizer": "25-30 DAS (vine growth N top-dress)",
+            "third_fertilizer": "45-50 DAS (fruit development K top-dress)",
+            "critical_irrigation": "Flowering to net formation (35-65 DAS) — reduce irrigation near harvest for sweetness",
+            "pest_watch": "Fruit fly (45-75 DAS), powdery mildew",
+            "harvest_window": "Apr 25 - May 20",
+            "duration_days": 85,
+        },
+    },
 }
 
 
