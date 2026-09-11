@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from collections import Counter
 
-from ml.dataset_builders import _build_yield_dataset
+from ml.dataset_builders import _build_recommendation_dataset, _build_yield_dataset
 
 
 def test_build_yield_dataset_tags_row_provenance():
@@ -33,9 +33,6 @@ def test_build_yield_dataset_augmented_rows_inherit_non_real_source():
     # audit_models._split_yield_mape() -- a noised copy of a deliberately-
     # tiny value is still not a realistic observed yield.
     assert counts["augmented"] == counts["real"] * 6
-
-
-from ml.dataset_builders import _build_recommendation_dataset
 
 
 def test_build_recommendation_dataset_staples_are_recommendable():

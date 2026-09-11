@@ -17,6 +17,7 @@ import numpy as np
 
 import ml.evaluate_models as E
 import ml.audit_models as A
+import ml.dataset_builders as D
 from ml.audit_models import ModelAuditor
 
 
@@ -51,8 +52,17 @@ def test_audit_models_unpacks_yield_dataset_6tuple(tmp_path, monkeypatch):
     The test is isolated using monkeypatch to avoid writing to real
     production files, following the same pattern as test_evaluate_models_does_not_write_production_artifacts.
     """
-    # Isolate MODEL_DIR to temporary test directory
+    # Isolate MODEL_DIR to temporary test directory. Both modules that
+    # resolve MODEL_DIR from their own globals on the run_audit() code path
+    # must be patched: ml.audit_models for its own reads/writes, and
+    # ml.dataset_builders because that is where _save_holdout -- the one
+    # genuinely dangerous writer this isolation effort exists for -- looks
+    # MODEL_DIR up. Nothing calls _save_holdout from run_audit() today, but
+    # re-adding a _save_holdout("recommend", X_test, y_test) call to
+    # ml/evaluate_models.py (the exact line Task 5 deleted) would otherwise
+    # clobber real production holdout files while this test stayed green.
     monkeypatch.setattr(A, "MODEL_DIR", tmp_path)
+    monkeypatch.setattr(D, "MODEL_DIR", tmp_path)
 
     # Copy required fixture files from real ml/models/ to tmp_path
     BASE_DIR = Path(__file__).resolve().parents[1]
@@ -62,7 +72,6 @@ def test_audit_models_unpacks_yield_dataset_6tuple(tmp_path, monkeypatch):
         "recommend_model.joblib",
         "yield_model.joblib",
         "recommend_encoders.joblib",
-        "yield_encoders.joblib",
         "holdout_recommend.joblib",
         "holdout_yield.joblib",
     }
@@ -72,9 +81,24 @@ def test_audit_models_unpacks_yield_dataset_6tuple(tmp_path, monkeypatch):
         assert src.exists(), f"Missing fixture file: {fname} (run Task 4 training first)"
         shutil.copy(src, tmp_path / fname)
 
+    # Fingerprint the REAL production holdout files so we can prove the audit
+    # never wrote to ml/models/ itself.
+    real_holdouts = {
+        name: real_model_dir / f"holdout_{name}.joblib" for name in ("recommend", "yield")
+    }
+    mtimes_before = {name: path.stat().st_mtime for name, path in real_holdouts.items()}
+
     # Run audit in isolated tmp_path - should not raise ValueError from unpacking mismatch
     auditor = A.ModelAuditor()
     auditor.run_audit()
+
+    # The real production holdouts must be byte-for-byte untouched.
+    for name, path in real_holdouts.items():
+        assert path.stat().st_mtime == mtimes_before[name], (
+            f"run_audit() wrote to the REAL ml/models/holdout_{name}.joblib "
+            f"despite MODEL_DIR isolation -- a writer is resolving MODEL_DIR "
+            f"from a module that is not monkeypatched here."
+        )
 
     # Verify audit output was created in tmp_path with expected structure
     audit_path = tmp_path / "audit_metrics.json"

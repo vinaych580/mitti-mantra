@@ -2,7 +2,6 @@ import os
 import csv
 import json
 import logging
-import time
 import warnings
 from pathlib import Path
 import numpy as np

@@ -63,7 +63,7 @@ def train_yield_model() -> dict[str, Any]:
 
     with warnings.catch_warnings():
         warnings.filterwarnings("ignore", category=UserWarning, module="sklearn")
-        X_train, X_test, y_train, y_test, source_train, source_test = train_test_split(
+        X_train, X_test, y_train, y_test, _source_train_unused, source_test = train_test_split(
             X, y, source, test_size=0.2, random_state=42,
         )
 

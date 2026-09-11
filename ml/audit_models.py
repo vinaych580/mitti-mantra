@@ -18,10 +18,13 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 BASE_DIR = Path(__file__).resolve().parents[1]
 MODEL_DIR = BASE_DIR / "ml" / "models"
 
-# Reuse the data loaders from evaluate_models directly
-import sys
-sys.path.append(str(BASE_DIR))
-from ml.evaluate_models import _build_recommendation_dataset, _build_yield_dataset
+# Import the shared data loaders from their source module directly, not via
+# ml.evaluate_models' re-export: the extra hop is the exact shape of bug that
+# caused a real regression earlier (a re-export's target changed shape and a
+# downstream unpack broke), and importing ml.evaluate_models would also apply
+# its module-scope warnings.filterwarnings("ignore") / logging.basicConfig()
+# process-wide as a side effect of importing this audit module.
+from ml.dataset_builders import _build_recommendation_dataset, _build_yield_dataset
 
 class ModelAuditor:
     # FIX (C-3): ml/evaluate_models.py's and ml/train_models.py's dataset
@@ -83,8 +86,6 @@ class ModelAuditor:
         rec_model = joblib.load(rec_model_path)
         yield_model = joblib.load(yield_model_path)
         rec_encoders = joblib.load(MODEL_DIR / "recommend_encoders.joblib")
-        yield_encoders = joblib.load(MODEL_DIR / "yield_encoders.joblib")
-
 
         # 1. Auditing Crop Recommendation
         X_rec, y_rec, crop_le_rec, region_le_rec, season_le_rec = _build_recommendation_dataset()
@@ -135,7 +136,7 @@ class ModelAuditor:
         pi_rec_importances = dict(sorted(pi_rec_importances.items(), key=lambda x: x[1], reverse=True))
         
         # 2. Auditing Yield Prediction
-        X_yield, y_yield, source, crop_le_y, region_le_y, season_le_y = _build_yield_dataset()
+        X_yield, y_yield, _source_unused, crop_le_y, region_le_y, season_le_y = _build_yield_dataset()
 
         yield_holdout = self._load_holdout("yield")
         source_test_y = None
