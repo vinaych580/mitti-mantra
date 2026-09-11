@@ -10,6 +10,7 @@ Regression tests for Task 5 refactoring and downstream impact on ml/audit_models
 from __future__ import annotations
 
 import json
+import shutil
 from pathlib import Path
 import ml.evaluate_models as E
 import ml.audit_models as A
@@ -31,7 +32,7 @@ def test_evaluate_models_does_not_write_production_artifacts(tmp_path, monkeypat
     assert "evaluation_manifest.json" in written
 
 
-def test_audit_models_unpacks_yield_dataset_6tuple():
+def test_audit_models_unpacks_yield_dataset_6tuple(tmp_path, monkeypatch):
     """
     Regression test for ml/audit_models.py's yield dataset unpacking.
 
@@ -42,22 +43,38 @@ def test_audit_models_unpacks_yield_dataset_6tuple():
     This test verifies that ModelAuditor.run_audit() correctly unpacks
     the 6-tuple (including the unused 'source' parameter) and completes
     without raising ValueError.
+
+    The test is isolated using monkeypatch to avoid writing to real
+    production files, following the same pattern as test_evaluate_models_does_not_write_production_artifacts.
     """
-    # Use the existing production models from ml/models/ (created by Task 4 training)
+    # Isolate MODEL_DIR to temporary test directory
+    monkeypatch.setattr(A, "MODEL_DIR", tmp_path)
+
+    # Copy required fixture files from real ml/models/ to tmp_path
     BASE_DIR = Path(__file__).resolve().parents[1]
-    model_dir = BASE_DIR / "ml" / "models"
+    real_model_dir = BASE_DIR / "ml" / "models"
 
-    # Check models exist (they should after Task 4 training)
-    assert (model_dir / "recommend_model.joblib").exists(), "Missing recommend_model.joblib (run Task 4 training first)"
-    assert (model_dir / "yield_model.joblib").exists(), "Missing yield_model.joblib (run Task 4 training first)"
+    required_files = {
+        "recommend_model.joblib",
+        "yield_model.joblib",
+        "recommend_encoders.joblib",
+        "yield_encoders.joblib",
+        "holdout_recommend.joblib",
+        "holdout_yield.joblib",
+    }
 
-    # Run audit - should not raise ValueError from unpacking mismatch
+    for fname in required_files:
+        src = real_model_dir / fname
+        assert src.exists(), f"Missing fixture file: {fname} (run Task 4 training first)"
+        shutil.copy(src, tmp_path / fname)
+
+    # Run audit in isolated tmp_path - should not raise ValueError from unpacking mismatch
     auditor = A.ModelAuditor()
     auditor.run_audit()
 
-    # Verify audit output was created with expected structure
-    audit_path = model_dir / "audit_metrics.json"
-    assert audit_path.exists(), "audit_metrics.json not created"
+    # Verify audit output was created in tmp_path with expected structure
+    audit_path = tmp_path / "audit_metrics.json"
+    assert audit_path.exists(), "audit_metrics.json not created in isolated tmp_path"
 
     with open(audit_path, "r") as f:
         audit_data = json.load(f)
