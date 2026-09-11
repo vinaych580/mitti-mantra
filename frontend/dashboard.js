@@ -735,6 +735,8 @@
       });
     }
 
+    applyCommittedCropToForms();
+
     // FIX-3: Trigger initial telemetry using the farm's region (not the
     // API's first-returned region). Falls back to first select value if no farm.
     const initRegion = (savedFarm && savedFarm.region_id) || $('select[data-regions]')?.value;
@@ -1141,8 +1143,9 @@
         </div>` : ''}
 
         <div style="margin-top:12px;display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap;">
-          <button type="button" class="btn btn-ghost" style="flex-shrink:0;" id="mm-commit-crop-btn"
-            data-crop-id="${top.crop_id}" data-region-id="${body.region_id}" data-season="${body.season}" data-area="${area}">
+          <button type="button" class="btn btn-ghost mm-commit-btn" style="flex-shrink:0;" id="mm-commit-crop-btn"
+            data-crop-id="${top.crop_id}" data-crop-name="${CROP_LABELS[top.crop_id] || top.crop_id}"
+            data-region-id="${body.region_id}" data-season="${body.season}" data-area="${area}">
             I'm planting this →
           </button>
         </div>
@@ -1176,7 +1179,7 @@
           </div>
         </div>
 
-        <h4 style="font-size:.85rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin:16px 0 12px;">Ranked alternatives</h4>
+        <h4 style="font-size:.85rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin:16px 0 12px;">Ranked alternatives · pick the one you're planting</h4>
         ${recs.slice(0, 5).map((r, i) => `
           <div class="list-row">
             <div class="list-row__bullet">${i + 1}</div>
@@ -1184,33 +1187,58 @@
               <small>Yield ${Math.round(r.predicted_yield_kg_per_acre)} kg/ac · Risk ${Math.round(r.risk_score)}/100 · Score ${FIX(r.smart_score, 1)}</small>
               ${r.reasons ? `<div style="font-size: 0.76rem; color: var(--brand-deep); margin-top: 4px;">• ${r.reasons[0]}</div>` : ''}
               ${r.saturation_label ? `<div style="font-size: 0.76rem; color: var(--ink-soft); margin-top: 2px;">📊 ${r.saturation_label}</div>` : ''}
+              <div style="margin-top:6px;">
+                <button type="button" class="btn btn-ghost mm-commit-btn" style="padding:4px 10px;font-size:.72rem;"
+                  data-crop-id="${r.crop_id}" data-crop-name="${CROP_LABELS[r.crop_id] || r.crop_id}"
+                  data-region-id="${body.region_id}" data-season="${body.season}" data-area="${area}">
+                  Choose this →
+                </button>
+              </div>
             </div>
             <div class="list-row__val">${INR(r.expected_profit)}<small>ROI ${PCT(r.roi_percent)}</small></div>
           </div>`).join('')}`;
 
-      const commitBtn = out.querySelector('#mm-commit-crop-btn');
-      if (commitBtn) {
-        commitBtn.addEventListener('click', async () => {
-          commitBtn.disabled = true;
-          commitBtn.textContent = 'Recording…';
+      /* Every recommendation row (plus the top-pick banner button) shares this
+         commit flow: record the pick for the regional-saturation signal, then
+         remember it on the active plot so fertilizer/irrigation/other tools
+         can default to it instead of asking the farmer to re-pick a crop. */
+      const syncCommittedButtons = cropId => {
+        out.querySelectorAll('.mm-commit-btn').forEach(b => {
+          const isThis = b.dataset.cropId === cropId;
+          b.disabled = isThis;
+          b.textContent = isThis
+            ? (b.id === 'mm-commit-crop-btn' ? '✓ Recorded — thanks, this helps other farmers nearby.' : '✓ Planting this')
+            : (b.id === 'mm-commit-crop-btn' ? "I'm planting this →" : 'Choose this →');
+        });
+      };
+
+      out.querySelectorAll('.mm-commit-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const cropId = btn.dataset.cropId;
+          const cropName = btn.dataset.cropName;
+          out.querySelectorAll('.mm-commit-btn').forEach(b => { b.disabled = true; });
+          btn.textContent = 'Recording…';
           try {
             await api('/api/commit-crop', {
               method: 'POST',
               body: JSON.stringify({
-                region_id: commitBtn.dataset.regionId,
-                crop_id: commitBtn.dataset.cropId,
-                season: commitBtn.dataset.season,
-                area_acres: parseFloat(commitBtn.dataset.area),
+                region_id: btn.dataset.regionId,
+                crop_id: cropId,
+                season: btn.dataset.season,
+                area_acres: parseFloat(btn.dataset.area),
                 device_id: window.MM.deviceId(),
               }),
             });
-            commitBtn.textContent = '✓ Recorded — thanks, this helps other farmers nearby.';
+            if (typeof window.FarmState !== 'undefined' && window.FarmState.setActiveCrop) {
+              window.FarmState.setActiveCrop(cropId, cropName);
+            }
+            syncCommittedButtons(cropId);
           } catch (err) {
-            commitBtn.disabled = false;
-            commitBtn.textContent = "I'm planting this →";
+            out.querySelectorAll('.mm-commit-btn').forEach(b => { b.disabled = false; });
+            btn.textContent = btn.id === 'mm-commit-crop-btn' ? "I'm planting this →" : 'Choose this →';
           }
         });
-      }
+      });
 
       // Bar chart — smart score
       const top5 = recs.slice(0, 5);
@@ -2994,6 +3022,21 @@
     });
   }
 
+  /* Pre-fill every single-select crop dropdown across the dashboard with the
+     crop the farmer committed to on the active plot (Smart recommend tool),
+     so fertilizer/irrigation/forecast/etc. don't ask them to re-pick a crop
+     they've already told the app they're planting. Skips the compare tool's
+     multi-select — a single committed crop isn't a sensible default there. */
+  function applyCommittedCropToForms() {
+    const committed = (typeof window.FarmState !== 'undefined' && window.FarmState.getActiveCrop)
+      ? window.FarmState.getActiveCrop() : null;
+    if (!committed) return;
+    $$('select[data-crops]:not([multiple])').forEach(sel => {
+      const opt = sel.querySelector(`option[value="${committed.crop_id}"]`);
+      if (opt) sel.value = committed.crop_id;
+    });
+  }
+
   function applyFarmToForms() {
     if (!savedFarm) return;
 
@@ -3013,6 +3056,8 @@
         if (opt) sel.value = savedFarm.region_id;
       });
     }
+
+    applyCommittedCropToForms();
 
     // Pre-fill fertilizer form inputs with SoilGrids values if available
     if (savedFarm.soil) {

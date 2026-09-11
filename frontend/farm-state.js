@@ -37,6 +37,8 @@
      FarmState.getNearestRegionId(centroid[lon,lat]) → string
      FarmState.reverseGeocode(lat, lon)              → Promise<{state,district,village}>
      FarmState.REGION_CENTROIDS      → [{region_id, lat, lon, state, displayName}, …]
+     FarmState.getActiveCrop()               → {crop_id, crop_name, committedAt} | null
+     FarmState.setActiveCrop(cropId, cropName) → farm | null (active plot; null if no active plot)
 
    Every mutation dispatches `mm:plot-changed` on document with
    { detail: { plot, plots, activeId, reason } }.
@@ -59,6 +61,9 @@
      soil:        object|null,// SoilGrids data at centroid
      nearestState:string|null,// deprecated alias kept for compat
      savedAt:     string,     // ISO timestamp
+     crop_id:     string|undefined,  // crop the farmer has committed to planting on this plot
+     crop_name:   string|undefined,  // display name for crop_id, captured at commit time
+     committedAt: string|undefined,  // ISO timestamp of the last commit
    }
    ========================================================= */
 
@@ -397,6 +402,34 @@
     return persisted ? _activeOf(store) : null;
   }
 
+  /* ── Committed crop (per active plot) ────────────── */
+
+  /**
+   * The crop the farmer has committed to planting on the active plot, or
+   * null if no plot is active or none has been committed yet.
+   */
+  function getActiveCrop() {
+    const active = load();
+    if (!active || !active.crop_id) return null;
+    return {
+      crop_id: active.crop_id,
+      crop_name: active.crop_name || active.crop_id,
+      committedAt: active.committedAt || null,
+    };
+  }
+
+  /**
+   * Record which crop the farmer is planting on the active plot, so
+   * fertilizer/irrigation/other tools can default to it instead of asking
+   * the farmer to re-pick a crop every time. No-op (returns null) if there
+   * is no active plot to attach the commitment to — there's nothing to
+   * auto-fill from in that case anyway.
+   */
+  function setActiveCrop(cropId, cropName) {
+    if (!cropId || !load()) return null;
+    return save({ crop_id: cropId, crop_name: cropName || cropId, committedAt: new Date().toISOString() });
+  }
+
   /* ── Export ─────────────────────────────────────── */
   global.FarmState = {
     STORAGE_KEY,
@@ -417,6 +450,8 @@
     getNearestRegionId,
     getRegionRecord,
     reverseGeocode,
+    getActiveCrop,
+    setActiveCrop,
   };
 
 })(window);
