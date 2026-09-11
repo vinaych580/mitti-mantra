@@ -849,6 +849,26 @@ def price_forecast(region_id: str, crop_id: str, months_ahead: int = 6) -> dict[
     }
 
 
+def _region_avg_weather(region_id: str) -> dict[str, float] | None:
+    """Region-average rainfall/temperature from dataset/weather.csv, or None
+    if the region has no rows on file. Used by calculate_disease_outbreak_risk
+    as a region-aware fallback -- see its B-9 fix note below."""
+    rows = [r for r in _load_csv("weather.csv") if r.get("region_id") == region_id]
+    if not rows:
+        return None
+    try:
+        temps = [float(r["avg_temp_c"]) for r in rows if r.get("avg_temp_c")]
+        rains = [float(r["rainfall_mm"]) for r in rows if r.get("rainfall_mm")]
+    except ValueError:
+        return None
+    if not temps or not rains:
+        return None
+    return {
+        "avg_temp_c": round(sum(temps) / len(temps), 1),
+        "rainfall_mm": round(sum(rains) / len(rains), 1),
+    }
+
+
 def calculate_disease_outbreak_risk(
     crop_id: str = "wheat",
     region_id: str = "mp_sehore",
@@ -865,9 +885,17 @@ def calculate_disease_outbreak_risk(
     documented trigger conditions. Crops with no entries in pest_rules.csv
     fall back to a clearly-labeled generic weather-driven index instead of
     silently pretending it's crop-specific.
+
+    FIX (B-9): `region_id` used to be accepted and echoed into the response
+    but never actually used -- when `weather` was omitted, every region got
+    the identical fixed nationwide default, so climatically opposite regions
+    (e.g. arid Rajasthan vs. humid Kerala) produced byte-identical risk
+    scores. Omitted weather is now backfilled from that region's own average
+    in dataset/weather.csv, falling back to the old nationwide default only
+    if the region has no weather rows on file.
     """
     if weather is None:
-        weather = {"rainfall_mm": 850.0, "avg_temp_c": 27.5, "humidity_pct": 78.0}
+        weather = _region_avg_weather(region_id) or {"rainfall_mm": 850.0, "avg_temp_c": 27.5, "humidity_pct": 78.0}
 
     temp = float(weather.get("avg_temp_c", 27.5))
     rainfall = float(weather.get("rainfall_mm", 800.0))
@@ -958,8 +986,26 @@ def calculate_carbon_credits(
     cover_crop: bool = True,
     biochar_application: bool = False,
 ) -> dict[str, Any]:
-    """Return a transparent planning estimate, not verified carbon credits."""
+    """Return a transparent planning estimate, not verified carbon credits.
+
+    FIX: sequestration used to ignore crop_id entirely -- a sugarcane farm and
+    a chickpea farm with identical tillage/cover-crop settings got an
+    identical estimate. Perennial tree/plantation crops (tagged "Perennial"
+    in dataset/crop_parameters.csv -- coconut, tea, coffee, mango, cashew)
+    hold continuous, undisturbed root systems and standing woody biomass
+    year-round, unlike annual crops that are tilled and replanted each
+    season -- a well-established qualitative reason for higher per-acre
+    soil+biomass carbon in perennial/agroforestry systems.
+    PERENNIAL_SEQUESTRATION_MULT is a documented approximation reflecting
+    that difference, not a crop-specific measured coefficient -- it's applied
+    only to the baseline biomass term, not the practice-based bonuses below.
+    """
+    PERENNIAL_SEQUESTRATION_MULT = 1.6
     base_sequestration = 0.4  # baseline tons CO2e / acre / year
+
+    crop = _load_crop_params().get(crop_id)
+    is_perennial = crop is not None and "perennial" in (crop.season or "").lower()
+    crop_type_mult = PERENNIAL_SEQUESTRATION_MULT if is_perennial else 1.0
 
     if tillage_practice == "no_till":
         tillage_mult = 1.6
@@ -971,7 +1017,7 @@ def calculate_carbon_credits(
     cover_bonus = 0.35 if cover_crop else 0.0
     biochar_bonus = 0.50 if biochar_application else 0.0
 
-    seq_per_acre = (base_sequestration * tillage_mult) + cover_bonus + biochar_bonus
+    seq_per_acre = (base_sequestration * tillage_mult * crop_type_mult) + cover_bonus + biochar_bonus
     total_co2e_tons = seq_per_acre * area_acres
 
     # Global/Indian carbon credit market price (~$15 / ₹1250 per ton CO2e)
@@ -980,6 +1026,7 @@ def calculate_carbon_credits(
 
     return {
         "crop_id": crop_id,
+        "crop_cycle": "perennial" if is_perennial else "seasonal",
         "area_acres": area_acres,
         "tillage_practice": tillage_practice,
         "cover_crop_enabled": cover_crop,

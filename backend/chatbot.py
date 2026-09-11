@@ -17,6 +17,7 @@ docstring for the scoping rationale.
 from __future__ import annotations
 
 import re
+from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
 
 from engine.features import (
@@ -76,6 +77,13 @@ def _regions() -> List[str]:
 
 
 _VALID_SEASONS = {"kharif", "rabi", "zaid"}
+
+# Representative sowing date per season, used when a farmer doesn't name a
+# sowing date explicitly. Keeping this keyed by season (rather than a single
+# hardcoded kharif date) matters because _region_weather() below also filters
+# by season -- using a kharif date with rabi-filtered weather (or vice versa)
+# would pair the wrong seasonal rainfall with the wrong crop-calendar labels.
+_SEASON_SOWING_DATE = {"kharif": "2025-06-15", "rabi": "2025-11-01", "zaid": "2025-03-15"}
 
 
 def _region_weather(region_id: Optional[str], season: Optional[str] = None) -> Dict[str, float]:
@@ -720,15 +728,24 @@ def _intent_pest(crop: Dict[str, str], lang: str, region: Optional[str] = None,
 
 def _intent_irrigation(crop: Dict[str, str], lang: str, region: Optional[str] = None,
                         season: Optional[str] = None) -> Reply:
+    # C-25 fix: default to kharif (matching _intent_recommend's own default)
+    # so the season used to filter weather and the sowing date used to build
+    # the schedule always agree -- previously an unspecified season left
+    # weather blended across all seasons while the sowing date stayed a
+    # hardcoded kharif date, understating rainfall by ~44% on real regions.
+    season = season if season in _VALID_SEASONS else "kharif"
     weather = _region_weather(region, season)
     rainfall = weather["rainfall_mm"]
+    sowing_date = _SEASON_SOWING_DATE[season]
     try:
-        sch = irrigation_schedule(crop["crop_id"], "2025-06-15", rainfall, 0.5)
+        sch = irrigation_schedule(crop["crop_id"], sowing_date, rainfall, 0.5)
     except Exception as e:
         return (f"Couldn't build schedule: {e}" if lang == "en" else T(lang, "generic_error", err=e)), []
     weeks = sch.get("weekly_schedule", []) if isinstance(sch, dict) else []
+    sow_dt = datetime.strptime(sowing_date, "%Y-%m-%d")
+    sow_label = f"{sow_dt.day} {sow_dt.strftime('%b')}"
     if lang == "en":
-        lines = [f"### Irrigation schedule — {crop['crop_name']}", f"_Sown 15 Jun · {rainfall:.0f} mm seasonal rainfall_\n"]
+        lines = [f"### Irrigation schedule — {crop['crop_name']}", f"_Sown {sow_label} ({season}) · {rainfall:.0f} mm seasonal rainfall_\n"]
         if weeks:
             lines.append("| Week | Stage | Water Need (mm) | Rain (mm) | Irrigation (mm) |")
             lines.append("|---:|---|---:|---:|---:|")
@@ -1232,7 +1249,10 @@ def answer(message: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, 
     # pest/irrigation/etc. intents below ever got a chance to match. Require
     # "suggest(ion)" to co-occur with a crop/grow/plant word so it only
     # fires for genuine crop-choice questions.
-    if _matches("recommend", text, r"\brecommend(ation)?\b|\bwhich crop\b|\bbest crop\b|\bwhat (should|to) (i )?(grow|plant|sow)\b|\bsuggest(ion)?\b.*\b(crop|grow|plant|sow)\b|\b(crop|grow|plant|sow)\b.*\bsuggest(ion)?\b"):
+    # C-24 fix: grow/plant/sow were exact-word-only, so "-ing" forms like
+    # "growing" or "planting" (a very natural way to phrase this) missed the
+    # gate entirely and fell through to the generic fallback reply.
+    if _matches("recommend", text, r"\brecommend(ation)?\b|\bwhich crop\b|\bbest crop\b|\bwhat (should|to) (i )?(grow(ing)?|plant(ing)?|sow(ing)?)\b|\bsuggest(ion)?\b.*\b(crop|grow(ing)?|plant(ing)?|sow(ing)?)\b|\b(crop|grow(ing)?|plant(ing)?|sow(ing)?)\b.*\bsuggest(ion)?\b"):
         reply, sug = _intent_recommend(region, season, text, lang)
         return _pack(reply, sug, "recommend", region=region, season=season, nums=nums)
 
