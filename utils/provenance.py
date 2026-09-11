@@ -91,6 +91,41 @@ def _max_column(csv_name: str, column: str) -> Optional[str]:
     return best
 
 
+def _season_end_iso(season: str, year: int) -> Optional[str]:
+    """Last day of an agricultural season, for staleness purposes. Matches
+    data_ingestion/refresh_weather_seed.py's convention: kharif `year` runs
+    Jun-Oct of `year`; rabi `year` runs Nov `year` to Mar `year + 1`."""
+    if season == "kharif":
+        return date(year, 10, 31).isoformat()
+    if season == "rabi":
+        return date(year + 1, 3, 31).isoformat()
+    return None
+
+
+def _weather_as_of() -> Optional[str]:
+    """Newest season-end date across dataset/weather.csv. A bare year (what
+    _max_column would give) can't distinguish a kharif row (ends in October)
+    from a rabi row for the same year (ends the following March) -- and that
+    five-month difference matters for staleness scoring."""
+    path = _DATASET_DIR / "weather.csv"
+    if not path.exists():
+        return None
+    best: Optional[str] = None
+    try:
+        with path.open("r", newline="", encoding="utf-8") as f:
+            for row in csv.DictReader(f):
+                try:
+                    year = int((row.get("year") or "").strip())
+                except ValueError:
+                    continue
+                end = _season_end_iso((row.get("season") or "").strip().lower(), year)
+                if end and (best is None or end > best):
+                    best = end
+    except OSError:
+        return None
+    return best
+
+
 def _file_mtime_iso(path: Path) -> Optional[str]:
     try:
         return datetime.fromtimestamp(path.stat().st_mtime).isoformat(timespec="seconds")
@@ -209,7 +244,7 @@ def describe_sources() -> Dict[str, Any]:
             "weather",
             "Weather",
             "seed",
-            _max_column("weather.csv", "year"),
+            _weather_as_of(),
             "dataset/weather.csv (seasonal averages)",
             "Planning uses seasonal averages from the CSV. The live Open-Meteo "
             "fetcher currently covers only the three pilot regions.",
