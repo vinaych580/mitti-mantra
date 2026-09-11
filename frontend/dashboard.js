@@ -1131,6 +1131,15 @@
           </div>
         </div>` : ''}
 
+        ${area >= 3 ? `
+        <div class="alert alert--gold" style="margin-top:12px;">
+          <div class="alert__body">
+            <strong>🌱 ${area} acres is enough to diversify.</strong>
+            Spreading this land across a few crops instead of putting it all into ${cropLabel(top.crop_id)} can lower risk without giving up much profit.
+            <a href="#" onclick="document.querySelector('.sidebar__btn[data-tool=mix]').click();return false;" style="color:var(--brand);font-weight:600;">See an optimal multi-crop mix →</a>
+          </div>
+        </div>` : ''}
+
         <div style="margin-top:12px;display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap;">
           <button type="button" class="btn btn-ghost" style="flex-shrink:0;" id="mm-commit-crop-btn"
             data-crop-id="${top.crop_id}" data-region-id="${body.region_id}" data-season="${body.season}" data-area="${area}">
