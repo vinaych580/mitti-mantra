@@ -95,7 +95,7 @@ class ModelAuditor:
         pi_rec_importances = dict(sorted(pi_rec_importances.items(), key=lambda x: x[1], reverse=True))
         
         # 2. Auditing Yield Prediction
-        X_yield, y_yield, crop_le_y, region_le_y, season_le_y = _build_yield_dataset()
+        X_yield, y_yield, source, crop_le_y, region_le_y, season_le_y = _build_yield_dataset()
 
         yield_holdout = self._load_holdout("yield")
         if yield_holdout is not None:
