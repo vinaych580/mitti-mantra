@@ -17,7 +17,10 @@ from utils.calculations import (
     calculate_risk_score_and_subscores,
     calculate_yield_kg_per_acre,
     clamp,
+    compute_budget_fit,
+    compute_roi_normalized,
     compute_smart_score,
+    compute_soil_health,
 )
 
 # FIX (4.1): Added structured logging for ML fallback diagnostics
@@ -1173,14 +1176,16 @@ def _score_single_crop(
         mandi_price_per_kg=price,
     )
 
-    budget_fit = clamp(
-        (budget_per_acre / max(crop.avg_input_cost_inr_per_acre, 1.0)) * 100.0, 0.0, 120.0
+    budget_fit = compute_budget_fit(budget_per_acre, crop.avg_input_cost_inr_per_acre)
+    roi_normalized = compute_roi_normalized(profit["roi_percent"])
+    soil_health = compute_soil_health(
+        soil.get("n_kg_per_acre", 40.0),
+        soil.get("p_kg_per_acre", 20.0),
+        soil.get("k_kg_per_acre", 20.0),
+        crop.npk_n_kg_per_acre,
+        crop.npk_p_kg_per_acre,
+        crop.npk_k_kg_per_acre,
     )
-    roi_normalized = clamp(profit["roi_percent"] / 3.0, 0.0, 100.0)
-    n_ratio = soil.get("n_kg_per_acre", 40.0) / max(crop.npk_n_kg_per_acre, 1.0)
-    p_ratio = soil.get("p_kg_per_acre", 20.0) / max(crop.npk_p_kg_per_acre, 1.0)
-    k_ratio = soil.get("k_kg_per_acre", 20.0) / max(crop.npk_k_kg_per_acre, 1.0)
-    soil_health = clamp(((n_ratio + p_ratio + k_ratio) / 3.0) * 100.0, 0.0, 120.0)
 
     # Blend ML confidence into smart_score if available
     ml_score = ml_conf_map.get(crop_id, 0.0) * 100.0
