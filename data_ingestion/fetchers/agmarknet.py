@@ -1,7 +1,8 @@
-# NOT WIRED INTO PRODUCTION -- see AUDIT_REPORT.md M-22.
-# Only imported by data_ingestion/etl_pipeline.py (itself unwired) and the
-# data_ingestion.fetchers package re-export; not reachable from any live
-# request-handling code.
+# Agmarknet HTTP client. `fetch_mandi_records` (uncached) is the shared
+# transport used by both the live price path (data_ingestion/fetchers/mandi.py,
+# which layers its own 1-hour cache and CSV fallback on top) and the offline
+# ETL pipeline (data_ingestion/etl_pipeline.py, itself still unwired -- see
+# AUDIT_REPORT.md D-4) via the cached get_mandi_prices() below.
 import logging
 import os
 from typing import Dict, List, Optional
@@ -48,6 +49,14 @@ class AgmarknetClient(BaseAPIClient):
 
 _client = AgmarknetClient()
 
+def fetch_mandi_records(commodity: str, state: Optional[str] = None) -> Optional[List[Dict[str, str]]]:
+    """
+    Uncached passthrough to the Agmarknet client (retries + rate-limit via
+    BaseAPIClient, no caching layer). For callers that manage their own
+    caching/fallback policy, e.g. data_ingestion/fetchers/mandi.py.
+    """
+    return _client.fetch_mandi_prices(commodity, state)
+
 @cached(ttl_seconds=60 * 60 * 6, key="agmarknet_prices") # 6-hour caching for commodity pricing
 def get_mandi_prices(commodity: str, state: Optional[str] = None) -> Optional[List[Dict[str, str]]]:
     """
@@ -55,4 +64,4 @@ def get_mandi_prices(commodity: str, state: Optional[str] = None) -> Optional[Li
     Returns:
         List of dictionaries with commodity pricing metadata, or None on failure.
     """
-    return _client.fetch_mandi_prices(commodity, state)
+    return fetch_mandi_records(commodity, state)

@@ -1,7 +1,7 @@
-# NOT WIRED INTO PRODUCTION -- see AUDIT_REPORT.md M-22.
 # Shared base class for agmarknet.py, isro_bhuvan.py, nasa_power.py, and
-# soil_grids.py -- all of which are themselves unwired dead code, so this
-# base class is not reachable from any live request-handling code either.
+# soil_grids.py. agmarknet.py is reachable from production via
+# data_ingestion/fetchers/mandi.py; the other three remain unwired dead code
+# -- see AUDIT_REPORT.md D-4.
 import logging
 import time
 import requests

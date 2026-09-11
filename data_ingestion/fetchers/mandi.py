@@ -7,9 +7,8 @@ import threading
 import time
 from pathlib import Path
 
-import requests
-
 from data_ingestion.cache import cached
+from data_ingestion.fetchers.agmarknet import fetch_mandi_records
 
 _DATASET_DIR = Path(__file__).resolve().parents[2] / "dataset"
 _FALLBACK_CSV = _DATASET_DIR / "mandi_prices.csv"
@@ -57,15 +56,14 @@ _CROP_COMMODITY: dict[str, str] = {
     "soybean": "Soybean",
 }
 
-_BASE_URL = "https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070"
-
 logger = logging.getLogger(__name__)
 
 
 @cached(ttl_seconds=3600, key="mandi_price")  # 1-hour TTL; prices update a few times/day
 def fetch_mandi_price(crop_id: str, state: str | None = None) -> float | None:
     """
-    Fetch latest mandi price (INR/kg) for a crop from data.gov.in.
+    Fetch latest mandi price (INR/kg) for a crop from data.gov.in (Agmarknet),
+    via the shared AgmarknetClient in data_ingestion/fetchers/agmarknet.py.
     Returns None if API is unavailable or key is missing; caller should use fallback.
     API key is read from the DATAGOV_API_KEY environment variable.
     """
@@ -81,37 +79,24 @@ def fetch_mandi_price(crop_id: str, state: str | None = None) -> float | None:
         _record(None, live_error=f"no data.gov.in commodity mapping for '{crop_id}'")
         return None
 
-    params: dict[str, str | int] = {
-        "api-key": api_key,
-        "format": "json",
-        "limit": 10,
-        "filters[Commodity]": commodity,
-    }
-    if state:
-        params["filters[State]"] = state
-
     try:
-        resp = requests.get(_BASE_URL, params=params, timeout=8)
-        resp.raise_for_status()
-        records = resp.json().get("records", [])
-        if not records:
-            logger.info(f"No recent mandi records found for {commodity}.")
-            _record(None, live_error=f"no recent data.gov.in records for {commodity}")
-            return None
-        # Modal price is the most representative; convert quintal → kg (÷100)
-        prices = [float(r["Modal_Price"]) / 100 for r in records if r.get("Modal_Price")]
-        if not prices:
-            _record(None, live_error=f"data.gov.in records for {commodity} carried no modal price")
-            return None
-        return round(sum(prices) / len(prices), 2)
-    except requests.exceptions.RequestException as e:
-        logger.error(f"Network error fetching mandi price for {crop_id}: {e}")
-        _record(None, live_error=f"network error: {e.__class__.__name__}")
-        return None
+        records = fetch_mandi_records(commodity, state)
     except Exception as e:
         logger.error(f"Unexpected error fetching mandi price for {crop_id}: {e}")
         _record(None, live_error=f"{e.__class__.__name__}: {e}")
         return None
+
+    if not records:
+        logger.info(f"No recent mandi records found for {commodity}.")
+        _record(None, live_error=f"no recent data.gov.in records for {commodity}")
+        return None
+
+    # Modal price is the most representative; convert quintal → kg (÷100)
+    prices = [float(r["Modal_Price"]) / 100 for r in records if r.get("Modal_Price")]
+    if not prices:
+        _record(None, live_error=f"data.gov.in records for {commodity} carried no modal price")
+        return None
+    return round(sum(prices) / len(prices), 2)
 
 
 def get_mandi_price(crop_id: str, region_id: str, state: str | None = None) -> float:
