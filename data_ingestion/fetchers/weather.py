@@ -13,6 +13,7 @@ from pathlib import Path
 import requests
 
 from data_ingestion.cache import cached
+from data_ingestion.fetchers import indianapi_weather
 
 _DATASET_DIR = Path(__file__).resolve().parents[2] / "dataset"
 _FALLBACK_CSV = _DATASET_DIR / "weather.csv"
@@ -25,6 +26,13 @@ _REGION_COORDS: dict[str, tuple[float, float]] = {
     "telangana_medak": (17.61, 78.26),
     "mp_sehore": (23.20, 77.08),
     "punjab_ludhiana": (30.90, 75.85),
+}
+
+# Region → nearest IndianAPI city name, for the IndianAPI fallback tier only.
+_REGION_CITY: dict[str, str] = {
+    "telangana_medak": "Hyderabad",
+    "mp_sehore": "Bhopal",
+    "punjab_ludhiana": "Ludhiana",
 }
 
 logger = logging.getLogger(__name__)
@@ -120,16 +128,38 @@ def get_weather(
     except Exception as e:
         logger.warning(f"Failed to get live weather data for {region_id}: {e}")
 
-    # Fallback: static CSV
+    # IndianAPI has no rainfall field, so it can only ever supply avg_temp_c.
+    # Fetch it here but don't return yet -- rainfall_mm still has to come
+    # from the CSV below. A fabricated rainfall figure (e.g. 0.0) would read
+    # as a real "no rain" measurement to the irrigation/moisture-index logic
+    # downstream, so we merge instead of returning a partial result early.
+    indianapi_temp: float | None = None
+    try:
+        city = _REGION_CITY.get(region_id)
+        if city:
+            partial = indianapi_weather.fetch_weather(city)
+            if partial is not None and "avg_temp_c" in partial:
+                indianapi_temp = partial["avg_temp_c"]
+    except Exception as e:
+        logger.warning(f"Failed to get IndianAPI weather data for {region_id}: {e}")
+
+    # Fallback: static CSV (merged with IndianAPI temperature when available)
     try:
         if _FALLBACK_CSV.exists():
             with _FALLBACK_CSV.open("r", newline="", encoding="utf-8") as f:
                 for row in csv.DictReader(f):
                     if row["region_id"] == region_id and row["season"].lower() == season.lower():
-                        return {
+                        result = {
                             "rainfall_mm": float(row["rainfall_mm"]),
                             "avg_temp_c": float(row["avg_temp_c"]),
                         }
+                        if indianapi_temp is not None:
+                            logger.info(
+                                f"Using IndianAPI temperature for {region_id}; "
+                                "rainfall from static CSV (no rainfall field on IndianAPI)."
+                            )
+                            result["avg_temp_c"] = indianapi_temp
+                        return result
     except Exception as e:
         logger.error(f"Error reading weather fallback CSV: {e}")
 
