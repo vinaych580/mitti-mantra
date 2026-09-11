@@ -115,6 +115,19 @@ class ModelAuditor:
             _, X_test_rec, _, y_test_rec = train_test_split(
                 X_rec, y_rec, test_size=0.2, random_state=42, stratify=y_rec
             )
+            # y_test_rec's integer labels come from crop_le_rec, fit fresh
+            # this run from the *current* crop_parameters.csv -- but
+            # rec_model (and pred_rec below) were trained against
+            # rec_encoders["crop"], the deployed model's original
+            # training-time encoder. If the crop roster has changed since
+            # that training run, the two encoders assign different
+            # integers to the same crop, silently corrupting every metric
+            # computed below. Realign y_test_rec into rec_model's label
+            # space before scoring against it; this raises loudly (unseen
+            # label) rather than silently mislabeling if a crop present
+            # in this run's dataset didn't exist when rec_model was
+            # trained.
+            y_test_rec = rec_encoders["crop"].transform(crop_le_rec.inverse_transform(y_test_rec))
 
         pred_rec = rec_model.predict(X_test_rec)
         acc_rec = accuracy_score(y_test_rec, pred_rec)

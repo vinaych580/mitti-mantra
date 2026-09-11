@@ -552,7 +552,11 @@ def _intent_recommend(region: Optional[str], season: Optional[str], text: str, l
                 ["List regions", "Recommend for Telangana Medak in Kharif"],
             )
         return T(lang, "recommend_need_region"), [T(lang, "sug_list_regions"), T(lang, "sug_recommend_medak_kharif")]
-    season = season or "kharif"
+    # Matches _intent_irrigation's own validity check (C-25 fix) -- an
+    # invalid, non-empty season string must default the same way here as
+    # it does there, or the two intents disagree on what season a farmer
+    # asked for.
+    season = season if season in _VALID_SEASONS else "kharif"
     # H-7 fix: bind budget/area to nearby keywords instead of trusting
     # sentence position; fall back to positional order only for whichever
     # one wasn't tagged.
@@ -1076,7 +1080,8 @@ def _build_actions(intent: str, crop: Optional[Dict[str, str]], region: Optional
         area = nums[1] if len(nums) > 1 else 3
         acts.append(_action(
             "Open in dashboard →",
-            _dashboard_link("recommend", region_id=region, season=season or "kharif",
+            _dashboard_link("recommend", region_id=region,
+                            season=season if season in _VALID_SEASONS else "kharif",
                             budget_per_acre=budget, area_acres=area),
         ))
     elif intent == "simulate" and crop:

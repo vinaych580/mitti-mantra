@@ -29,19 +29,19 @@
     },
     "zero_f1_crops": [],
     "correlations": {
-      "region_enc": 0.0574,
-      "season_enc": -0.1491,
-      "soil_ph": -0.0021,
-      "soil_n": 0.1473,
-      "soil_p": 0.1568,
-      "soil_k": 0.171,
-      "soil_oc": 0.042,
-      "rainfall": -0.2209,
-      "avg_temp": 0.0198,
-      "min_temp": 0.0193,
-      "max_temp": 0.0196,
-      "budget": 0.3941,
-      "irrigation": 0.051
+      "region_enc": 0.058,
+      "season_enc": -0.1133,
+      "soil_ph": -0.0023,
+      "soil_n": 0.1467,
+      "soil_p": 0.1559,
+      "soil_k": 0.169,
+      "soil_oc": 0.0418,
+      "rainfall": -0.2482,
+      "avg_temp": -0.0009,
+      "min_temp": -0.0015,
+      "max_temp": -0.0011,
+      "budget": 0.398,
+      "irrigation": 0.0529
     },
     "permutation_importances": {
       "rainfall": 0.4494,
@@ -93,5 +93,5 @@
     "robustness_drought_r2": 0.6713,
     "evaluated_on_persisted_holdout": true
   },
-  "audited_at": 1789127088.7633994
+  "audited_at": 1789144896.7543347
 }

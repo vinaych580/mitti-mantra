@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import csv
 import logging
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date
 from pathlib import Path
 
@@ -122,6 +123,9 @@ def _fetch_season_aggregate(lat: float, lon: float, start: date, end: date) -> d
     }
 
 
+_MAX_WORKERS = 10
+
+
 def refresh(dry_run: bool = False) -> list[dict[str, str]]:
     """Append missing (region, season, year) rows to dataset/weather.csv.
     Returns the rows that were (or would be, if dry_run) added."""
@@ -131,31 +135,60 @@ def refresh(dry_run: bool = False) -> list[dict[str, str]]:
             existing.add((row["region_id"], row["season"], row["year"]))
 
     today = date.today()
-    to_add: list[dict[str, str]] = []
-    for region_id, (lat, lon) in REGION_COORDS.items():
+    # Each (region, season, year) fetch is an independent HTTP call to
+    # Open-Meteo -- with up to 30 regions x 15 season/years that's ~270
+    # sequential round-trips otherwise. A bounded thread pool overlaps them
+    # (network I/O, not CPU-bound, so the GIL isn't a bottleneck) while
+    # _MAX_WORKERS keeps this a well-behaved client of a public free API.
+    jobs: list[tuple[str, str, int]] = []
+    for region_id in REGION_COORDS:
         for season, year in _completed_seasons(today):
-            if (region_id, season, str(year)) in existing:
-                continue
+            if (region_id, season, str(year)) not in existing:
+                jobs.append((region_id, season, year))
+
+    # None = fetch raised (already logged below); missing key = never
+    # scheduled. Kept distinct from "fetched but no usable data" so each
+    # failure gets exactly one log line, matching the original behavior.
+    results: dict[tuple[str, str, int], dict[str, float] | None] = {}
+    failed: set[tuple[str, str, int]] = set()
+    with ThreadPoolExecutor(max_workers=_MAX_WORKERS) as pool:
+        future_to_job = {}
+        for region_id, season, year in jobs:
+            lat, lon = REGION_COORDS[region_id]
             start, end = _season_range(season, year)
+            future = pool.submit(_fetch_season_aggregate, lat, lon, start, end)
+            future_to_job[future] = (region_id, season, year)
+
+        for future in as_completed(future_to_job):
+            job = future_to_job[future]
             try:
-                agg = _fetch_season_aggregate(lat, lon, start, end)
+                results[job] = future.result()
             except requests.exceptions.RequestException as e:
-                logger.error(f"Failed to fetch {region_id} {season} {year}: {e}")
-                continue
-            if agg is None:
-                logger.warning(f"No usable daily data for {region_id} {season} {year}")
-                continue
-            to_add.append(
-                {
-                    "region_id": region_id,
-                    "season": season,
-                    "year": str(year),
-                    "rainfall_mm": str(agg["rainfall_mm"]),
-                    "avg_temp_c": str(agg["avg_temp_c"]),
-                    "min_temp_c": str(agg["min_temp_c"]),
-                    "max_temp_c": str(agg["max_temp_c"]),
-                }
-            )
+                logger.error(f"Failed to fetch {job[0]} {job[1]} {job[2]}: {e}")
+                failed.add(job)
+
+    # Iterate `jobs` (not `results`) to keep the CSV's row order stable and
+    # independent of thread-completion order.
+    to_add: list[dict[str, str]] = []
+    for region_id, season, year in jobs:
+        job = (region_id, season, year)
+        if job in failed:
+            continue
+        agg = results.get(job)
+        if agg is None:
+            logger.warning(f"No usable daily data for {region_id} {season} {year}")
+            continue
+        to_add.append(
+            {
+                "region_id": region_id,
+                "season": season,
+                "year": str(year),
+                "rainfall_mm": str(agg["rainfall_mm"]),
+                "avg_temp_c": str(agg["avg_temp_c"]),
+                "min_temp_c": str(agg["min_temp_c"]),
+                "max_temp_c": str(agg["max_temp_c"]),
+            }
+        )
 
     if to_add and not dry_run:
         with _WEATHER_CSV.open("a", newline="", encoding="utf-8") as f:

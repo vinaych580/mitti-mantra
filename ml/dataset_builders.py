@@ -362,7 +362,15 @@ def _build_recommendation_dataset() -> tuple[np.ndarray, np.ndarray, LabelEncode
             # envelope (3 years, dataset/weather.csv), widened to allow for
             # years outside the 3 sampled, rather than one hard-coded range
             # shared across every region and both seasons.
-            weather_hist = weather_by_region_season[(rid, season)]
+            #
+            # A region can exist in soil.csv without weather rows for every
+            # season yet (e.g. a newly onboarded region, or a partial
+            # refresh_weather_seed.py run) -- skip it rather than crashing
+            # the whole training run, matching _build_yield_dataset's own
+            # `if not weather: continue` guard on the same kind of lookup.
+            weather_hist = weather_by_region_season.get((rid, season))
+            if not weather_hist:
+                continue
             rain_hist = [float(w["rainfall_mm"]) for w in weather_hist]
             temp_hist = [float(w["avg_temp_c"]) for w in weather_hist]
             # Rainfall is ratio-scale (0mm is meaningful), so widen it

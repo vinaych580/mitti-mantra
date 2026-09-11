@@ -230,6 +230,16 @@ def train_recommendation_model() -> dict[str, Any]:
             X, y, test_size=0.2, random_state=42, stratify=y,
         )
 
+        # class_weight="balanced" compensates, at the classifier layer, for
+        # severe label imbalance coming from compute_smart_score's ROI
+        # weighting (e.g. wheat labeled in ~0.06% of recommendation-dataset
+        # samples -- see docs/superpowers/specs/2026-09-11-rabi-rainfall-
+        # sampling-design.md). It is a second lever stacked on top of
+        # dataset_builders.py's own _WEATHER_TAIL_FRAC mixture, which
+        # already exists to give rare-but-real crops more representation.
+        # Removing or tuning this needs a retrain + audit_models.py
+        # comparison (f1_macro, zero_f1_crops) against the current deployed
+        # baseline, not a drive-by change here.
         model = RandomForestClassifier(
             n_estimators=200,
             max_depth=10,

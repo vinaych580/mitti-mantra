@@ -108,6 +108,13 @@ def _nutrient_gap(crop: CropParameter, soil: dict[str, Any]) -> dict[str, Any]:
         "k_required": crop.npk_k_kg_per_acre,
         "k_available": k_soil,
         "k_deficit": round(max(crop.npk_k_kg_per_acre - k_soil, 0), 2),
+        # Deliberately not utils.calculations.compute_soil_health(): that
+        # function is a "health score" that rewards oversupply above 100%
+        # (clamped to 120), which fits a recommendation-ranking signal but
+        # is meaningless for a "sufficiency percent" whose whole point is
+        # to say how much of the crop's requirement the soil currently
+        # covers -- each ratio is capped at 1.0 before averaging so this
+        # number tops out at exactly 100%.
         "overall_nutrient_sufficiency_percent": round(
             clamp(
                 ((min(n_soil / max(crop.npk_n_kg_per_acre, 1), 1.0)

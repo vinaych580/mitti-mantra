@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from typing import Any, Optional
 
-from utils.calculations import calculate_ndvi_and_field_health, clamp
+from utils.calculations import calculate_ndvi_and_field_health, clamp, compute_roi_normalized
 from utils.csv_cache import index_by as _csv_index
 from ml.predict import recommend_crops
 from engine.features import pest_disease_alerts
@@ -71,7 +71,7 @@ def compute_farm_score(
             chosen = match
 
     pillars: dict[str, float] = {
-        "profitability": round(clamp(chosen["roi_percent"] / 3.0, 0.0, 100.0), 1),
+        "profitability": round(compute_roi_normalized(chosen["roi_percent"]), 1),
         "risk_resilience": round(clamp(100.0 - chosen["risk_score"], 0.0, 100.0), 1),
         "market_fit": round(clamp(chosen["smart_score"], 0.0, 100.0), 1),
     }

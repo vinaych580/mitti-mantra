@@ -37,13 +37,25 @@ def test_build_yield_dataset_augmented_rows_inherit_non_real_source():
 
 def test_build_recommendation_dataset_staples_are_recommendable():
     X, y, crop_le, region_le, season_le = _build_recommendation_dataset()
-    labeled_crops = {crop_le.classes_[i] for i in set(y.tolist())}
+    labeled_names = [crop_le.classes_[i] for i in y.tolist()]
+    counts = Counter(labeled_names)
     # The concrete regression test for the bug this task fixes: these
     # staples used to never win a single sample (0.00 F1 on the deployed
     # model's real holdout) because the old label formula had no risk/
     # soil-fit term and let perennials compete in every seasonal sample.
+    #
+    # A bare "wins at least once" bar is satisfied by a single lucky draw
+    # from the 35% synthetic weather tail (see
+    # docs/superpowers/specs/2026-09-11-rabi-rainfall-sampling-design.md)
+    # without the crop being genuinely representable in training data --
+    # requiring >=10 wins (the deployed dataset's actual weakest staple,
+    # maize, wins 24/60000 at random_state=42) still catches the original
+    # regression while ruling out a single-fluke pass.
     for staple in ("rice", "wheat", "maize", "soybean"):
-        assert staple in labeled_crops, f"{staple} should be recommendable at least once"
+        assert counts[staple] >= 10, (
+            f"{staple} should win a genuine number of training samples, not just one "
+            f"(got {counts[staple]})"
+        )
 
 
 def test_build_recommendation_dataset_excludes_true_perennials():
