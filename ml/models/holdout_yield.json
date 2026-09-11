@@ -25,5 +25,10 @@
     "8541d0fd53f292e4a72ec06ffb944cf9"
   ],
   "row_hash_set_size": 2925,
-  "saved_at": 1787939978.852373
+  "saved_at": 1789110517.7197895,
+  "source_counts": {
+    "synthetic_mismatch": 2135,
+    "augmented": 689,
+    "real": 132
+  }
 }
