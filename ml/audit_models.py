@@ -39,7 +39,36 @@ class ModelAuditor:
         if not holdout_path.exists():
             return None
         data = joblib.load(holdout_path)
-        return data.get("X_test"), data.get("y_test")
+        return data.get("X_test"), data.get("y_test"), data.get("source_test")
+
+    @staticmethod
+    def _split_yield_mape(y_test, y_pred, source_test: list[str] | None):
+        """Return (real_and_augmented_mape, full_mape) as percentages.
+
+        `source_test` tags each row "real"/"augmented"/"synthetic_mismatch"
+        (see ml/dataset_builders.py). The full-set MAPE is dominated by the
+        deliberately-tiny synthetic_mismatch rows (near-zero denominators
+        blow up percentage error) and conflates "the model is bad at real
+        yields" with "this metric is unfair to rows never meant to look
+        realistic" -- see
+        docs/superpowers/specs/2026-09-06-ml-model-accuracy-design.md
+        section 7. When `source_test` isn't available (an old-format
+        holdout file predating this field), both values are the same
+        full-set figure -- there's nothing to split.
+        """
+        y_test = np.asarray(y_test)
+        y_pred = np.asarray(y_pred)
+        full_ape = np.abs((y_test - y_pred) / y_test) * 100.0
+        full_mape = float(np.mean(full_ape))
+
+        if not source_test:
+            return full_mape, full_mape
+
+        trustworthy_mask = np.array([s in ("real", "augmented") for s in source_test])
+        if not trustworthy_mask.any():
+            return full_mape, full_mape
+        real_mape = float(np.mean(full_ape[trustworthy_mask]))
+        return real_mape, full_mape
 
     def run_audit(self):
         logger.info("Initializing model audit on corrected schemas...")
@@ -73,7 +102,7 @@ class ModelAuditor:
 
         rec_holdout = self._load_holdout("recommend")
         if rec_holdout is not None:
-            X_test_rec, y_test_rec = rec_holdout
+            X_test_rec, y_test_rec, _rec_source_unused = rec_holdout
             logger.info("Using persisted genuinely-unseen holdout for crop_recommendation audit (n=%d)", len(X_test_rec))
         else:
             logger.warning(
@@ -89,7 +118,18 @@ class ModelAuditor:
         pred_rec = rec_model.predict(X_test_rec)
         acc_rec = accuracy_score(y_test_rec, pred_rec)
         prec, rec, f1, _ = precision_recall_fscore_support(y_test_rec, pred_rec, average="macro")
-        
+
+        rec_crop_le = rec_encoders["crop"]
+        present_labels = sorted(set(y_test_rec.tolist()) | set(pred_rec.tolist()))
+        per_class_prec, per_class_rec, per_class_f1, per_class_support = precision_recall_fscore_support(
+            y_test_rec, pred_rec, labels=present_labels, zero_division=0,
+        )
+        per_class_f1_named = {
+            rec_crop_le.classes_[label]: round(float(f1_val), 4)
+            for label, f1_val in zip(present_labels, per_class_f1)
+        }
+        zero_f1_crops = sorted(name for name, f1_val in per_class_f1_named.items() if f1_val == 0.0)
+
         pi_rec = permutation_importance(rec_model, X_test_rec, y_test_rec, n_repeats=5, random_state=42)
         pi_rec_importances = dict(zip(feature_names_rec, [round(float(w), 4) for w in pi_rec.importances_mean]))
         pi_rec_importances = dict(sorted(pi_rec_importances.items(), key=lambda x: x[1], reverse=True))
@@ -98,8 +138,9 @@ class ModelAuditor:
         X_yield, y_yield, source, crop_le_y, region_le_y, season_le_y = _build_yield_dataset()
 
         yield_holdout = self._load_holdout("yield")
+        source_test_y = None
         if yield_holdout is not None:
-            X_test_y, y_test_y = yield_holdout
+            X_test_y, y_test_y, source_test_y = yield_holdout
             logger.info("Using persisted genuinely-unseen holdout for yield_prediction audit (n=%d)", len(X_test_y))
         else:
             logger.warning(
@@ -116,7 +157,7 @@ class ModelAuditor:
         r2 = r2_score(y_test_y, pred_yield)
         mae = mean_absolute_error(y_test_y, pred_yield)
         rmse = np.sqrt(mean_squared_error(y_test_y, pred_yield))
-        mape = float(np.mean(np.abs((y_test_y - pred_yield) / y_test_y))) * 100
+        mape_real, mape_full = self._split_yield_mape(y_test_y, pred_yield, source_test_y)
         
         feature_names_yield = [
             "crop_enc", "region_enc", "season_enc", "base_yield", "water_req", "temp_min", "temp_max",
@@ -147,6 +188,8 @@ class ModelAuditor:
                 "algorithm": type(rec_model).__name__,
                 "accuracy": round(float(acc_rec), 4),
                 "f1_macro": round(float(f1), 4),
+                "per_class_f1": per_class_f1_named,
+                "zero_f1_crops": zero_f1_crops,
                 "correlations": correlations,
                 "permutation_importances": pi_rec_importances,
                 "robustness_noisy_weather_accuracy": round(float(noisy_acc_rec), 4),
@@ -160,7 +203,8 @@ class ModelAuditor:
                 "r2": round(float(r2), 4),
                 "mae": round(float(mae), 2),
                 "rmse": round(float(rmse), 2),
-                "mape_pct": round(float(mape), 2),
+                "mape_pct_real_rows": round(float(mape_real), 2),
+                "mape_pct_full_including_synthetic": round(float(mape_full), 2),
                 "permutation_importances": pi_yield_importances,
                 "robustness_drought_r2": round(float(drought_r2), 4),
                 "evaluated_on_persisted_holdout": yield_holdout is not None,

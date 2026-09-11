@@ -12,8 +12,12 @@ from __future__ import annotations
 import json
 import shutil
 from pathlib import Path
+
+import numpy as np
+
 import ml.evaluate_models as E
 import ml.audit_models as A
+from ml.audit_models import ModelAuditor
 
 
 def test_evaluate_models_does_not_write_production_artifacts(tmp_path, monkeypatch):
@@ -83,10 +87,40 @@ def test_audit_models_unpacks_yield_dataset_6tuple(tmp_path, monkeypatch):
     assert "yield_prediction" in audit_data, "yield_prediction section missing from audit_metrics.json"
     yield_section = audit_data["yield_prediction"]
 
-    expected_keys = {"r2", "mae", "rmse", "mape_pct", "permutation_importances", "robustness_drought_r2", "evaluated_on_persisted_holdout"}
+    expected_keys = {"r2", "mae", "rmse", "mape_pct_real_rows", "mape_pct_full_including_synthetic", "permutation_importances", "robustness_drought_r2", "evaluated_on_persisted_holdout"}
     assert expected_keys.issubset(yield_section.keys()), f"yield_prediction missing keys: {expected_keys - yield_section.keys()}"
 
     # Verify values are sensible (r2 should be a number, permutation_importances should be a dict)
     assert isinstance(yield_section["r2"], (int, float)), "r2 should be numeric"
     assert isinstance(yield_section["permutation_importances"], dict), "permutation_importances should be dict"
     assert len(yield_section["permutation_importances"]) > 0, "permutation_importances should not be empty"
+
+
+def test_split_yield_mape_by_provenance():
+    # 2 "real" rows with easy-to-predict targets, 1 "synthetic_mismatch"
+    # row with a near-zero target that would explode a naive MAPE.
+    y_test = np.array([100.0, 200.0, 0.5], dtype=np.float32)
+    y_pred = np.array([110.0, 190.0, 50.0], dtype=np.float32)
+    source_test = ["real", "real", "synthetic_mismatch"]
+
+    auditor = ModelAuditor()
+    real_mape, full_mape = auditor._split_yield_mape(y_test, y_pred, source_test)
+
+    # real rows only: |100-110|/100 + |200-190|/200 -> mean 7.5%
+    assert round(real_mape, 2) == 7.5
+    # full set additionally includes the exploded synthetic row:
+    # |0.5-50|/0.5 = 9900% -> pulls the mean way up
+    assert full_mape > real_mape * 100
+
+
+def test_split_yield_mape_without_provenance_returns_same_value_twice():
+    # An old-format holdout file predating the provenance field has no
+    # source_test at all -- there's nothing to split, so both returned
+    # values must be identical (the plain full-set MAPE).
+    y_test = np.array([100.0, 200.0], dtype=np.float32)
+    y_pred = np.array([110.0, 190.0], dtype=np.float32)
+
+    auditor = ModelAuditor()
+    real_mape, full_mape = auditor._split_yield_mape(y_test, y_pred, None)
+
+    assert real_mape == full_mape
