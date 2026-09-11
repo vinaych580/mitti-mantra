@@ -27,8 +27,10 @@ from utils.calculations import (
     calculate_climate_factor,
     calculate_soil_factor,
     calculate_yield_kg_per_acre,
-    clamp,
+    compute_budget_fit,
+    compute_roi_normalized,
     compute_smart_score,
+    compute_soil_health,
 )
 
 DATASET_DIR = Path(__file__).resolve().parents[1] / "dataset"
@@ -387,14 +389,16 @@ def _build_recommendation_dataset() -> tuple[np.ndarray, np.ndarray, LabelEncode
                     # that, not an idealized version of it.
                     risk = smart_risk_score(cid, weather_sim, soil_sim, budget)
 
-                    budget_fit = clamp(
-                        (budget / max(cp_obj.avg_input_cost_inr_per_acre, 1.0)) * 100.0, 0.0, 120.0
+                    budget_fit = compute_budget_fit(budget, cp_obj.avg_input_cost_inr_per_acre)
+                    roi_normalized = compute_roi_normalized(profit["roi_percent"])
+                    soil_health = compute_soil_health(
+                        soil_sim["n_kg_per_acre"],
+                        soil_sim["p_kg_per_acre"],
+                        soil_sim["k_kg_per_acre"],
+                        cp_obj.npk_n_kg_per_acre,
+                        cp_obj.npk_p_kg_per_acre,
+                        cp_obj.npk_k_kg_per_acre,
                     )
-                    roi_normalized = clamp(profit["roi_percent"] / 3.0, 0.0, 100.0)
-                    n_ratio = soil_sim["n_kg_per_acre"] / max(cp_obj.npk_n_kg_per_acre, 1.0)
-                    p_ratio = soil_sim["p_kg_per_acre"] / max(cp_obj.npk_p_kg_per_acre, 1.0)
-                    k_ratio = soil_sim["k_kg_per_acre"] / max(cp_obj.npk_k_kg_per_acre, 1.0)
-                    soil_health = clamp(((n_ratio + p_ratio + k_ratio) / 3.0) * 100.0, 0.0, 120.0)
 
                     # ml_term forced to roi_normalized (production's own
                     # no-model-loaded fallback) and saturation_penalty

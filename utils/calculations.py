@@ -270,6 +270,37 @@ def region_display_name(region_id: str) -> str:
     return " · ".join(p.upper() if p.lower() in _STATE_ABBR else p.capitalize() for p in parts)
 
 
+def compute_budget_fit(budget_per_acre: float, avg_input_cost_inr_per_acre: float) -> float:
+    """The budget-adequacy term `compute_smart_score` blends in, shared by
+    `ml/predict.py::_score_single_crop` and `ml/dataset_builders.py`'s
+    recommendation label generator so they can never drift apart (see
+    docs/superpowers/specs/2026-09-06-ml-model-accuracy-design.md).
+    """
+    return clamp((budget_per_acre / max(avg_input_cost_inr_per_acre, 1.0)) * 100.0, 0.0, 120.0)
+
+
+def compute_roi_normalized(roi_percent: float) -> float:
+    """The ROI term `compute_smart_score` blends in -- see `compute_budget_fit`."""
+    return clamp(roi_percent / 3.0, 0.0, 100.0)
+
+
+def compute_soil_health(
+    n_kg_per_acre: float,
+    p_kg_per_acre: float,
+    k_kg_per_acre: float,
+    npk_n_kg_per_acre: float,
+    npk_p_kg_per_acre: float,
+    npk_k_kg_per_acre: float,
+) -> float:
+    """The N/P/K-ratio soil term `compute_smart_score` blends in -- see
+    `compute_budget_fit`.
+    """
+    n_ratio = n_kg_per_acre / max(npk_n_kg_per_acre, 1.0)
+    p_ratio = p_kg_per_acre / max(npk_p_kg_per_acre, 1.0)
+    k_ratio = k_kg_per_acre / max(npk_k_kg_per_acre, 1.0)
+    return clamp(((n_ratio + p_ratio + k_ratio) / 3.0) * 100.0, 0.0, 120.0)
+
+
 def compute_smart_score(
     roi_normalized: float,
     confidence_score: float,
