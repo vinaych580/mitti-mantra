@@ -2750,7 +2750,7 @@
           <div class="kpi kpi--info">
             <div class="kpi__lbl">Yield performance</div>
             <div class="kpi__val">R² ${FIX(yieldAud.r2 || 0.99, 3)}</div>
-            <div class="kpi__sub">MAPE ${yieldAud.mape_pct || 7.5}% | MAE ${Math.round(yieldAud.mae || 411)}kg</div>
+            <div class="kpi__sub">MAPE ${yieldAud.mape_pct_real_rows || 7.5}% | MAE ${Math.round(yieldAud.mae || 411)}kg</div>
           </div>
           <div class="kpi ${r.recommend_model_loaded ? 'kpi--good' : 'kpi--warn'}">
             <div class="kpi__lbl">Crop recommendation</div>

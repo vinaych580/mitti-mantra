@@ -268,3 +268,29 @@ def region_display_name(region_id: str) -> str:
         return ""
     parts = str(region_id).split("_")
     return " · ".join(p.upper() if p.lower() in _STATE_ABBR else p.capitalize() for p in parts)
+
+
+def compute_smart_score(
+    roi_normalized: float,
+    confidence_score: float,
+    budget_fit: float,
+    soil_health: float,
+    ml_term: float,
+    saturation_penalty: float = 0.0,
+) -> float:
+    """The weighted blend `ml/predict.py::_score_single_crop` uses to rank a
+    crop for a farmer's request, and `ml/dataset_builders.py` uses to label
+    what "best crop" means for training -- extracted here so both call
+    sites can never drift apart the way they had (see
+    docs/superpowers/specs/2026-09-06-ml-model-accuracy-design.md).
+    """
+    return clamp(
+        0.35 * roi_normalized
+        + 0.20 * confidence_score
+        + 0.15 * budget_fit
+        + 0.15 * soil_health
+        + 0.15 * ml_term
+        - saturation_penalty * 0.25,
+        0.0,
+        100.0,
+    )
