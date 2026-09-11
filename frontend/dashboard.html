@@ -1038,6 +1038,16 @@
               <p>Planning calculator for connected sensors and pumps. It does not control physical equipment.</p>
             </div>
           </div>
+
+          <div class="field" style="margin-bottom:14px;">
+            <label>Upload sensor readings (CSV, XML, or JSON)</label>
+            <input type="file" data-input="sensor-file" accept=".csv,.xml,.json">
+            <p style="font-size:var(--fs-2xs);color:var(--ink-soft);margin-top:4px;">
+              Export from your soil/weather sensors or pump controller. Expected fields per reading: metric, value, unit (optional), timestamp (optional).
+            </p>
+          </div>
+          <div class="output" data-out="sensor-upload"></div>
+
           <form data-form="iot">
             <div class="form-row form-row--3">
               <div class="field"><label>Current Moisture (%)</label><input name="current_moisture_pct" type="number" value="38"></div>

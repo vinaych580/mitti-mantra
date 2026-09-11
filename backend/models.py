@@ -189,6 +189,13 @@ class CarbonCreditQuery(BaseModel):
 
 class IoTTelemetryQuery(BaseModel):
     farm_id: Optional[str] = Field("farm_01", min_length=1, max_length=100)
+    region_id: Optional[str] = Field(None, max_length=100)
+
+class SensorUploadRequest(BaseModel):
+    region_id: str = Field(..., min_length=1, max_length=100)
+    device_id: Optional[str] = Field(None, max_length=100)
+    filename: str = Field(..., min_length=1, max_length=255)
+    content: str = Field(..., min_length=1, max_length=2_000_000)
 
 class IoTTriggerRequest(BaseModel):
     farm_id: Optional[str] = Field("farm_01", min_length=1, max_length=100)

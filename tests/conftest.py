@@ -29,3 +29,10 @@ def _isolated_commitments_file_global(tmp_path, monkeypatch):
     from utils import commitment_log
     monkeypatch.setattr(commitment_log, "_COMMITMENTS_PATH", tmp_path / "commitments.csv")
     yield
+
+
+@pytest.fixture(autouse=True)
+def _isolated_sensor_readings_file_global(tmp_path, monkeypatch):
+    from utils import sensor_log
+    monkeypatch.setattr(sensor_log, "_SENSOR_READINGS_PATH", tmp_path / "sensor_readings.csv")
+    yield

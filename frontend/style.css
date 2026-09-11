@@ -3351,6 +3351,16 @@ body.mm-menu-open .qw-panel {
   .sidebar {
     position: static;
     max-height: none;
+    /* The desktop rail is a self-contained scroll region on purpose (see
+       the overscroll-behavior comment above) so reaching its own top/bottom
+       doesn't lurch the page underneath. Once it's stacked into the page's
+       single column instead of sitting in its own sticky rail, that same
+       "don't hand scroll back to the page" behavior turns into a dead zone:
+       touching anywhere over the sidebar never scrolls the page, only the
+       gutters beside it do. Let it scroll as part of the page like every
+       other stacked section. */
+    overflow-y: visible;
+    overscroll-behavior: auto;
   }
 }
 
@@ -4382,11 +4392,47 @@ body.page-farm-boundary {
 }
 
 /* Enhanced farm pickup sub-elements */
+
+/* Primary stat: the one number a farmer actually decides against (acreage),
+   promoted above the metadata list instead of sitting flush with it at the
+   same weight as coordinates. */
+.farm-pickup__body .fp-stat {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 3px 8px;
+  margin-top: 6px;
+}
+
+.farm-pickup__body .fp-stat__val {
+  font-family: 'Inter', sans-serif;
+  font-size: var(--fs-2xl);
+  font-weight: 600;
+  color: var(--brand-deep);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.farm-pickup__body .fp-stat__unit {
+  font-size: var(--fs-2xs);
+  color: var(--ink-soft);
+}
+
+.farm-pickup__body .fp-stat__sub {
+  font-size: var(--fs-2xs);
+  color: var(--ink-soft);
+}
+
+.farm-pickup__body .fp-stat__sub::before {
+  content: '\00b7';
+  margin-right: 8px;
+}
+
 .fp-meta {
   display: flex;
   flex-wrap: wrap;
   gap: 6px 14px;
-  margin-top: 4px;
+  margin-top: 8px;
 }
 
 .fp-meta__item {
@@ -4407,6 +4453,10 @@ body.page-farm-boundary {
   font-weight: 600;
 }
 
+.fp-meta__item--coords {
+  font-size: var(--fs-3xs);
+}
+
 .fp-chips {
   display: flex;
   flex-wrap: wrap;
@@ -4425,12 +4475,6 @@ body.page-farm-boundary {
   font-weight: 500;
 }
 
-.fp-chip--dim {
-  background: var(--bg-soft);
-  border-color: var(--bg-soft);
-  color: var(--ink-faint);
-}
-
 .fp-note {
   font-size: 0.75rem;
   color: var(--brand);
@@ -4438,6 +4482,40 @@ body.page-farm-boundary {
   display: flex;
   align-items: center;
   gap: 4px;
+}
+
+/* Below ~640px there's no room for a third "auto" actions column beside a
+   body that's already wrapping onto several lines — it ends up floating
+   wherever the grid's vertical centering happens to land it. Reflow to two
+   rows instead: icon + body on top, actions as a full-width row underneath. */
+@media (max-width: 640px) {
+  .farm-pickup {
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      "icon body"
+      "actions actions";
+    row-gap: 14px;
+    align-items: start;
+  }
+
+  .farm-pickup__ico {
+    grid-area: icon;
+  }
+
+  .farm-pickup__body {
+    grid-area: body;
+  }
+
+  .farm-pickup__actions {
+    grid-area: actions;
+    padding-top: 14px;
+    border-top: 1px solid rgba(29, 26, 21, .08);
+  }
+
+  .farm-pickup__actions .btn {
+    flex: 1;
+    text-align: center;
+  }
 }
 
 /* Farm-boundary sidebar: location chips and region badge */
@@ -5209,9 +5287,20 @@ html {
 }
 
 @media (max-width: 520px) {
+  /* Below ~520px, the 3-column grid (bullet | name | value) leaves the name
+     column so narrow that ordinary words wrap one-per-line. Drop to two
+     columns and let the value run full-width on its own line instead. */
+  .list-row {
+    grid-template-columns: 24px 1fr;
+  }
+
   .list-row__val {
+    grid-column: 1 / -1;
     white-space: normal;
-    max-width: 55%;
+    max-width: 100%;
+    text-align: left;
+    margin-top: 6px;
+    padding-left: 38px;
   }
 }
 

@@ -2700,6 +2700,53 @@
     } catch (err) { showError(out, err); }
   });
 
+  /* Sensor upload + live telemetry prefill for the Smart IoT Pump tool. */
+  async function prefillIotTelemetry() {
+    const moistureInput = document.querySelector('[data-form="iot"] [name="current_moisture_pct"]');
+    if (!moistureInput) return;
+    const profile = window.MM?.profile?.get?.() || {};
+    if (!profile.region_id) return;
+    try {
+      const r = await api('/api/iot/telemetry', {
+        method: 'POST', body: JSON.stringify({ region_id: profile.region_id }),
+      });
+      if (r.is_live && typeof r.soil_moisture_pct === 'number') {
+        moistureInput.value = r.soil_moisture_pct;
+        moistureInput.title = 'Pre-filled from your uploaded sensor data';
+      }
+    } catch (_) { /* best-effort prefill; form keeps its static default on failure */ }
+  }
+  prefillIotTelemetry();
+
+  const sensorFileInput = $('[data-input="sensor-file"]');
+  if (sensorFileInput) sensorFileInput.addEventListener('change', async e => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const out = $('[data-out="sensor-upload"]');
+    const esc = (window.MM && window.MM.escapeHtml) ? window.MM.escapeHtml : (s => String(s));
+    showLoading(out, 'Uploading sensor readings...');
+    try {
+      const profile = window.MM?.profile?.get?.() || {};
+      if (!profile.region_id) throw new Error('Select a farm/region first (top-right selector) before uploading sensor data.');
+      const content = await file.text();
+      const r = await api('/api/sensors/upload', {
+        method: 'POST', body: JSON.stringify({
+          region_id: profile.region_id, device_id: window.MM.deviceId(),
+          filename: file.name, content,
+        }),
+      });
+      out.innerHTML = `<div class="alert ${r.accepted > 0 ? 'alert--green' : 'alert--gold'}"><div class="alert__body">
+        <strong>${r.accepted} reading(s) accepted${r.rejected ? `, ${r.rejected} rejected` : ''}</strong>
+        ${r.errors.length ? `<ul style="margin:8px 0 0 16px;padding:0;font-size:var(--fs-2xs);">${r.errors.slice(0, 5).map(msg => `<li>${esc(msg)}</li>`).join('')}</ul>` : ''}
+      </div></div>`;
+      if (r.accepted > 0) await prefillIotTelemetry();
+    } catch (err) {
+      showError(out, err);
+    } finally {
+      e.target.value = '';
+    }
+  });
+
   const iotForm = $('[data-form="iot"]');
   if (iotForm) iotForm.addEventListener('submit', async e => {
     e.preventDefault();
@@ -2801,6 +2848,13 @@
           <strong>Production Model Directory</strong>
           <p style="font-family:monospace;font-size:.82rem;word-break:break-all;">${r.model_dir}</p>
           <p style="font-size:.82rem;">${r.model_provenance || 'Model provenance was not supplied.'}</p>
+        </div></div>
+
+        <div class="alert ${r.data_sources?.sensor_uploads_available ? 'alert--green' : ''}" style="margin-top:12px;"><div class="alert__body">
+          <strong>Live sensor data</strong>
+          <p style="font-size:.82rem;">${r.data_sources?.sensor_uploads_available
+            ? `Farmer-uploaded sensor readings are informing calculations for ${r.data_sources.regions_with_sensor_data} region(s) — see the Smart IoT Pump tool.`
+            : 'No live sensor uploads yet — calculations use seed data until a CSV/XML/JSON export is uploaded via the Smart IoT Pump tool.'}</p>
         </div></div>`;
     } catch (err) { showError(out, err); }
   });
@@ -2859,18 +2913,20 @@
     if (!host) return;
     if (!savedFarm) { host.hidden = true; host.innerHTML = ''; return; }
 
-    const acres = (savedFarm.acres || 0).toFixed(2);
-    const ha = (savedFarm.hectares || 0).toFixed(2);
+    const fmt = n => (Number(n) || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const acres = fmt(savedFarm.acres);
+    const ha = fmt(savedFarm.hectares);
     const lat = (savedFarm.lat || (savedFarm.centroid && savedFarm.centroid[1]) || 0).toFixed(5);
     const lon = (savedFarm.lon || (savedFarm.centroid && savedFarm.centroid[0]) || 0).toFixed(5);
 
     // Location chips — show state, district, village (whatever is available)
     // These come from Nominatim (third-party) — escape before injecting.
     const esc = (window.MM && window.MM.escapeHtml) ? window.MM.escapeHtml : (s => String(s));
+    // Coordinates are already shown above in .fp-meta, so only render this
+    // row when there's a named location to add — otherwise it just repeats
+    // the same lat/lon a second time.
     const locParts = [savedFarm.state, savedFarm.district, savedFarm.village].filter(Boolean);
-    const locChips = locParts.length
-      ? locParts.map(p => `<span class="fp-chip">${esc(p)}</span>`).join('')
-      : `<span class="fp-chip fp-chip--dim">${lat}°N, ${lon}°E</span>`;
+    const locChips = locParts.map(p => `<span class="fp-chip">${esc(p)}</span>`).join('');
 
     // Matched region display name
     let regionDisplay = savedFarm.region_id || '';
@@ -2886,21 +2942,22 @@
       </div>
       <div class="farm-pickup__body">
         <strong>Your farm is active</strong>
+        <div class="fp-stat">
+          <span class="fp-stat__val">${acres}</span>
+          <span class="fp-stat__unit">acres</span>
+          <span class="fp-stat__sub">${ha} ha</span>
+        </div>
         <div class="fp-meta">
-          <span class="fp-meta__item">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 16l3-4 4 3 5-7"/></svg>
-            ${acres} acres &middot; ${ha} ha
-          </span>
-          <span class="fp-meta__item">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg>
-            ${lat}°N, ${lon}°E
-          </span>
           ${regionDisplay ? `<span class="fp-meta__item fp-meta__item--region" title="This matched backend dataset profile will be used for regional predictions.">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
             Dataset profile: ${esc(regionDisplay)}
           </span>` : ''}
+          <span class="fp-meta__item fp-meta__item--coords">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg>
+            ${lat}°N, ${lon}°E
+          </span>
         </div>
-        <div class="fp-chips">${locChips}</div>
+        ${locChips ? `<div class="fp-chips">${locChips}</div>` : ''}
         ${savedFarm.soil ? '<div class="fp-note">✓ SoilGrids data available — will be used in simulation.</div>' : ''}
       </div>
       <div class="farm-pickup__actions">

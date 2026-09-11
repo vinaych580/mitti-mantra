@@ -30,7 +30,7 @@
   .mm-factor__lbl{flex:0 0 110px;font-weight:600;color:var(--ink-soft);}
   .mm-factor__bar{flex:1;height:6px;background:var(--bg-soft);border-radius:3px;overflow:hidden;}
   .mm-factor__bar > div{height:100%;background:linear-gradient(90deg,var(--brand),var(--brand-deep));border-radius:3px;}
-  .mm-factor__val{width:40px;text-align:right;font-variant-numeric:tabular-nums;color:var(--brand-deep);font-weight:600;}
+  .mm-factor__val{flex:0 0 auto;min-width:40px;white-space:nowrap;text-align:right;font-variant-numeric:tabular-nums;color:var(--brand-deep);font-weight:600;}
 
   .mm-source{margin-top:14px;padding-top:10px;border-top:1px dashed rgba(29,26,21,.15);
     font-size:.68rem;color:var(--ink-soft);display:flex;gap:10px;flex-wrap:wrap;}

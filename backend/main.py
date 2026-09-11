@@ -175,6 +175,7 @@ from backend.models import (
     CarbonCreditQuery,
     IoTTelemetryQuery,
     IoTTriggerRequest,
+    SensorUploadRequest,
     UsageCollectRequest,
 )
 
@@ -483,11 +484,15 @@ def get_carbon_credits(req: CarbonCreditQuery):
 
 @app.post("/api/iot/telemetry")
 def get_iot_telemetry(req: Optional[IoTTelemetryQuery] = None):
-    """Returns a clearly labelled sample payload until a sensor integration exists."""
+    """Returns the farmer's own uploaded sensor readings for `region_id` when
+    any exist (see /api/sensors/upload), else a clearly labelled sample
+    payload until a live sensor integration exists."""
     try:
         from datetime import datetime, timezone
         farm_id = (req and req.farm_id) or "farm_01"
-        return {
+        region_id = req.region_id if req else None
+
+        payload = {
             "source": "sample_data",
             "is_live": False,
             "farm_id": farm_id,
@@ -504,6 +509,23 @@ def get_iot_telemetry(req: Optional[IoTTelemetryQuery] = None):
             "battery_level_pct": 94,
             "sensor_status": "ONLINE_NORMAL",
         }
+
+        if not region_id:
+            return payload
+
+        from utils.sensor_log import latest_by_metric
+        live = latest_by_metric(region_id)
+        live_metrics = [metric for metric in live if metric in payload]
+        for metric in live_metrics:
+            payload[metric] = float(live[metric]["value"])
+
+        if live_metrics:
+            payload["source"] = "farmer_upload"
+            payload["is_live"] = True
+            payload["live_metrics"] = live_metrics
+            payload["sensor_status"] = "LIVE_FARMER_DATA"
+
+        return payload
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -534,6 +556,95 @@ def trigger_smart_pump(req: IoTTriggerRequest):
         }
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+# ---------------------------------------------------------------------------
+# Minimal per-IP rate limit for /api/sensors/upload, mirroring
+# _commit_rate_limit_check above -- a farmer uploads a sensor export a
+# handful of times per session, not in a tight loop.
+# ---------------------------------------------------------------------------
+_SENSOR_UPLOAD_RATE_LIMIT_WINDOW_SEC = 60
+_SENSOR_UPLOAD_RATE_LIMIT_MAX_REQUESTS = 10
+_sensor_upload_rate_limit_lock = _commit_threading_mod.Lock()
+_sensor_upload_rate_limit_log: Dict[str, List[float]] = {}
+
+
+def _sensor_upload_rate_limit_check(client_ip: str) -> bool:
+    now = _commit_time_mod.time()
+    window_start = now - _SENSOR_UPLOAD_RATE_LIMIT_WINDOW_SEC
+    with _sensor_upload_rate_limit_lock:
+        if len(_sensor_upload_rate_limit_log) >= 5000:
+            _sensor_upload_rate_limit_log.clear()
+        timestamps = [t for t in _sensor_upload_rate_limit_log.get(client_ip, []) if t > window_start]
+        if len(timestamps) >= _SENSOR_UPLOAD_RATE_LIMIT_MAX_REQUESTS:
+            _sensor_upload_rate_limit_log[client_ip] = timestamps
+            return False
+        timestamps.append(now)
+        _sensor_upload_rate_limit_log[client_ip] = timestamps
+        return True
+
+
+@app.post("/api/sensors/upload")
+def upload_sensor_readings(req: SensorUploadRequest, request: Request):
+    """Ingest a farmer-uploaded CSV/XML/JSON file of sensor readings (soil,
+    weather, or other farm-sensor data) into the region's live sensor log,
+    which /api/iot/telemetry and the irrigation calculation prefer over the
+    static seed data when present.
+    """
+    _xff = request.headers.get("x-forwarded-for")
+    client_ip = _xff.split(",")[0].strip() if _xff else (request.client.host if request.client else "unknown")
+    if not _sensor_upload_rate_limit_check(client_ip):
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail=(
+                f"Too many upload requests from this address. Limit is "
+                f"{_SENSOR_UPLOAD_RATE_LIMIT_MAX_REQUESTS} per {_SENSOR_UPLOAD_RATE_LIMIT_WINDOW_SEC}s "
+                f"-- please wait a moment and try again."
+            ),
+        )
+
+    from ml.predict import _load_soil_by_region
+    if req.region_id not in _load_soil_by_region():
+        raise HTTPException(status_code=400, detail=f"Unrecognized region_id: {req.region_id!r}")
+
+    from utils.sensor_parsing import SensorUploadError, parse_readings
+    try:
+        accepted, errors = parse_readings(req.filename, req.content)
+    except SensorUploadError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+    from utils.sensor_log import append_batch
+    written = []
+    if accepted:
+        source_by_ext = {"csv": "csv_upload", "xml": "xml_upload", "json": "json_upload"}
+        ext = req.filename.lower().rsplit(".", 1)[-1]
+        written = append_batch(
+            region_id=req.region_id,
+            device_id=req.device_id or "unknown_device",
+            source=source_by_ext.get(ext, "file_upload"),
+            readings=accepted,
+        )
+
+    return {
+        "accepted": len(written),
+        "rejected": len(errors),
+        "errors": errors[:50],
+    }
+
+
+@app.get("/api/sensors/{region_id}")
+def get_sensor_readings(region_id: str, max_age_days: float = 30.0):
+    """Latest farmer-uploaded reading per metric for a region."""
+    from utils.sensor_log import latest_by_metric
+    latest = latest_by_metric(region_id, max_age_days=max_age_days)
+    return {
+        "region_id": region_id,
+        "available": bool(latest),
+        "readings": {
+            metric: {"value": float(row["value"]), "unit": row.get("unit") or None, "timestamp": row["timestamp"]}
+            for metric, row in latest.items()
+        },
+    }
 
 
 @app.post("/api/optimal-mix")
@@ -828,6 +939,9 @@ def model_status():
         with open(audit_path, "r") as f:
             audit = json.load(f)
             
+    from utils.sensor_log import regions_with_recent_data
+    sensor_regions = regions_with_recent_data()
+
     return {
         "yield_model_loaded": pred._ml_yield_model is not None,
         "price_model_loaded": pred._ml_price_model is not None,
@@ -839,7 +953,11 @@ def model_status():
         "models_exist": os.path.exists(os.path.join(model_dir, "yield_model.joblib")),
         "training_enabled": os.getenv("ENABLE_MODEL_TRAINING", "false").lower() == "true",
         "training_report": manifest,
-        "audit_metrics": audit
+        "audit_metrics": audit,
+        "data_sources": {
+            "sensor_uploads_available": bool(sensor_regions),
+            "regions_with_sensor_data": len(sensor_regions),
+        },
     }
 
 # Database of 18 disease classes and their treatments/metadata
