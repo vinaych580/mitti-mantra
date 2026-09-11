@@ -82,6 +82,20 @@
       text-transform: uppercase; letter-spacing: .06em; margin-top: 4px;
     }
 
+    @media (max-width: 640px) {
+      .tractor-hero__stats {
+        display: inline-grid; grid-template-columns: 1fr 1fr; gap: 0;
+        max-width: calc(100vw - 48px);
+      }
+      .tractor-hero__stat {
+        padding: 14px 16px;
+        border-right: 1px solid rgba(29,26,21,.07);
+        border-bottom: 1px solid rgba(29,26,21,.07);
+      }
+      .tractor-hero__stat:nth-child(2n) { border-right: none; }
+      .tractor-hero__stat:nth-last-child(-n+2) { border-bottom: none; }
+    }
+
     /* Section title block */
     .tractor-section-head {
       text-align: center; margin-bottom: 48px;

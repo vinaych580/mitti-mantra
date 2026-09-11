@@ -3722,11 +3722,16 @@ body.page-farm-boundary {
 
 .farmmap__searchwrap input {
   flex: 1;
+  min-width: 0;
   border: 1px solid var(--border-strong);
   border-radius: var(--r-sm);
   padding: 9px 12px;
   font-size: var(--fs-xs);
   font-family: inherit;
+}
+
+.farmmap__searchwrap button {
+  flex-shrink: 0;
 }
 
 /* "Use my location" — the fastest path for a farmer standing in the field. */
@@ -3875,7 +3880,8 @@ body.page-farm-boundary {
 }
 
 .farmmap__actions .btn {
-  flex: 1;
+  flex: 1 1 auto;
+  min-width: 130px;
   justify-content: center;
   white-space: nowrap;
 }

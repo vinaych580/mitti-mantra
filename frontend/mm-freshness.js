@@ -124,7 +124,7 @@
       '.mm-fresh__rmeta{color:var(--ink-faint);font-size:.73rem;}',
       '.mm-fresh__rdetail{color:var(--ink-soft);font-size:.73rem;margin-top:2px;}',
       '.mm-fresh--float{position:fixed;right:88px;bottom:24px;z-index:9997;}',
-      '@media(max-width:640px){.mm-fresh--float{right:12px;bottom:76px;}',
+      '@media(max-width:640px){.mm-fresh--float{right:12px;bottom:86px;}',
       '.mm-fresh__panel{right:auto;left:0;}}',
       '@media print{.mm-fresh--float{display:none;}}'
     ].join('');

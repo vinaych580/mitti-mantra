@@ -679,9 +679,12 @@
 
   /* ── Boot ──────────────────────────────────────────── */
   // The steps are open on desktop, where the panel has room, and collapsed on
-  // phones so they never push the map below the fold.
+  // phones -- and on short-height laptop windows (the panel matches the map's
+  // full height via grid stretch, so on common 768px-tall screens the open
+  // steps used to push Search/Use my location past the fold) -- so they never
+  // push the rest of the panel out of view.
   const howEl = document.getElementById('farmHow');
-  if (howEl && window.matchMedia('(max-width: 860px)').matches) howEl.open = false;
+  if (howEl && window.matchMedia('(max-width: 860px), (max-height: 800px)').matches) howEl.open = false;
 
   renderEmpty();
   renderPlots();
