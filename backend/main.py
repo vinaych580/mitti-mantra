@@ -1860,9 +1860,16 @@ async def get_market_pricing_api(region_id: str, crop_id: str):
         latest_price = float(results[-1]["price_inr_per_kg"]) if results else 25.0
         prices = [float(r["price_inr_per_kg"]) for r in results]
         volatility = np.std(prices) if len(prices) > 1 else 0.0
-        
-        forecast_data = price_forecast(region_id, crop_id, months_ahead=6)
-        
+
+        # price_forecast() needs 12+ months of history for this region/crop and
+        # raises ValueError otherwise -- a data-coverage gap, not a failure of
+        # the current price/volatility above, which already degrade gracefully.
+        # Don't let a missing forecast take down a response that's otherwise fine.
+        try:
+            forecast_data = price_forecast(region_id, crop_id, months_ahead=6)
+        except ValueError:
+            forecast_data = None
+
         res = {
             "region_id": region_id,
             "crop_id": crop_id,

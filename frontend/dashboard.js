@@ -921,7 +921,7 @@
         if (mBody) mBody.innerHTML = `
           <div style="font-size: 1.15rem; font-weight: 600; color: var(--brand-deep);">₹${m.current_mandi_price_inr_per_kg}/kg</div>
           <div style="font-size: 0.8rem; color: var(--ink-soft);">Volatility: ${m.volatility_std}</div>
-          <div style="font-size: 0.78rem; color: var(--accent); font-weight: 600;">Trend: ${m.forecast.trend_direction}</div>
+          ${m.forecast ? `<div style="font-size: 0.78rem; color: var(--accent); font-weight: 600;">Trend: ${m.forecast.trend_direction}</div>` : ''}
         `;
       })
       .catch(err => {
