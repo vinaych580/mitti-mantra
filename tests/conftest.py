@@ -12,12 +12,12 @@ verification commitments sitting in that file could silently change
 golden-fixture results depending on which region/crop/season they happen to
 match.
 
-This autouse fixture redirects utils.commitment_log._COMMITMENTS_PATH to a
-fresh temp path for every test in the suite, so no test observes real
-commitment data written by manual runs or other test modules. It's the
-safety net for the whole suite; test_commitment_log.py's own local fixture
-is redundant with this one but harmless to keep (whichever applies last
-still points at an isolated tmp_path).
+This autouse fixture redirects utils.db.DB_PATH to a fresh temp SQLite file
+for every test in the suite, so no test observes real commitment/sensor
+data written by manual runs or other test modules -- commitment_log.py and
+sensor_log.py share this one database (see utils/db.py). It's the safety
+net for the whole suite; a module's own local fixture pointed at the same
+attribute is redundant with this one but harmless to keep.
 """
 from __future__ import annotations
 
@@ -25,14 +25,7 @@ import pytest
 
 
 @pytest.fixture(autouse=True)
-def _isolated_commitments_file_global(tmp_path, monkeypatch):
-    from utils import commitment_log
-    monkeypatch.setattr(commitment_log, "_COMMITMENTS_PATH", tmp_path / "commitments.csv")
-    yield
-
-
-@pytest.fixture(autouse=True)
-def _isolated_sensor_readings_file_global(tmp_path, monkeypatch):
-    from utils import sensor_log
-    monkeypatch.setattr(sensor_log, "_SENSOR_READINGS_PATH", tmp_path / "sensor_readings.csv")
+def _isolated_db_global(tmp_path, monkeypatch):
+    from utils import db
+    monkeypatch.setattr(db, "DB_PATH", tmp_path / "agrisim.db")
     yield

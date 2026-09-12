@@ -11,8 +11,8 @@ import pytest
 
 @pytest.fixture(autouse=True)
 def isolated_commitments_file(tmp_path, monkeypatch):
-    from utils import commitment_log
-    monkeypatch.setattr(commitment_log, "_COMMITMENTS_PATH", tmp_path / "commitments.csv")
+    from utils import db
+    monkeypatch.setattr(db, "DB_PATH", tmp_path / "agrisim.db")
     yield
 
 

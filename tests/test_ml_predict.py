@@ -138,8 +138,8 @@ def test_compute_region_saturation_no_baseline_omits_crop():
 
 
 def test_compute_region_saturation_ratio_from_real_commitment(monkeypatch, tmp_path):
-    from utils import commitment_log
-    monkeypatch.setattr(commitment_log, "_COMMITMENTS_PATH", tmp_path / "commitments.csv")
+    from utils import commitment_log, db
+    monkeypatch.setattr(db, "DB_PATH", tmp_path / "agrisim.db")
 
     from ml.predict import _compute_region_saturation, _load_crop_parameters
     crop_params = _load_crop_parameters()
@@ -156,8 +156,8 @@ def test_compute_region_saturation_ratio_from_real_commitment(monkeypatch, tmp_p
 
 
 def test_compute_region_saturation_ratio_clamped_at_two(monkeypatch, tmp_path):
-    from utils import commitment_log
-    monkeypatch.setattr(commitment_log, "_COMMITMENTS_PATH", tmp_path / "commitments.csv")
+    from utils import commitment_log, db
+    monkeypatch.setattr(db, "DB_PATH", tmp_path / "agrisim.db")
 
     from ml.predict import _compute_region_saturation, _load_crop_parameters
     crop_params = _load_crop_parameters()
