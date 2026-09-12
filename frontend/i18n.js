@@ -1,6 +1,6 @@
 /* =========================================================
    AgriSim — lightweight i18n
-   Supports English (en), Hindi (hi), Telugu (te), Kannada (kn).
+   Supports English (en), Hindi (hi), Telugu (te), Kannada (kn), Tamil (ta).
 
    Strategy (rewritten — see i18n-data.js for the "why"):
      • Walk all visible text nodes + translatable attributes, exactly as
@@ -21,7 +21,8 @@
     { code: 'en', label: 'EN',  name: 'English' },
     { code: 'hi', label: 'हिं', name: 'हिन्दी' },
     { code: 'te', label: 'తె',  name: 'తెలుగు' },
-    { code: 'kn', label: 'ಕ',  name: 'ಕನ್ನಡ' }
+    { code: 'kn', label: 'ಕ',  name: 'ಕನ್ನಡ' },
+    { code: 'ta', label: 'த',  name: 'தமிழ்' }
   ];
 
   const LANG_KEY = 'agrisim_lang';
