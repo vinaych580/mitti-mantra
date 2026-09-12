@@ -2944,6 +2944,14 @@ body.mm-menu-open .qw-panel {
   color: var(--sky);
 }
 
+.kpi--bad {
+  background: var(--danger-soft);
+}
+
+.kpi--bad .kpi__val {
+  color: var(--danger);
+}
+
 .chip {
   display: inline-flex;
   align-items: center;

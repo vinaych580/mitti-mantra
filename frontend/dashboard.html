@@ -83,6 +83,13 @@
       <aside class="sidebar">
         <div class="sidebar__group">
           <div class="sidebar__label">Overview</div>
+          <button class="sidebar__btn active" data-tool="home">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M3 11l9-8 9 8" />
+              <path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10" />
+            </svg>
+            My Farm
+          </button>
           <button class="sidebar__btn" data-tool="score">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
               <circle cx="12" cy="12" r="9" />
@@ -94,7 +101,7 @@
 
         <div class="sidebar__group">
           <div class="sidebar__label">Plan</div>
-          <button class="sidebar__btn active" data-tool="recommend">
+          <button class="sidebar__btn" data-tool="recommend">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
               <path d="M12 2 C9 8 7 12 7 15 a5 5 0 0 0 10 0 c0-3-2-7-5-13z" />
             </svg>
@@ -326,6 +333,21 @@
           <div id="telemetryMap" class="telemetry-map" style="display: none;"></div>
         </div>
 
+        <!-- 0. MY FARM — plain-language overview, above Farm Score -->
+        <section class="tool active" data-tool="home">
+          <div class="tool__head">
+            <div class="tool__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 11l9-8 9 8" />
+                <path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10" />
+              </svg></div>
+            <div>
+              <h2>My Farm</h2>
+              <p>The six things that matter most, before you sow and through the week — no jargon, no digging through tools.</p>
+            </div>
+          </div>
+          <div class="output" data-out="home"></div>
+        </section>
+
         <!-- 1. RECOMMEND -->
         <!-- 0. FARM SCORE -->
         <section class="tool" data-tool="score">
@@ -367,7 +389,7 @@
           <div class="output" data-out="score"></div>
         </section>
 
-        <section class="tool active" data-tool="recommend">
+        <section class="tool" data-tool="recommend">
           <div class="tool__head">
             <div class="tool__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 2 C9 8 7 12 7 15 a5 5 0 0 0 10 0 c0-3-2-7-5-13z" />

@@ -1075,6 +1075,198 @@
   });
 
   /* ==========================================================
+     MY FARM — plain-language overview shown above Farm Score.
+     Reuses /api/crop, /api/farm-score, /api/weather,
+     /api/msp-vs-market and /api/pest-alerts — the same calls the
+     detailed tools below already make — so nothing here is a new
+     number, just the six a farmer needs before anything else.
+     ========================================================== */
+  (function () {
+    const out = $('[data-out="home"]');
+    if (!out) return;
+    const esc = (window.MM && window.MM.escapeHtml) ? window.MM.escapeHtml : (s => String(s));
+
+    function committedCropId() {
+      const fs = (typeof window.FarmState !== 'undefined' && window.FarmState.getActiveCrop) ? window.FarmState.getActiveCrop() : null;
+      return (fs && fs.crop_id) || '';
+    }
+
+    function riskInfo(resilience) {
+      const v = Number(resilience) || 0;
+      if (v >= 70) return { text: 'Low risk', cls: 'kpi--good' };
+      if (v >= 40) return { text: 'Medium risk', cls: 'kpi--warn' };
+      return { text: 'High risk', cls: 'kpi--bad' };
+    }
+
+    // The setup form's selects are created after the page's one-time
+    // /api/regions + /api/crops population has already run (or, on first
+    // load, right before it resolves) -- either way they can't rely on
+    // that single sweep. Both endpoints are memoGet-cached, so calling them
+    // again here is nearly free and always leaves these selects filled,
+    // however many times "Edit your farm details" re-creates them.
+    function populateSetupSelects(scope) {
+      const regionSel = $('select[data-regions]', scope);
+      const cropSel = $('select[data-crops]', scope);
+      Promise.all([
+        api('/api/regions').catch(() => []),
+        api('/api/crops').catch(() => [])
+      ]).then(([regions, crops]) => {
+        if (regionSel && !regionSel.options.length) {
+          regionSel.innerHTML = (regions || []).map(r => {
+            const id = r.id || r.region_id, name = r.name || r.region_name || id;
+            return `<option value="${id}">${name}</option>`;
+          }).join('');
+        }
+        if (cropSel && cropSel.options.length <= 1) {
+          cropSel.innerHTML = '<option value="">Help me choose</option>' + (crops || []).map(c => {
+            const id = c.crop_id || c;
+            return `<option value="${id}">${cropLabel(id)}</option>`;
+          }).join('');
+        }
+      });
+    }
+
+    function renderSetup() {
+      out.innerHTML = `
+        <div class="alert alert--gold">
+          <svg class="alert__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          <div class="alert__body"><strong>Tell us about your land</strong><p>Three quick fields — this fills in every tool on the dashboard, not just this page.</p></div>
+        </div>
+        <form data-form="home-setup" style="margin-top:16px;">
+          <div class="form-row">
+            <div class="field"><label>Region</label><select name="region_id" data-regions></select></div>
+            <div class="field"><label>Crop</label><select name="crop_id" data-crops><option value="">Help me choose</option></select></div>
+            <div class="field"><label>Area (acres)</label><input name="area_acres" type="number" step="any" value="4"></div>
+          </div>
+          <button class="btn btn-primary" type="submit">See my farm</button>
+        </form>`;
+      populateSetupSelects(out);
+      $('[data-form="home-setup"]', out)?.addEventListener('submit', e => {
+        e.preventDefault();
+        const f = formToObj(e.target);
+        const area_acres = parseFloat(f.area_acres) || 4;
+        // profile.set() and setActiveCrop() each dispatch their own change
+        // event (mm:profile-changed / mm:plot-changed); the debounced
+        // listener below re-renders once both have landed rather than
+        // fetching everything twice in a row.
+        window.MM.profile.set({ region_id: f.region_id, area_acres });
+        if (f.crop_id) {
+          const season = window.MM.profile.get().season;
+          window.FarmState.setActiveCrop(f.crop_id, cropLabel(f.crop_id), { region_id: f.region_id, season, acres: area_acres });
+        }
+      });
+    }
+
+    async function renderHome() {
+      const profile = (window.MM && window.MM.profile) ? window.MM.profile.get() : null;
+      if (!profile || !profile.region_id) { renderSetup(); return; }
+
+      const region_id = profile.region_id, season = profile.season;
+      const area_acres = parseFloat(profile.area_acres) || 4;
+      const budget_per_acre = parseFloat(profile.budget_per_acre) || 15000;
+      const committed = committedCropId();
+
+      showLoading(out, 'Reading your farm…');
+      try {
+        const recs = await api('/api/crop', {
+          method: 'POST',
+          body: JSON.stringify({ region_id, season, area_acres, budget_per_acre })
+        });
+        if (!Array.isArray(recs) || !recs.length) {
+          out.innerHTML = '<div class="alert"><div class="alert__body"><strong>No recommendations available for this region and budget yet.</strong></div></div>';
+          return;
+        }
+
+        // A committed crop the recommender didn't shortlist (e.g. budget too
+        // low to include it) still gets named correctly -- its profit tile
+        // just says so honestly instead of borrowing another crop's numbers.
+        const pick = committed ? (recs.find(r => r.crop_id === committed) || null) : recs[0];
+        const cropId = committed || (pick ? pick.crop_id : '');
+
+        const [score, weather] = await Promise.all([
+          api('/api/farm-score', { method: 'POST', body: JSON.stringify({ region_id, season, area_acres, budget_per_acre, ...(cropId ? { crop_id: cropId } : {}) }) }).catch(() => null),
+          api(`/api/weather/${region_id}?season=${season}`).catch(() => null),
+        ]);
+
+        const [msp, pest] = await Promise.all([
+          cropId ? api(`/api/msp-vs-market/${region_id}/${cropId}`).catch(() => null) : Promise.resolve(null),
+          (cropId && weather && weather.avg_temp_c != null) ? api(`/api/pest-alerts/${cropId}?avg_temp_c=${weather.avg_temp_c}&rainfall_mm=${weather.rainfall_mm}`).catch(() => null) : Promise.resolve(null),
+        ]);
+
+        const risk = score && score.pillars ? riskInfo(score.pillars.risk_resilience) : null;
+        const alerts = (pest && pest.alerts) || [];
+        const topAlert = alerts.find(a => ((a.risk_level || a.severity || '') + '').toLowerCase().includes('high')) || alerts[0] || null;
+        const rainCaution = !!(weather && weather.imd_alert && weather.imd_alert !== 'Green');
+
+        out.innerHTML = `
+          <div class="kpi-grid">
+            <div class="kpi kpi--good">
+              <div class="kpi__lbl">${committed ? 'Your crop' : 'Recommended crop'}</div>
+              <div class="kpi__val" style="font-size:1.2rem;">${cropId ? cropLabel(cropId) : '—'}</div>
+              ${(!committed && pick) ? `<div class="kpi__sub"><a href="#" data-plant-cta style="color:var(--brand-deep);font-weight:600;">Yes, plant this →</a></div>` : ''}
+            </div>
+            <div class="kpi kpi--good">
+              <div class="kpi__lbl">Expected profit</div>
+              <div class="kpi__val">${pick ? TT(pick.expected_profit, INR(pick.expected_profit)) : '—'}</div>
+              <div class="kpi__sub">${pick ? 'ROI ' + PCT(pick.roi_percent) : '<span>Not available for this crop yet</span> · <a href="#" data-goto="simulate" style="color:var(--brand-deep);font-weight:600;">Run a full simulation →</a>'}</div>
+            </div>
+            <div class="kpi ${risk ? risk.cls : ''}">
+              <div class="kpi__lbl">Risk level</div>
+              <div class="kpi__val" style="font-size:1.2rem;">${risk ? risk.text : '—'}</div>
+              <div class="kpi__sub">${score ? 'Farm Score ' + FIX(score.farm_score, 0) + '/100' : 'Not available right now'}</div>
+            </div>
+            <div class="kpi ${msp ? (msp.mandi_above_msp ? 'kpi--good' : 'kpi--warn') : ''}">
+              <div class="kpi__lbl">Today's price</div>
+              <div class="kpi__val">${msp ? TT(msp.current_mandi_price, INR2(msp.current_mandi_price)) : '—'}${msp ? '<span style="font-size:.5em">/kg</span>' : ''}</div>
+              <div class="kpi__sub">${msp ? (msp.mandi_above_msp ? '+' : '') + FIX(msp.mandi_msp_gap_pct, 1) + '% vs MSP' : 'Pick a crop to see this'}</div>
+            </div>
+            <div class="kpi ${weather ? (rainCaution ? 'kpi--warn' : 'kpi--info') : ''}">
+              <div class="kpi__lbl">Rain this season</div>
+              <div class="kpi__val">${weather ? Math.round(weather.rainfall_mm) + ' mm' : '—'}</div>
+              <div class="kpi__sub">${weather ? FIX(weather.avg_temp_c, 0) + '°C avg · ' : ''}<a href="#" data-goto="irrigation" style="color:var(--brand-deep);font-weight:600;">Watering plan →</a></div>
+            </div>
+            <div class="kpi ${topAlert ? 'kpi--bad' : 'kpi--good'}">
+              <div class="kpi__lbl">Pest &amp; disease alerts</div>
+              <div class="kpi__val" style="font-size:1.1rem;">${topAlert ? esc(topAlert.pest_disease) : 'No alerts'}</div>
+              <div class="kpi__sub">${topAlert ? '<a href="#" data-goto="pest" style="color:var(--brand-deep);font-weight:600;">See details →</a>' : 'All clear right now'}</div>
+            </div>
+          </div>
+          <div style="margin-top:10px;font-size:.82rem;color:var(--ink-faint);">
+            ${esc(region_id)} · ${esc(season)} · ${area_acres} ac · ${INR(budget_per_acre)}/ac —
+            <a href="#" data-edit-profile style="color:var(--ink-soft);text-decoration:underline;">Edit your farm details</a>
+          </div>`;
+
+        $('[data-plant-cta]', out)?.addEventListener('click', e => {
+          e.preventDefault();
+          window.FarmState.setActiveCrop(pick.crop_id, cropLabel(pick.crop_id), { region_id, season, acres: area_acres });
+        });
+        $$('[data-goto]', out).forEach(a => a.addEventListener('click', e => {
+          e.preventDefault();
+          document.querySelector(`.sidebar__btn[data-tool="${a.dataset.goto}"]`)?.click();
+        }));
+        $('[data-edit-profile]', out)?.addEventListener('click', e => { e.preventDefault(); renderSetup(); });
+      } catch (err) { showError(out, err); }
+    }
+
+    document.querySelector('.sidebar__btn[data-tool="home"]')?.addEventListener('click', renderHome);
+
+    // profile.set() and FarmState mutations both fire synchronously and
+    // often in pairs (setup form: region+crop; plant CTA: crop alone) --
+    // coalesce same-tick events into one re-render instead of fetching twice.
+    let rerenderScheduled = false;
+    const rerenderIfActive = () => {
+      const btn = document.querySelector('.sidebar__btn[data-tool="home"]');
+      if (!btn || !btn.classList.contains('active') || rerenderScheduled) return;
+      rerenderScheduled = true;
+      Promise.resolve().then(() => { rerenderScheduled = false; renderHome(); });
+    };
+    document.addEventListener('mm:profile-changed', rerenderIfActive);
+    document.addEventListener('mm:plot-changed', rerenderIfActive);
+
+    renderHome();
+  })();
+
+  /* ==========================================================
      TOOL 0: Farm Score — blends recommend + risk + NDVI + pest
      ========================================================== */
   const scoreForm = $('[data-form="score"]');
