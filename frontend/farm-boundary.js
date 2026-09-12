@@ -294,7 +294,7 @@
     const soilHtml = soilState === 'loading'
       ? '<div class="farmmap__muted">Fetching soil data…</div>'
       : soilState === 'error'
-      ? '<div class="farmmap__muted">Soil lookup unavailable offline. Coordinates saved.</div>'
+      ? '<div class="farmmap__muted">Soil lookup unavailable right now. Coordinates saved.</div>'
       : d.soil
         ? `
           <div class="farmmap__grid">
@@ -462,7 +462,14 @@
     const props = ['phh2o', 'nitrogen', 'clay', 'sand', 'soc', 'cec'];
     const qs    = props.map(p => `property=${p}`).join('&');
     const url   = `https://rest.isric.org/soilgrids/v2.0/properties/query?lon=${lon}&lat=${lat}&${qs}&depth=0-5cm&value=mean`;
-    const res   = await fetch(url);
+    // ISRIC's API is known to hang well past any reasonable wait. Without a
+    // timeout, this fetch can stay pending indefinitely, which stalls the
+    // Promise.allSettled() in computeAndShow() forever -- both the geocoding
+    // and soil placeholders stay stuck on-screen even after geocoding (which
+    // does have its own timeout, see FarmState.reverseGeocode) finished.
+    const res = await fetch(url, {
+      signal: AbortSignal.timeout ? AbortSignal.timeout(8000) : undefined,
+    });
     if (!res.ok) throw new Error('http ' + res.status);
     const data  = await res.json();
     const out   = {};
