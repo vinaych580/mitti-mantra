@@ -1213,6 +1213,26 @@ def _score_single_crop(
         saturation_penalty=saturation_penalty,
     )
 
+    # compute_roi_normalized() floors every negative ROI to the same value
+    # (0), so a crop losing 90% of the investment scored identically on this
+    # term to one losing 5% -- letting soil/budget/ML terms alone decide the
+    # live ranking among money-losing crops, and occasionally putting a
+    # crop that loses money ahead of one turning a healthy profit (the
+    # jute-over-turmeric case this fixes). That floor can't be changed in
+    # compute_roi_normalized itself: ml/dataset_builders.py's synthetic
+    # training-label formula shares it (see
+    # test_score_single_crop_and_recommendation_dataset_derive_identical_values)
+    # and actually depends on the floor to keep thin-margin staples like
+    # rice/wheat competitive against high-variance cash crops in the
+    # training data (see
+    # test_build_recommendation_dataset_staples_are_recommendable) --
+    # widening it there drops rice/wheat to zero training-label wins.
+    # Apply the loss penalty only here, after the shared score, so live
+    # ranking gets it without touching training-label generation at all.
+    if profit["roi_percent"] < 0:
+        loss_normalized = max(profit["roi_percent"] / 3.0, -100.0)  # symmetric with roi_normalized's own +100 ceiling
+        smart_score = clamp(smart_score + 0.35 * loss_normalized, 0.0, 100.0)
+
     budget_adequate = profit["budget_yield_multiplier"] >= 1.0
     rec_entry = {
         "crop_id": crop_id,

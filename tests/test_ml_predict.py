@@ -215,3 +215,52 @@ def test_score_single_crop_no_baseline_means_no_penalty():
     )
     assert entry["saturation_ratio"] is None
     assert entry["saturation_label"] is None
+
+
+def test_score_single_crop_penalizes_severe_loss_more_than_mild_loss():
+    """compute_roi_normalized() floors every negative ROI to 0, so a crop
+    losing 90% of the investment used to score identically, on that term, to
+    one losing 8% -- this is the fix for a real case where a -28% ROI crop
+    (jute) still out-ranked a +129% ROI crop (turmeric) as the top pick. The
+    penalty is applied only in _score_single_crop (see the comment above its
+    `if profit["roi_percent"] < 0` block), not in compute_roi_normalized
+    itself, because ml/dataset_builders.py's synthetic training-label
+    formula shares that function and depends on the floor to keep staples
+    competitive (see test_build_recommendation_dataset_staples_are_recommendable).
+    """
+    from ml.predict import _score_single_crop, _load_crop_parameters, _prepare_region_data
+
+    crop_params = _load_crop_parameters()
+    weather, soil = _prepare_region_data("telangana_medak", "kharif")
+    crop = crop_params["rice"]
+    common_kwargs = dict(
+        crop_id="rice", crop=crop, weather=weather, soil=soil,
+        region_id="telangana_medak", season="kharif",
+        budget_per_acre=15000.0, area_acres=3.0,
+        ml_conf_map={}, region_saturation={},
+    )
+
+    # Same crop/soil/weather/budget -- only the mandi price differs, so it's
+    # only ROI (and everything downstream of it) that moves between calls.
+    mild_loss = _score_single_crop(**common_kwargs, region_crop_price={"rice": 18.0})
+    severe_loss = _score_single_crop(**common_kwargs, region_crop_price={"rice": 3.0})
+
+    assert mild_loss["roi_percent"] < 0
+    assert severe_loss["roi_percent"] < mild_loss["roi_percent"]
+    assert severe_loss["smart_score"] < mild_loss["smart_score"]
+
+
+def test_recommend_crops_never_ranks_a_loss_above_a_clear_profit():
+    """End-to-end regression for the reported bug: given a budget too small
+    for jute (-28% ROI), recommend_crops must not still rank it above
+    turmeric, whose ROI under the same budget is a healthy +129%.
+    """
+    from ml.predict import recommend_crops
+
+    recs = recommend_crops("telangana_medak", "kharif", 15000.0, 6.14, top_k=10)
+    by_crop = {r["crop_id"]: r for r in recs}
+
+    assert by_crop["jute"]["roi_percent"] < 0
+    assert by_crop["turmeric"]["roi_percent"] > 0
+    assert by_crop["turmeric"]["smart_score"] > by_crop["jute"]["smart_score"]
+    assert recs[0]["crop_id"] != "jute"
