@@ -1105,6 +1105,28 @@
       const top = recs[0];
       const area = body.area_acres;
 
+      // Committing to an alternative only used to update that row's own
+      // button, while the "Ready to sell" CTA below kept pointing at
+      // whichever crop the algorithm ranked #1 -- confusing if a farmer
+      // deliberately picked a different one. Both re-render from whichever
+      // rec was actually committed to, looked up by crop_id from `recs`.
+      const sellCtaHtml = rec => `
+        <div class="alert__body" style="color:var(--brand-deep);">
+          <strong>🌾 Ready to sell?</strong> List ${cropLabel(rec.crop_id)} on the Marketplace once it's harvested — buyers can see it alongside real mandi price context.
+        </div>
+        <a class="btn btn-primary" style="flex-shrink:0;" href="marketplace.html?view=sell&crop_id=${encodeURIComponent(rec.crop_id)}&qty=${Math.max(1, Math.round(area * rec.predicted_yield_kg_per_acre / 100))}">Sell this produce →</a>`;
+
+      const plantingStatusHtml = (cropId, cropName) => `
+        <div class="alert alert--green" style="margin-top:12px;">
+          <div class="alert__body" style="color:var(--brand-deep);">
+            <strong>✓ You're planting ${cropLabel(cropId)}.</strong>
+            Fertilizer, irrigation, and the other tools on this dashboard will now default to ${cropName} instead of asking you to pick a crop again.
+          </div>
+        </div>`;
+
+      const alreadyCommitted = (typeof window.FarmState !== 'undefined' && window.FarmState.getActiveCrop)
+        ? window.FarmState.getActiveCrop() : null;
+
       out.innerHTML = `
         <div class="kpi-grid">
           <div class="kpi kpi--good"><div class="kpi__lbl">Top pick</div>
@@ -1116,6 +1138,8 @@
             <div class="kpi__val">${TT(top.expected_profit, INR(top.expected_profit))}</div>
             <div class="kpi__sub">ROI ${PCT(top.roi_percent)}</div></div>
         </div>
+
+        <div id="mm-planting-status">${alreadyCommitted ? plantingStatusHtml(alreadyCommitted.crop_id, alreadyCommitted.crop_name) : ''}</div>
 
         ${top.budget_adequate === false ? `
         <div class="alert alert--gold" style="margin-top:12px;">
@@ -1145,16 +1169,14 @@
         <div style="margin-top:12px;display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap;">
           <button type="button" class="btn btn-ghost mm-commit-btn" style="flex-shrink:0;" id="mm-commit-crop-btn"
             data-crop-id="${top.crop_id}" data-crop-name="${CROP_LABELS[top.crop_id] || top.crop_id}"
-            data-region-id="${body.region_id}" data-season="${body.season}" data-area="${area}">
-            I'm planting this →
+            data-region-id="${body.region_id}" data-season="${body.season}" data-area="${area}"
+            ${alreadyCommitted?.crop_id === top.crop_id ? 'disabled' : ''}>
+            ${alreadyCommitted?.crop_id === top.crop_id ? '✓ Recorded — thanks, this helps other farmers nearby.' : "I'm planting this →"}
           </button>
         </div>
 
-        <div class="alert alert--green" style="margin-top:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--brand-soft);border:1px solid color-mix(in srgb, var(--brand) 35%, transparent);">
-          <div class="alert__body" style="color:var(--brand-deep);">
-            <strong>🌾 Ready to sell?</strong> List ${cropLabel(top.crop_id)} on the Marketplace once it's harvested — buyers can see it alongside real mandi price context.
-          </div>
-          <a class="btn btn-primary" style="flex-shrink:0;" href="marketplace.html?view=sell&crop_id=${encodeURIComponent(top.crop_id)}&qty=${Math.max(1, Math.round(area * top.predicted_yield_kg_per_acre / 100))}">Sell this produce →</a>
+        <div id="mm-sell-cta" class="alert alert--green" style="margin-top:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--brand-soft);border:1px solid color-mix(in srgb, var(--brand) 35%, transparent);">
+          ${sellCtaHtml(alreadyCommitted ? (recs.find(r => r.crop_id === alreadyCommitted.crop_id) || top) : top)}
         </div>
 
         ${top.reasons ? `
@@ -1190,8 +1212,9 @@
               <div style="margin-top:6px;">
                 <button type="button" class="btn btn-ghost mm-commit-btn" style="padding:4px 10px;font-size:.72rem;"
                   data-crop-id="${r.crop_id}" data-crop-name="${CROP_LABELS[r.crop_id] || r.crop_id}"
-                  data-region-id="${body.region_id}" data-season="${body.season}" data-area="${area}">
-                  Choose this →
+                  data-region-id="${body.region_id}" data-season="${body.season}" data-area="${area}"
+                  ${alreadyCommitted?.crop_id === r.crop_id ? 'disabled' : ''}>
+                  ${alreadyCommitted?.crop_id === r.crop_id ? '✓ Planting this' : 'Choose this →'}
                 </button>
               </div>
             </div>
@@ -1209,7 +1232,7 @@
          commit flow: record the pick for the regional-saturation signal, then
          remember it on the active plot so fertilizer/irrigation/other tools
          can default to it instead of asking the farmer to re-pick a crop. */
-      const syncCommittedButtons = cropId => {
+      const syncCommittedButtons = (cropId, cropName) => {
         out.querySelectorAll('.mm-commit-btn').forEach(b => {
           const isThis = b.dataset.cropId === cropId;
           b.disabled = isThis;
@@ -1217,6 +1240,13 @@
             ? (b.id === 'mm-commit-crop-btn' ? '✓ Recorded — thanks, this helps other farmers nearby.' : '✓ Planting this')
             : (b.id === 'mm-commit-crop-btn' ? "I'm planting this →" : 'Choose this →');
         });
+
+        const statusEl = out.querySelector('#mm-planting-status');
+        if (statusEl) statusEl.innerHTML = plantingStatusHtml(cropId, cropName);
+
+        const sellCtaEl = out.querySelector('#mm-sell-cta');
+        if (sellCtaEl) sellCtaEl.innerHTML = sellCtaHtml(recs.find(r => r.crop_id === cropId) || top);
+
         retranslate();
       };
 
@@ -1241,7 +1271,7 @@
             if (typeof window.FarmState !== 'undefined' && window.FarmState.setActiveCrop) {
               window.FarmState.setActiveCrop(cropId, cropName);
             }
-            syncCommittedButtons(cropId);
+            syncCommittedButtons(cropId, cropName);
           } catch (err) {
             out.querySelectorAll('.mm-commit-btn').forEach(b => { b.disabled = false; });
             btn.textContent = btn.id === 'mm-commit-crop-btn' ? "I'm planting this →" : 'Choose this →';
