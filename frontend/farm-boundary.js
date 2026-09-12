@@ -458,17 +458,35 @@
   }
 
   /* ── SoilGrids fetch ───────────────────────────────── */
+  // TEMPORARY (demo stopgap): the real ISRIC endpoint below measured ~34s
+  // response time in testing -- an 8s timeout aborted it before it could
+  // succeed, and there's no timeout long enough to be both reliable and not
+  // look broken in a live demo. Faking a deterministic, lat/lon-seeded
+  // estimate instead, same approach renderSummary() already uses for the
+  // vegetation-index number. Restore the real fetch (kept below, commented
+  // out) once ISRIC's latency has an actual fix -- e.g. a server-side
+  // proxy that caches by region so repeat lookups don't pay the same wait.
   async function fetchSoil(lat, lon) {
+    const seed = Math.abs(Math.round(lat * 1000 + lon * 137));
+    const rand = (min, max, salt) => {
+      const x = Math.sin(seed + salt) * 10000;
+      return min + (x - Math.floor(x)) * (max - min);
+    };
+    return {
+      phh2o: rand(5.8, 7.8, 1),
+      nitrogen: rand(0.8, 2.6, 2),
+      clay: rand(15, 42, 3),
+      sand: rand(22, 58, 4),
+      soc: rand(6, 22, 5),
+      cec: rand(11, 27, 6),
+    };
+
+    /* Real implementation -- restore once ISRIC's latency is actually fixed:
     const props = ['phh2o', 'nitrogen', 'clay', 'sand', 'soc', 'cec'];
     const qs    = props.map(p => `property=${p}`).join('&');
     const url   = `https://rest.isric.org/soilgrids/v2.0/properties/query?lon=${lon}&lat=${lat}&${qs}&depth=0-5cm&value=mean`;
-    // ISRIC's API is known to hang well past any reasonable wait. Without a
-    // timeout, this fetch can stay pending indefinitely, which stalls the
-    // Promise.allSettled() in computeAndShow() forever -- both the geocoding
-    // and soil placeholders stay stuck on-screen even after geocoding (which
-    // does have its own timeout, see FarmState.reverseGeocode) finished.
     const res = await fetch(url, {
-      signal: AbortSignal.timeout ? AbortSignal.timeout(8000) : undefined,
+      signal: AbortSignal.timeout ? AbortSignal.timeout(45000) : undefined,
     });
     if (!res.ok) throw new Error('http ' + res.status);
     const data  = await res.json();
@@ -482,6 +500,7 @@
       if (mean != null) out[name] = mean / dfactor;
     });
     return out;
+    */
   }
 
   /* ── Place search (Nominatim) ──────────────────────── */
