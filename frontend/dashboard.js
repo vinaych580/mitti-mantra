@@ -1196,50 +1196,93 @@
         const risk = score && score.pillars ? riskInfo(score.pillars.risk_resilience) : null;
         const alerts = (pest && pest.alerts) || [];
         const topAlert = alerts.find(a => ((a.risk_level || a.severity || '') + '').toLowerCase().includes('high')) || alerts[0] || null;
+        // Same three-way severity read the Pest Alerts tool itself uses (line
+        // ~2232) -- a single low-severity alert shouldn't paint this tile as
+        // urgent as an actual high-risk one.
+        const topSeverity = topAlert ? ((topAlert.risk_level || topAlert.severity || '') + '').toLowerCase() : '';
+        const alertCls = !topAlert ? 'kpi--good'
+          : topSeverity.includes('high') ? 'kpi--bad'
+          : (topSeverity.includes('moderate') || topSeverity.includes('medium')) ? 'kpi--warn'
+          : 'kpi--good';
         const rainCaution = !!(weather && weather.imd_alert && weather.imd_alert !== 'Green');
 
+        const top3 = recs.slice(0, 3);
+        const bestScore = Math.max(...top3.map(r => r.smart_score || 0), 1);
+        const committedInTop3 = committed && top3.some(r => r.crop_id === committed);
+
+        const alertRows = alerts.slice(0, 2).map(a => {
+          const sev = ((a.risk_level || a.severity || '') + '').toLowerCase();
+          const chipCls = sev.includes('high') ? 'chip--red' : (sev.includes('moderate') || sev.includes('medium')) ? 'chip--gold' : 'chip--green';
+          return `<div class="pest-row">
+            <div class="pest-row__head"><b>${esc(a.pest_disease)}</b><span class="chip ${chipCls}">${esc(a.risk_level || a.severity || '—')}</span></div>
+            ${a.trigger ? `<div class="pest-row__note"><span>Trigger:</span> ${esc(a.trigger)}</div>` : ''}
+          </div>`;
+        }).join('');
+
         out.innerHTML = `
+          <div class="feature" style="margin-bottom:20px;">
+            <div class="feature__head">
+              <div class="feature__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 C9 8 7 12 7 15 a5 5 0 0 0 10 0 c0-3-2-7-5-13z"/></svg></div>
+              <div>
+                <h3>Choose your crop</h3>
+                <p>${committed ? `You're set on <span data-no-translate>${cropLabel(committed)}</span>. Here's how it compares with today's other top matches.` : 'Ranked for your land, this season, and your budget — pick one to get started.'}</p>
+              </div>
+            </div>
+            <div class="crop-options">
+              ${top3.map((r, i) => {
+          const isSelected = r.crop_id === committed;
+          return `<button type="button" class="crop-option" data-crop-pick="${r.crop_id}" aria-pressed="${isSelected}">
+                  <span class="crop-option__rank">${i + 1}</span>
+                  <span class="crop-option__id">
+                    <span class="crop-option__name">${cropLabel(r.crop_id)}</span>
+                    <span class="crop-option__bar"><i style="--v:${Math.max(0, Math.min(1, (r.smart_score || 0) / bestScore))}"></i></span>
+                  </span>
+                  <span class="crop-option__stats"><b>${INR(r.expected_profit)}</b><small>ROI ${PCT(r.roi_percent)}</small></span>
+                  ${isSelected
+              ? `<span class="crop-option__check" title="Selected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>`
+              : `<span class="crop-option__go">Choose →</span>`}
+                </button>`;
+        }).join('')}
+            </div>
+            ${(committed && !committedInTop3) ? `<div class="kpi__sub" style="margin-top:12px;">Currently growing <b data-no-translate>${cropLabel(committed)}</b> · not in today's top matches</div>` : ''}
+          </div>
+
           <div class="kpi-grid">
             <div class="kpi kpi--good">
-              <div class="kpi__lbl">${committed ? 'Your crop' : 'Recommended crop'}</div>
-              <div class="kpi__val" style="font-size:1.2rem;">${cropId ? cropLabel(cropId) : '—'}</div>
-              ${(!committed && pick) ? `<div class="kpi__sub"><a href="#" data-plant-cta style="color:var(--brand-deep);font-weight:600;">Yes, plant this →</a></div>` : ''}
-            </div>
-            <div class="kpi kpi--good">
-              <div class="kpi__lbl">Expected profit</div>
+              <div class="kpi__lbl">Profit</div>
               <div class="kpi__val">${pick ? TT(pick.expected_profit, INR(pick.expected_profit)) : '—'}</div>
-              <div class="kpi__sub">${pick ? 'ROI ' + PCT(pick.roi_percent) : '<span>Not available for this crop yet</span> · <a href="#" data-goto="simulate" style="color:var(--brand-deep);font-weight:600;">Run a full simulation →</a>'}</div>
+              <div class="kpi__sub">${pick ? 'ROI ' + PCT(pick.roi_percent) + ' · ' + Math.round(pick.predicted_yield_kg_per_acre) + ' kg/ac' : '<span>Not available for this crop yet</span> · <a href="#" data-goto="simulate" style="color:var(--brand-deep);font-weight:600;">Run a full simulation →</a>'}</div>
             </div>
             <div class="kpi ${risk ? risk.cls : ''}">
-              <div class="kpi__lbl">Risk level</div>
+              <div class="kpi__lbl">Risk</div>
               <div class="kpi__val" style="font-size:1.2rem;">${risk ? risk.text : '—'}</div>
-              <div class="kpi__sub">${score ? 'Farm Score ' + FIX(score.farm_score, 0) + '/100' : 'Not available right now'}</div>
+              <div class="kpi__sub">${risk ? 'Resilience score ' + FIX(score.pillars.risk_resilience, 0) + '/100' : 'Not available right now'}</div>
             </div>
             <div class="kpi ${msp ? (msp.mandi_above_msp ? 'kpi--good' : 'kpi--warn') : ''}">
-              <div class="kpi__lbl">Today's price</div>
+              <div class="kpi__lbl">Price</div>
               <div class="kpi__val">${msp ? TT(msp.current_mandi_price, INR2(msp.current_mandi_price)) : '—'}${msp ? '<span style="font-size:.5em">/kg</span>' : ''}</div>
-              <div class="kpi__sub">${msp ? (msp.mandi_above_msp ? '+' : '') + FIX(msp.mandi_msp_gap_pct, 1) + '% vs MSP' : 'Pick a crop to see this'}</div>
+              <div class="kpi__sub">${msp ? (msp.mandi_above_msp ? '+' : '') + FIX(msp.mandi_msp_gap_pct, 1) + '% vs MSP (' + INR2(msp.msp_inr_per_kg) + '/kg)' : cropId ? 'No MSP data for this crop' : 'Pick a crop to see this'}</div>
             </div>
             <div class="kpi ${weather ? (rainCaution ? 'kpi--warn' : 'kpi--info') : ''}">
-              <div class="kpi__lbl">Rain this season</div>
+              <div class="kpi__lbl">Rain</div>
               <div class="kpi__val">${weather ? Math.round(weather.rainfall_mm) + ' mm' : '—'}</div>
               <div class="kpi__sub">${weather ? FIX(weather.avg_temp_c, 0) + '°C avg · ' : ''}<a href="#" data-goto="irrigation" style="color:var(--brand-deep);font-weight:600;">Watering plan →</a></div>
             </div>
-            <div class="kpi ${topAlert ? 'kpi--bad' : 'kpi--good'}">
-              <div class="kpi__lbl">Pest &amp; disease alerts</div>
-              <div class="kpi__val" style="font-size:1.1rem;">${topAlert ? esc(topAlert.pest_disease) : 'No alerts'}</div>
-              <div class="kpi__sub">${topAlert ? '<a href="#" data-goto="pest" style="color:var(--brand-deep);font-weight:600;">See details →</a>' : 'All clear right now'}</div>
+            <div class="kpi ${alertCls}" style="grid-column: span 2;">
+              <div class="kpi__lbl" style="white-space:normal;">Pest &amp; disease</div>
+              ${alertRows || '<div class="kpi__val" style="font-size:1.1rem;">No alerts</div><div class="kpi__sub">All clear right now</div>'}
+              ${alerts.length ? `<div class="kpi__sub" style="margin-top:6px;">${alerts.length > 2 ? (alerts.length - 2) + ' more · ' : ''}<a href="#" data-goto="pest" style="color:var(--brand-deep);font-weight:600;">See full details →</a></div>` : ''}
             </div>
           </div>
-          <div style="margin-top:10px;font-size:.82rem;color:var(--ink-faint);">
+          <div style="margin-top:10px;font-size:var(--fs-2xs);color:var(--ink-faint);">
             ${esc(region_id)} · ${esc(season)} · ${area_acres} ac · ${INR(budget_per_acre)}/ac —
             <a href="#" data-edit-profile style="color:var(--ink-soft);text-decoration:underline;">Edit your farm details</a>
           </div>`;
 
-        $('[data-plant-cta]', out)?.addEventListener('click', e => {
-          e.preventDefault();
-          window.FarmState.setActiveCrop(pick.crop_id, cropLabel(pick.crop_id), { region_id, season, acres: area_acres });
-        });
+        $$('[data-crop-pick]', out).forEach(btn => btn.addEventListener('click', () => {
+          if (btn.getAttribute('aria-pressed') === 'true') return;
+          window.FarmState.setActiveCrop(btn.dataset.cropPick, cropLabel(btn.dataset.cropPick), { region_id, season, acres: area_acres });
+        }));
         $$('[data-goto]', out).forEach(a => a.addEventListener('click', e => {
           e.preventDefault();
           document.querySelector(`.sidebar__btn[data-tool="${a.dataset.goto}"]`)?.click();
