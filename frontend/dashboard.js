@@ -300,10 +300,31 @@
     return err instanceof TypeError;
   }
 
+  // A backend HttpError's message is developer/API text (e.g. "422 · field
+  // required" or a raw FastAPI validation dump) -- useful in the console,
+  // meaningless or alarming to a farmer. Map it to plain, actionable copy
+  // instead of showing it verbatim. A plain Error thrown by our own code
+  // (e.g. "Select a farm/region first...") is already farmer-friendly and
+  // is shown as authored -- only HttpError gets translated here.
+  function friendlyHttpMessage(err) {
+    const status = err.status;
+    if (status === 400 || status === 422) return "Some of the details entered don't look right. Please check the form and try again.";
+    if (status === 401 || status === 403) return 'Please sign in again to continue.';
+    if (status === 404) return "That couldn't be found. Try refreshing the page.";
+    if (status >= 500) return 'Something went wrong on our end. Please try again in a moment.';
+    return 'Something went wrong. Please try again.';
+  }
+
   function showError(el, err) {
     if (isLikelyOffline(err)) {
       el.innerHTML = `<div class="alert alert--red"><svg class="alert__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l22 22"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/><path d="M10.71 5.05A16 16 0 0 1 22.58 9"/><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
         <div class="alert__body"><strong>You're offline</strong><p>Reconnect to use this tool.</p></div></div>`;
+      return;
+    }
+    if (err instanceof HttpError) {
+      console.error('API error:', err.status, err.message);
+      el.innerHTML = `<div class="alert alert--red"><svg class="alert__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        <div class="alert__body"><strong>Request failed</strong><p>${friendlyHttpMessage(err)}</p></div></div>`;
       return;
     }
     el.innerHTML = `<div class="alert alert--red"><svg class="alert__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
@@ -343,6 +364,28 @@
   document.querySelectorAll('.output').forEach((el) => {
     el.setAttribute('aria-live', 'polite');
   });
+
+  /* ---------- Tool outputs stay in the active language ----------
+     i18n.js only translates text present in the DOM at the moment it runs;
+     anything rendered afterwards needs AgriSimI18n.retranslate() called
+     explicitly. The crop-recommendation panel does that itself, but the
+     other ~17 tools set .output's innerHTML directly (loading -> result or
+     error) with no retranslate() call, so once a non-English language is
+     active, every one of those results silently reverts to English until
+     the user flips the language switcher again. Watch every panel instead
+     of hand-wiring each render call site: an innerHTML swap is a childList
+     mutation, so observing that (not characterData) re-translates the new
+     content without the observer re-triggering on retranslate()'s own
+     in-place text edits. */
+  (function keepToolOutputsTranslated() {
+    const outputs = document.querySelectorAll('.output');
+    if (!outputs.length) return;
+    const retranslate = () => {
+      if (window.AgriSimI18n && window.AgriSimI18n.getLanguage() !== 'en') window.AgriSimI18n.retranslate();
+    };
+    const observer = new MutationObserver(retranslate);
+    outputs.forEach((el) => observer.observe(el, { childList: true, subtree: true }));
+  })();
 
   /* ---------- Constraint failures never disappear silently ----------
      A form that fails HTML validation never fires `submit`, so the tool's own
