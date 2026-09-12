@@ -1116,11 +1116,20 @@
         </div>
         <a class="btn btn-primary" style="flex-shrink:0;" href="marketplace.html?view=sell&crop_id=${encodeURIComponent(rec.crop_id)}&qty=${Math.max(1, Math.round(area * rec.predicted_yield_kg_per_acre / 100))}">Sell this produce →</a>`;
 
-      const plantingStatusHtml = (cropId, cropName) => `
+      // G-3 fix: the static wording used to have the crop name spliced
+      // straight into the middle of both sentences, so the whole thing was
+      // one text node per sentence that could never match a catalog entry
+      // (there's no single string for "You're planting Jute." — one per
+      // crop). Wrapping just the crop name in its own data-no-translate
+      // span (the same mechanism i18n.js already uses for other dynamic
+      // content) leaves the surrounding chrome as its own translatable text
+      // node, and dropping the repeated crop name from the second sentence
+      // avoids needing the same split twice.
+      const plantingStatusHtml = cropId => `
         <div class="alert alert--green" style="margin-top:12px;">
           <div class="alert__body" style="color:var(--brand-deep);">
-            <strong>✓ You're planting ${cropLabel(cropId)}.</strong>
-            Fertilizer, irrigation, and the other tools on this dashboard will now default to ${cropName} instead of asking you to pick a crop again.
+            <strong>✓ You're planting: <span data-no-translate>${cropLabel(cropId)}</span>.</strong>
+            Fertilizer, irrigation, and the other tools on this dashboard will now default to this crop instead of asking you to pick a crop again.
           </div>
         </div>`;
 
@@ -1139,7 +1148,7 @@
             <div class="kpi__sub">ROI ${PCT(top.roi_percent)}</div></div>
         </div>
 
-        <div id="mm-planting-status">${alreadyCommitted ? plantingStatusHtml(alreadyCommitted.crop_id, alreadyCommitted.crop_name) : ''}</div>
+        <div id="mm-planting-status">${alreadyCommitted ? plantingStatusHtml(alreadyCommitted.crop_id) : ''}</div>
 
         ${top.budget_adequate === false ? `
         <div class="alert alert--gold" style="margin-top:12px;">
@@ -1232,7 +1241,7 @@
          commit flow: record the pick for the regional-saturation signal, then
          remember it on the active plot so fertilizer/irrigation/other tools
          can default to it instead of asking the farmer to re-pick a crop. */
-      const syncCommittedButtons = (cropId, cropName) => {
+      const syncCommittedButtons = cropId => {
         out.querySelectorAll('.mm-commit-btn').forEach(b => {
           const isThis = b.dataset.cropId === cropId;
           b.disabled = isThis;
@@ -1242,7 +1251,7 @@
         });
 
         const statusEl = out.querySelector('#mm-planting-status');
-        if (statusEl) statusEl.innerHTML = plantingStatusHtml(cropId, cropName);
+        if (statusEl) statusEl.innerHTML = plantingStatusHtml(cropId);
 
         const sellCtaEl = out.querySelector('#mm-sell-cta');
         if (sellCtaEl) sellCtaEl.innerHTML = sellCtaHtml(recs.find(r => r.crop_id === cropId) || top);
@@ -1269,9 +1278,21 @@
               }),
             });
             if (typeof window.FarmState !== 'undefined' && window.FarmState.setActiveCrop) {
-              window.FarmState.setActiveCrop(cropId, cropName);
+              // G-1 fix: pass along the region/season/area this recommendation
+              // already ran with, so setActiveCrop can create a plot from it
+              // when the farmer has no active one (the top farm bar's own
+              // region/season/area/budget fields don't create a FarmState
+              // plot — only "Draw your farm" does). Without this, the
+              // commitment silently went nowhere for anyone using the
+              // zero-sign-up flow the landing page advertises, even though
+              // the UI below unconditionally claims it worked.
+              window.FarmState.setActiveCrop(cropId, cropName, {
+                region_id: btn.dataset.regionId,
+                season: btn.dataset.season,
+                acres: parseFloat(btn.dataset.area) || undefined,
+              });
             }
-            syncCommittedButtons(cropId, cropName);
+            syncCommittedButtons(cropId);
           } catch (err) {
             out.querySelectorAll('.mm-commit-btn').forEach(b => { b.disabled = false; });
             btn.textContent = btn.id === 'mm-commit-crop-btn' ? "I'm planting this →" : 'Choose this →';
@@ -3068,14 +3089,27 @@
      crop the farmer committed to on the active plot (Smart recommend tool),
      so fertilizer/irrigation/forecast/etc. don't ask them to re-pick a crop
      they've already told the app they're planting. Skips the compare tool's
-     multi-select — a single committed crop isn't a sensible default there. */
+     multi-select — a single committed crop isn't a sensible default there.
+
+     G-2 fix: this used to only ever *set* a value, never clear one, so
+     switching to a plot with nothing committed left the *previous* plot's
+     crop showing everywhere — indistinguishable from a real choice for the
+     new plot. Now it resets only the selects it previously set itself
+     (`mmCommitApplied`), and — matching the same "don't clobber a farmer's
+     own edit" rule mm-core.js's profile.applyToForms() already follows —
+     never touches a select the farmer has manually changed (`mmUserDirty`). */
   function applyCommittedCropToForms() {
     const committed = (typeof window.FarmState !== 'undefined' && window.FarmState.getActiveCrop)
       ? window.FarmState.getActiveCrop() : null;
-    if (!committed) return;
     $$('select[data-crops]:not([multiple])').forEach(sel => {
-      const opt = sel.querySelector(`option[value="${committed.crop_id}"]`);
-      if (opt) sel.value = committed.crop_id;
+      if (sel.dataset.mmUserDirty === '1') return;
+      if (committed) {
+        const opt = sel.querySelector(`option[value="${committed.crop_id}"]`);
+        if (opt) { sel.value = committed.crop_id; sel.dataset.mmCommitApplied = '1'; }
+      } else if (sel.dataset.mmCommitApplied === '1') {
+        sel.value = sel.options[0] ? sel.options[0].value : '';
+        delete sel.dataset.mmCommitApplied;
+      }
     });
   }
 

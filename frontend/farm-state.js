@@ -38,7 +38,9 @@
      FarmState.reverseGeocode(lat, lon)              → Promise<{state,district,village}>
      FarmState.REGION_CENTROIDS      → [{region_id, lat, lon, state, displayName}, …]
      FarmState.getActiveCrop()               → {crop_id, crop_name, committedAt} | null
-     FarmState.setActiveCrop(cropId, cropName) → farm | null (active plot; null if no active plot)
+     FarmState.setActiveCrop(cropId, cropName, farmData?) → farm | null
+       (farmData: {region_id, season?, acres?} — used to create a plot if none
+        is active yet; without it, still a no-op when there's no active plot)
 
    Every mutation dispatches `mm:plot-changed` on document with
    { detail: { plot, plots, activeId, reason } }.
@@ -421,12 +423,30 @@
   /**
    * Record which crop the farmer is planting on the active plot, so
    * fertilizer/irrigation/other tools can default to it instead of asking
-   * the farmer to re-pick a crop every time. No-op (returns null) if there
-   * is no active plot to attach the commitment to — there's nothing to
-   * auto-fill from in that case anyway.
+   * the farmer to re-pick a crop every time.
+   *
+   * G-1 fix: this used to no-op silently whenever there was no active plot —
+   * true for anyone using the top farm bar's region/season/area/budget
+   * fields without ever drawing a farm boundary, i.e. most farmers, since
+   * that's the zero-sign-up flow the landing page advertises. The caller
+   * (dashboard.js) would still show "recorded" and promise every tool would
+   * now default to this crop, which was false. If `farmData` (region_id and
+   * optionally season/acres — the caller already has these on hand from
+   * whatever generated the recommendation) is supplied and there's no plot
+   * yet, create one so the commitment has somewhere to live. Still returns
+   * null (no-op) if there's truly nothing to seed a plot from, or if the
+   * plot limit is already reached.
    */
-  function setActiveCrop(cropId, cropName) {
-    if (!cropId || !load()) return null;
+  function setActiveCrop(cropId, cropName, farmData) {
+    if (!cropId) return null;
+    if (!load()) {
+      if (!farmData || !farmData.region_id) return null;
+      try {
+        add({ region_id: farmData.region_id, season: farmData.season, acres: farmData.acres });
+      } catch {
+        return null; // e.g. the per-device plot limit was already reached
+      }
+    }
     return save({ crop_id: cropId, crop_name: cropName || cropId, committedAt: new Date().toISOString() });
   }
 
