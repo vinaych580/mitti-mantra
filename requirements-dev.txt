@@ -22,3 +22,6 @@ onnx>=1.17.0
 # based on the latest release compatible with numpy/pandas above, not an exact
 # tested pin. See AUDIT_REPORT.md M-26.
 catboost>=1.2.10
+
+# Test runner (tests/ is excluded from the Vercel bundle).
+pytest>=8.0.0

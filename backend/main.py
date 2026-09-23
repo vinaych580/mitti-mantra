@@ -1,4 +1,4 @@
-from fastapi import Depends, FastAPI, Header, HTTPException, Request, status
+from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -9,6 +9,7 @@ from statistics import mean
 from datetime import datetime
 import sys
 import os
+import logging
 import secrets
 import numpy as np
 
@@ -52,9 +53,12 @@ from engine.features import (
     calculate_carbon_credits,
 )
 from engine.disease_actions import build_action_plan
+from engine.crop_mix import allocate as allocate_crop_mix
 
 
 from backend.routers.data import router as data_router
+
+logger = logging.getLogger("FastAPIIntegration")
 
 app = FastAPI(title="AgriSim - Farm Intelligence Platform")
 app.include_router(data_router, prefix="/api")
@@ -188,6 +192,19 @@ from backend.models import (
 # below use index_by() to skip full-table scans entirely.
 def read_csv(filename: str) -> List[Dict[str, str]]:
     return _csv_load(filename)
+
+
+def _reference_price(crop_id: str) -> Optional[float]:
+    """Midpoint of the crop's documented mandi price band (crop_parameters.csv).
+
+    Used when a region has no mandi history for a crop, instead of a flat
+    made-up number that was the same for every crop. None for unknown crops.
+    """
+    from ml.predict import _load_crop_parameters
+    cp = _load_crop_parameters().get(crop_id)
+    if not cp:
+        return None
+    return round((cp.mandi_price_min_inr_per_kg + cp.mandi_price_max_inr_per_kg) / 2.0, 2)
 
 _DEFAULT_YIELD_RMSE = 950.0  # fallback if the audit report is unavailable
 
@@ -388,7 +405,9 @@ def batch_simulate(req: BatchSimRequest):
     for crop_id in req.crop_ids:
         try:
             crop_prices = [float(r["price_inr_per_kg"]) for r in region_rows if r["crop_id"] == crop_id]
-            price = crop_prices[-1] if crop_prices else 25.0
+            price = crop_prices[-1] if crop_prices else _reference_price(crop_id)
+            if price is None:
+                raise ValueError(f"Unknown crop_id: {crop_id!r}")
             budget = req.budget_per_acre
             strategy = {
                 "crop_id": crop_id,
@@ -484,13 +503,15 @@ def get_carbon_credits(req: CarbonCreditQuery):
 
 @app.post("/api/iot/telemetry")
 def get_iot_telemetry(req: Optional[IoTTelemetryQuery] = None):
-    """Returns the farmer's own uploaded sensor readings for `region_id` when
+    """Returns this device's own uploaded sensor readings for `region_id` when
     any exist (see /api/sensors/upload), else a clearly labelled sample
-    payload until a live sensor integration exists."""
+    payload until a live sensor integration exists. Other devices' uploads in
+    the same region are never merged in."""
     try:
         from datetime import datetime, timezone
         farm_id = (req and req.farm_id) or "farm_01"
         region_id = req.region_id if req else None
+        device_id = req.device_id if req else None
 
         payload = {
             "source": "sample_data",
@@ -510,11 +531,11 @@ def get_iot_telemetry(req: Optional[IoTTelemetryQuery] = None):
             "sensor_status": "ONLINE_NORMAL",
         }
 
-        if not region_id:
+        if not region_id or not device_id:
             return payload
 
         from utils.sensor_log import latest_by_metric
-        live = latest_by_metric(region_id)
+        live = latest_by_metric(region_id, device_id=device_id)
         live_metrics = [metric for metric in live if metric in payload]
         for metric in live_metrics:
             payload[metric] = float(live[metric]["value"])
@@ -530,6 +551,9 @@ def get_iot_telemetry(req: Optional[IoTTelemetryQuery] = None):
         raise HTTPException(status_code=400, detail=str(e))
 
 
+_SQM_PER_ACRE = 4046.86
+
+
 @app.post("/api/iot/pump-trigger")
 def trigger_smart_pump(req: IoTTriggerRequest):
     """Calculates a pump-runtime recommendation; it never controls equipment."""
@@ -537,9 +561,11 @@ def trigger_smart_pump(req: IoTTriggerRequest):
         deficit_pct = max(0.0, (req.target_moisture_pct or 65.0) - (req.current_moisture_pct or 40.0))
         area = req.area_acres or 4.0
         flow = req.flow_rate_lpm or 120.0
+        depth_m = (req.root_zone_depth_cm or 30.0) / 100.0
 
-        # ~10,000 liters per acre per 10% moisture deficit
-        water_volume_liters = round(deficit_pct * 1000.0 * area, 1)
+        # Volumetric deficit x root-zone depth x area = m^3 of water; x1000 = L.
+        # (A 10% deficit over 30 cm on one acre is ~121,000 L.)
+        water_volume_liters = round((deficit_pct / 100.0) * depth_m * area * _SQM_PER_ACRE * 1000.0, 1)
         runtime_minutes = round(water_volume_liters / max(flow, 1.0), 1)
 
         return {
@@ -549,6 +575,7 @@ def trigger_smart_pump(req: IoTTriggerRequest):
             "moisture_deficit_pct": round(deficit_pct, 1),
             "required_water_liters": water_volume_liters,
             "flow_rate_lpm": flow,
+            "root_zone_depth_cm": round(depth_m * 100.0, 1),
             "recommended_pump_runtime_minutes": runtime_minutes,
             "control_action": "RECOMMEND_IRRIGATION" if deficit_pct > 5 else "NO_ACTION_RECOMMENDED",
             "is_controlled": False,
@@ -620,7 +647,7 @@ def upload_sensor_readings(req: SensorUploadRequest, request: Request):
         ext = req.filename.lower().rsplit(".", 1)[-1]
         written = append_batch(
             region_id=req.region_id,
-            device_id=req.device_id or "unknown_device",
+            device_id=req.device_id,
             source=source_by_ext.get(ext, "file_upload"),
             readings=accepted,
         )
@@ -633,10 +660,14 @@ def upload_sensor_readings(req: SensorUploadRequest, request: Request):
 
 
 @app.get("/api/sensors/{region_id}")
-def get_sensor_readings(region_id: str, max_age_days: float = 30.0):
-    """Latest farmer-uploaded reading per metric for a region."""
+def get_sensor_readings(
+    region_id: str,
+    device_id: str = Query(..., min_length=1, max_length=100),
+    max_age_days: float = 30.0,
+):
+    """Latest reading per metric that this device uploaded for a region."""
     from utils.sensor_log import latest_by_metric
-    latest = latest_by_metric(region_id, max_age_days=max_age_days)
+    latest = latest_by_metric(region_id, max_age_days=max_age_days, device_id=device_id)
     return {
         "region_id": region_id,
         "available": bool(latest),
@@ -649,60 +680,35 @@ def get_sensor_readings(region_id: str, max_age_days: float = 30.0):
 
 @app.post("/api/optimal-mix")
 def optimal_crop_mix(req: CropMixRequest):
-    """Find optimal multi-crop allocation for given land and budget."""
+    """Split the land across up to 3 profitable crops (see engine/crop_mix.py)."""
+    budget_per_acre = req.total_budget / req.total_area_acres
     try:
-        all_crops = recommend_crops(req.region_id, req.season, req.total_budget / req.total_area_acres, req.total_area_acres, top_k=50)
+        all_crops = recommend_crops(req.region_id, req.season, budget_per_acre, req.total_area_acres, top_k=50)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
     if not all_crops:
         raise HTTPException(status_code=404, detail="No crops available for this region/season")
 
-    # Greedy allocation: assign area proportional to smart_score, minimum 0.5 acres per crop
-    total_score = sum(c["smart_score"] for c in all_crops)
-    if total_score == 0:
-        raise HTTPException(status_code=400, detail="All crops scored 0")
-
-    min_area_per_crop = min(0.5, req.total_area_acres)
-    allocations = []
-    remaining_area = req.total_area_acres
-    remaining_budget = req.total_budget
-    for crop in all_crops:
-        if remaining_area < 0.05:
-            break
-        share = crop["smart_score"] / total_score
-        target_area = share * req.total_area_acres
-        area = round(max(target_area, min_area_per_crop), 2)
-        area = min(area, remaining_area)
-        if area <= 0:
-            continue
-        budget_for_crop = round(area / req.total_area_acres * req.total_budget, 2)
-        allocations.append({
-            "crop_id": crop["crop_id"],
-            "crop_name": crop["crop_name"],
-            "allocated_acres": area,
-            "allocated_budget": budget_for_crop,
-            "expected_profit": round(crop["expected_profit"] * (area / req.total_area_acres), 2),
-            "roi_percent": crop["roi_percent"],
-            "risk_score": crop["risk_score"],
-            "smart_score": crop["smart_score"],
-        })
-        remaining_area -= area
-        remaining_budget -= budget_for_crop
-
-    total_profit = sum(a["expected_profit"] for a in allocations)
-    avg_risk = mean([a["risk_score"] for a in allocations]) if allocations else 0
+    mix = allocate_crop_mix(all_crops, req.total_area_acres, budget_per_acre)
+    allocs = mix["allocations"]
     return {
         "region_id": req.region_id,
         "season": req.season,
         "total_area_acres": req.total_area_acres,
         "total_budget": req.total_budget,
-        "allocations": allocations,
-        "total_expected_profit": round(total_profit, 2),
-        "avg_risk_score": round(avg_risk, 2),
-        "num_crops": len(allocations),
-        "unallocated_budget": round(max(0.0, remaining_budget), 2),
-        "unallocated_area_acres": round(max(0.0, remaining_area), 2),
+        "allocations": allocs,
+        "total_expected_profit": mix["total_expected_profit"],
+        "single_crop_best": mix["single_crop_best"],
+        "diversification_cost": mix["diversification_cost"],
+        "avg_risk_score": round(mean([a["risk_score"] for a in allocs]), 2) if allocs else 0,
+        "num_crops": len(allocs),
+        "unallocated_budget": 0.0 if allocs else req.total_budget,
+        "unallocated_area_acres": 0.0 if allocs else req.total_area_acres,
+        "method": (
+            "Up to 3 profitable crops, ranked by risk-adjusted profit per acre; "
+            "no crop takes more than 60% of the land."
+        ),
     }
 
 # ---------------------------------------------------------------------------
@@ -1194,6 +1200,39 @@ DISEASE_METADATA = {
     }
 }
 
+
+# Offline fallback when the scheme CSV can't be matched for a region.
+_DISEASE_SCHEME_FALLBACK = {
+    "pmfby": "PMFBY (Crop Insurance) — URL: https://pmfby.gov.in",
+    "kkc": "Kisan Credit Card — URL: https://www.nabard.org",
+    "pkvy": "PKVY (Organic Cluster Subsidy) — URL: https://pgsindia-ncof.gov.in",
+}
+
+
+def _disease_schemes(meta: Dict[str, Any], crop_id: str, region_id: Optional[str]) -> List[str]:
+    """Schemes relevant to a screened disease, matched against the region when given."""
+    matched: List[str] = []
+    if region_id:
+        try:
+            schemes_res = match_government_schemes(crop_id, region_id)
+            for s in schemes_res.get("eligible_schemes", []):
+                if s["scheme_id"] in meta["schemes"] or (
+                    s["scheme_id"] == "pkvy" and meta.get("organic")
+                ):
+                    matched.append(f"{s['scheme_name']} ({s['description']}) — URL: {s['url']}")
+        except Exception:
+            logger.warning("Scheme matching failed for disease screen", exc_info=True)
+    if not matched:
+        matched = [_DISEASE_SCHEME_FALLBACK[sid] for sid in meta.get("schemes", []) if sid in _DISEASE_SCHEME_FALLBACK]
+    return matched
+
+
+def _disease_treatments(meta: Dict[str, Any]) -> List[str]:
+    return (
+        [f"Organic: {o}" for o in meta.get("organic", [])]
+        + [f"Chemical Escalation: {c}" for c in meta.get("chemical", [])]
+    )
+
 # ---------------------------------------------------------------------------
 # D-8: minimal per-IP rate limit for /api/disease/predict.
 #
@@ -1251,8 +1290,11 @@ def _disease_rate_limit_check(client_ip: str) -> bool:
         return True
 
 
+SUPPORTED_DISEASE_CROPS = ("maize", "potato", "soybean", "tomato")
+
+
 @app.post("/api/disease/predict")
-async def predict_disease_api(req: DiseasePredictQuery, request: Request):
+def predict_disease_api(req: DiseasePredictQuery, request: Request):
     """
     Preliminary visual screening using HSV colour and texture heuristics.
     This is not a validated diagnostic model and must not be used as a basis
@@ -1306,32 +1348,8 @@ async def predict_disease_api(req: DiseasePredictQuery, request: Request):
                 meta = DISEASE_METADATA.get(class_name, DISEASE_METADATA["tomato_healthy"])
                 matched_crop = class_name.split("_")[0]
 
-                matched_schemes: list[str] = []
-                if req.region_id:
-                    try:
-                        schemes_res = match_government_schemes(matched_crop, req.region_id)
-                        for esc in schemes_res.get("eligible_schemes", []):
-                            if esc["scheme_id"] in meta["schemes"] or (
-                                esc["scheme_id"] == "pkvy" and len(meta.get("organic", [])) > 0
-                            ):
-                                matched_schemes.append(
-                                    f"{esc['scheme_name']} ({esc['description']}) — URL: {esc['url']}"
-                                )
-                    except Exception:
-                        pass
-                if not matched_schemes:
-                    for sid in meta.get("schemes", []):
-                        if sid == "pmfby":
-                            matched_schemes.append("PMFBY (Crop Insurance) — URL: https://pmfby.gov.in")
-                        elif sid == "kkc":
-                            matched_schemes.append("Kisan Credit Card — URL: https://www.nabard.org")
-                        elif sid == "pkvy":
-                            matched_schemes.append("PKVY (Organic Cluster Subsidy) — URL: https://pgsindia-ncof.gov.in")
-
-                treatments = (
-                    [f"Organic: {o}" for o in meta.get("organic", [])]
-                    + [f"Chemical Escalation: {c}" for c in meta.get("chemical", [])]
-                )
+                matched_schemes = _disease_schemes(meta, matched_crop, req.region_id)
+                treatments = _disease_treatments(meta)
 
                 return {
                     "analysis_type": "demo_precomputed",
@@ -1389,10 +1407,20 @@ async def predict_disease_api(req: DiseasePredictQuery, request: Request):
         # -----------------------------------------------------------------
         # 4. CROP CONTEXT
         # -----------------------------------------------------------------
+        # Only crops the classifier was trained on can be screened. This used to
+        # reset anything else -- including no crop at all, which the UI offered
+        # as "Auto-detect" -- to tomato, so a cotton or rice leaf came back
+        # with a tomato diagnosis.
         crop = (req.crop_id or "").lower().strip()
-        valid_crops = {"maize", "potato", "soybean", "tomato"}
-        if crop not in valid_crops:
-            crop = ""
+        if crop not in SUPPORTED_DISEASE_CROPS:
+            raise HTTPException(
+                status_code=422,
+                detail=(
+                    "Leaf screening currently covers only "
+                    + ", ".join(SUPPORTED_DISEASE_CROPS)
+                    + ". Choose one of these crops; other crops cannot be screened yet."
+                ),
+            )
 
         # -----------------------------------------------------------------
         # 5. DECISION TREE CLASSIFIER
@@ -1401,9 +1429,8 @@ async def predict_disease_api(req: DiseasePredictQuery, request: Request):
         # -----------------------------------------------------------------
         def classify(c: str) -> tuple[str, float]:
             """
-            Strictly crop-bound decision tree.
-            If the user selected a crop, we ONLY return diseases for that crop.
-            If no crop is selected (c == ""), we default to Tomato diseases since they are the most comprehensive.
+            Strictly crop-bound decision tree: only diseases of crop `c`
+            (always one of SUPPORTED_DISEASE_CROPS) are returned.
             """
             if c == "potato":
                 if hue_dark > 0.30 or val_mean < 0.25 or (hue_brown > 0.20 and severity == "severe"):
@@ -1485,34 +1512,9 @@ async def predict_disease_api(req: DiseasePredictQuery, request: Request):
         # -----------------------------------------------------------------
         # 6. GOVERNMENT SCHEME MATCHING
         # -----------------------------------------------------------------
-        matched_schemes: list[str] = []
         matched_crop = best_class.split("_")[0]
-        if req.region_id:
-            try:
-                schemes_res = match_government_schemes(matched_crop, req.region_id)
-                for esc in schemes_res.get("eligible_schemes", []):
-                    if esc["scheme_id"] in meta["schemes"] or (
-                        esc["scheme_id"] == "pkvy" and len(meta.get("organic", [])) > 0
-                    ):
-                        matched_schemes.append(
-                            f"{esc['scheme_name']} ({esc['description']}) — URL: {esc['url']}"
-                        )
-            except Exception:
-                pass
-
-        if not matched_schemes:
-            for sid in meta.get("schemes", []):
-                if sid == "pmfby":
-                    matched_schemes.append("PMFBY (Crop Insurance) — URL: https://pmfby.gov.in")
-                elif sid == "kkc":
-                    matched_schemes.append("Kisan Credit Card — URL: https://www.nabard.org")
-                elif sid == "pkvy":
-                    matched_schemes.append("PKVY (Organic Cluster Subsidy) — URL: https://pgsindia-ncof.gov.in")
-
-        treatments = (
-            [f"Organic: {o}" for o in meta.get("organic", [])]
-            + [f"Chemical Escalation: {c}" for c in meta.get("chemical", [])]
-        )
+        matched_schemes = _disease_schemes(meta, matched_crop, req.region_id)
+        treatments = _disease_treatments(meta)
 
         response = {
             "analysis_type": "trained_classifier_screening" if prediction_source == "ml_model" else "heuristic_screening",
@@ -1544,18 +1546,17 @@ async def predict_disease_api(req: DiseasePredictQuery, request: Request):
             )
         return response
 
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Inference failure: {str(e)}")
 
 
 # ---------------------------------------------------------------------------
-# Phase 6 Integration: Asynchronous, Validated, and Cached Endpoints
+# Phase 6 Integration: Validated and Cached Endpoints
 # ---------------------------------------------------------------------------
 import time
-import logging
 import threading
-
-logger = logging.getLogger("FastAPIIntegration")
 
 # Thread-safe in-memory cache with 30s TTL
 _route_cache_lock = threading.Lock()
@@ -1587,10 +1588,15 @@ def set_cached_response(key: str, data: Any):
                 ROUTE_CACHE.pop(oldest_key, None)
         ROUTE_CACHE[key] = (data, now)
 
-# --- Async & Cached REST API Routes ---
+# --- Cached REST API Routes ---
+# Plain `def`, not `async def`: every handler below does blocking work (model
+# inference, CSV reads), and FastAPI only moves `def` handlers onto its
+# threadpool. As `async def` they ran on the event loop and serialized every
+# concurrent request behind whichever was running -- e.g. My Farm's five
+# parallel calls queued one after another.
 
 @app.get("/api/crop")
-async def get_crop_recommendations_api(q: CropRecQuery = Depends()):
+def get_crop_recommendations_api(q: CropRecQuery = Depends()):
     """Retrieves ranked crop suggestions with expected profits, risk scores, and ML confidence."""
     # Query params are validated via the CropRecQuery Pydantic model (positive
     # budget/area) instead of hand-rolled checks -- see AUDIT_REPORT.md M-2.
@@ -1635,12 +1641,12 @@ async def get_crop_recommendations_api(q: CropRecQuery = Depends()):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.post("/api/crop")
-async def post_crop_recommendations_api(req: CropRecQuery):
+def post_crop_recommendations_api(req: CropRecQuery):
     """POST wrapper for crop recommendation API checks."""
-    return await get_crop_recommendations_api(req)
+    return get_crop_recommendations_api(req)
 
 @app.get("/api/yield")
-async def get_yield_prediction_api(q: YieldPredQuery = Depends()):
+def get_yield_prediction_api(q: YieldPredQuery = Depends()):
     """Predicts yield output in kg/acre with 95% confidence intervals and agronomic drivers."""
     # Validated via the YieldPredQuery Pydantic model (irrigation_level bounded
     # 0.0-1.0) instead of a hand-rolled check -- see AUDIT_REPORT.md M-2.
@@ -1716,7 +1722,7 @@ async def get_yield_prediction_api(q: YieldPredQuery = Depends()):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.post("/api/profit")
-async def post_profit_estimation_api(req: ProfitEstRequest):
+def post_profit_estimation_api(req: ProfitEstRequest):
     """Evaluates expected profit returns, input expenses, and ROI."""
     logger.info(f"Profit estimation request: crop={req.crop_id}, yield={req.predicted_yield_kg_per_acre}")
     try:
@@ -1742,7 +1748,7 @@ async def post_profit_estimation_api(req: ProfitEstRequest):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/api/irrigation")
-async def get_irrigation_api(q: IrrigationQuery = Depends()):
+def get_irrigation_api(q: IrrigationQuery = Depends()):
     """Retrieves week-by-week scheduling parameters and supplemental reasoning."""
     # Validated via the IrrigationQuery Pydantic model (irrigation_level bounded
     # 0.0-1.0, rainfall_mm non-negative) instead of a hand-rolled check -- see
@@ -1763,7 +1769,7 @@ async def get_irrigation_api(q: IrrigationQuery = Depends()):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/api/fertilizer")
-async def get_fertilizer_api(q: FertilizerQuery = Depends()):
+def get_fertilizer_api(q: FertilizerQuery = Depends()):
     """Computes replenishment dosage based on soil NPK indicators and government guidelines."""
     # Validated via the FertilizerQuery Pydantic model (all NPK values ge=0)
     # instead of a hand-rolled check -- see AUDIT_REPORT.md M-2.
@@ -1781,7 +1787,7 @@ async def get_fertilizer_api(q: FertilizerQuery = Depends()):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/api/soil")
-async def get_soil_details_api(region_id: str):
+def get_soil_details_api(region_id: str):
     """Retrieves soil attributes mapped to region coordinates."""
     logger.info(f"Soil grids lookup: region={region_id}")
     cache_key = f"soil_grid_{region_id}"
@@ -1804,11 +1810,13 @@ async def get_soil_details_api(region_id: str):
         }
         set_cached_response(cache_key, res)
         return res
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/api/weather")
-async def get_weather_details_api(region_id: str, season: str = "kharif"):
+def get_weather_details_api(region_id: str, season: str = "kharif"):
     """Fetches meteorological averages and severe IMD weather alerts."""
     logger.info(f"Weather info request: region={region_id}, season={season}")
     cache_key = f"weather_alert_{region_id}_{season}"
@@ -1842,11 +1850,41 @@ async def get_weather_details_api(region_id: str, season: str = "kharif"):
         }
         set_cached_response(cache_key, res)
         return res
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+@app.get("/api/forecast")
+def get_forecast(
+    lat: float = Query(..., ge=6.0, le=38.0, description="Farm latitude (India)"),
+    lon: float = Query(..., ge=68.0, le=98.0, description="Farm longitude (India)"),
+):
+    """Live 7-day forecast for a farm with spray / irrigation / heat-stress
+    calls per day (see engine/forecast.py for the rules, returned as `rules`).
+
+    Unlike /api/weather's seasonal averages this is a real forecast; when
+    Open-Meteo can't be reached it fails with a 503 instead of substituting
+    averages, so the UI can say the forecast is unavailable.
+    """
+    from engine import forecast as forecast_engine
+    try:
+        daily = forecast_engine.fetch_daily(lat, lon)
+    except forecast_engine.ForecastUnavailable:
+        logger.warning("Forecast unavailable for lat=%s lon=%s", lat, lon, exc_info=True)
+        raise HTTPException(status_code=503, detail="Live forecast is unavailable right now.")
+    return {
+        "source": "Open-Meteo",
+        "fetched_at": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+        "lat": lat,
+        "lon": lon,
+        "rules": forecast_engine.RULES,
+        "days": forecast_engine.field_windows(daily),
+    }
+
+
 @app.get("/api/market")
-async def get_market_pricing_api(region_id: str, crop_id: str):
+def get_market_pricing_api(region_id: str, crop_id: str):
     """Retrieves current commodity averages and price volatility risks."""
     logger.info(f"Market pricing metrics: region={region_id}, crop={crop_id}")
     cache_key = f"market_{region_id}_{crop_id}"
@@ -1857,7 +1895,14 @@ async def get_market_pricing_api(region_id: str, crop_id: str):
         results = _csv_index("mandi_prices.csv", "region_id").get(region_id, [])
         results = [row for row in results if row["crop_id"] == crop_id]
         
-        latest_price = float(results[-1]["price_inr_per_kg"]) if results else 25.0
+        if results:
+            latest_price = float(results[-1]["price_inr_per_kg"])
+            price_source = "mandi_history"
+        else:
+            latest_price = _reference_price(crop_id)
+            if latest_price is None:
+                raise HTTPException(status_code=404, detail=f"Unknown crop_id: {crop_id!r}")
+            price_source = "crop_reference"
         prices = [float(r["price_inr_per_kg"]) for r in results]
         volatility = np.std(prices) if len(prices) > 1 else 0.0
 
@@ -1874,11 +1919,16 @@ async def get_market_pricing_api(region_id: str, crop_id: str):
             "region_id": region_id,
             "crop_id": crop_id,
             "current_mandi_price_inr_per_kg": latest_price,
+            # "crop_reference" = no local mandi history; the price is the crop's
+            # national reference band midpoint, not a reading from this region.
+            "price_source": price_source,
             "volatility_std": round(float(volatility), 2),
             "forecast": forecast_data
         }
         set_cached_response(cache_key, res)
         return res
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -1891,7 +1941,7 @@ class ChatRequest(BaseModel):
 
 
 @app.post("/api/chat")
-async def chat(req: ChatRequest):
+def chat(req: ChatRequest):
     """Site-aware assistant grounded in Mitti Mantra's data + engine."""
     try:
         return chatbot_answer(req.message, req.context or {})

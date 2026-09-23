@@ -75,3 +75,14 @@ def test_optimal_mix_micro_farm_area():
     assert len(data["allocations"]) > 0
     assert data["allocations"][0]["allocated_acres"] > 0
 
+
+
+def test_optimal_mix_is_never_negative_and_needs_no_soil_weather():
+    r = client.post("/api/optimal-mix", json={"region_id": "telangana_medak", "season": "kharif",
+                                              "total_area_acres": 10, "total_budget": 200000})
+    assert r.status_code == 200
+    d = r.json()
+    assert d["total_expected_profit"] > 0
+    assert 1 <= d["num_crops"] <= 3
+    assert all(a["expected_profit"] > 0 for a in d["allocations"])
+    assert abs(sum(a["allocated_acres"] for a in d["allocations"]) - 10) < 0.05

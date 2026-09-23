@@ -29,8 +29,13 @@
 
   /* ---------- Helpers ---------- */
   const $ = (s, r = document) => r.querySelector(s);
+  const escHtml = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
-  const INR = n => '₹' + Math.round(Number(n) || 0).toLocaleString('en-IN');
+  const INR = n => {
+    const v = Math.round(Number(n) || 0);
+    return (v < 0 ? '−₹' : '₹') + Math.abs(v).toLocaleString('en-IN');
+  };
   // For per-kg / per-unit prices where rounding to ₹ would lose meaningful precision.
   const INR2 = n => '₹' + (Number(n) || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const FIX = (n, d = 1) => (Number(n) || 0).toFixed(d);
@@ -56,7 +61,9 @@
     groundnut: '🥜', soybean: '🌱', mustard: '🌻', bajra: '🌾', jowar: '🌾',
     potato: '🥔', onion: '🧅'
   };
-  const cropLabel = id => (CROP_EMOJI[id] || '🌱') + ' ' + (CROP_LABELS[id] || id);
+  const CROP_NAMES = {};
+  const titleCase = s => String(s || '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  const cropLabel = id => (CROP_EMOJI[id] || '🌱') + ' ' + (CROP_LABELS[id] || CROP_NAMES[id] || titleCase(id));
 
   // Shared chart theming
   const BRAND = '#2f6b3a', BRAND_D = '#1f4d28', ACCENT = '#c88a3a', CLAY = '#a5562a', SKY = '#6ea7c7', INK = '#4a4339';
@@ -154,6 +161,14 @@
       this.status = status;
     }
   }
+  // fetch() itself rejected (offline, DNS, refused connection). Tagged so a
+  // TypeError thrown by a bug in a render function isn't mistaken for one.
+  class NetworkError extends Error {
+    constructor(cause) {
+      super(cause && cause.message ? cause.message : 'Network request failed');
+      this.name = 'NetworkError';
+    }
+  }
 
   /* ---------- Reference-data GET cache ----------
      This farm's /api/soil/{region} and /api/weather/{region} pair is fetched
@@ -213,7 +228,12 @@
 
   async function apiRequest(url, opts) {
     try {
-      const res = await fetch(url, { headers: { 'Content-Type': 'application/json' }, ...opts });
+      let res;
+      try {
+        res = await fetch(url, { headers: { 'Content-Type': 'application/json' }, ...opts });
+      } catch (netErr) {
+        throw new NetworkError(netErr);
+      }
       if (!res.ok) {
         let msg;
         try {
@@ -263,6 +283,13 @@
     return data;
   }
   function tryParseJSON(s) { try { return JSON.parse(s); } catch { return null; } }
+
+  // Resolves once CROP_NAMES is filled (or the lookup failed -- labels then
+  // fall back to title-cased ids). /api/crops is memo-cached, so the region/
+  // crop <select> population below shares this same request.
+  const cropNamesReady = api('/api/crops').then(list => {
+    (Array.isArray(list) ? list : []).forEach(c => { if (c && c.crop_id) CROP_NAMES[c.crop_id] = c.crop_name || titleCase(c.crop_id); });
+  }).catch(() => {});
   let offlineBannerShown = false;
   function flashOfflineBanner() {
     if (offlineBannerShown) return;
@@ -291,13 +318,13 @@
   }
 
   // A likely network-level failure: either the browser reports itself
-  // offline, or the error is the generic TypeError a rejected fetch() throws
-  // (e.g. "Failed to fetch") rather than an HttpError with a real status.
+  // offline, or fetch() itself rejected (wrapped as NetworkError in
+  // apiRequest) rather than returning an HttpError with a real status.
   // Deliberately excludes HttpError (real backend 4xx/5xx responses), which
   // should keep showing their actual message instead of a generic one.
   function isLikelyOffline(err) {
     if (!navigator.onLine) return true;
-    return err instanceof TypeError;
+    return err instanceof NetworkError;
   }
 
   // A backend HttpError's message is developer/API text (e.g. "422 · field
@@ -308,6 +335,7 @@
   // is shown as authored -- only HttpError gets translated here.
   function friendlyHttpMessage(err) {
     const status = err.status;
+    if (status === 429) return 'Too many requests in a short time. Please wait a minute and try again.';
     if (status === 400 || status === 422) return "Some of the details entered don't look right. Please check the form and try again.";
     if (status === 401 || status === 403) return 'Please sign in again to continue.';
     if (status === 404) return "That couldn't be found. Try refreshing the page.";
@@ -327,8 +355,19 @@
         <div class="alert__body"><strong>Request failed</strong><p>${friendlyHttpMessage(err)}</p></div></div>`;
       return;
     }
+    // Our own thrown Errors carry farmer-facing copy; anything else (a
+    // render bug, a missing chart library) is developer text -- log it and
+    // show something generic rather than "Cannot read properties of undefined".
+    const authored = err && err.userFacing;
+    if (!authored) console.error(err);
     el.innerHTML = `<div class="alert alert--red"><svg class="alert__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-      <div class="alert__body"><strong>Request failed</strong><p>${err.message}</p></div></div>`;
+      <div class="alert__body"><strong>Request failed</strong><p>${authored ? escHtml(err.message) : 'Something went wrong showing this result. Please try again.'}</p></div></div>`;
+  }
+  // An Error whose message is written for the farmer and safe to show as-is.
+  function userError(message) {
+    const e = new Error(message);
+    e.userFacing = true;
+    return e;
   }
   function formToObj(form) {
     const obj = {};
@@ -631,7 +670,7 @@
     rotation: ['Kharif × rabi pairings', 'Combined two-season profit', 'Soil nitrogen impact', 'Ranked rotation options'],
     templates: ['Preset farming strategies', 'Expected return per template', 'Risk profile', 'Best-fit match for your plot'],
     compare: ['Side-by-side metrics', 'Winner per category', 'Profit difference', 'Water & input demand'],
-    mix: ['Optimal acre allocation', 'Blended profit estimate', 'Diversification benefit', 'Per-crop share'],
+    mix: ['Acres for each crop', 'Blended profit estimate', 'What spreading risk costs', 'Per-crop share'],
     forecast: ['Six-month price curve', 'Confidence range', 'Sell-or-hold signal', 'Historical trend'],
     msp: ['MSP vs live mandi price', 'Gap per quintal', 'Whether MSP beats market', 'Procurement guidance'],
     sell: ['Best selling window', 'Expected price gain', 'Month-by-month outlook', 'Holding-cost trade-off'],
@@ -743,19 +782,15 @@
     ]),
     api('/api/crops').catch(() => Object.keys(CROP_LABELS).map(c => ({ crop_id: c, crop_name: CROP_LABELS[c] })))
   ]).then(([regions, crops]) => {
+    const regionOpts = regions.map(r => {
+      const id = r.id || r.region_id;
+      const name = r.name || r.region_name || id;
+      return `<option value="${escHtml(id)}">${escHtml(name)}</option>`;
+    }).join('');
     $$('select[data-regions]').forEach(sel => {
-      let optsHtml = regions.map(r => {
-        const id = r.id || r.region_id;
-        const name = r.name || r.region_name || id;
-        return `<option value="${id}">${name}</option>`;
-      }).join('');
-      if (savedFarm && savedFarm.region_id) {
-        const farmName = (savedFarm.state && savedFarm.district)
-          ? `${savedFarm.state} · ${savedFarm.district} (My Farm)`
-          : "My Farm";
-        optsHtml = `<option value="${savedFarm.region_id}">${farmName}</option>` + optsHtml;
-      }
-      sel.innerHTML = optsHtml;
+      const keep = sel.value;
+      sel.innerHTML = regionOpts;
+      if (keep && sel.querySelector(`option[value="${keep}"]`)) sel.value = keep;
     });
     $$('select[data-crops]').forEach(sel => {
       const hasAny = sel.querySelector('option[value=""]');
@@ -905,7 +940,13 @@
         if (wBody) wBody.innerHTML = `
           <div style="font-size: 1.15rem; font-weight: 600; color: var(--brand-deep);">${w.avg_temp_c}°C</div>
           <div style="font-size: 0.8rem; color: var(--ink-soft);">Rainfall: ${w.rainfall_mm}mm</div>
-          <div style="font-size: 0.78rem; margin-top: 4px; padding: 2px 6px; border-radius: 4px; display: inline-block; background: ${w.imd_alert === 'Green' ? '#d1fae5' : '#fee2e2'}; color: ${w.imd_alert === 'Green' ? '#065f46' : '#991b1b'}; font-weight: 600;">IMD: ${w.imd_alert}</div>
+          ${(() => {
+            const lvl = String(w.imd_alert || 'Unavailable');
+            const known = ['Green', 'Yellow', 'Orange', 'Red'].includes(lvl);
+            const bg = lvl === 'Green' ? '#d1fae5' : known ? '#fee2e2' : 'var(--bg-soft)';
+            const fg = lvl === 'Green' ? '#065f46' : known ? '#991b1b' : 'var(--ink-soft)';
+            return `<div style="font-size: 0.78rem; margin-top: 4px; padding: 2px 6px; border-radius: 4px; display: inline-block; background: ${bg}; color: ${fg}; font-weight: 600;">IMD: ${escHtml(known ? lvl : 'no live alert feed')}</div>`;
+          })()}
         `;
 
         // Auto-populate form default weather values
@@ -944,7 +985,7 @@
         `;
 
         // Auto-fill NPK inputs in fertilizer form if no custom active farm soil is present
-        if (!savedFarm || !savedFarm.soil) {
+        if (!hasMeasuredSoil(savedFarm)) {
           const fertForm = document.querySelector('[data-form="fertilizer"]');
           if (fertForm) {
             if (s.n_kg_per_acre != null) fertForm.n.value = Math.round(s.n_kg_per_acre);
@@ -962,8 +1003,8 @@
       .then(m => {
         if (activeTelemetryRegionId !== regionId) return;
         if (mBody) mBody.innerHTML = `
-          <div style="font-size: 1.15rem; font-weight: 600; color: var(--brand-deep);">₹${m.current_mandi_price_inr_per_kg}/kg</div>
-          <div style="font-size: 0.8rem; color: var(--ink-soft);">Volatility: ${m.volatility_std}</div>
+          <div style="font-size: 1.15rem; font-weight: 600; color: var(--brand-deep);">${INR2(m.current_mandi_price_inr_per_kg)}/kg <span style="font-size:.7rem;font-weight:500;color:var(--ink-faint);">rice</span></div>
+          <div style="font-size: 0.8rem; color: var(--ink-soft);">${m.price_source === 'crop_reference' ? 'No local mandi history — national reference price' : 'Volatility: ' + FIX(m.volatility_std, 2)}</div>
           ${m.forecast ? `<div style="font-size: 0.78rem; color: var(--accent); font-weight: 600;">Trend: ${m.forecast.trend_direction}</div>` : ''}
         `;
       })
@@ -1084,7 +1125,7 @@
   (function () {
     const out = $('[data-out="home"]');
     if (!out) return;
-    const esc = (window.MM && window.MM.escapeHtml) ? window.MM.escapeHtml : (s => String(s));
+    const esc = escHtml;
 
     function committedCropId() {
       const fs = (typeof window.FarmState !== 'undefined' && window.FarmState.getActiveCrop) ? window.FarmState.getActiveCrop() : null;
@@ -1134,9 +1175,9 @@
         </div>
         <form data-form="home-setup" style="margin-top:16px;">
           <div class="form-row">
-            <div class="field"><label>Region</label><select name="region_id" data-regions></select></div>
+            <div class="field"><label>Region</label><select name="region_id" data-regions required></select></div>
             <div class="field"><label>Crop</label><select name="crop_id" data-crops><option value="">Help me choose</option></select></div>
-            <div class="field"><label>Area (acres)</label><input name="area_acres" type="number" step="any" value="4"></div>
+            <div class="field"><label>Area (acres)</label><input name="area_acres" type="number" step="any" min="0.1" max="10000" value="4" required></div>
           </div>
           <button class="btn btn-primary" type="submit">See my farm</button>
         </form>`;
@@ -1144,7 +1185,10 @@
       $('[data-form="home-setup"]', out)?.addEventListener('submit', e => {
         e.preventDefault();
         const f = formToObj(e.target);
-        const area_acres = parseFloat(f.area_acres) || 4;
+        const area_acres = parseFloat(f.area_acres);
+        // Region list failed to load (backend down) -- say so instead of
+        // silently re-rendering this same empty form.
+        if (!f.region_id) { window.MM?.toast?.('Regions could not be loaded. Check your connection and try again.', 4000); return; }
         // profile.set() and setActiveCrop() each dispatch their own change
         // event (mm:profile-changed / mm:plot-changed); the debounced
         // listener below re-renders once both have landed rather than
@@ -1157,7 +1201,84 @@
       });
     }
 
+    // Region display names come from the (cached) /api/regions list; fall
+    // back to FarmState's offline table, then the raw id.
+    async function regionName(regionId) {
+      try {
+        const regions = await api('/api/regions');
+        const r = (regions || []).find(x => (x.id || x.region_id) === regionId);
+        if (r) return r.name || r.region_name || regionId;
+      } catch (_) { /* fall through */ }
+      const rec = window.FarmState?.getRegionRecord?.(regionId);
+      return rec ? rec.displayName : regionId;
+    }
+
+    // Profile/plot events, the tab button and the initial call can all start
+    // a render; only the most recent one may write to the panel, or a slow
+    // earlier fetch lands last and shows the previous crop's numbers.
+    let renderSeq = 0;
+
+    // Where to ask for a forecast: the drawn plot's own centroid when there is
+    // one, else the centre of the profile's region.
+    function forecastPoint(region_id) {
+      const farm = window.FarmState && window.FarmState.load && window.FarmState.load();
+      if (farm && isFinite(farm.lat) && isFinite(farm.lon)) return { lat: +farm.lat, lon: +farm.lon, own: true };
+      const c = window.FarmState && (window.FarmState.REGION_CENTROIDS || []).find(r => r.region_id === region_id);
+      return c ? { lat: +c.lat, lon: +c.lon, own: false } : null;
+    }
+
+    // "This week on your farm": live 7-day forecast turned into spray /
+    // irrigation calls (rules live in engine/forecast.py). Loaded after the
+    // main render so a slow or failed forecast never holds up the tab.
+    async function renderForecast(box, region_id, seq) {
+      if (!box) return;
+      const pt = forecastPoint(region_id);
+      if (!pt) { box.remove(); return; }
+      box.innerHTML = '<div class="forecast__head"><h3>This week on your farm</h3></div><p class="forecast__note">Loading the live forecast…</p>';
+      let r;
+      try {
+        r = await api(`/api/forecast?lat=${pt.lat.toFixed(3)}&lon=${pt.lon.toFixed(3)}`);
+      } catch (_) {
+        if (seq !== renderSeq) return;
+        box.innerHTML = `<div class="forecast__head"><h3>This week on your farm</h3></div>
+          <p class="forecast__note">Live forecast unavailable right now. Check the IMD forecast before spraying.</p>`;
+        return;
+      }
+      if (seq !== renderSeq || !r || !Array.isArray(r.days) || !r.days.length) return;
+
+      const fmtDay = (iso, i) => i === 0 ? 'Today' : i === 1 ? 'Tomorrow'
+        : new Date(iso + 'T00:00:00').toLocaleDateString(
+          (window.AgriSimI18n && window.AgriSimI18n.getLanguage && window.AgriSimI18n.getLanguage()) || undefined,
+          { weekday: 'short' });
+      const nextSprayIdx = r.days.findIndex(d => d.spray === 'good');
+      const today = r.days[0];
+      const summary = today.spray === 'good'
+        ? `<b>Good day to spray</b> — ${esc(today.spray_reason)}.`
+        : `<b>Don't spray today</b> — ${esc(today.spray_reason)}. ${nextSprayIdx > 0 ? `Next good day: <b>${esc(fmtDay(r.days[nextSprayIdx].date, nextSprayIdx))}</b>.` : 'No good spraying day this week.'}`;
+      const water = today.irrigate === 'skip'
+        ? `<b>Hold irrigation</b> — ${esc(today.irrigate_reason)}.`
+        : `<b>Irrigation:</b> ${esc(today.irrigate_reason)}.`;
+      const heatDays = r.days.filter(d => d.heat_stress).length;
+
+      box.innerHTML = `
+        <div class="forecast__head">
+          <h3>This week on your farm</h3>
+          <span class="forecast__src">${pt.own ? 'Your plot' : 'Region centre'} · Open-Meteo</span>
+        </div>
+        <div class="forecast__days">
+          ${r.days.map((d, i) => `
+            <div class="forecast__day" title="${esc(d.spray_reason)}">
+              <div class="forecast__dow">${esc(fmtDay(d.date, i))}</div>
+              <div class="forecast__rain">${d.rain_mm == null ? '—' : (d.rain_mm < 0.05 ? '0' : FIX(d.rain_mm, d.rain_mm < 10 ? 1 : 0)) + ' mm'}</div>
+              <div class="forecast__temp">${d.tmax_c == null ? '—' : Math.round(d.tmax_c) + '°'}${d.heat_stress ? ' <span class="forecast__hot" title="Heat stress">!</span>' : ''}</div>
+              <span class="chip ${d.spray === 'good' ? 'chip--green' : 'chip--red'}">${d.spray === 'good' ? 'Spray OK' : 'No spray'}</span>
+            </div>`).join('')}
+        </div>
+        <p class="forecast__note">${summary} ${water}${heatDays ? ` <b>Heat stress</b> expected on ${heatDays} ${heatDays === 1 ? 'day' : 'days'} (40°C+): water early, avoid midday field work.` : ''}</p>`;
+    }
+
     async function renderHome() {
+      const seq = ++renderSeq;
       const profile = (window.MM && window.MM.profile) ? window.MM.profile.get() : null;
       if (!profile || !profile.region_id) { renderSetup(); return; }
 
@@ -1168,19 +1289,25 @@
 
       showLoading(out, 'Reading your farm…');
       try {
-        const recs = await api('/api/crop', {
-          method: 'POST',
-          body: JSON.stringify({ region_id, season, area_acres, budget_per_acre })
-        });
+        const qs = new URLSearchParams({ budget_per_acre, area_acres });
+        const [recs] = await Promise.all([
+          api(`/api/crop-comparison/${encodeURIComponent(region_id)}/${encodeURIComponent(season)}?${qs}`),
+          cropNamesReady,
+        ]);
+        if (seq !== renderSeq) return;
         if (!Array.isArray(recs) || !recs.length) {
           out.innerHTML = '<div class="alert"><div class="alert__body"><strong>No recommendations available for this region and budget yet.</strong></div></div>';
           return;
         }
 
-        // A committed crop the recommender didn't shortlist (e.g. budget too
-        // low to include it) still gets named correctly -- its profit tile
-        // just says so honestly instead of borrowing another crop's numbers.
-        const pick = committed ? (recs.find(r => r.crop_id === committed) || null) : recs[0];
+        // A committed crop with no score (e.g. out of season here) still gets
+        // named correctly -- its profit tile says so honestly instead of
+        // borrowing another crop's numbers.
+        // Don't offer a loss-making crop as a "top match" while profitable
+        // ones exist.
+        const profitable = recs.filter(r => r.expected_profit > 0);
+        const top3 = (profitable.length ? profitable : recs).slice(0, 3);
+        const pick = committed ? (recs.find(r => r.crop_id === committed) || null) : top3[0];
         const cropId = committed || (pick ? pick.crop_id : '');
 
         const [score, weather] = await Promise.all([
@@ -1188,10 +1315,12 @@
           api(`/api/weather/${region_id}?season=${season}`).catch(() => null),
         ]);
 
-        const [msp, pest] = await Promise.all([
+        const [msp, pest, placeName] = await Promise.all([
           cropId ? api(`/api/msp-vs-market/${region_id}/${cropId}`).catch(() => null) : Promise.resolve(null),
           (cropId && weather && weather.avg_temp_c != null) ? api(`/api/pest-alerts/${cropId}?avg_temp_c=${weather.avg_temp_c}&rainfall_mm=${weather.rainfall_mm}`).catch(() => null) : Promise.resolve(null),
+          regionName(region_id),
         ]);
+        if (seq !== renderSeq) return;
 
         const risk = score && score.pillars ? riskInfo(score.pillars.risk_resilience) : null;
         const alerts = (pest && pest.alerts) || [];
@@ -1204,9 +1333,8 @@
           : topSeverity.includes('high') ? 'kpi--bad'
           : (topSeverity.includes('moderate') || topSeverity.includes('medium')) ? 'kpi--warn'
           : 'kpi--good';
-        const rainCaution = !!(weather && weather.imd_alert && weather.imd_alert !== 'Green');
+        const rainCaution = !!(weather && ['Yellow', 'Orange', 'Red'].includes(weather.imd_alert));
 
-        const top3 = recs.slice(0, 3);
         const bestScore = Math.max(...top3.map(r => r.smart_score || 0), 1);
         const committedInTop3 = committed && top3.some(r => r.crop_id === committed);
 
@@ -1248,8 +1376,8 @@
           </div>
 
           <div class="kpi-grid">
-            <div class="kpi kpi--good">
-              <div class="kpi__lbl">Profit</div>
+            <div class="kpi ${!pick ? '' : pick.expected_profit < 0 ? 'kpi--bad' : 'kpi--good'}">
+              <div class="kpi__lbl">${pick && pick.expected_profit < 0 ? 'Expected loss' : 'Profit'}</div>
               <div class="kpi__val">${pick ? TT(pick.expected_profit, INR(pick.expected_profit)) : '—'}</div>
               <div class="kpi__sub">${pick ? 'ROI ' + PCT(pick.roi_percent) + ' · ' + Math.round(pick.predicted_yield_kg_per_acre) + ' kg/ac' : '<span>Not available for this crop yet</span> · <a href="#" data-goto="simulate" style="color:var(--brand-deep);font-weight:600;">Run a full simulation →</a>'}</div>
             </div>
@@ -1264,7 +1392,7 @@
               <div class="kpi__sub">${msp ? (msp.mandi_above_msp ? '+' : '') + FIX(msp.mandi_msp_gap_pct, 1) + '% vs MSP (' + INR2(msp.msp_inr_per_kg) + '/kg)' : cropId ? 'No MSP data for this crop' : 'Pick a crop to see this'}</div>
             </div>
             <div class="kpi ${weather ? (rainCaution ? 'kpi--warn' : 'kpi--info') : ''}">
-              <div class="kpi__lbl">Rain</div>
+              <div class="kpi__lbl">Season rain (avg)</div>
               <div class="kpi__val">${weather ? Math.round(weather.rainfall_mm) + ' mm' : '—'}</div>
               <div class="kpi__sub">${weather ? FIX(weather.avg_temp_c, 0) + '°C avg · ' : ''}<a href="#" data-goto="irrigation" style="color:var(--brand-deep);font-weight:600;">Watering plan →</a></div>
             </div>
@@ -1274,8 +1402,9 @@
               ${alerts.length ? `<div class="kpi__sub" style="margin-top:6px;">${alerts.length > 2 ? (alerts.length - 2) + ' more · ' : ''}<a href="#" data-goto="pest" style="color:var(--brand-deep);font-weight:600;">See full details →</a></div>` : ''}
             </div>
           </div>
+          <div class="forecast" data-forecast></div>
           <div style="margin-top:10px;font-size:var(--fs-2xs);color:var(--ink-faint);">
-            ${esc(region_id)} · ${esc(season)} · ${area_acres} ac · ${INR(budget_per_acre)}/ac —
+            ${esc(placeName)} ·<span style="text-transform:capitalize;">${esc(season)}</span> · ${area_acres} ac · ${INR(budget_per_acre)}/ac —
             <a href="#" data-edit-profile style="color:var(--ink-soft);text-decoration:underline;">Edit your farm details</a>
           </div>`;
 
@@ -1288,7 +1417,8 @@
           document.querySelector(`.sidebar__btn[data-tool="${a.dataset.goto}"]`)?.click();
         }));
         $('[data-edit-profile]', out)?.addEventListener('click', e => { e.preventDefault(); renderSetup(); });
-      } catch (err) { showError(out, err); }
+        renderForecast($('[data-forecast]', out), region_id, seq);
+      } catch (err) { if (seq === renderSeq) showError(out, err); }
     }
 
     document.querySelector('.sidebar__btn[data-tool="home"]')?.addEventListener('click', renderHome);
@@ -1572,9 +1702,15 @@
             }
             syncCommittedButtons(cropId);
           } catch (err) {
-            out.querySelectorAll('.mm-commit-btn').forEach(b => { b.disabled = false; });
+            // Restore the pre-click state (the already-committed crop, if any,
+            // stays disabled) and say why nothing happened.
+            const current = window.FarmState?.getActiveCrop?.();
+            out.querySelectorAll('.mm-commit-btn').forEach(b => { b.disabled = !!current && b.dataset.cropId === current.crop_id; });
             btn.textContent = btn.id === 'mm-commit-crop-btn' ? "I'm planting this →" : 'Choose this →';
             retranslate();
+            window.MM?.toast?.(isLikelyOffline(err)
+              ? "You're offline — your choice wasn't saved. Try again when connected."
+              : (err instanceof HttpError ? friendlyHttpMessage(err) : "Couldn't save your choice. Please try again."), 4000);
           }
         });
       });
@@ -1731,8 +1867,8 @@
             <strong>Yield Model Explainability Drivers:</strong>
             <div style="font-size: 0.95rem; margin-top: 4px; font-weight: 600;">${r.intelligence_report.uncertainty_range}</div>
             <ul style="margin: 8px 0 0 16px; padding: 0;">
-              ${r.intelligence_report.positive_influences.map(pi => `<li style="margin-bottom: 2px; font-size: 0.85rem; list-style-type: check;">✓ ${pi}</li>`).join('')}
-              ${r.intelligence_report.negative_influences.map(ni => `<li style="margin-bottom: 2px; font-size: 0.85rem; list-style-type: warning;">⚠ ${ni}</li>`).join('')}
+              ${(r.intelligence_report.positive_influences || []).map(pi => `<li style="margin-bottom: 2px; font-size: 0.85rem; list-style: none;">✓ ${escHtml(pi)}</li>`).join('')}
+              ${(r.intelligence_report.negative_influences || []).map(ni => `<li style="margin-bottom: 2px; font-size: 0.85rem; list-style: none;">⚠ ${escHtml(ni)}</li>`).join('')}
             </ul>
             <div style="font-size: 0.78rem; color: var(--ink-faint); margin-top: 8px; font-style: italic;">
               ${r.intelligence_report.explanation}
@@ -1892,7 +2028,7 @@
               <div class="kpi__val">${Math.round(b.yield_percentile || 0)}<span style="font-size:.5em;color:var(--ink-faint)">th</span></div>
             </div>
           </div>
-          <p style="margin:10px 2px 0;font-size:.9rem;color:var(--ink-faint)">${(window.MM && window.MM.escapeHtml ? window.MM.escapeHtml : String)(b.rating || '')}</p>`;
+          <p style="margin:10px 2px 0;font-size:.9rem;color:var(--ink-faint)">${escHtml(b.rating || '')}</p>`;
       }).catch(() => {
         const body = out.querySelector('[data-benchmark-body]');
         const card = out.querySelector('[data-benchmark-card]');
@@ -1983,7 +2119,7 @@
       if (!fcst.length) { out.innerHTML = '<div class="alert"><div class="alert__body"><strong>No forecast available.</strong></div></div>'; return; }
 
       // Build historical series (last 12 rows sorted by date)
-      const histSorted = history
+      const histSorted = (Array.isArray(history) ? history : [])
         .map(h => ({ date: h.date || h.price_date, price: parseFloat(h.price_inr_per_kg || h.price || 0) }))
         .filter(h => h.date && !isNaN(h.price))
         .sort((a, b) => a.date.localeCompare(b.date))
@@ -1997,9 +2133,12 @@
       // Combined series: history followed by forecast (padded with nulls so they align on same chart)
       const combinedLabels = [...histLabels, ...fcstLabels];
       const histPad = [...histData, ...fcstLabels.map(() => null)];
-      const fcstPad = [...histLabels.slice(0, -1).map(() => null),
-      histData.length ? histData[histData.length - 1] : null,
-      ...fcstData];
+      // With history, the forecast line starts from the last actual point so
+      // the two series join up; without any, it's just the forecast -- a
+      // bridging null there would shift every forecast point one month right.
+      const fcstPad = histData.length
+        ? [...histLabels.slice(0, -1).map(() => null), histData[histData.length - 1], ...fcstData]
+        : fcstData;
 
       const lastHist = histData[histData.length - 1] || data.current_price || 0;
       const lastFcst = fcstData[fcstData.length - 1] || 0;
@@ -2016,13 +2155,13 @@
             <div class="kpi__lbl">Trend</div>
             <div class="kpi__val" style="font-size:1.3rem;text-transform:capitalize;">${data.trend_direction || '—'}</div>
             <div class="kpi__sub">Slope ${FIX(data.trend_slope_per_month || 0, 2)}/mo</div></div>
-          <div class="kpi kpi--good"><div class="kpi__lbl">Model</div>
-            <div class="kpi__val" style="font-size:1rem;">${data.prediction_source || 'ml_model'}</div>
-            <div class="kpi__sub">${fcst[0]?.confidence || 'high'} confidence</div></div>
+          <div class="kpi"><div class="kpi__lbl">Model</div>
+            <div class="kpi__val" style="font-size:1rem;">${data.prediction_source === 'ml_model' ? 'ML model' : data.prediction_source ? 'Trend estimate' : '—'}</div>
+            ${fcst[0]?.confidence ? `<div class="kpi__sub">${escHtml(fcst[0].confidence)} confidence</div>` : ''}</div>
         </div>
 
         <div class="chart-box">
-          <div class="chart-box__title">Price trajectory · ${f.crop_id} @ ${f.region_id}</div>
+          <div class="chart-box__title">Price trajectory · ${cropLabel(f.crop_id)}</div>
           <canvas data-chart="fcst-line"></canvas>
         </div>`;
 
@@ -2443,12 +2582,12 @@
       const f = formToObj(e.target);
       const r = await api(`/api/pest-alerts/${f.crop_id}?avg_temp_c=${f.avg_temp_c}&rainfall_mm=${f.rainfall_mm}`);
       const alerts = r.alerts || [];
-      const esc = (window.MM && window.MM.escapeHtml) ? window.MM.escapeHtml : (s => String(s));
+      const esc = escHtml;
 
       if (!alerts.length) {
         out.innerHTML = `<div class="alert alert--green">
           <svg class="alert__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
-          <div class="alert__body"><strong>No active pest risk</strong><p>Current weather (${f.avg_temp_c}°C, ${f.rainfall_mm}mm) is safe for ${f.crop_id}.</p></div></div>`;
+          <div class="alert__body"><strong>No active pest risk</strong><p>Current weather (${escHtml(f.avg_temp_c)}°C, ${escHtml(f.rainfall_mm)}mm) doesn't trigger any known pest rule for ${cropLabel(f.crop_id)}.</p></div></div>`;
         return;
       }
 
@@ -2575,88 +2714,157 @@
   });
 
   /* ==========================================================
-     TOOL 12b: Expense tracker — localStorage only, no backend call.
+     TOOL 12b: Season ledger — localStorage only, no backend call.
      /api/expense/* used to do this server-side, keyed by a client-supplied
      farm_id with no auth (anyone could read/write anyone else's expenses),
      so it's disabled in backend/main.py until real tenant-scoped storage
-     exists. This keeps the same category/amount/date/note shape but scopes
-     it to this browser, the same way the Farm Profile and the disease-scan
-     log (mittimantra_disease_logs, below) already do.
+     exists. Entries live in this browser, the same way the Farm Profile and
+     the disease-scan log (mittimantra_disease_logs, below) already do.
+
+     Every expense and harvest sale is tagged with the plot and season it
+     belongs to, so several plots (FarmState) and several seasons each keep
+     their own books, and the season closes the loop the planning tools
+     open: what the plan expected vs. what was actually spent and earned.
      ========================================================== */
   const EXPENSE_KEY = 'mm_expenses';
+  const HARVEST_KEY = 'mm_harvests';
   const EXPENSE_CATEGORY_LABELS = {
     seeds: 'Seeds', fertilizer: 'Fertilizer', pesticide: 'Pesticide',
     labor: 'Labor', irrigation: 'Irrigation', equipment: 'Equipment', other: 'Other'
   };
 
-  function loadExpenses() {
-    try { return JSON.parse(localStorage.getItem(EXPENSE_KEY) || '[]'); }
+  // Which books are open: the active plot, and the season from the farm
+  // profile. Rabi sown in Oct-Dec is harvested Jan-Apr, so a rabi entry made
+  // before June belongs to the season that started the previous year.
+  function ledgerScope() {
+    const profile = (window.MM && window.MM.profile && window.MM.profile.get()) || {};
+    const season = (profile.season || 'kharif').toLowerCase();
+    const now = new Date();
+    const year = (season === 'rabi' && now.getMonth() < 5) ? now.getFullYear() - 1 : now.getFullYear();
+    const plotId = (window.FarmState && window.FarmState.getActiveId && window.FarmState.getActiveId()) || 'default';
+    return { plot_id: plotId, season_key: `${season}-${year}`, season, year };
+  }
+  function seasonLabel(sc) {
+    const name = sc.season.charAt(0).toUpperCase() + sc.season.slice(1);
+    return sc.season === 'rabi' ? `${name} ${sc.year}–${String(sc.year + 1).slice(2)}` : `${name} ${sc.year}`;
+  }
+  const inScope = (x, sc) => x.plot_id === sc.plot_id && x.season_key === sc.season_key;
+
+  function readList(key) {
+    try { const v = JSON.parse(localStorage.getItem(key) || '[]'); return Array.isArray(v) ? v : []; }
     catch (_) { return []; }
   }
-  function saveExpenses(list) {
-    try { localStorage.setItem(EXPENSE_KEY, JSON.stringify(list)); } catch (_) { }
+  function writeList(key, list) {
+    try { localStorage.setItem(key, JSON.stringify(list)); } catch (_) { }
   }
-  function expenseBudget() {
+  // Entries logged before the ledger was scoped carry no plot/season, and
+  // entries logged before any plot existed sit under 'default' (committing a
+  // crop or drawing a farm creates the first plot). Adopt both into whichever
+  // books are open the first time they're read, once, so nothing vanishes.
+  function loadScoped(key) {
+    const list = readList(key);
+    const sc = ledgerScope();
+    const orphan = x => !x.plot_id || !x.season_key || (x.plot_id === 'default' && sc.plot_id !== 'default');
+    if (list.some(orphan)) {
+      list.forEach(x => {
+        if (!orphan(x)) return;
+        if (!x.plot_id || x.plot_id === 'default') x.plot_id = sc.plot_id;
+        x.season_key = x.season_key || sc.season_key;
+      });
+      writeList(key, list);
+    }
+    return list;
+  }
+  const loadAllExpenses = () => loadScoped(EXPENSE_KEY);
+  const loadAllSales = () => loadScoped(HARVEST_KEY);
+  const nextId = list => list.reduce((m, x) => Math.max(m, x.id || 0), 0) + 1;
+
+  function ledgerBudget() {
     const profile = (window.MM && window.MM.profile && window.MM.profile.get()) || {};
-    const areaAcres = +profile.area_acres || +(savedFarm && savedFarm.acres) || 0;
+    const areaAcres = +(savedFarm && savedFarm.acres) || +profile.area_acres || 0;
     const perAcre = +profile.budget_per_acre || 0;
-    return areaAcres * perAcre;
+    return { areaAcres, perAcre, total: areaAcres * perAcre };
   }
 
+  let ledgerSeq = 0;
   function renderExpenses() {
     const out = $('[data-out="expense"]');
     if (!out) return;
-    const entries = loadExpenses().slice().sort((a, b) => (b.date || '').localeCompare(a.date || '') || b.id - a.id);
+    const seq = ++ledgerSeq;
+    const sc = ledgerScope();
+    const byDateDesc = (a, b) => (b.date || '').localeCompare(a.date || '') || b.id - a.id;
+    const expenses = loadAllExpenses().filter(x => inScope(x, sc)).sort(byDateDesc);
+    const sales = loadAllSales().filter(x => inScope(x, sc)).sort(byDateDesc);
+    const plotName = (savedFarm && savedFarm.name) || '';
+    const scopeLine = `<p class="ledger__scope"><b>${escHtml(seasonLabel(sc))}</b>${plotName ? ' · ' + escHtml(plotName) : ''} — change the season or plot in the “My farm” bar to open other books.</p>`;
 
-    if (!entries.length) {
-      const items = ['Total spend vs. your farm budget', 'Spend by category', 'A running log you can edit'];
-      out.innerHTML = `<div class="tool__empty">
+    if (!expenses.length && !sales.length) {
+      const items = ['Total spend vs. your farm budget', 'Harvest sales and actual profit', 'Planned vs. actual for the season'];
+      out.innerHTML = `${scopeLine}<div class="tool__empty">
            <div class="tool__empty__ico">${SPARK_SVG}</div>
            <div>
              <div class="tool__empty__label">What you'll get</div>
              <ul>${items.map(t => `<li>${CHECK_SVG}<span>${t}</span></li>`).join('')}</ul>
-             <p class="tool__empty__hint">Add your first expense above.</p>
+             <p class="tool__empty__hint">Add your first expense or harvest sale above.</p>
            </div>
          </div>`;
       return;
     }
 
-    const total = entries.reduce((s, e) => s + (Number(e.amount) || 0), 0);
-    const budget = expenseBudget();
-    const variance = budget - total;
-    const varianceCls = budget ? (variance >= 0 ? 'kpi--good' : 'kpi--warn') : '';
+    const spent = expenses.reduce((s, e) => s + (Number(e.amount) || 0), 0);
+    const revenue = sales.reduce((s, h) => s + (Number(h.qty_kg) || 0) * (Number(h.price_per_kg) || 0), 0);
+    const soldKg = sales.reduce((s, h) => s + (Number(h.qty_kg) || 0), 0);
+    const actual = revenue - spent;
+    const budget = ledgerBudget();
+    const variance = budget.total - spent;
 
     const byCategory = {};
-    entries.forEach(e => { byCategory[e.category] = (byCategory[e.category] || 0) + (Number(e.amount) || 0); });
+    expenses.forEach(e => { byCategory[e.category] = (byCategory[e.category] || 0) + (Number(e.amount) || 0); });
     const catKeys = Object.keys(byCategory).sort((a, b) => byCategory[b] - byCategory[a]);
 
+    const spentSub = budget.total
+      ? (variance >= 0 ? `${INR(variance)} left of ${INR(budget.total)} budget` : `${INR(-variance)} over the ${INR(budget.total)} budget`)
+      : `${expenses.length} ${expenses.length === 1 ? 'entry' : 'entries'}`;
+
     out.innerHTML = `
+      ${scopeLine}
       <div class="kpi-grid">
-        <div class="kpi"><div class="kpi__lbl">Total spent</div><div class="kpi__val">${INR(total)}</div>
-          <div class="kpi__sub">${entries.length} ${entries.length === 1 ? 'entry' : 'entries'}</div></div>
-        ${budget ? `
-        <div class="kpi"><div class="kpi__lbl">Farm budget</div><div class="kpi__val">${INR(budget)}</div></div>
-        <div class="kpi ${varianceCls}"><div class="kpi__lbl">${variance >= 0 ? 'Remaining' : 'Over budget'}</div>
-          <div class="kpi__val">${INR(Math.abs(variance))}</div></div>` : ''}
+        <div class="kpi ${budget.total && variance < 0 ? 'kpi--warn' : ''}"><div class="kpi__lbl">Total spent</div><div class="kpi__val">${INR(spent)}</div>
+          <div class="kpi__sub">${spentSub}</div></div>
+        <div class="kpi"><div class="kpi__lbl">Harvest sales</div><div class="kpi__val">${INR(revenue)}</div>
+          <div class="kpi__sub">${soldKg ? Math.round(soldKg).toLocaleString('en-IN') + ' kg sold' : 'No sales recorded yet'}</div></div>
+        <div class="kpi ${sales.length ? (actual >= 0 ? 'kpi--good' : 'kpi--bad') : ''}"><div class="kpi__lbl">${actual >= 0 ? 'Actual profit' : 'Actual loss'}</div>
+          <div class="kpi__val">${sales.length ? INR(Math.abs(actual)) : '—'}</div>
+          <div class="kpi__sub">${sales.length ? 'Sales minus spend so far' : 'Shows once you record a sale'}</div></div>
+        <div class="kpi kpi--info" data-ledger-plan><div class="kpi__lbl">Planned profit</div>
+          <div class="kpi__val">…</div><div class="kpi__sub">Checking your plan</div></div>
       </div>
 
-      <div class="chart-grid">
+      ${catKeys.length ? `<div class="chart-grid">
         <div class="chart-box">
           <div class="chart-box__title">Spend by category</div>
           <canvas data-chart="expense-cat"></canvas>
         </div>
-      </div>
+      </div>` : ''}
 
-      ${entries.map(e => `
+      ${sales.map(h => `
+        <div class="alert alert--green" data-harvest-row="${h.id}">
+          <div class="alert__body">
+            <strong>Sale — ${INR((Number(h.qty_kg) || 0) * (Number(h.price_per_kg) || 0))}</strong>
+            <span>${escHtml(h.date || '')} · ${Number(h.qty_kg).toLocaleString('en-IN')} kg × ${INR2(h.price_per_kg)}/kg${h.note ? ' · ' + escHtml(h.note) : ''}</span>
+          </div>
+          <button type="button" class="btn btn-ghost" data-harvest-delete="${h.id}">Delete</button>
+        </div>`).join('')}
+      ${expenses.map(e => `
         <div class="alert" data-expense-row="${e.id}">
           <div class="alert__body">
-            <strong>${EXPENSE_CATEGORY_LABELS[e.category] || e.category} — ${INR(e.amount)}</strong>
-            <span>${e.date || ''}${e.note ? ' · ' + e.note : ''}</span>
+            <strong>${escHtml(EXPENSE_CATEGORY_LABELS[e.category] || e.category)} — ${INR(e.amount)}</strong>
+            <span>${escHtml(e.date || '')}${e.note ? ' · ' + escHtml(e.note) : ''}</span>
           </div>
           <button type="button" class="btn btn-ghost" data-expense-delete="${e.id}">Delete</button>
         </div>`).join('')}`;
 
-    makeChart($('[data-chart="expense-cat"]'), {
+    if (catKeys.length) makeChart($('[data-chart="expense-cat"]'), {
       type: 'bar',
       data: {
         labels: catKeys.map(k => EXPENSE_CATEGORY_LABELS[k] || k),
@@ -2668,33 +2876,106 @@
         plugins: { legend: { display: false } }
       }
     });
+
+    fillPlannedProfit($('[data-ledger-plan]', out), sc, budget, sales.length ? actual : null, seq);
+  }
+
+  // The plan's number is what the recommender expected for the crop this
+  // plot is committed to, at this farm's area and budget -- the same figure
+  // My Farm shows. Without a committed crop there is no plan to compare with,
+  // and the tile says so rather than picking one.
+  async function fillPlannedProfit(tile, sc, budget, actual, seq) {
+    if (!tile) return;
+    const setTile = (val, sub) => {
+      if (seq !== ledgerSeq) return;
+      tile.querySelector('.kpi__val').innerHTML = val;
+      tile.querySelector('.kpi__sub').innerHTML = sub;
+    };
+    const crop = window.FarmState && window.FarmState.getActiveCrop && window.FarmState.getActiveCrop();
+    const profile = (window.MM && window.MM.profile && window.MM.profile.get()) || {};
+    const region = (savedFarm && savedFarm.region_id) || profile.region_id;
+    if (!crop || !crop.crop_id) { setTile('—', 'Choose a crop on My Farm to compare with a plan'); return; }
+    if (!region || !budget.areaAcres || !budget.perAcre) { setTile('—', 'Set area and budget in the “My farm” bar'); return; }
+    try {
+      const qs = new URLSearchParams({ budget_per_acre: budget.perAcre, area_acres: budget.areaAcres });
+      const recs = await api(`/api/crop-comparison/${encodeURIComponent(region)}/${encodeURIComponent(sc.season)}?${qs}`);
+      const rec = Array.isArray(recs) ? recs.find(r => r.crop_id === crop.crop_id) : null;
+      if (!rec) { setTile('—', `No plan figure for <span data-no-translate>${cropLabel(crop.crop_id)}</span> this season`); return; }
+      const planned = rec.expected_profit;
+      const gap = actual == null ? '' : ` · ${actual >= planned ? 'ahead by' : 'behind by'} ${INR(Math.abs(actual - planned))}`;
+      setTile(INR(planned), `<span data-no-translate>${cropLabel(crop.crop_id)}</span>${gap}`);
+    } catch (_) {
+      setTile('—', 'Plan unavailable offline');
+    }
   }
 
   $('[data-form="expense"]')?.addEventListener('submit', e => {
     e.preventDefault();
     const f = formToObj(e.target);
     const amount = +f.amount;
-    if (!f.category || !(amount > 0)) return;
-    const entries = loadExpenses();
-    const nextId = entries.reduce((m, x) => Math.max(m, x.id || 0), 0) + 1;
+    if (!f.category || !(amount > 0)) {
+      window.MM?.toast?.('Pick a category and enter an amount above ₹0.', 3500);
+      return;
+    }
+    const sc = ledgerScope();
+    const entries = loadAllExpenses();
     entries.push({
-      id: nextId,
+      id: nextId(entries),
+      plot_id: sc.plot_id,
+      season_key: sc.season_key,
       category: f.category,
       amount: Math.round(amount * 100) / 100,
-      date: f.date || new Date().toISOString().slice(0, 10),
+      date: f.date || new Date().toLocaleDateString('en-CA'),  // local YYYY-MM-DD
       note: (f.note || '').slice(0, 200)
     });
-    saveExpenses(entries);
+    writeList(EXPENSE_KEY, entries);
+    e.target.reset();
+    renderExpenses();
+  });
+
+  $('[data-form="harvest"]')?.addEventListener('submit', e => {
+    e.preventDefault();
+    const f = formToObj(e.target);
+    const qty = +f.qty_kg, price = +f.price_per_kg;
+    if (!(qty > 0) || !(price > 0)) {
+      window.MM?.toast?.('Enter the quantity sold and the price per kg, both above 0.', 3500);
+      return;
+    }
+    const sc = ledgerScope();
+    const sales = loadAllSales();
+    sales.push({
+      id: nextId(sales),
+      plot_id: sc.plot_id,
+      season_key: sc.season_key,
+      qty_kg: Math.round(qty * 100) / 100,
+      price_per_kg: Math.round(price * 100) / 100,
+      date: f.date || new Date().toLocaleDateString('en-CA'),
+      note: (f.note || '').slice(0, 200)
+    });
+    writeList(HARVEST_KEY, sales);
     e.target.reset();
     renderExpenses();
   });
 
   $('[data-out="expense"]')?.addEventListener('click', e => {
-    const btn = e.target.closest('[data-expense-delete]');
-    if (!btn) return;
-    saveExpenses(loadExpenses().filter(x => x.id !== (+btn.dataset.expenseDelete)));
-    renderExpenses();
+    const exp = e.target.closest('[data-expense-delete]');
+    if (exp) {
+      writeList(EXPENSE_KEY, loadAllExpenses().filter(x => x.id !== (+exp.dataset.expenseDelete)));
+      renderExpenses();
+      return;
+    }
+    const sale = e.target.closest('[data-harvest-delete]');
+    if (sale) {
+      writeList(HARVEST_KEY, loadAllSales().filter(x => x.id !== (+sale.dataset.harvestDelete)));
+      renderExpenses();
+    }
   });
+
+  // savedFarm is refreshed by the dashboard's own mm:plot-changed listener;
+  // defer a tick so the ledger reads the new plot, not the previous one.
+  const rerenderLedger = () => setTimeout(renderExpenses, 0);
+  document.addEventListener('mm:plot-changed', rerenderLedger);
+  document.addEventListener('mm:profile-changed', rerenderLedger);
 
   renderExpenses();
 
@@ -2716,7 +2997,7 @@
       }).toString();
       const r = await api(`/api/government-schemes?${q}`);
       const schemes = r.eligible_schemes || [];
-      const esc = (window.MM && window.MM.escapeHtml) ? window.MM.escapeHtml : (s => String(s));
+      const esc = escHtml;
       if (!schemes.length) {
         out.innerHTML = `<div class="alert"><div class="alert__body"><strong>No matching schemes</strong><p>Try widening the filters.</p></div></div>`;
         return;
@@ -2747,7 +3028,7 @@
       const profile = formToObj(e.target).profile;
       const url = profile ? `/api/strategy-templates?profile=${profile}` : '/api/strategy-templates';
       const list = await api(url);
-      const esc = (window.MM && window.MM.escapeHtml) ? window.MM.escapeHtml : (s => String(s));
+      const esc = escHtml;
       if (!Array.isArray(list) || !list.length) {
         out.innerHTML = '<div class="alert"><div class="alert__body"><strong>No templates found.</strong></div></div>';
         return;
@@ -2769,13 +3050,13 @@
               <p style="font-size:.9rem;color:var(--ink-soft);margin:0;flex:1;">${esc(t.description || '')}</p>
               <div style="display:flex;flex-wrap:wrap;gap:6px;">
                 ${c.crop_id ? `<span class="chip chip--green">${cropLabel(c.crop_id)}</span>` : ''}
-                ${c.season ? `<span class="chip">${c.season}</span>` : ''}
+                ${c.season ? `<span class="chip">${escHtml(c.season)}</span>` : ''}
                 ${c.area_acres ? `<span class="chip">${c.area_acres} ac</span>` : ''}
                 ${c.irrigation_level !== undefined ? `<span class="chip chip--blue">irrig ${c.irrigation_level}</span>` : ''}
                 ${c.budget_per_acre ? `<span class="chip chip--gold">${INR(c.budget_per_acre)}/ac</span>` : ''}
               </div>
               <div style="font-size:.78rem;color:var(--ink-faint);border-top:1px dashed rgba(29,26,21,.1);padding-top:8px;">${esc(t.profile || '')}</div>
-              <button class="btn btn-ghost" data-apply-template='${JSON.stringify(t).replace(/'/g, "&#39;")}' style="padding:8px 14px;font-size:.85rem;">Use in simulator →</button>
+              <button class="btn btn-ghost" data-apply-template="${list.indexOf(t)}" style="padding:8px 14px;font-size:.85rem;">Use in simulator →</button>
             </div>`;
       }).join('')}
         </div>`;
@@ -2783,8 +3064,8 @@
       // Wire up "Use in simulator" buttons → prefill Yield & Profit form
       out.querySelectorAll('[data-apply-template]').forEach(btn => {
         btn.addEventListener('click', () => {
-          const tpl = JSON.parse(btn.dataset.applyTemplate.replace(/&#39;/g, "'"));
-          const c = tpl.config || {};
+          const tpl = list[+btn.dataset.applyTemplate];
+          const c = (tpl && tpl.config) || {};
           const simForm = document.querySelector('[data-form="simulate"]');
           if (!simForm) return;
           if (c.crop_id) simForm.crop_id.value = c.crop_id;
@@ -2956,15 +3237,21 @@
       const r = await api('/api/optimal-mix', { method: 'POST', body: JSON.stringify(body) });
       const allocs = r.allocations || [];
       if (!allocs.length) {
-        out.innerHTML = '<div class="alert"><div class="alert__body"><strong>No allocations returned.</strong></div></div>';
+        out.innerHTML = '<div class="alert alert--gold"><div class="alert__body"><strong>No crop is expected to make a profit here</strong><p>Not at this budget, in this region and season. Try a larger budget or another season.</p></div></div>';
         return;
       }
+      // A mix always earns less than putting all the land on the single best
+      // crop (profit is linear in area); say what the risk-spreading costs.
+      const best = r.single_crop_best;
+      const tradeoff = (best && r.diversification_cost > 0 && allocs.length > 1)
+        ? `<div class="alert alert--gold" style="margin-top:12px;"><div class="alert__body"><strong>Why not just one crop?</strong><p>Growing only <span data-no-translate>${cropLabel(best.crop_id)}</span> on all ${r.total_area_acres} ac would earn about ${INR(best.expected_profit)}. This mix gives up ${INR(r.diversification_cost)} to spread weather and price risk across crops.</p></div></div>`
+        : '';
 
       out.innerHTML = `
         <div class="kpi-grid">
           <div class="kpi kpi--good"><div class="kpi__lbl">Total profit</div>
             <div class="kpi__val">${INR(r.total_expected_profit)}</div>
-            <div class="kpi__sub">across ${r.num_crops} crops</div></div>
+            <div class="kpi__sub">across ${r.num_crops} ${r.num_crops === 1 ? 'crop' : 'crops'}</div></div>
           <div class="kpi"><div class="kpi__lbl">Land allocated</div>
             <div class="kpi__val">${allocs.reduce((s, a) => s + a.allocated_acres, 0).toFixed(1)}<span style="font-size:.5em"> / ${r.total_area_acres} ac</span></div></div>
           <div class="kpi"><div class="kpi__lbl">Budget used</div>
@@ -2972,6 +3259,7 @@
           <div class="kpi kpi--warn"><div class="kpi__lbl">Avg risk</div>
             <div class="kpi__val">${Math.round(r.avg_risk_score || 0)}<span style="font-size:.5em;color:var(--ink-faint)">/100</span></div></div>
         </div>
+        ${tradeoff}
 
         <div class="chart-grid">
           <div class="chart-box">
@@ -3068,7 +3356,8 @@
       const profile = window.MM?.profile?.get?.() || {};
       const r = await api('/api/carbon-credits', {
         method: 'POST', body: JSON.stringify({
-          crop_id: profile.crop_id || 'wheat', area_acres: +(profile.area_acres || 1),
+          crop_id: window.FarmState?.getActiveCrop?.()?.crop_id || profile.crop_id || 'wheat',
+          area_acres: +(profile.area_acres || 1),
           tillage_practice: f.tillage_practice, cover_crop: f.cover_crop === 'true',
           biochar_application: f.biochar_application === 'true'
         })
@@ -3086,7 +3375,7 @@
     if (!profile.region_id) return;
     try {
       const r = await api('/api/iot/telemetry', {
-        method: 'POST', body: JSON.stringify({ region_id: profile.region_id }),
+        method: 'POST', body: JSON.stringify({ region_id: profile.region_id, device_id: window.MM.deviceId() }),
       });
       if (r.is_live && typeof r.soil_moisture_pct === 'number') {
         moistureInput.value = r.soil_moisture_pct;
@@ -3101,11 +3390,11 @@
     const file = e.target.files && e.target.files[0];
     if (!file) return;
     const out = $('[data-out="sensor-upload"]');
-    const esc = (window.MM && window.MM.escapeHtml) ? window.MM.escapeHtml : (s => String(s));
+    const esc = escHtml;
     showLoading(out, 'Uploading sensor readings...');
     try {
       const profile = window.MM?.profile?.get?.() || {};
-      if (!profile.region_id) throw new Error('Select a farm/region first (top-right selector) before uploading sensor data.');
+      if (!profile.region_id) throw userError('Choose your region in the “My farm” bar above before uploading sensor data.');
       const content = await file.text();
       const r = await api('/api/sensors/upload', {
         method: 'POST', body: JSON.stringify({
@@ -3137,95 +3426,99 @@
         method: 'POST', body: JSON.stringify({
           farm_id: profile.farm_id || 'local_plan', area_acres: +(profile.area_acres || 1),
           current_moisture_pct: +f.current_moisture_pct, target_moisture_pct: +f.target_moisture_pct,
-          flow_rate_lpm: +f.flow_rate_lpm
+          flow_rate_lpm: +f.flow_rate_lpm,
+          ...(f.root_zone_depth_cm ? { root_zone_depth_cm: +f.root_zone_depth_cm } : {})
         })
       });
+      const mins = r.recommended_pump_runtime_minutes;
+      const runtime = mins >= 60 ? `${Math.floor(mins / 60)} h ${Math.round(mins % 60)} min` : `${mins} min`;
       out.innerHTML = `<div class="alert alert--gold"><div class="alert__body"><strong>Recommendation only</strong><p>No physical pump was controlled.</p></div></div>
-        <div class="kpi-grid"><div class="kpi kpi--info"><div class="kpi__lbl">Recommended runtime</div><div class="kpi__val">${r.recommended_pump_runtime_minutes} min</div></div><div class="kpi"><div class="kpi__lbl">Estimated water</div><div class="kpi__val">${r.required_water_liters.toLocaleString()} L</div></div><div class="kpi"><div class="kpi__lbl">Action</div><div class="kpi__val" style="font-size:1rem">${r.control_action}</div></div></div>`;
+        <div class="kpi-grid"><div class="kpi kpi--info"><div class="kpi__lbl">Recommended runtime</div><div class="kpi__val">${runtime}</div></div><div class="kpi"><div class="kpi__lbl">Estimated water</div><div class="kpi__val">${r.required_water_liters.toLocaleString()} L</div></div><div class="kpi"><div class="kpi__lbl">Action</div><div class="kpi__val" style="font-size:1rem">${r.control_action}</div></div></div>`;
     } catch (err) { showError(out, err); }
   });
 
   /* ==========================================================
      TOOL 17: ML status
      ========================================================== */
-  $('[data-action="ml-status"]').addEventListener('click', async () => {
+  // Every figure here comes from ml/models/audit_metrics.json. A metric the
+  // audit didn't record shows as "—" -- never a remembered number from some
+  // earlier training run.
+  const num = (v, fmt) => (typeof v === 'number' && isFinite(v)) ? fmt(v) : '—';
+  const featureList = feats => feats.length
+    ? `<ul style="padding: 10px 0 0 20px; font-size: 0.85rem; color: var(--ink-soft);">${feats.map(([feat, score]) => `
+        <li style="margin-bottom: 6px;">
+          <strong style="color: var(--brand);">${escHtml(feat.replace('_enc', ''))}</strong>:
+          <span style="font-family: monospace; font-weight: 600;">${num(score, v => v.toFixed(4))}</span>
+        </li>`).join('')}</ul>`
+    : '<p style="font-size:.85rem;color:var(--ink-faint);padding-top:10px;">Not recorded in the last audit.</p>';
+
+  $('[data-action="ml-status"]')?.addEventListener('click', async () => {
     const out = $('[data-out="ml"]');
     showLoading(out, 'Checking model status…');
     try {
       const r = await api('/api/ml/status');
-      const m = r.training_report || {};
-      const my = m.yield_model || m.yield || {};
-      const mp = m.price_model || m.price || {};
-      const mr = m.recommend_model || m.recommend || {};
       const aud = r.audit_metrics || {};
       const recAud = aud.crop_recommendation || {};
       const yieldAud = aud.yield_prediction || {};
 
-      // Feature importances
       const recFeats = Object.entries(recAud.permutation_importances || {}).slice(0, 5);
       const yieldFeats = Object.entries(yieldAud.permutation_importances || {}).slice(0, 5);
+
+      const robustness = [];
+      if (typeof recAud.robustness_noisy_weather_accuracy === 'number') {
+        robustness.push(`<li style="margin-bottom: 4px;"><strong>Weather inputs zeroed (sensor failure):</strong> crop-recommendation accuracy ${num(recAud.accuracy, v => PCT(v * 100))} → <b>${PCT(recAud.robustness_noisy_weather_accuracy * 100)}</b>.</li>`);
+      }
+      if (typeof yieldAud.robustness_drought_r2 === 'number') {
+        robustness.push(`<li style="margin-bottom: 4px;"><strong>Rainfall zeroed (severe drought):</strong> yield-model R² ${num(yieldAud.r2, v => FIX(v, 3))} → <b>${FIX(yieldAud.robustness_drought_r2, 3)}</b>.</li>`);
+      }
 
       out.innerHTML = `
         <div class="kpi-grid">
           <div class="kpi ${r.yield_model_loaded ? 'kpi--good' : 'kpi--warn'}">
             <div class="kpi__lbl">Yield prediction</div>
             <div class="kpi__val">${r.yield_model_loaded ? '✓ Loaded' : '— Offline'}</div>
-            <div class="kpi__sub">${yieldAud.algorithm || 'RandomForest'} (Tuned)</div>
+            <div class="kpi__sub">${escHtml(yieldAud.algorithm || 'Algorithm not recorded')}</div>
           </div>
           <div class="kpi kpi--info">
             <div class="kpi__lbl">Yield performance</div>
-            <div class="kpi__val">R² ${FIX(yieldAud.r2 || 0.99, 3)}</div>
-            <div class="kpi__sub">MAPE ${yieldAud.mape_pct_real_rows || 7.5}% | MAE ${Math.round(yieldAud.mae || 411)}kg</div>
+            <div class="kpi__val">R² ${num(yieldAud.r2, v => FIX(v, 3))}</div>
+            <div class="kpi__sub">MAPE ${num(yieldAud.mape_pct_real_rows, v => FIX(v, 1) + '%')} · MAE ${num(yieldAud.mae, v => Math.round(v) + ' kg')}</div>
           </div>
           <div class="kpi ${r.recommend_model_loaded ? 'kpi--good' : 'kpi--warn'}">
             <div class="kpi__lbl">Crop recommendation</div>
             <div class="kpi__val">${r.recommend_model_loaded ? '✓ Loaded' : '— Offline'}</div>
-            <div class="kpi__sub">${recAud.algorithm || 'CatBoost'} (Tuned)</div>
+            <div class="kpi__sub">${escHtml(recAud.algorithm || 'Algorithm not recorded')}</div>
           </div>
           <div class="kpi kpi--info">
-            <div class="kpi__lbl">Crop performance</div>
-            <div class="kpi__val">${PCT((recAud.accuracy || 0.938) * 100)}</div>
-            <div class="kpi__sub">Macro F1: ${FIX(recAud.f1_macro || 0.58, 2)}</div>
+            <div class="kpi__lbl">Crop accuracy</div>
+            <div class="kpi__val">${num(recAud.accuracy, v => PCT(v * 100))}</div>
+            <div class="kpi__sub">Macro F1 ${num(recAud.f1_macro, v => FIX(v, 2))}</div>
           </div>
         </div>
 
         <div class="chart-grid" style="margin-top: 20px;">
           <div class="chart-box">
-            <div class="chart-box__title">Crop Rec. Permutation Importance (SHAP Proxy)</div>
-            <ul style="padding: 10px 0 0 20px; font-size: 0.85rem; color: var(--ink-soft);">
-              ${recFeats.map(([feat, score]) => `
-                <li style="margin-bottom: 6px;">
-                  <strong style="color: var(--brand);">${feat.replace('_enc', '')}</strong>: 
-                  <span style="font-family: monospace; font-weight: 600;">${score.toFixed(4)}</span>
-                </li>`).join('')}
-            </ul>
+            <div class="chart-box__title">Crop recommendation · permutation importance</div>
+            ${featureList(recFeats)}
           </div>
           <div class="chart-box">
-            <div class="chart-box__title">Yield Pred. Feature Weights</div>
-            <ul style="padding: 10px 0 0 20px; font-size: 0.85rem; color: var(--ink-soft);">
-              ${yieldFeats.map(([feat, score]) => `
-                <li style="margin-bottom: 6px;">
-                  <strong style="color: var(--brand);">${feat.replace('_enc', '')}</strong>: 
-                  <span style="font-family: monospace; font-weight: 600;">${score.toFixed(4)}</span>
-                </li>`).join('')}
-            </ul>
+            <div class="chart-box__title">Yield prediction · permutation importance</div>
+            ${featureList(yieldFeats)}
           </div>
         </div>
 
-        <div class="alert alert--green" style="margin-top: 20px; border:1px solid color-mix(in srgb, var(--brand) 35%, transparent); background: var(--brand-soft);">
-          <div class="alert__body" style="color: var(--brand-deep);">
-            <strong>ML Robustness Stress Test Diagnostics:</strong>
-            <ul style="margin: 8px 0 0 16px; padding: 0; font-size: 0.85rem;">
-              <li style="margin-bottom: 4px;">⛅ <strong>Sensor Failure Weather Simulation (Rainfall/Temp to 0.0):</strong> Crop Recommendation test accuracy drops from 93.8% to <b>${PCT((recAud.robustness_noisy_weather_accuracy || 0.829) * 100)}</b> (highly stable, graceful degradation).</li>
-              <li style="margin-bottom: 4px;">🌵 <strong>Severe Regional Drought Simulation (Rainfall to 0.0):</strong> Yield Regressor prediction accuracy ($R^2$) maintains at <b>${FIX(yieldAud.robustness_drought_r2 || 0.989, 4)}</b>.</li>
-            </ul>
+        ${robustness.length ? `
+        <div class="alert alert--gold" style="margin-top: 20px;">
+          <div class="alert__body">
+            <strong>Stress tests (held-out data)</strong>
+            <ul style="margin: 8px 0 0 16px; padding: 0; font-size: 0.85rem;">${robustness.join('')}</ul>
           </div>
-        </div>
+        </div>` : ''}
 
         <div class="alert"><div class="alert__body">
-          <strong>Production Model Directory</strong>
-          <p style="font-family:monospace;font-size:.82rem;word-break:break-all;">${r.model_dir}</p>
-          <p style="font-size:.82rem;">${r.model_provenance || 'Model provenance was not supplied.'}</p>
+          <strong>Production model directory</strong>
+          <p style="font-family:monospace;font-size:.82rem;word-break:break-all;">${escHtml(r.model_dir)}</p>
+          <p style="font-size:.82rem;">${escHtml(r.model_provenance || 'Model provenance was not supplied.')}</p>
         </div></div>
 
         <div class="alert ${r.data_sources?.sensor_uploads_available ? 'alert--green' : ''}" style="margin-top:12px;"><div class="alert__body">
@@ -3236,7 +3529,7 @@
         </div></div>`;
     } catch (err) { showError(out, err); }
   });
-  $('[data-action="ml-train"]').addEventListener('click', async () => {
+  $('[data-action="ml-train"]')?.addEventListener('click', async () => {
     if (!confirm('Retrain all 3 ML models? This takes 20–40 seconds.')) return;
     const out = $('[data-out="ml"]');
     showLoading(out, 'Retraining yield, price & recommend models…');
@@ -3245,7 +3538,15 @@
       out.innerHTML = `<div class="alert alert--green">
         <svg class="alert__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg>
         <div class="alert__body"><strong>All models retrained ✓</strong><p>Click "Check status" to see fresh metrics.</p></div></div>`;
-    } catch (err) { showError(out, err); }
+    } catch (err) {
+      // Training is an admin-only job (server flag + admin key), so from this
+      // page it's refused by design -- say that, not "please sign in again".
+      if (err instanceof HttpError && [401, 403, 503].includes(err.status)) {
+        out.innerHTML = `<div class="alert alert--gold"><div class="alert__body"><strong>Retraining is admin-only</strong><p>Models are retrained by the server operator, not from this page. "Check status" shows the metrics of the models currently in use.</p></div></div>`;
+        return;
+      }
+      showError(out, err);
+    }
   });
 
   /* ==========================================================
@@ -3266,6 +3567,11 @@
   // Note: savedFarm is declared and initialized at the TOP of this IIFE
   // so it is available to all async callbacks (region select population, etc.)
 
+
+  // Soil the draw page could only estimate (see farm-boundary.js fetchSoil)
+  // is shown on the banner but never fed into a calculation -- the region's
+  // surveyed soil row is the better number.
+  const hasMeasuredSoil = farm => !!(farm && farm.soil && !farm.soil.estimated);
 
   function mapBoundarySoilToSimulator(src) {
     // farm-boundary.js's fetchSoil() already divides every SoilGrids layer
@@ -3293,13 +3599,17 @@
 
     const fmt = n => (Number(n) || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     const acres = fmt(savedFarm.acres);
-    const ha = fmt(savedFarm.hectares);
-    const lat = (savedFarm.lat || (savedFarm.centroid && savedFarm.centroid[1]) || 0).toFixed(5);
-    const lon = (savedFarm.lon || (savedFarm.centroid && savedFarm.centroid[0]) || 0).toFixed(5);
+    const latRaw = savedFarm.lat ?? (savedFarm.centroid && savedFarm.centroid[1]);
+    const lonRaw = savedFarm.lon ?? (savedFarm.centroid && savedFarm.centroid[0]);
+    const hasGeo = latRaw != null && lonRaw != null;
+    // Hectares may be missing on a plot that never had a boundary drawn.
+    const ha = fmt(savedFarm.hectares || (Number(savedFarm.acres) || 0) * 0.404686);
+    const lat = hasGeo ? Number(latRaw).toFixed(5) : '';
+    const lon = hasGeo ? Number(lonRaw).toFixed(5) : '';
 
     // Location chips — show state, district, village (whatever is available)
     // These come from Nominatim (third-party) — escape before injecting.
-    const esc = (window.MM && window.MM.escapeHtml) ? window.MM.escapeHtml : (s => String(s));
+    const esc = escHtml;
     // Coordinates are already shown above in .fp-meta, so only render this
     // row when there's a named location to add — otherwise it just repeats
     // the same lat/lon a second time.
@@ -3319,7 +3629,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l9-4 9 4v10l-9 4-9-4V7z"/><path d="M3 7l9 4 9-4"/><path d="M12 11v10"/></svg>
       </div>
       <div class="farm-pickup__body">
-        <strong>Your farm is active</strong>
+        <strong>${hasGeo ? 'Your farm is active' : 'Your plot is set up'}</strong>
         <div class="fp-stat">
           <span class="fp-stat__val">${acres}</span>
           <span class="fp-stat__unit">acres</span>
@@ -3330,16 +3640,18 @@
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
             Dataset profile: ${esc(regionDisplay)}
           </span>` : ''}
-          <span class="fp-meta__item fp-meta__item--coords">
+          ${hasGeo ? `<span class="fp-meta__item fp-meta__item--coords">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg>
             ${lat}°N, ${lon}°E
-          </span>
+          </span>` : ''}
         </div>
         ${locChips ? `<div class="fp-chips">${locChips}</div>` : ''}
-        ${savedFarm.soil ? '<div class="fp-note">✓ SoilGrids data available — will be used in simulation.</div>' : ''}
+        ${hasGeo ? '' : '<div class="fp-note">Draw its boundary to get a measured area, soil at your field and tractor distances.</div>'}
+        ${hasMeasuredSoil(savedFarm) ? '<div class="fp-note">✓ SoilGrids data available — will be used in simulation.</div>'
+          : savedFarm.soil ? "<div class=\"fp-note\">Soil values for this plot are a placeholder estimate — tools use your region's surveyed soil instead.</div>" : ''}
       </div>
       <div class="farm-pickup__actions">
-        <a href="farm-boundary.html" class="btn btn-ghost" style="padding:8px 14px;font-size:.85rem;">Edit farm</a>
+        <a href="farm-boundary.html" class="btn btn-ghost" style="padding:8px 14px;font-size:.85rem;">${hasGeo ? 'Edit farm' : 'Draw boundary'}</a>
         <button id="farmPickupClear" class="btn btn-ghost" style="padding:8px 14px;font-size:.85rem;">Clear</button>
       </div>`;
 
@@ -3351,6 +3663,7 @@
       // Revert region selects to first available option
       $$('select[data-regions]').forEach(sel => {
         if (sel.options.length) sel.selectedIndex = 0;
+        delete sel.dataset.mmUserDirty;
       });
 
       // Reset fertilizer form default values
@@ -3414,7 +3727,7 @@
     applyCommittedCropToForms();
 
     // Pre-fill fertilizer form inputs with SoilGrids values if available
-    if (savedFarm.soil) {
+    if (hasMeasuredSoil(savedFarm)) {
       const simSoil = mapBoundarySoilToSimulator(savedFarm.soil);
       if (simSoil) {
         const fertForm = document.querySelector('[data-form="fertilizer"]');
@@ -3466,14 +3779,21 @@
 
     // Disease-scan region/crop context (normally synced only when the tab is
     // first opened — keep it in sync if the plot changes while it's open too).
-    const diseaseRegionSel = $('#diseaseRegionSelect');
-    if (diseaseRegionSel && savedFarm && savedFarm.region_id) {
-      diseaseRegionSel.value = savedFarm.region_id;
+    syncDiseaseContext();
+  }
+
+  // The screener only knows four crops; pre-select the farm's region and
+  // committed crop when they fit.
+  function syncDiseaseContext() {
+    const regionSel = $('#diseaseRegionSelect');
+    if (regionSel && savedFarm && savedFarm.region_id &&
+        regionSel.querySelector(`option[value="${savedFarm.region_id}"]`)) {
+      regionSel.value = savedFarm.region_id;
     }
-    const diseaseCropSel = $('#diseaseCropSelect');
-    const knownCrop = savedFarm?.crop_id || localStorage.getItem('mittimantra_selectedCrop') || '';
-    if (diseaseCropSel && knownCrop && ["maize", "potato", "soybean", "tomato"].includes(knownCrop)) {
-      diseaseCropSel.value = knownCrop;
+    const cropSel = $('#diseaseCropSelect');
+    const knownCrop = (savedFarm && savedFarm.crop_id) || '';
+    if (cropSel && ['maize', 'potato', 'soybean', 'tomato'].includes(knownCrop)) {
+      cropSel.value = knownCrop;
     }
   }
   document.addEventListener('mm:plot-changed', refreshFarmContext);
@@ -3529,7 +3849,9 @@
         if (w && w.avg_temp_c != null) simForm.avg_temp_c.value = (+w.avg_temp_c).toFixed(1);
         simForm.weather_override_on.checked = true;
       } catch (err) {
-        alert('Live weather unavailable: ' + err.message);
+        window.MM?.toast?.(isLikelyOffline(err)
+          ? "You're offline — weather can't be fetched right now."
+          : 'Weather for this region is unavailable right now.', 4000);
       } finally {
         fetchBtn.disabled = false;
         fetchBtn.textContent = original;
@@ -3553,7 +3875,7 @@
   };
 
   window.__agrisimFarmSoil = () => {
-    if (!savedFarm || !savedFarm.soil) return null;
+    if (!hasMeasuredSoil(savedFarm)) return null;
     return mapBoundarySoilToSimulator(savedFarm.soil);
   };
 
@@ -3564,11 +3886,17 @@
   // Screening always runs via the backend heuristic endpoint — the checked-in
   // TF.js artefact has placeholder weights and cannot produce a real
   // prediction, so there is no in-browser model path to load.
+  let diseaseImageReady = false;
   function loadTFJS() {
     const screeningStatus = $('#modelLoadStatus');
-    screeningStatus.textContent = 'Preliminary visual screening uses the backend; it is not a diagnostic model.';
-    screeningStatus.style.color = '#c88a3a';
-    $('#runDiseaseScanBtn').disabled = false;
+    if (screeningStatus) {
+      screeningStatus.textContent = 'Preliminary visual screening uses the backend; it is not a diagnostic model.';
+      screeningStatus.style.color = '#c88a3a';
+    }
+    // Opening the tab used to enable Run unconditionally, which then
+    // "screened" a blank canvas when no photo had been chosen yet.
+    const btn = $('#runDiseaseScanBtn');
+    if (btn) btn.disabled = !diseaseImageReady;
   }
 
   // Bind to disease scan tab click
@@ -3576,14 +3904,7 @@
   if (diseaseBtn) {
     diseaseBtn.addEventListener('click', () => {
       loadTFJS();
-      // Sync farm contexts
-      if (savedFarm && savedFarm.region_id) {
-        $('#diseaseRegionSelect').value = savedFarm.region_id;
-      }
-      const knownCrop = savedFarm?.crop_id || localStorage.getItem('mittimantra_selectedCrop') || '';
-      if (knownCrop && ["maize", "potato", "soybean", "tomato"].includes(knownCrop)) {
-        $('#diseaseCropSelect').value = knownCrop;
-      }
+      syncDiseaseContext();
     });
   }
 
@@ -3593,13 +3914,20 @@
   const previewContainer = $('#imagePreviewContainer');
   const uploadPrompt = $('#uploadPrompt');
   const resizeCanvas = $('#diseaseResizeCanvas');
-  const resizeCtx = resizeCanvas.getContext('2d');
+  const resizeCtx = resizeCanvas ? resizeCanvas.getContext('2d') : null;
   const runScanBtn = $('#runDiseaseScanBtn');
 
-  if (imgInput) {
+  if (imgInput && resizeCtx) {
     imgInput.addEventListener('change', e => {
       const file = e.target.files[0];
       if (!file) return;
+      if (!file.type.startsWith('image/')) {
+        window.MM?.toast?.('Please choose a photo (JPG or PNG) of the affected leaf.', 4000);
+        imgInput.value = '';
+        return;
+      }
+      diseaseImageReady = false;
+      runScanBtn.disabled = true;
 
       const reader = new FileReader();
       reader.onload = evt => {
@@ -3609,8 +3937,13 @@
 
         imgPreview.onload = () => {
           // Draw to canvas and scale to 224x224
+          resizeCtx.clearRect(0, 0, 224, 224);
           resizeCtx.drawImage(imgPreview, 0, 0, 224, 224);
+          diseaseImageReady = true;
           runScanBtn.disabled = false;
+        };
+        imgPreview.onerror = () => {
+          window.MM?.toast?.("That photo couldn't be opened. Try another one.", 4000);
         };
       };
       reader.readAsDataURL(file);
@@ -3623,7 +3956,9 @@
       e.stopPropagation();
       e.preventDefault();
       imgInput.value = '';
-      imgPreview.src = '';
+      imgPreview.removeAttribute('src');
+      resizeCtx?.clearRect(0, 0, 224, 224);
+      diseaseImageReady = false;
       previewContainer.style.display = 'none';
       uploadPrompt.style.display = 'block';
       runScanBtn.disabled = true;
@@ -3748,9 +4083,15 @@
   }
 
   // Run Disease Scan inference
-  if (runScanBtn) {
+  if (runScanBtn && resizeCtx) {
     runScanBtn.addEventListener('click', async () => {
+      if (!diseaseImageReady || runScanBtn.disabled) return;
       const resultsBox = $('#diseaseResultsBox');
+      if (!$('#diseaseCropSelect').value) {
+        resultsBox.style.display = 'block';
+        showError(resultsBox, userError('Choose the crop in the photo first. Screening covers maize, potato, soybean and tomato leaves.'));
+        return;
+      }
       showLoading(resultsBox, 'Running preliminary visual screening...');
       resultsBox.style.display = 'block';
 
@@ -3781,8 +4122,8 @@
         }
 
         const totalLeaf = greenCount + lesionCount;
-        const lesionPct = totalLeaf > 0 ? (lesionCount / totalLeaf) * 100.0 : 5.0;
-        const severity = lesionPct < 5.0 ? 'early' : lesionPct <= 20.0 ? 'moderate' : 'severe';
+        let lesionPct = totalLeaf > 0 ? (lesionCount / totalLeaf) * 100.0 : 5.0;
+        let severity = lesionPct < 5.0 ? 'early' : lesionPct <= 20.0 ? 'moderate' : 'severe';
 
         // 2. Run the backend heuristic screen (there is no real in-browser
         // model to fall back from — see loadTFJS above).
@@ -3809,9 +4150,16 @@
         diseaseName = r.disease;
         confidence = r.confidence;
         matchedCrop = r.crop_matched;
-        treatments = r.treatment;
-        subsidySchemes = r.subsidy_eligible_schemes;
+        treatments = r.treatment || [];
+        subsidySchemes = r.subsidy_eligible_schemes || [];
         const plan = r.action_plan || null;
+        // The server measures lesions on the full-resolution photo and builds
+        // the treatment plan from *its* severity -- show that one so the
+        // headline and the plan below can't disagree. The canvas estimate is
+        // only a fallback for responses that don't carry it (demo mode).
+        if (typeof r.lesion_area_pct === 'number') lesionPct = r.lesion_area_pct;
+        if (['early', 'moderate', 'severe'].includes(r.severity)) severity = r.severity;
+        const severitySource = typeof r.lesion_area_pct === 'number' ? 'Measured on your photo' : 'Estimated on-device';
 
         // 3. Queue Analytics Log
         queueOfflineLog(matchedCrop, diseaseName, confidence, severity, regionId);
@@ -3828,22 +4176,24 @@
           <div class="kpi-grid">
             <div class="kpi kpi--info">
               <div class="kpi__lbl">Screening result</div>
-              <div class="kpi__val" style="font-size: 1.15rem; font-weight: 600;">${diseaseName}</div>
-              <div class="kpi__sub">Class matched: ${matchedCrop}</div>
+              <div class="kpi__val" style="font-size: 1.15rem; font-weight: 600;">${escHtml(diseaseName)}</div>
+              <div class="kpi__sub">Crop: ${cropLabel(matchedCrop)}</div>
             </div>
             <div class="kpi kpi--info">
               <div class="kpi__lbl">Heuristic score</div>
               <div class="kpi__val">${formattedConf}</div>
               <div class="kpi__sub">Not a clinical or agronomic confidence value</div>
             </div>
-            <div class="kpi kpi--${sevClass === 'red' ? 'red' : sevClass === 'warn' ? 'warn' : 'good'}">
+            <div class="kpi kpi--${sevClass === 'red' ? 'bad' : sevClass === 'warn' ? 'warn' : 'good'}">
               <div class="kpi__lbl">Severity (Lesion Area)</div>
               <div class="kpi__val">${sevLabel} (${FIX(lesionPct, 1)}%)</div>
-              <div class="kpi__sub">Computed client-side</div>
+              <div class="kpi__sub">${severitySource}</div>
             </div>
           </div>
 
           <div class="alert alert--gold" style="margin-top: 20px;"><div class="alert__body"><strong>Do not treat this as a diagnosis.</strong><p>Confirm symptoms with a qualified agronomist before applying any treatment.</p></div></div>
+
+          ${r.coverage_note ? `<div class="alert alert--gold" style="margin-top: 12px;"><div class="alert__body"><p>${escHtml(r.coverage_note)}</p></div></div>` : ''}
 
           ${plan && plan.options && plan.options.length ? renderActionPlan(plan) : `
           <div class="chart-grid" style="margin-top: 20px;">
@@ -3879,7 +4229,7 @@
               <strong>High-risk diagnosis flagged</strong>
               <p>Because the severity is severe or confidence is low, we highly recommend consulting an agriculture expert.</p>
               <p style="margin-top: 8px;">
-                <a href="gyan-seva.html?region=${regionId || ''}&specialty=pathologist" class="btn btn-primary" style="font-size: 0.82rem; padding: 6px 12px; display: inline-block;">Connect with Regional Expert on Gyan Seva</a>
+                <a href="gyan-seva.html?region=${encodeURIComponent(regionId || '')}&specialty=pathologist" class="btn btn-primary" style="font-size: 0.82rem; padding: 6px 12px; display: inline-block;">Connect with Regional Expert on Gyan Seva</a>
               </p>
             </div>
           </div>` : ''}
@@ -3891,7 +4241,7 @@
       } catch (err) {
         showError(resultsBox, err);
       } finally {
-        runScanBtn.disabled = false;
+        runScanBtn.disabled = !diseaseImageReady;
       }
     });
   }

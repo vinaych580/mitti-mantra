@@ -1278,8 +1278,8 @@
             <div class="gs-scan-meta">
               <div class="gs-form-group" style="margin-bottom:10px;">
                 <label for="gsScanCrop">Crop (optional — narrows the match)</label>
-                <select id="gsScanCrop" class="gs-select">
-                  <option value="">Auto-detect from image</option>
+                <select id="gsScanCrop" class="gs-select" required>
+                  <option value="" disabled selected>Choose crop…</option>
                   <option value="maize">Maize (Makka)</option>
                   <option value="potato">Potato (Aloo)</option>
                   <option value="soybean">Soybean</option>
@@ -1287,7 +1287,7 @@
                 </select>
               </div>
               <p style="font-size:.78rem;color:var(--ink-soft);line-height:1.5;">
-                This runs the same visual-screening model used elsewhere in MittiMantra. It is <strong>not a diagnosis</strong> — always confirm with a qualified agronomist before treatment.
+                Covers maize, potato, soybean and tomato leaves only. This runs the same visual-screening model used elsewhere in MittiMantra. It is <strong>not a diagnosis</strong> — always confirm with a qualified agronomist before treatment.
               </p>
               <button type="button" id="gsScanRunBtn" class="btn-gs-primary" disabled style="width:100%;">🔬 Run Preliminary Screen</button>
             </div>

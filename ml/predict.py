@@ -226,10 +226,10 @@ def _preprocess_leaf_image(image: Image.Image) -> np.ndarray:
 def predict_disease_ml(image: Image.Image, crop: str = "") -> tuple[str, float] | None:
     """Classify a leaf photo with the fine-tuned disease model, if loaded.
 
-    When `crop` is given, only that crop's classes are considered (mirrors the
-    heuristic fallback's crop-bound behaviour) -- otherwise defaults to the
-    tomato_* classes, the most comprehensive set, matching the heuristic's
-    own no-crop-selected default.
+    Only `crop`'s classes are considered (mirrors the heuristic fallback's
+    crop-bound behaviour). The API rejects crops the model doesn't cover
+    before calling this, so an empty or unknown crop returns None rather than
+    silently scoring some other crop's classes.
 
     Returns (class_name, confidence) or None if no exported model is present --
     callers must fall back to the heuristic decision tree in that case.
@@ -244,10 +244,10 @@ def predict_disease_ml(image: Image.Image, crop: str = "") -> tuple[str, float] 
     exp = np.exp(logits - np.max(logits))
     proba = exp / exp.sum()
 
-    prefix = (crop or "tomato") + "_"
+    prefix = crop + "_"
     candidate_idxs = [i for i, c in enumerate(_ml_disease_labels) if c.startswith(prefix)]
-    if not candidate_idxs:
-        candidate_idxs = list(range(len(_ml_disease_labels)))
+    if not crop or not candidate_idxs:
+        return None
 
     best_idx = max(candidate_idxs, key=lambda i: proba[i])
     return _ml_disease_labels[best_idx], float(proba[best_idx])
@@ -1264,6 +1264,19 @@ def _score_single_crop(
     return rec_entry
 
 
+def rank_recommendations(recs: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Profitable crops first, then by smart_score.
+
+    smart_score blends ROI with risk/soil/budget/ML fit, and _score_single_crop's
+    loss penalty scales with ROI -- so a crop with a small expected loss could
+    still outscore a clearly profitable one (jute at -Rs 2,540 above groundnut
+    at +Rs 52,973 for Medak kharif). A farmer asking what to sow should never
+    see a money-losing crop ranked above one that makes money; the score only
+    orders crops *within* each tier. The sort is stable.
+    """
+    return sorted(recs, key=lambda r: (r["expected_profit"] > 0, r["smart_score"]), reverse=True)
+
+
 def recommend_crops(
     region_id: str,
     season: str,
@@ -1343,5 +1356,5 @@ def recommend_crops(
         )
         recommendations.append(rec_entry)
 
-    ranked = sorted(recommendations, key=lambda x: x["smart_score"], reverse=True)
+    ranked = rank_recommendations(recommendations)
     return ranked[:top_k]

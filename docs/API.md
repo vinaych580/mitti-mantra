@@ -54,7 +54,18 @@ One row from `dataset/soil.csv` for the region. `404` if missing.
 ### `GET /api/weather/{region_id}?season=kharif`
 
 Latest weather row for the given region (and optional season). `404` if
-missing.
+missing. These are seasonal averages from `dataset/weather.csv`, not a
+forecast — see `/api/forecast` for that.
+
+### `GET /api/forecast?lat=17.6&lon=78.26`
+
+Live 7-day forecast from Open-Meteo (no key) for a point in India
+(`lat` 6–38, `lon` 68–98, else `422`), with a field-work call per day:
+`spray` (`good`/`avoid` + `spray_reason`), `irrigate` (`skip`/`check` +
+`irrigate_reason`) and `heat_stress`. The thresholds are returned as
+`rules`; logic lives in `engine/forecast.py`. Cached an hour per ~1 km
+cell. `503` when Open-Meteo is unreachable — it never falls back to
+averages.
 
 ### `GET /api/mandi-prices/{region_id}?crop_id=rice`
 
@@ -121,8 +132,17 @@ result paired with its input strategy.
 
 ### `POST /api/optimal-mix`
 
-Greedy multi-crop land allocator. Given total area + total budget,
-allocates area proportional to each candidate crop's smart score.
+Splits total area across up to 3 crops with a positive expected profit,
+ranked by risk-adjusted profit per acre (`profit_per_acre × (1 −
+risk/200)`); no crop takes more than 60 % of the land and every parcel is
+at least 0.5 ac (farms under 1 ac get one crop). Budget is spent per acre
+at the farm's own rate. `soil`/`weather` are accepted but optional and
+unused. The response adds `single_crop_best` and `diversification_cost` —
+what putting all the land on the most profitable crop would earn, and what
+the mix gives up to spread risk. See `engine/crop_mix.py`.
+
+Rankings from `/api/recommend` and `/api/crop-comparison` always list
+every profitable crop before any loss-making one.
 
 ### `POST /api/rotation-plan`
 

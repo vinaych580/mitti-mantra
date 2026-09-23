@@ -12,7 +12,10 @@
 // visitor would pair the new markup with the previous farm-boundary.js -- whose
 // startup guard aborts when window.turf is absent -- and lose plot drawing for
 // a load. Bumping drops the old cache on activate so both refresh together.
-const VERSION = 'mittimantra-v51';
+// v52: code-quality pass touched most shell scripts (dashboard, mm-core,
+// toolbar, chatbot, farm-boundary, marketplace, book-a-tractor, gyan-seva)
+// and book-a-tractor.html; same reasoning -- ship them as one set.
+const VERSION = 'mittimantra-v53';
 const CORE = [
   './',
   './index.html',

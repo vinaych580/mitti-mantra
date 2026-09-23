@@ -68,22 +68,6 @@
         "reason": "Budget covers only 5% of this crop's typical input cost, so yield and ROI below are scaled down to what's realistically achievable, not the full-funding potential."
       },
       {
-        "crop_id": "jowar",
-        "crop_name": "Sorghum (Jowar)",
-        "predicted_yield_kg_per_acre": 328.6,
-        "potential_yield_kg_per_acre": 328.6,
-        "expected_profit": -11975.7,
-        "roi_percent": -26.61,
-        "risk_score": 44.91,
-        "smart_score": 43.22,
-        "saturation_ratio": null,
-        "saturation_label": null,
-        "prediction_source": "heuristic",
-        "crop_cycle": "seasonal",
-        "budget_adequate": true,
-        "reason": "Ranked using ML models + location, soil, season fit, budget fit, profit, and risk confidence."
-      },
-      {
         "crop_id": "tobacco",
         "crop_name": "Tobacco",
         "predicted_yield_kg_per_acre": 129.97,
@@ -98,22 +82,6 @@
         "crop_cycle": "seasonal",
         "budget_adequate": false,
         "reason": "Budget covers only 11% of this crop's typical input cost, so yield and ROI below are scaled down to what's realistically achievable, not the full-funding potential."
-      },
-      {
-        "crop_id": "rice",
-        "crop_name": "Rice (Paddy)",
-        "predicted_yield_kg_per_acre": 715.44,
-        "potential_yield_kg_per_acre": 2318.04,
-        "expected_profit": -850.2,
-        "roi_percent": -1.89,
-        "risk_score": 18.36,
-        "smart_score": 42.44,
-        "saturation_ratio": 0.0,
-        "saturation_label": null,
-        "prediction_source": "heuristic",
-        "crop_cycle": "seasonal",
-        "budget_adequate": false,
-        "reason": "Budget covers only 31% of this crop's typical input cost, so yield and ROI below are scaled down to what's realistically achievable, not the full-funding potential."
       },
       {
         "crop_id": "chilli",
@@ -146,6 +114,38 @@
         "crop_cycle": "seasonal",
         "budget_adequate": false,
         "reason": "Budget covers only 17% of this crop's typical input cost, so yield and ROI below are scaled down to what's realistically achievable, not the full-funding potential."
+      },
+      {
+        "crop_id": "jowar",
+        "crop_name": "Sorghum (Jowar)",
+        "predicted_yield_kg_per_acre": 328.6,
+        "potential_yield_kg_per_acre": 328.6,
+        "expected_profit": -11975.7,
+        "roi_percent": -26.61,
+        "risk_score": 44.91,
+        "smart_score": 43.22,
+        "saturation_ratio": null,
+        "saturation_label": null,
+        "prediction_source": "heuristic",
+        "crop_cycle": "seasonal",
+        "budget_adequate": true,
+        "reason": "Ranked using ML models + location, soil, season fit, budget fit, profit, and risk confidence."
+      },
+      {
+        "crop_id": "rice",
+        "crop_name": "Rice (Paddy)",
+        "predicted_yield_kg_per_acre": 715.44,
+        "potential_yield_kg_per_acre": 2318.04,
+        "expected_profit": -850.2,
+        "roi_percent": -1.89,
+        "risk_score": 18.36,
+        "smart_score": 42.44,
+        "saturation_ratio": 0.0,
+        "saturation_label": null,
+        "prediction_source": "heuristic",
+        "crop_cycle": "seasonal",
+        "budget_adequate": false,
+        "reason": "Budget covers only 31% of this crop's typical input cost, so yield and ROI below are scaled down to what's realistically achievable, not the full-funding potential."
       },
       {
         "crop_id": "sunflower",
@@ -1956,22 +1956,6 @@
         "reason": "Budget covers only 16% of this crop's typical input cost, so yield and ROI below are scaled down to what's realistically achievable, not the full-funding potential."
       },
       {
-        "crop_id": "maize",
-        "crop_name": "Maize",
-        "predicted_yield_kg_per_acre": 702.72,
-        "potential_yield_kg_per_acre": 1511.63,
-        "expected_profit": -1782.72,
-        "roi_percent": -3.96,
-        "risk_score": 29.55,
-        "smart_score": 41.86,
-        "saturation_ratio": null,
-        "saturation_label": null,
-        "prediction_source": "heuristic",
-        "crop_cycle": "seasonal",
-        "budget_adequate": false,
-        "reason": "Budget covers only 46% of this crop's typical input cost, so yield and ROI below are scaled down to what's realistically achievable, not the full-funding potential."
-      },
-      {
         "crop_id": "tomato",
         "crop_name": "Tomato",
         "predicted_yield_kg_per_acre": 854.16,
@@ -1986,6 +1970,22 @@
         "crop_cycle": "seasonal",
         "budget_adequate": false,
         "reason": "Budget covers only 11% of this crop's typical input cost, so yield and ROI below are scaled down to what's realistically achievable, not the full-funding potential."
+      },
+      {
+        "crop_id": "maize",
+        "crop_name": "Maize",
+        "predicted_yield_kg_per_acre": 702.72,
+        "potential_yield_kg_per_acre": 1511.63,
+        "expected_profit": -1782.72,
+        "roi_percent": -3.96,
+        "risk_score": 29.55,
+        "smart_score": 41.86,
+        "saturation_ratio": null,
+        "saturation_label": null,
+        "prediction_source": "heuristic",
+        "crop_cycle": "seasonal",
+        "budget_adequate": false,
+        "reason": "Budget covers only 46% of this crop's typical input cost, so yield and ROI below are scaled down to what's realistically achievable, not the full-funding potential."
       },
       {
         "crop_id": "potato",
@@ -2308,6 +2308,22 @@
         "reason": "Budget covers only 17% of this crop's typical input cost, so yield and ROI below are scaled down to what's realistically achievable, not the full-funding potential."
       },
       {
+        "crop_id": "tomato",
+        "crop_name": "Tomato",
+        "predicted_yield_kg_per_acre": 893.43,
+        "potential_yield_kg_per_acre": 8040.86,
+        "expected_profit": 5925.51,
+        "roi_percent": 13.17,
+        "risk_score": 56.72,
+        "smart_score": 33.85,
+        "saturation_ratio": null,
+        "saturation_label": null,
+        "prediction_source": "heuristic",
+        "crop_cycle": "seasonal",
+        "budget_adequate": false,
+        "reason": "Budget covers only 11% of this crop's typical input cost, so yield and ROI below are scaled down to what's realistically achievable, not the full-funding potential."
+      },
+      {
         "crop_id": "ragi",
         "crop_name": "Finger Millet (Ragi)",
         "predicted_yield_kg_per_acre": 161.55,
@@ -2402,22 +2418,6 @@
         "crop_cycle": "seasonal",
         "budget_adequate": false,
         "reason": "Budget covers only 88% of this crop's typical input cost, so yield and ROI below are scaled down to what's realistically achievable, not the full-funding potential."
-      },
-      {
-        "crop_id": "tomato",
-        "crop_name": "Tomato",
-        "predicted_yield_kg_per_acre": 893.43,
-        "potential_yield_kg_per_acre": 8040.86,
-        "expected_profit": 5925.51,
-        "roi_percent": 13.17,
-        "risk_score": 56.72,
-        "smart_score": 33.85,
-        "saturation_ratio": null,
-        "saturation_label": null,
-        "prediction_source": "heuristic",
-        "crop_cycle": "seasonal",
-        "budget_adequate": false,
-        "reason": "Budget covers only 11% of this crop's typical input cost, so yield and ROI below are scaled down to what's realistically achievable, not the full-funding potential."
       },
       {
         "crop_id": "pulses",
@@ -3428,6 +3428,22 @@
         "reason": "Budget covers only 17% of this crop's typical input cost, so yield and ROI below are scaled down to what's realistically achievable, not the full-funding potential."
       },
       {
+        "crop_id": "ginger",
+        "crop_name": "Ginger",
+        "predicted_yield_kg_per_acre": 200.54,
+        "potential_yield_kg_per_acre": 8043.85,
+        "expected_profit": 121.5,
+        "roi_percent": 0.27,
+        "risk_score": 22.48,
+        "smart_score": 35.71,
+        "saturation_ratio": null,
+        "saturation_label": null,
+        "prediction_source": "heuristic",
+        "crop_cycle": "seasonal",
+        "budget_adequate": false,
+        "reason": "Budget covers only 2% of this crop's typical input cost, so yield and ROI below are scaled down to what's realistically achievable, not the full-funding potential."
+      },
+      {
         "crop_id": "ragi",
         "crop_name": "Finger Millet (Ragi)",
         "predicted_yield_kg_per_acre": 165.24,
@@ -3474,22 +3490,6 @@
         "crop_cycle": "seasonal",
         "budget_adequate": true,
         "reason": "Ranked using ML models + location, soil, season fit, budget fit, profit, and risk confidence."
-      },
-      {
-        "crop_id": "ginger",
-        "crop_name": "Ginger",
-        "predicted_yield_kg_per_acre": 200.54,
-        "potential_yield_kg_per_acre": 8043.85,
-        "expected_profit": 121.5,
-        "roi_percent": 0.27,
-        "risk_score": 22.48,
-        "smart_score": 35.71,
-        "saturation_ratio": null,
-        "saturation_label": null,
-        "prediction_source": "heuristic",
-        "crop_cycle": "seasonal",
-        "budget_adequate": false,
-        "reason": "Budget covers only 2% of this crop's typical input cost, so yield and ROI below are scaled down to what's realistically achievable, not the full-funding potential."
       },
       {
         "crop_id": "urad",

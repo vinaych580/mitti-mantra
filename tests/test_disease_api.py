@@ -205,3 +205,21 @@ def test_disease_rate_limit_is_per_ip(monkeypatch):
     assert backend_main._disease_rate_limit_check("5.6.7.8") is True
     assert backend_main._disease_rate_limit_check("5.6.7.8") is False
 
+
+
+_GREEN_PX = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+
+
+import pytest  # noqa: E402
+
+
+@pytest.mark.parametrize("crop", [None, "", "cotton", "rice"])
+def test_disease_predict_rejects_unsupported_or_missing_crop(crop):
+    """Review 2026-09-23: with no crop (the UI's "Auto-detect" option) or a
+    crop the model doesn't cover, screening fell through to tomato diseases --
+    a cotton or rice leaf came back with a tomato diagnosis. It must refuse
+    and name the crops it can actually screen."""
+    r = client.post("/api/disease/predict", json={"image_b64": _GREEN_PX, "crop_id": crop})
+    assert r.status_code == 422
+    detail = r.json()["detail"]
+    assert "maize" in detail and "tomato" in detail

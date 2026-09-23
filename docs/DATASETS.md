@@ -15,7 +15,10 @@ requests safely fall back to these committed CSV files.
 Runtime, farmer-uploaded sensor data (soil, weather, or other farm-sensor
 readings), written by `POST /api/sensors/upload` and read by
 `GET /api/sensors/{region_id}` and `POST /api/iot/telemetry` via
-`utils/sensor_log.py`. Unlike the static seed CSVs above, this file is
+`utils/sensor_log.py`. Uploads require a `device_id`, and reads are scoped
+to it: `GET /api/sensors/{region_id}` needs `?device_id=` and telemetry
+only merges the calling device's own readings, never another farmer's in
+the same region. Unlike the static seed CSVs above, this file is
 written to at request time, so it lives under `dataset/dynamic/` (mirroring
 `dynamic/commitments.csv`) rather than `dataset/`. Rows: `reading_id,
 region_id, device_id, metric, value, unit, timestamp, source`. `metric` is

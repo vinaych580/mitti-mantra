@@ -32,6 +32,7 @@ def test_upload_csv_happy_path():
 def test_upload_rejects_unknown_region():
     payload = {
         "region_id": "not_a_real_region",
+        "device_id": "dev_test",
         "filename": "readings.csv",
         "content": "metric,value\nsoil_ph,6.5\n",
     }
@@ -42,6 +43,7 @@ def test_upload_rejects_unknown_region():
 def test_upload_rejects_unsupported_extension():
     payload = {
         "region_id": REGION,
+        "device_id": "dev_test",
         "filename": "readings.txt",
         "content": "metric,value\nsoil_ph,6.5\n",
     }
@@ -52,11 +54,13 @@ def test_upload_rejects_unsupported_extension():
 def test_upload_json_and_xml_formats():
     json_payload = {
         "region_id": REGION,
+        "device_id": "dev_test",
         "filename": "readings.json",
         "content": '[{"metric": "soil_ph", "value": 6.8}]',
     }
     xml_payload = {
         "region_id": REGION,
+        "device_id": "dev_test",
         "filename": "readings.xml",
         "content": "<readings><reading><metric>rainfall_mm</metric><value>5</value></reading></readings>",
     }
@@ -66,10 +70,10 @@ def test_upload_json_and_xml_formats():
 
 def test_get_sensor_readings_reflects_upload():
     client.post("/api/sensors/upload", json={
-        "region_id": REGION, "filename": "readings.csv",
+        "region_id": REGION, "device_id": "dev_test", "filename": "readings.csv",
         "content": "metric,value,unit\nsoil_moisture_pct,61.0,%\n",
     })
-    response = client.get(f"/api/sensors/{REGION}")
+    response = client.get(f"/api/sensors/{REGION}?device_id=dev_test")
     assert response.status_code == 200
     data = response.json()
     assert data["available"] is True
@@ -77,7 +81,7 @@ def test_get_sensor_readings_reflects_upload():
 
 
 def test_get_sensor_readings_empty_when_no_uploads():
-    response = client.get("/api/sensors/some_region_with_no_uploads")
+    response = client.get("/api/sensors/some_region_with_no_uploads?device_id=dev_test")
     assert response.status_code == 200
     data = response.json()
     assert data["available"] is False
@@ -94,10 +98,10 @@ def test_iot_telemetry_without_region_id_stays_sample_data():
 
 def test_iot_telemetry_uses_live_data_when_uploaded():
     client.post("/api/sensors/upload", json={
-        "region_id": REGION, "filename": "readings.csv",
+        "region_id": REGION, "device_id": "dev_test", "filename": "readings.csv",
         "content": "metric,value,unit\nsoil_moisture_pct,72.5,%\n",
     })
-    response = client.post("/api/iot/telemetry", json={"region_id": REGION})
+    response = client.post("/api/iot/telemetry", json={"region_id": REGION, "device_id": "dev_test"})
     data = response.json()
     assert data["is_live"] is True
     assert data["source"] == "farmer_upload"
@@ -109,7 +113,7 @@ def test_iot_telemetry_uses_live_data_when_uploaded():
 
 def test_ml_status_reports_data_sources():
     client.post("/api/sensors/upload", json={
-        "region_id": REGION, "filename": "readings.csv",
+        "region_id": REGION, "device_id": "dev_test", "filename": "readings.csv",
         "content": "metric,value\nsoil_ph,6.5\n",
     })
     response = client.get("/api/ml/status")

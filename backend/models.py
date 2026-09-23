@@ -115,8 +115,10 @@ class CropMixRequest(BaseModel):
     season: str
     total_area_acres: float
     total_budget: float
-    soil: Dict[str, Any]
-    weather: Dict[str, Any]
+    # Accepted for backward compatibility with older clients; the allocation
+    # reads the region's own soil/weather through recommend_crops().
+    soil: Optional[Dict[str, Any]] = None
+    weather: Optional[Dict[str, Any]] = None
 
     @field_validator("total_area_acres", "total_budget")
     @classmethod
@@ -190,10 +192,14 @@ class CarbonCreditQuery(BaseModel):
 class IoTTelemetryQuery(BaseModel):
     farm_id: Optional[str] = Field("farm_01", min_length=1, max_length=100)
     region_id: Optional[str] = Field(None, max_length=100)
+    # Uploaded readings are only merged in for the device that uploaded them.
+    device_id: Optional[str] = Field(None, min_length=1, max_length=100)
 
 class SensorUploadRequest(BaseModel):
     region_id: str = Field(..., min_length=1, max_length=100)
-    device_id: Optional[str] = Field(None, max_length=100)
+    # Required: readings are scoped to the uploading device, so an upload
+    # without one would land in a bucket every anonymous caller shares.
+    device_id: str = Field(..., min_length=1, max_length=100)
     filename: str = Field(..., min_length=1, max_length=255)
     content: str = Field(..., min_length=1, max_length=2_000_000)
 
@@ -203,6 +209,9 @@ class IoTTriggerRequest(BaseModel):
     current_moisture_pct: Optional[float] = Field(40.0, ge=0, le=100)
     area_acres: Optional[float] = Field(4.0, gt=0, le=100_000)
     flow_rate_lpm: Optional[float] = Field(120.0, gt=0, le=100_000)
+    # Depth of soil the crop draws water from: ~15-30 cm for vegetables and
+    # rice, 30-60 cm for most field crops, deeper for sugarcane and orchards.
+    root_zone_depth_cm: Optional[float] = Field(30.0, ge=5, le=150)
 
 
 class CropRecQuery(BaseModel):

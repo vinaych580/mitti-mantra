@@ -528,7 +528,7 @@
       btnGeolocation.style.color = "var(--brand-deep)";
 
       if (!navigator.geolocation) {
-        alert("Geolocation is not supported by your browser.");
+        (window.MM && window.MM.toast ? window.MM.toast : alert)("This device can't share its location. Pick your state and district instead.", 4000);
         resetGeoButton();
         return;
       }
@@ -562,7 +562,7 @@
             state.visibleCount = 15;
             updateResults();
           } else {
-            alert("Could not identify closest district. Falling back to manual selection.");
+            (window.MM && window.MM.toast ? window.MM.toast : alert)("We couldn't match your location to a district. Pick it from the list instead.", 4000);
             resetGeoButton();
           }
         },
@@ -1404,7 +1404,7 @@
      submitting.
      ========================================================================= */
   function speechLocaleFor(lang) {
-    return { en: 'en-IN', hi: 'hi-IN', te: 'te-IN', kn: 'kn-IN' }[lang] || 'en-IN';
+    return { en: 'en-IN', hi: 'hi-IN', te: 'te-IN', kn: 'kn-IN', ta: 'ta-IN' }[lang] || 'en-IN';
   }
 
   function parseOutcomeTranscript(transcript) {
@@ -1773,6 +1773,11 @@
     });
 
     runBtn.addEventListener('click', async () => {
+      if (cropSelect && !cropSelect.value) {
+        resultBox.innerHTML = '<p class="gs-scan-disclaimer">Choose the crop in the photo first. Screening covers maize, potato, soybean and tomato leaves.</p>';
+        cropSelect.focus();
+        return;
+      }
       runBtn.disabled = true;
       runBtn.textContent = '⌛ Screening...';
       resultBox.innerHTML = '<div class="gs-shimmer"></div>';

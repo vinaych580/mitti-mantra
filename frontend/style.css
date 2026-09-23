@@ -2924,6 +2924,106 @@ body.mm-menu-open .qw-panel {
   background: var(--brand-soft);
 }
 
+/* Season ledger */
+.ledger__h {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 24px 0 12px;
+}
+
+.ledger__scope {
+  margin: 0 0 12px;
+  font-size: var(--fs-2xs);
+  color: var(--ink-soft);
+}
+
+/* My Farm: "This week on your farm" live forecast strip */
+.forecast {
+  margin-top: 16px;
+  padding: 16px;
+  background: var(--bg-soft);
+  border-radius: var(--r-md);
+}
+
+.forecast:empty {
+  display: none;
+}
+
+.forecast__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+  margin-bottom: 12px;
+}
+
+.forecast__head h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.forecast__src {
+  font-size: var(--fs-2xs);
+  color: var(--ink-soft);
+}
+
+.forecast__days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(64px, 1fr));
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.forecast__day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 4px;
+  background: var(--surface);
+  border-radius: var(--r-sm, 8px);
+  text-align: center;
+  min-width: 0;
+}
+
+.forecast__dow {
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.forecast__rain {
+  font-size: .85rem;
+  color: var(--ink);
+}
+
+.forecast__temp {
+  font-family: 'Fraunces', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.forecast__hot {
+  color: var(--danger);
+}
+
+.forecast__day .chip {
+  font-size: .68rem;
+  white-space: nowrap;
+}
+
+.forecast__note {
+  margin: 12px 0 0;
+  font-size: .85rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
 .kpi--good .kpi__val {
   color: var(--brand-deep);
 }
