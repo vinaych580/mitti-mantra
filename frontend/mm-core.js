@@ -71,6 +71,11 @@
     } catch (_) { return null; }
   }
 
+  /** A plot whose acreage was measured from a drawn boundary. */
+  function isMeasured(plot) {
+    return !!(plot && plot.geojson && Number(plot.acres) > 0);
+  }
+
   const profile = {
     get() {
       let stored = null;
@@ -79,22 +84,29 @@
       const plot = activePlot();
       if (plot) {
         if (plot.region_id) p.region_id = plot.region_id;
-        if (plot.acres) p.area_acres = +Number(plot.acres).toFixed(2);
+        if (Number(plot.acres) > 0) p.area_acres = +Number(plot.acres).toFixed(2);
       }
       return p;
     },
     set(patch) {
       const next = Object.assign(this.get(), patch || {});
 
-      // Area is measured from the boundary, so it is never writable here — a typed
-      // acreage would contradict the polygon it came from, and nothing could
-      // reconcile the two. The draw page owns it. Region is metadata rather than
-      // geometry, so an override is legitimate and is stored on the plot.
+      // A measured area is never writable here — a typed acreage would
+      // contradict the polygon it came from; the draw page owns it. Region is
+      // metadata rather than geometry, so an override is legitimate and is
+      // stored on the plot.
       const plot = activePlot();
       if (plot) {
-        next.area_acres = +Number(plot.acres).toFixed(2);
-        if (next.region_id && next.region_id !== plot.region_id) {
-          try { window.FarmState.save({ region_id: next.region_id }); } catch (_) {}
+        const plotPatch = {};
+        if (isMeasured(plot)) next.area_acres = +Number(plot.acres).toFixed(2);
+        else if (Number(next.area_acres) > 0 && Number(next.area_acres) !== Number(plot.acres)) {
+          // No boundary behind this plot (it came from committing to a crop),
+          // so its acreage is just a setting -- keep the plot in step.
+          plotPatch.acres = Number(next.area_acres);
+        }
+        if (next.region_id && next.region_id !== plot.region_id) plotPatch.region_id = next.region_id;
+        if (Object.keys(plotPatch).length) {
+          try { window.FarmState.save(plotPatch); } catch (_) {}
         }
       }
 
@@ -344,23 +356,13 @@
         () => fetch("/api/regions").then(r => r.json()));
     } catch (_) {}
     const regSel = bar.querySelector('[data-mm="region_id"]');
-    if (Array.isArray(regions) && regions.length) {
-      let opts = regions.map(r => `<option value="${r.id || r.region_id}">${r.name || r.id}</option>`).join("");
-      let savedFarm = null;
-      try {
-        savedFarm = JSON.parse(
-          localStorage.getItem('mittimantra_selectedFarm') ||
-          localStorage.getItem('agrisim_farm') ||
-          'null'
-        );
-      } catch (_) {}
-      if (savedFarm && savedFarm.region_id) {
-        const farmName = (savedFarm.state && savedFarm.district)
-          ? `${savedFarm.state} · ${savedFarm.district} (My Farm)`
-          : "My Farm";
-        opts = `<option value="${savedFarm.region_id}">${farmName}</option>` + opts;
-      }
-      regSel.innerHTML = opts;
+    // No extra "(My Farm)" duplicate: fillBar() below selects the plot's
+    // region, and a duplicate option was never removed when the plot changed.
+    if (Array.isArray(regions) && regions.length && !regSel.options.length) {
+      regSel.innerHTML = regions.map(r => {
+        const id = r.id || r.region_id;
+        return `<option value="${escapeHtml(id)}">${escapeHtml(r.name || r.region_name || id)}</option>`;
+      }).join("");
     }
 
     // Load current profile into bar
@@ -374,13 +376,15 @@
       // read-only and point at the page that can actually change it.
       const areaEl = bar.querySelector('[data-mm="area_acres"]');
       const measuredNote = bar.querySelector(".mm-farm-bar__measured");
-      const plot = activePlot();
+      // Only a drawn boundary is a measurement; a plot created by committing
+      // to a crop has no geometry, so its area stays editable.
+      const measured = isMeasured(activePlot());
       if (areaEl) {
-        areaEl.readOnly = !!plot;
-        areaEl.title = plot
+        areaEl.readOnly = measured;
+        areaEl.title = measured
           ? "Measured from the boundary you drew — edit the boundary to change it."
           : "Area used by every tool.";
-        if (measuredNote) measuredNote.hidden = !plot;
+        if (measuredNote) measuredNote.hidden = !measured;
       }
 
       // The region list comes from /api/regions; a plot matched offline (or while
@@ -423,10 +427,25 @@
     // Save
     bar.querySelector(".mm-farm-bar__save").addEventListener("click", () => {
       const patch = {};
+      let invalid = null;
       bar.querySelectorAll("[data-mm]").forEach((el) => {
-        const v = el.value;
-        patch[el.dataset.mm] = el.type === "number" ? parseFloat(v) || 0 : v;
+        if (el.type !== "number") { patch[el.dataset.mm] = el.value; return; }
+        if (el.readOnly) return;                 // measured area -- not ours to write
+        const n = parseFloat(el.value);
+        // A blank or zero area used to be saved as 0 acres and pushed into
+        // every tool, which then failed validation one by one.
+        const min = parseFloat(el.min) || 0;
+        if (!isFinite(n) || n < min || (el.dataset.mm === "area_acres" && n <= 0)) {
+          invalid = invalid || el;
+          return;
+        }
+        patch[el.dataset.mm] = n;
       });
+      if (invalid) {
+        invalid.focus();
+        toast(invalid.dataset.mm === "area_acres" ? "Enter an area above 0 acres" : "Enter a budget of ₹0 or more", 3000);
+        return;
+      }
       profile.set(patch);
       toast("Farm profile saved — all tools updated");
     });

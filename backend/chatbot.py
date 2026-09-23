@@ -1257,7 +1257,7 @@ def answer(message: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, 
     # C-24 fix: grow/plant/sow were exact-word-only, so "-ing" forms like
     # "growing" or "planting" (a very natural way to phrase this) missed the
     # gate entirely and fell through to the generic fallback reply.
-    if _matches("recommend", text, r"\brecommend(ation)?\b|\bwhich crop\b|\bbest crop\b|\bwhat (should|to) (i )?(grow(ing)?|plant(ing)?|sow(ing)?)\b|\bsuggest(ion)?\b.*\b(crop|grow(ing)?|plant(ing)?|sow(ing)?)\b|\b(crop|grow(ing)?|plant(ing)?|sow(ing)?)\b.*\bsuggest(ion)?\b"):
+    if _matches("recommend", text, r"\brecommend(ation)?s?\b|\bwhich crops?\b|\bbest crops?\b|\bwhat (should|to) (i )?(grow(ing)?|plant(ing)?|sow(ing)?)\b|\bsuggest(ion)?s?\b.*\b(crops?|grow(ing)?|plant(ing)?|sow(ing)?)\b|\b(crops?|grow(ing)?|plant(ing)?|sow(ing)?)\b.*\bsuggest(ion)?s?\b"):
         reply, sug = _intent_recommend(region, season, text, lang)
         return _pack(reply, sug, "recommend", region=region, season=season, nums=nums)
 

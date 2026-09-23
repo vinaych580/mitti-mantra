@@ -340,7 +340,7 @@
         <em style="color:${ndviBadgeColor};font-weight:600;">${ndviStatus} · not satellite imagery</em>
       </div>
       ${geoHtml}
-      <h4 class="farmmap__h">Soil at centroid <small>(SoilGrids v2, 0–5 cm)</small></h4>
+      <h4 class="farmmap__h">Soil at centroid <small>${d.soil && d.soil.estimated ? '(placeholder estimate — not measured)' : '(SoilGrids v2, 0–5 cm)'}</small></h4>
       ${soilHtml}
     `;
     actionsEl.style.display = '';
@@ -472,6 +472,10 @@
       const x = Math.sin(seed + salt) * 10000;
       return min + (x - Math.floor(x)) * (max - min);
     };
+    // `estimated` travels with the saved plot: the dashboard shows these as a
+    // placeholder and keeps using the region's surveyed soil for every
+    // calculation, rather than letting invented numbers drive fertilizer
+    // doses and yield simulations.
     return {
       phh2o: rand(5.8, 7.8, 1),
       nitrogen: rand(0.8, 2.6, 2),
@@ -479,6 +483,7 @@
       sand: rand(22, 58, 4),
       soc: rand(6, 22, 5),
       cec: rand(11, 27, 6),
+      estimated: true,
     };
 
     /* Real implementation -- restore once ISRIC's latency is actually fixed:
@@ -514,6 +519,7 @@
     try {
       const url  = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=in&limit=1&q=${encodeURIComponent(q)}`;
       const res  = await fetch(url, { headers: { 'Accept-Language': 'en' } });
+      if (!res.ok) throw new Error('http ' + res.status);
       const data = await res.json();
       if (data && data[0]) {
         map.setView([+data[0].lat, +data[0].lon], 15);
@@ -621,14 +627,14 @@
       const suggested = currentData.village || currentData.district || 'New plot';
       const name = prompt('Name this plot:', suggested);
       if (name === null) return;          // cancelled
-      const added = FarmState.add(currentData, name.trim());
+      const added = FarmState.add(currentData, name.trim() || suggested);
       if (!added) {
-        alert('Could not save on this device — storage is full. Free up space (or remove a saved plot) and try again.');
+        setStatus('Could not save on this device — storage is full. Free up space (or remove a saved plot) and try again.', 'error');
         return;
       }
       window.location.href = 'dashboard.html?fromMap=1';
     } catch (e) {
-      alert(e.message);
+      setStatus(e.message, 'error');
     }
   });
 

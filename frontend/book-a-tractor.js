@@ -54,6 +54,12 @@ window.MM_TRACTOR_FALLBACK = window.MM_TRACTOR_FALLBACK || (function () {
      a new one. A booking "occupies" [date, date + spanDays - 1] — day-rate
      bookings span multiple calendar days, hour-rate bookings are treated as
      occupying just the one day. */
+  // YYYY-MM-DD in the device's own timezone (toISOString() would give UTC).
+  function localISODate(d) {
+    const pad = (n) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  }
+
   function computeSpanDays(rateType, hoursOrDays) {
     return rateType === 'day' ? Math.max(1, Number(hoursOrDays) || 1) : 1;
   }
@@ -108,10 +114,12 @@ window.MM_TRACTOR_FALLBACK = window.MM_TRACTOR_FALLBACK || (function () {
 
   /* ─── Trust loop: post-job verification + reliability score ───
      Real bookings on this device are logged after their date passes and feed
-     into a tractor's reliability chip. Since no fleet has real booking history
-     yet, each tractor also gets a small deterministic "illustrative" baseline
-     (seeded from its id, not random per page load) so the chip isn't empty —
-     clearly labelled, never presented as a real verified claim. */
+     into a tractor's reliability chip. There is no fleet-wide booking history,
+     so a tractor nobody has logged a job for says exactly that. (This used to
+     blend in a hash-generated "illustrative" baseline -- invented job counts
+     and on-time rates shown as a trust signal, disclosed only in a hover
+     tooltip phones never show, and NaN for community listings whose ids are
+     strings.) */
   const OUTCOMES_KEY = 'mittimantra_tractor_outcomes';
   function getTractorOutcomes() {
     try { return JSON.parse(localStorage.getItem(OUTCOMES_KEY) || '[]'); }
@@ -121,39 +129,22 @@ window.MM_TRACTOR_FALLBACK = window.MM_TRACTOR_FALLBACK || (function () {
     try { localStorage.setItem(OUTCOMES_KEY, JSON.stringify(list)); } catch (_) {}
   }
 
-  function hashSeed(id) {
-    // Small deterministic hash -> [0,1), stable across sessions for the same tractor id.
-    let h = (id * 2654435761) >>> 0;
-    h = (h ^ (h >>> 13)) >>> 0;
-    return (h % 10000) / 10000;
-  }
-
-  function simulatedBaseline(tractorId) {
-    const r1 = hashSeed(tractorId);
-    const r2 = hashSeed(tractorId + 99991);
-    return {
-      jobs: 12 + Math.floor(r1 * 45),        // 12–56 illustrative jobs
-      onTimePct: 78 + Math.floor(r2 * 19),   // 78–96% illustrative on-time rate
-    };
-  }
-
   function computeReliability(tractorId) {
-    const baseline = simulatedBaseline(tractorId);
     const real = getTractorOutcomes().filter((o) => o.tractorId === tractorId);
-    const realOnTime = real.filter((o) => o.onTime).length;
-    const totalJobs = baseline.jobs + real.length;
-    const totalOnTime = Math.round(baseline.jobs * (baseline.onTimePct / 100)) + realOnTime;
+    const onTime = real.filter((o) => o.onTime).length;
     return {
-      jobs: totalJobs,
-      onTimePct: totalJobs ? Math.round((totalOnTime / totalJobs) * 100) : 0,
-      realCount: real.length,
+      jobs: real.length,
+      onTimePct: real.length ? Math.round((onTime / real.length) * 100) : null,
     };
   }
 
   function reliabilityChipHtml(tractorId) {
     const r = computeReliability(tractorId);
+    if (!r.jobs) {
+      return '<span class="tractor-card__reliability" title="Jobs you confirm after a booking date passes are counted here.">🔁 No logged jobs yet</span>';
+    }
     const tier = r.onTimePct >= 90 ? 'tractor-card__reliability--good' : r.onTimePct >= 80 ? '' : 'tractor-card__reliability--low';
-    return `<span class="tractor-card__reliability ${tier}" title="Includes illustrative fleet data; real logs from farmer bookings on this device count too.">🔁 ${r.jobs} jobs · ${r.onTimePct}% on-time</span>`;
+    return `<span class="tractor-card__reliability ${tier}" title="From jobs confirmed on this device.">🔁 ${r.jobs} logged ${r.jobs === 1 ? 'job' : 'jobs'} · ${r.onTimePct}% on-time</span>`;
   }
 
   /* ─── List Your Tractor (owner side) ─── */
@@ -1104,8 +1095,8 @@ window.MM_TRACTOR_FALLBACK = window.MM_TRACTOR_FALLBACK || (function () {
         card.innerHTML = `
           <div class="mm-success-screen">
             <div class="mm-success-icon">✓</div>
-            <h3>Booking Request Placed!</h3>
-            <p>${bookedBy ? `<strong>${esc(bookedBy.name)}</strong> booked this for` : 'Namaste'} <strong>${safeName}</strong>, ${bookedBy ? 'their' : 'your'} request for renting the <strong>${esc(t.name)}</strong> has been successfully registered.</p>
+            <h3>Booking saved — call to confirm</h3>
+            <p>${bookedBy ? `<strong>${esc(bookedBy.name)}</strong> booked this for` : 'Namaste'} <strong>${safeName}</strong>, ${bookedBy ? 'their' : 'your'} request for the <strong>${esc(t.name)}</strong> is saved on this phone. It is confirmed only once the operator agrees on a call.</p>
 
             ${etaHtml}
 
@@ -1118,7 +1109,7 @@ window.MM_TRACTOR_FALLBACK = window.MM_TRACTOR_FALLBACK || (function () {
               <div class="mm-success-row"><span>Date</span><strong>${safeDate}</strong></div>
               ${bookedBy ? `<div class="mm-success-row"><span>Booked By</span><strong>${esc(bookedBy.name)}${bookedBy.phone ? ` (+91 ${esc(bookedBy.phone)})` : ''}</strong></div>` : ''}
               <div class="mm-success-row"><span>Operator</span><strong>${esc(t.operatorName || 'Partner Farmer')}</strong></div>
-              <div class="mm-success-row"><span>Operator Phone</span><strong>+91 ${esc(t.operatorPhone || 'Not listed yet')}</strong></div>
+              <div class="mm-success-row"><span>Operator Phone</span><strong>${t.operatorPhone ? '+91 ' + esc(t.operatorPhone) : 'Not listed yet'}</strong></div>
             </div>
             <p class="mm-split-note">Demo: this app has no live backend, so the operator isn't notified automatically. Call them with the number above to confirm your booking.</p>
             ${splitWith ? `<p class="mm-split-note">🤝 Let ${esc(splitWith.name)} know they owe ₹${splitWith.theirShare.toLocaleString('en-IN')} for their share — settle it between yourselves, MittiMantra doesn't handle payments.</p>` : ''}
@@ -1265,7 +1256,7 @@ window.MM_TRACTOR_FALLBACK = window.MM_TRACTOR_FALLBACK || (function () {
       // Set default date to tomorrow, and disallow picking anything earlier (M-11).
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
-      const tomorrowStr = tomorrow.toISOString().split('T')[0];
+      const tomorrowStr = localISODate(tomorrow);
       const bookingDateInput = document.getElementById('bookingDate');
       bookingDateInput.value = tomorrowStr;
       bookingDateInput.min = tomorrowStr;
@@ -1380,8 +1371,9 @@ window.MM_TRACTOR_FALLBACK = window.MM_TRACTOR_FALLBACK || (function () {
           const conflictRange = bookingDateRange(conflict.date, conflict.spanDays || 1);
           const rangeLabel = conflictRange.start.getTime() === conflictRange.end.getTime()
             ? conflict.date
-            : `${conflict.date} to ${conflictRange.end.toISOString().split('T')[0]}`;
-          showFormError(`You already have ${esc(t.name)} booked for ${rangeLabel} (${conflict.bookingId}). Pick a different date or tractor to avoid a scheduling conflict.`);
+            : `${conflict.date} to ${localISODate(conflictRange.end)}`;
+          // textContent, so no HTML escaping (it showed "&amp;" literally).
+          showFormError(`You already have ${t.name} booked for ${rangeLabel} (${conflict.bookingId}). Pick a different date or tractor to avoid a scheduling conflict.`);
           return;
         }
 

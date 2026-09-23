@@ -129,7 +129,14 @@
   const input = panel.querySelector("#mm-chat-input");
   const closeBtn = panel.querySelector(".mm-chat-close");
 
-  closeBtn.addEventListener("click", () => panel.classList.remove("open"));
+  function closeChat() {
+    if (!panel.classList.contains("open")) return;
+    panel.classList.remove("open");
+    fab.setAttribute("aria-expanded", "false");
+    fab.focus();
+  }
+  closeBtn.addEventListener("click", closeChat);
+  panel.addEventListener("keydown", (e) => { if (e.key === "Escape") closeChat(); });
 
   // --------------- drag + position persistence ---------------
   const FAB_SIZE = 60;
@@ -325,13 +332,15 @@
     }
   }
 
+  const SPEECH_LANGS = { en: 'en-IN', hi: 'hi-IN', te: 'te-IN', kn: 'kn-IN', ta: 'ta-IN' };
+
   function speakText(text) {
     if (!('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel();
     const cleanText = text.replace(/[*_#`|[\]()]/g, ' ').replace(/\s+/g, ' ').trim();
     const utt = new SpeechSynthesisUtterance(cleanText);
     const docLang = document.documentElement.getAttribute('lang') || 'en';
-    utt.lang = { en: 'en-IN', hi: 'hi-IN', te: 'te-IN', kn: 'kn-IN' }[docLang] || 'en-IN';
+    utt.lang = SPEECH_LANGS[docLang] || 'en-IN';
     utt.rate = 0.95;
     window.speechSynthesis.speak(utt);
   }
@@ -418,6 +427,19 @@
     if (r && !sessionCtx.region_id) sessionCtx.region_id = r;
   } catch (_) { }
   const persistCtx = () => { try { localStorage.setItem("mm_chat_ctx", JSON.stringify(sessionCtx)); } catch (_) { } };
+  // The region was only ever seeded once, so after switching farms (or
+  // plots) the assistant kept answering for the old one.
+  const syncRegionFromProfile = () => {
+    try {
+      const mp = window.MM && MM.profile && MM.profile.get();
+      if (mp && mp.region_id && mp.region_id !== sessionCtx.region_id) {
+        sessionCtx.region_id = mp.region_id;
+        persistCtx();
+      }
+    } catch (_) { }
+  };
+  document.addEventListener("mm:profile-changed", syncRegionFromProfile);
+  document.addEventListener("mm:plot-changed", syncRegionFromProfile);
 
   // --------------- API ---------------
   // FIX (5.2): Mutex guard to prevent concurrent send() calls
@@ -429,8 +451,12 @@
     input.value = "";
     addMsg("user", msg);
     setSuggestions([]);
-    const typing = addMsg("bot", '<span class="mm-typing"><span></span><span></span><span></span></span>');
+    const typing = document.createElement("div");
+    typing.className = "mm-msg bot";
+    typing.setAttribute("aria-label", "Assistant is typing");
     typing.innerHTML = '<span class="mm-typing"><span></span><span></span><span></span></span>';
+    body.appendChild(typing);
+    body.scrollTop = body.scrollHeight;
 
     function formatApiError(data) {
       const d = data && data.detail;
@@ -453,22 +479,21 @@
         data = await res.json();
       } catch (_) {
         typing.remove();
-        addMsg("bot",
-          "The server did not return JSON (often HTML from a proxy or 404 page). " +
-          "Open this site via the **Python backend** (e.g. `http://127.0.0.1:8000`) so `/api/chat` exists.");
+        console.error("[chat] non-JSON response from", API, res.status);
+        addMsg("bot", "The assistant isn't available right now. Please try again in a little while.");
         return;
       }
       typing.remove();
       if (!res.ok) {
-        const errText = formatApiError(data) || res.statusText || "Unknown error";
-        addMsg("bot", `**Something went wrong** (${res.status}): ${errText}`);
+        console.error("[chat] API error", res.status, formatApiError(data));
+        addMsg("bot", res.status === 422
+          ? "I couldn't read that message. Try asking in a shorter sentence."
+          : "Sorry, something went wrong on my side. Please try asking again.");
         return;
       }
       if (data.reply == null || data.reply === "") {
-        const hint = formatApiError(data);
-        addMsg("bot", hint
-          ? `Unexpected response: ${hint}`
-          : "I got an empty reply from the server. Check that the backend is running and POST /api/chat returns a JSON object with a \"reply\" field.");
+        console.error("[chat] empty reply", data);
+        addMsg("bot", "I didn't get an answer for that. Please try rephrasing your question.");
         return;
       }
       addMsg("bot", data.reply);
@@ -477,9 +502,10 @@
       setSuggestions(data.suggestions || []);
     } catch (err) {
       typing.remove();
-      addMsg("bot",
-        "I couldn't reach the chat API. Serve the app through the backend (e.g. run `uvicorn` and open `http://127.0.0.1:8000`) — " +
-        "opening `index.html` as a file won't work for `/api/chat`.");
+      console.error("[chat] request failed", err);
+      addMsg("bot", navigator.onLine
+        ? "I couldn't reach the assistant. Please try again in a moment."
+        : "You're offline. Reconnect and ask again.");
     } finally {
       // FIX (5.2): Always release the send mutex
       _sending = false;
@@ -501,7 +527,7 @@
         rec = new SpeechRec();
 
         const docLang = document.documentElement.getAttribute('lang') || 'en';
-        rec.lang = { en: 'en-IN', hi: 'hi-IN', te: 'te-IN', kn: 'kn-IN' }[docLang] || 'en-IN';
+        rec.lang = SPEECH_LANGS[docLang] || 'en-IN';
 
         rec.interimResults = false;
         rec.maxAlternatives = 1;

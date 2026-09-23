@@ -409,8 +409,15 @@
   ---------------------------------------------------------------------- */
   const FORWARD_DEPOSIT_PCT = 0.20; // matches the up-to-20%-of-estimated-harvest figure smallholder orgs already use for pre-harvest financing
 
+  // YYYY-MM-DD in the device's timezone (toISOString() would give UTC).
+  function todayLocal() {
+    const d = new Date();
+    const pad = (n) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  }
+
   function isForwardListing(listing) {
-    const today = new Date().toISOString().slice(0, 10);
+    const today = todayLocal();
     return !!listing.harvestDate && listing.harvestDate > today;
   }
 
@@ -903,7 +910,7 @@
      layer conceptually (only one product-related modal open at a time).
   ---------------------------------------------------------------------- */
   /* ----------------------------------------------------------------------
-     Verified Field Health — a real call to the existing /api/field/ndvi
+     Estimated field health — a real call to the existing /api/field/ndvi
      endpoint (satellite-style NDVI estimate), keyed off the seller's own
      listing location. Works identically for demo and real sellers since
      every listing already carries real lat/lon — no fabricated numbers,
@@ -926,12 +933,12 @@
     const s = String(fh.health_status || '');
     const statusCls = /high stress/i.test(s) ? 'poor' : /moderate/i.test(s) ? 'moderate' : /vibrant|healthy/i.test(s) ? 'good' : 'moderate';
     return `<div class="mkt-fieldhealth mkt-fieldhealth--${esc(statusCls)}">
-      <div class="mkt-fieldhealth__badge">🌱 Verified Field Health · <b>${esc(fh.health_status || '—')}</b></div>
+      <div class="mkt-fieldhealth__badge">🌱 Estimated field health · <b>${esc(fh.health_status || '—')}</b></div>
       <div class="mkt-fieldhealth__stats">
-        <span>NDVI index <b>${Number(fh.mean_ndvi).toFixed(2)}</b></span>
+        <span>Vegetation index (est.) <b>${Number(fh.mean_ndvi).toFixed(2)}</b></span>
         <span>Canopy cover <b>${Math.round(fh.canopy_cover_pct)}%</b></span>
       </div>
-      <p class="mkt-note">Satellite-style vegetation estimate for this farm's location, computed by the same field-health engine used elsewhere in MittiMantra — an estimate, not a live satellite pass or a seller's own claim.</p>
+      <p class="mkt-note">A planning estimate from this farm's location, computed by the same field-health engine used elsewhere in MittiMantra — not satellite imagery, a field inspection, or a seller's own claim.</p>
     </div>`;
   }
 
@@ -1330,7 +1337,7 @@
      offline support, which speech recognition can't honor).
   ---------------------------------------------------------------------- */
   function speechLocaleFor(lang) {
-    return { en: 'en-IN', hi: 'hi-IN', te: 'te-IN', kn: 'kn-IN' }[lang] || 'en-IN';
+    return { en: 'en-IN', hi: 'hi-IN', te: 'te-IN', kn: 'kn-IN', ta: 'ta-IN' }[lang] || 'en-IN';
   }
 
   const UNIT_WORDS = { kg: 'kg', kgs: 'kg', kilo: 'kg', kilos: 'kg', kilogram: 'kg', kilograms: 'kg',
@@ -1689,7 +1696,7 @@
       return;
     }
     const orders = getMyOrders();
-    const today = new Date().toISOString().slice(0, 10);
+    const today = todayLocal();
     const rows = mine.map((l) => {
       const views = getViews()[l.id] || 0;
       const requestsForListing = orders.filter((o) => o.listingId === l.id);

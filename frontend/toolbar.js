@@ -636,16 +636,23 @@
     fab.className = 'qw-fab';
     fab.setAttribute('aria-label', 'Open tools');
     fab.setAttribute('aria-expanded', 'false');
+    fab.setAttribute('aria-haspopup', 'true');
     fab.setAttribute('data-no-translate', '');
     fab.innerHTML = `<span class="qw-fab__lines"><span></span><span></span><span></span></span>`;
     document.body.appendChild(fab);
 
-    function togglePanel(open) {
+    function togglePanel(open, { restoreFocus = false } = {}) {
       const willOpen = typeof open === 'boolean' ? open : !panel.classList.contains('open');
       panel.classList.toggle('open', willOpen);
       fab.classList.toggle('open', willOpen);
       fab.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
       fab.setAttribute('aria-label', willOpen ? 'Close tools' : 'Open tools');
+      if (willOpen) {
+        const first = panel.querySelector('button:not([disabled]), select, [tabindex="0"]');
+        if (first) setTimeout(() => first.focus(), 0);
+      } else if (restoreFocus || panel.contains(document.activeElement)) {
+        fab.focus();
+      }
     }
     fab.addEventListener('click', (e) => { e.stopPropagation(); togglePanel(); });
     // Close when clicking outside or on Escape
@@ -655,7 +662,7 @@
       togglePanel(false);
     });
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && panel.classList.contains('open')) togglePanel(false);
+      if (e.key === 'Escape' && panel.classList.contains('open')) togglePanel(false, { restoreFocus: true });
     });
   }
 
@@ -665,18 +672,22 @@
     const next = cur === 'dark' ? 'light' : 'dark';
     if (next === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
     else document.documentElement.removeAttribute('data-theme');
-    localStorage.setItem(THEME_KEY, next);
+    try { localStorage.setItem(THEME_KEY, next); } catch (_) { /* still applied for this page */ }
     const btn = document.getElementById('qw-theme');
     if (btn) btn.classList.toggle('active', next === 'dark');
   }
 
   /* ---------- Modal helper ---------- */
   let modalEl = null;
+  let modalReturnFocus = null;
   function showModal(title, bodyHtml, actions = []) {
     if (!modalEl) {
       modalEl = document.createElement('div');
       modalEl.className = 'qw-modal';
+      modalEl.setAttribute('role', 'dialog');
+      modalEl.setAttribute('aria-modal', 'true');
       modalEl.setAttribute('data-no-translate', '');
+      modalEl.addEventListener('keydown', e => { if (e.key === 'Escape') hideModal(); });
       modalEl.innerHTML = `
         <div class="qw-modal__card">
           <h3 class="qw-modal__h"></h3>
@@ -687,6 +698,7 @@
       document.body.appendChild(modalEl);
     }
     modalEl.querySelector('.qw-modal__h').textContent = title;
+    modalEl.setAttribute('aria-label', title);
     modalEl.querySelector('.qw-modal__text').innerHTML = bodyHtml;
     const row = modalEl.querySelector('.qw-modal__row');
     row.innerHTML = '';
@@ -698,10 +710,22 @@
       b.addEventListener('click', () => a.onClick());
       row.appendChild(b);
     });
+    if (!modalEl.classList.contains('show')) modalReturnFocus = document.activeElement;
     modalEl.classList.add('show');
+    const primary = row.querySelector('.qw-modal__btn--primary') || row.querySelector('button');
+    if (primary) setTimeout(() => primary.focus(), 0);
     return modalEl;
   }
-  function hideModal() { if (modalEl) modalEl.classList.remove('show'); }
+  function hideModal() {
+    if (!modalEl || !modalEl.classList.contains('show')) return;
+    modalEl.classList.remove('show');
+    if (modalReturnFocus && document.contains(modalReturnFocus)) modalReturnFocus.focus();
+    modalReturnFocus = null;
+  }
+  function escapeHtml(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c => (
+      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
   function updateModalBody(html) {
     if (modalEl) modalEl.querySelector('.qw-modal__text').innerHTML = html;
   }
@@ -710,7 +734,7 @@
   function currentLangBCP47() {
     const lang = (window.AgriSimI18n && window.AgriSimI18n.getLanguage && window.AgriSimI18n.getLanguage())
                  || localStorage.getItem('agrisim_lang') || 'en';
-    return { en: 'en-IN', hi: 'hi-IN', te: 'te-IN' }[lang] || 'en-IN';
+    return { en: 'en-IN', hi: 'hi-IN', te: 'te-IN', kn: 'kn-IN', ta: 'ta-IN' }[lang] || 'en-IN';
   }
 
   /* ---------- Voice command parsing ----------
@@ -841,7 +865,13 @@
       if (out()) out().textContent = lastRecognized || '—';
     };
     rec.onerror = (e) => {
-      updateModalBody(`<p>Voice error: ${e.error}</p>`);
+      const msg = {
+        'not-allowed': 'Microphone access was blocked. Allow it in your browser settings and try again.',
+        'no-speech': "We didn't hear anything. Try again and speak close to the phone.",
+        'audio-capture': 'No microphone was found on this device.',
+        'network': 'Voice input needs an internet connection.',
+      }[e.error] || 'Voice input stopped unexpectedly. Please try again.';
+      updateModalBody(`<p>${msg}</p>`);
     };
     rec.onend = () => {
       const txt = (finalText || lastRecognized).trim();
@@ -858,14 +888,14 @@
         hideModal();
         return;
       }
-      showModal('You said:', `<p style="font-weight:500;">${txt}</p>
+      showModal('You said:', `<p style="font-weight:500;">${escapeHtml(txt)}</p>
         <p style="font-size:.85rem;margin-top:8px;">Tip: try <em>"simulate rice in Punjab for 5 acres"</em> or <em>"recommend crops for kharif"</em>.</p>`, [
         { label: 'Copy', primary: false, onClick: () => { navigator.clipboard?.writeText(txt); hideModal(); } },
         { label: 'OK', primary: true, onClick: hideModal }
       ]);
     };
     try { rec.start(); }
-    catch (e) { updateModalBody('<p>Could not start: ' + e.message + '</p>'); }
+    catch (e) { updateModalBody('<p>Voice input could not start. Close other apps using the microphone and try again.</p>'); }
   }
 
   /* ---------- Read aloud ---------- */
@@ -931,7 +961,7 @@
       hi: `आज की सलाह: ${d.crop} बोइए। अनुमानित मुनाफ़ा लगभग ${profitStr} प्रति एकड़ है, और जोखिम स्कोर 100 में से ${d.risk} है।${rainClause.hi}`,
       te: `ఈరోజు సలహా: ${d.crop} విత్తండి. ఎకరాకు అంచనా లాభం సుమారు ${profitStr}, రిస్క్ స్కోరు 100కి ${d.risk}.${rainClause.te}`
     };
-    return t[lang] || t.en;
+    return t[lang] ? { text: t[lang], lang } : { text: t.en, lang: 'en' };
   }
 
   async function composeBriefing(profile) {
@@ -943,10 +973,12 @@
       area_acres: profile.area_acres || 1
     });
     const [recs, weather] = await Promise.all([
-      fetch(`/api/crop?${qs}`).then(r => r.json()).catch(() => null),
-      fetch(`/api/weather/${encodeURIComponent(profile.region_id)}?season=${encodeURIComponent(season)}`).then(r => r.json()).catch(() => null)
+      fetch(`/api/crop?${qs}`).then(r => (r.ok ? r.json() : null)).catch(() => null),
+      fetch(`/api/weather/${encodeURIComponent(profile.region_id)}?season=${encodeURIComponent(season)}`).then(r => (r.ok ? r.json() : null)).catch(() => null)
     ]);
-    const top = Array.isArray(recs) ? recs[0] : null;
+    const committed = window.FarmState?.getActiveCrop?.()?.crop_id;
+    const list = Array.isArray(recs) ? recs : [];
+    const top = (committed && list.find(r => r.crop_id === committed)) || list[0] || null;
     if (!top) return null;
     const lang = (window.AgriSimI18n && window.AgriSimI18n.getLanguage && window.AgriSimI18n.getLanguage()) || 'en';
     const rainfall = weather && weather.rainfall_mm != null ? Math.round(Number(weather.rainfall_mm)) : null;
@@ -982,20 +1014,20 @@
     // (stop / no-op) instead of racing it into a duplicate speak() call.
     speakingBriefing = true;
     btn?.classList.add('active');
-    const text = await composeBriefing(profile).catch(() => null);
+    const briefing = await composeBriefing(profile).catch(() => null);
     if (!speakingBriefing) {
       // Stop-clicked while composing: that click already reset the flag
       // and button state, so treat this stale resolve as a no-op.
       return;
     }
-    if (!text) {
+    if (!briefing) {
       speakingBriefing = false;
       btn?.classList.remove('active');
       showModal("Today's briefing", '<p>Could not put together a briefing right now — try again in a moment.</p>');
       return;
     }
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = currentLangBCP47();
+    const u = new SpeechSynthesisUtterance(briefing.text);
+    u.lang = briefing.lang === 'en' ? 'en-IN' : currentLangBCP47();
     const voices = window.speechSynthesis.getVoices();
     const match = voices.find(v => v.lang && v.lang.toLowerCase().startsWith(u.lang.toLowerCase().slice(0, 2)));
     if (match) u.voice = match;
@@ -1008,8 +1040,9 @@
   function copyLink() {
     const url = location.href;
     const done = () => { if (window.MM && window.MM.toast) window.MM.toast('Link copied'); };
-    if (navigator.clipboard) navigator.clipboard.writeText(url).then(done);
-    else { prompt('Copy link:', url); }
+    const fail = () => showModal('Copy link', `<p>Copy this link:</p><p style="word-break:break-all;font-weight:500;">${escapeHtml(url)}</p>`);
+    if (navigator.clipboard) navigator.clipboard.writeText(url).then(done, fail);
+    else fail();
   }
 
   /* ---------- Usage & privacy modal ----------
@@ -1076,7 +1109,7 @@
     pdfLibsLoading = Promise.all([
       window.html2canvas ? null : loadScript('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js'),
       window.jspdf ? null : loadScript('https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js')
-    ]);
+    ]).catch((err) => { pdfLibsLoading = null; throw err; });
     return pdfLibsLoading;
   }
   async function exportPdf() {
@@ -1134,7 +1167,10 @@
       }
       pdf.save('agrisim-' + Date.now() + '.pdf');
     } catch (e) {
-      showModal('PDF export failed', '<p>' + e.message + '</p>');
+      console.error('[toolbar] PDF export failed', e);
+      showModal('PDF export failed', navigator.onLine
+        ? '<p>The page could not be saved as a PDF. Please try again, or use your browser\u2019s Print \u2192 Save as PDF.</p>'
+        : '<p>Saving a PDF needs an internet connection the first time. Reconnect and try again.</p>');
     } finally {
       if (btn) btn.disabled = false;
     }
