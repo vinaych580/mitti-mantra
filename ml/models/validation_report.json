@@ -6,10 +6,10 @@
       "season": "rabi",
       "status": "PASS",
       "top_crop": "Mustard (Sarson)",
-      "top_score": 78.43,
-      "top_yield_kg_ac": 872.65,
-      "top_profit_inr": 88270.68,
-      "latency_ms": 155,
+      "top_score": 92.48,
+      "top_yield_kg_ac": 901.19,
+      "top_profit_inr": 36953.6,
+      "latency_ms": 278,
       "ml_used": true
     },
     {
@@ -17,11 +17,11 @@
       "region_id": "mh_nashik",
       "season": "kharif",
       "status": "PASS",
-      "top_crop": "Finger Millet (Ragi)",
-      "top_score": 86.01,
-      "top_yield_kg_ac": 1282.04,
-      "top_profit_inr": 117844.8,
-      "latency_ms": 269,
+      "top_crop": "Jute",
+      "top_score": 72.17,
+      "top_yield_kg_ac": 655.59,
+      "top_profit_inr": 16140.53,
+      "latency_ms": 46,
       "ml_used": true
     },
     {
@@ -29,11 +29,11 @@
       "region_id": "tn_thanjavur",
       "season": "kharif",
       "status": "PASS",
-      "top_crop": "Black Gram (Urad)",
-      "top_score": 82.04,
-      "top_yield_kg_ac": 660.64,
-      "top_profit_inr": 67141.2,
-      "latency_ms": 263,
+      "top_crop": "Pulses (Chickpea/Tur)",
+      "top_score": 65.66,
+      "top_yield_kg_ac": 590.82,
+      "top_profit_inr": 25335.28,
+      "latency_ms": 51,
       "ml_used": true
     },
     {
@@ -42,10 +42,10 @@
       "season": "rabi",
       "status": "PASS",
       "top_crop": "Mustard (Sarson)",
-      "top_score": 80.69,
-      "top_yield_kg_ac": 896.94,
-      "top_profit_inr": 67308.14,
-      "latency_ms": 132,
+      "top_score": 68.27,
+      "top_yield_kg_ac": 915.28,
+      "top_profit_inr": 29546.68,
+      "latency_ms": 51,
       "ml_used": true
     },
     {
@@ -53,15 +53,16 @@
       "region_id": "guj_anand",
       "season": "kharif",
       "status": "PASS",
-      "top_crop": "Finger Millet (Ragi)",
-      "top_score": 82.68,
-      "top_yield_kg_ac": 1296.97,
-      "top_profit_inr": 75757.6,
-      "latency_ms": 260,
+      "top_crop": "Turmeric",
+      "top_score": 70.87,
+      "top_yield_kg_ac": 433.78,
+      "top_profit_inr": 26209.1,
+      "latency_ms": 54,
       "ml_used": true
     }
   ],
   "all_pass": true,
   "passed": 5,
-  "total": 5
+  "total": 5,
+  "generated_at": 1790186559.6937194
 }

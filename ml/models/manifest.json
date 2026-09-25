@@ -4,81 +4,110 @@
       "model": "yield_prediction",
       "algorithm": "RandomForestRegressor",
       "metrics": {
-        "mae": 728.18,
-        "rmse": 2146.24,
-        "r2": 0.8309,
-        "train_samples": 12073,
-        "test_samples": 3019
+        "mae": 426.05,
+        "rmse": 888.45,
+        "r2": 0.9909,
+        "mape_pct": 8.25,
+        "train_samples": 350,
+        "test_samples": 215,
+        "test_year": 2024,
+        "baselines": {
+          "crop_base_yield": {
+            "mae": 458.72,
+            "rmse": 987.32,
+            "r2": 0.9888,
+            "mape_pct": 8.78
+          },
+          "prior_years_mean": {
+            "mae": 471.7,
+            "rmse": 985.93,
+            "r2": 0.9888,
+            "mape_pct": 9.1
+          }
+        }
       },
       "feature_importances": {
-        "crop_enc": 0.0027,
-        "region_enc": 0.0167,
-        "season_enc": 0.5473,
-        "base_yield": 0.0745,
-        "water_req": 0.014,
-        "temp_min": 0.0162,
-        "temp_max": 0.0081,
-        "npk_n": 0.0209,
-        "npk_p": 0.0518,
-        "npk_k": 0.0195,
-        "soil_ph": 0.0078,
-        "soil_n": 0.0116,
-        "soil_p": 0.0102,
-        "soil_k": 0.0123,
-        "soil_oc": 0.0204,
-        "rainfall": 0.0868,
-        "avg_temp": 0.0081,
-        "min_temp": 0.0527,
-        "max_temp": 0.0124,
-        "irrigation": 0.006
+        "crop_enc": 0.0001,
+        "region_enc": 0.0005,
+        "season_enc": 0.0002,
+        "base_yield": 0.5338,
+        "water_req": 0.0,
+        "temp_min": 0.0,
+        "temp_max": 0.0,
+        "npk_n": 0.0002,
+        "npk_p": 0.4549,
+        "npk_k": 0.0013,
+        "soil_ph": 0.0004,
+        "soil_n": 0.0003,
+        "soil_p": 0.0003,
+        "soil_k": 0.0013,
+        "soil_oc": 0.0005,
+        "rainfall": 0.0013,
+        "avg_temp": 0.0008,
+        "min_temp": 0.0009,
+        "max_temp": 0.0029,
+        "irrigation": 0.0
       }
     },
     {
       "model": "price_forecasting",
-      "algorithm": "GradientBoostingRegressor",
+      "algorithm": "DummyRegressor (historical mean)",
       "metrics": {
-        "mae": 5.07,
-        "rmse": 19.65,
-        "r2": 0.9118,
-        "train_samples": 1778,
-        "test_samples": 445
+        "mae": 4.63,
+        "rmse": 6.43,
+        "r2": 0.9328,
+        "mape_pct": 11.42,
+        "deployed": "historical_mean",
+        "gradient_boosting": {
+          "mae": 4.9,
+          "rmse": 6.87,
+          "r2": 0.9232,
+          "mape_pct": 11.96
+        },
+        "train_samples": 2079,
+        "test_samples": 144,
+        "test_from": "2025-07-01",
+        "baselines": {
+          "historical_mean": {
+            "mae": 4.63,
+            "rmse": 6.43,
+            "r2": 0.9328,
+            "mape_pct": 11.42
+          },
+          "last_month": {
+            "mae": 6.81,
+            "rmse": 9.69,
+            "r2": 0.8474,
+            "mape_pct": 17.04
+          }
+        }
       },
-      "feature_importances": {
-        "crop_enc": 0.0017,
-        "region_enc": 0.0003,
-        "month": 0.004,
-        "year_offset": 0.0002,
-        "lag_1": 0.1848,
-        "lag_2": 0.0462,
-        "lag_3": 0.1176,
-        "rolling_mean_3": 0.272,
-        "rolling_std_3": 0.2109,
-        "price_range": 0.1623
-      }
+      "feature_importances": {}
     },
     {
       "model": "crop_recommendation",
-      "algorithm": "RandomForestClassifier",
+      "algorithm": "HistGradientBoostingClassifier",
       "metrics": {
-        "accuracy": 0.8374,
-        "train_samples": 48000,
-        "test_samples": 12000,
-        "num_classes": 23
+        "accuracy": 0.9385,
+        "f1_macro": 0.8252,
+        "train_samples": 30405,
+        "test_samples": 15000,
+        "num_classes": 22
       },
       "feature_importances": {
-        "region_enc": 0.0419,
-        "season_enc": 0.1058,
-        "soil_ph": 0.0262,
-        "soil_n": 0.0274,
-        "soil_p": 0.0322,
-        "soil_k": 0.0408,
-        "soil_oc": 0.0278,
-        "rainfall": 0.2766,
-        "avg_temp": 0.0442,
-        "min_temp": 0.0635,
-        "max_temp": 0.0492,
-        "budget": 0.2071,
-        "irrigation": 0.0573
+        "region_enc": 0.0097,
+        "season_enc": 0.4652,
+        "soil_ph": 0.008,
+        "soil_n": 0.0074,
+        "soil_p": 0.0053,
+        "soil_k": 0.0367,
+        "soil_oc": -0.0004,
+        "rainfall": 0.5424,
+        "avg_temp": 0.0613,
+        "min_temp": 0.0,
+        "max_temp": 0.0,
+        "budget": 0.3971,
+        "irrigation": 0.0458
       }
     },
     {
@@ -117,10 +146,10 @@
     }
   ],
   "model_dir": "ml/models",
-  "trained_at": 1789127088.8745673,
+  "trained_at": 1790186559.7132475,
   "model_hashes": {
-    "yield_model.joblib": "03f8b5284a54764d706bc42dff89f252",
-    "price_model.joblib": "a51d6c21829e93859f7819f66b76bc20",
-    "recommend_model.joblib": "6fb58fb9891bd1f4f306825a424fe2ed"
+    "yield_model.joblib": "7500b43f3e23d3dbbddaaf38346957d1",
+    "price_model.joblib": "21a0b0dc8b1c846fa720eb70f93ee714",
+    "recommend_model.joblib": "0da139ffd5bc36134957bbfe054a18d9"
   }
 }

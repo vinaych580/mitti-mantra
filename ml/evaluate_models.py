@@ -7,13 +7,14 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from sklearn.model_selection import train_test_split, KFold, StratifiedKFold, RandomizedSearchCV
+from sklearn.model_selection import GroupKFold, StratifiedKFold, RandomizedSearchCV
 from sklearn.metrics import accuracy_score, f1_score, mean_absolute_error, mean_squared_error, r2_score
 
 # Classifiers & Regressors
-from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+from sklearn.ensemble import HistGradientBoostingClassifier, RandomForestClassifier, RandomForestRegressor
 
-from ml.dataset_builders import _build_yield_dataset, _build_recommendation_dataset
+from ml.dataset_builders import _build_yield_dataset, _build_recommendation_dataset, _yield_time_split
+from ml.train_models import build_recommendation_holdout
 
 # Try importing XGBoost
 try:
@@ -58,15 +59,23 @@ class ModelEvaluationPipeline:
         logger.info("Evaluating CROP RECOMMENDATION Classifiers")
         logger.info("=========================================")
 
-        X, y, crop_le, region_le, season_le = _build_recommendation_dataset()
-        logger.info(f"Loaded classifier dataset with shape: {X.shape}")
-
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=0.2, random_state=42, stratify=y
-        )
+        # Same train set and independently drawn holdout as train_models.py,
+        # so these benchmarks are comparable with the deployed model's
+        # numbers. The old random split ran after augmentation and scored
+        # models on near-copies of their own training rows.
+        X_train, y_train, _, crop_le, region_le, season_le = _build_recommendation_dataset()
+        X_test, y_test, source_test, *_ = build_recommendation_holdout()
+        natural = np.array([s == "natural" for s in source_test])
+        X_test, y_test = X_test[natural], y_test[natural]
+        logger.info(f"Loaded classifier train {X_train.shape}, natural holdout {X_test.shape}")
         
         models = {
-            "RandomForest": RandomForestClassifier(random_state=42, n_jobs=-1)
+            "RandomForest": RandomForestClassifier(random_state=42, n_jobs=-1),
+            # What train_models.py deploys -- see its train_recommendation_model.
+            "HistGradientBoosting": HistGradientBoostingClassifier(
+                learning_rate=0.15, max_iter=150, max_leaf_nodes=31,
+                class_weight="balanced", early_stopping=False, random_state=42,
+            ),
         }
         if XGBOOST_AVAILABLE:
             models["XGBoost"] = XGBClassifier(random_state=42, eval_metric="mlogloss", n_jobs=-1)
@@ -113,8 +122,14 @@ class ModelEvaluationPipeline:
         if best_model_name == "RandomForest":
             param_grid = {
                 "n_estimators": [100, 200],
-                "max_depth": [6, 10],
+                "max_depth": [10, None],
                 "min_samples_split": [2, 5]
+            }
+        elif best_model_name == "HistGradientBoosting":
+            param_grid = {
+                "max_iter": [100, 150],
+                "max_leaf_nodes": [31, 63],
+                "learning_rate": [0.1, 0.15]
             }
         else:
             param_grid = {
@@ -142,12 +157,13 @@ class ModelEvaluationPipeline:
         logger.info("Evaluating CROP YIELD PREDICTION Regressors")
         logger.info("=========================================")
 
-        X, y, source, crop_le, region_le, season_le = _build_yield_dataset()
+        X, y, years, crop_le, region_le, season_le = _build_yield_dataset()
         logger.info(f"Loaded regressor dataset with shape: {X.shape}")
 
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=0.2, random_state=42
-        )
+        # Latest harvest year held out, exactly as train_models.py does.
+        train, test = _yield_time_split(years)
+        X_train, X_test, y_train, y_test = X[train], X[test], y[train], y[test]
+        years_train = years[train]
         
         models = {
             "RandomForest": RandomForestRegressor(random_state=42, n_jobs=-1)
@@ -164,12 +180,14 @@ class ModelEvaluationPipeline:
         best_model_name = ""
         best_model = None
         
-        cv = KFold(n_splits=5, shuffle=True, random_state=42)
+        # CV folds by harvest year, so no fold scores a model on a year it
+        # also trained on.
+        cv = GroupKFold(n_splits=len(set(years_train.tolist())))
         
         for name, reg in models.items():
             logger.info(f"Training {name} Regressor...")
             cv_r2s = []
-            for train_idx, val_idx in cv.split(X_train, y_train):
+            for train_idx, val_idx in cv.split(X_train, y_train, groups=years_train):
                 X_tr, X_val = X_train[train_idx], X_train[val_idx]
                 y_tr, y_val = y_train[train_idx], y_train[val_idx]
                 reg.fit(X_tr, y_tr)
@@ -209,8 +227,8 @@ class ModelEvaluationPipeline:
                 "max_depth": [4, 6, 8],
                 "learning_rate": [0.03, 0.1]
             }
-        search = RandomizedSearchCV(best_model, param_grid, n_iter=3, cv=3, random_state=42, n_jobs=-1)
-        search.fit(X_train, y_train)
+        search = RandomizedSearchCV(best_model, param_grid, n_iter=3, cv=cv, random_state=42, n_jobs=-1)
+        search.fit(X_train, y_train, groups=years_train)
         tuned_reg = search.best_estimator_
 
         feature_names = [

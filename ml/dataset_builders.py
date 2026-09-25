@@ -24,8 +24,6 @@ from sklearn.preprocessing import LabelEncoder
 from ml.predict import smart_risk_score, profit_estimator, _season_match, _is_perennial
 from utils.calculations import (
     CropParameter,
-    calculate_climate_factor,
-    calculate_soil_factor,
     calculate_yield_kg_per_acre,
     compute_budget_fit,
     compute_roi_normalized,
@@ -95,11 +93,9 @@ def _save_holdout(
     """Persist the exact held-out test set for `name` alongside the model
     artifact, so a later audit can evaluate on genuinely unseen rows.
 
-    `source_test`, when given, tags each row's provenance ("real",
-    "augmented", "synthetic_mismatch") so ml/audit_models.py can report
-    metrics split by how representative-of-a-realistic-yield each row is,
-    instead of averaging a metric like MAPE across rows that were never
-    meant to look like a realistic yield in the first place.
+    `source_test`, when given, tags each row's provenance -- "real" for
+    yield, "natural"/"topup" for recommendation -- so ml/audit_models.py can
+    report headline metrics on rows drawn from the real distribution only.
     """
     holdout_path = MODEL_DIR / f"holdout_{name}.joblib"
     payload = {"X_test": X_test, "y_test": y_test}
@@ -166,117 +162,121 @@ def _yield_features(cid, rid, season, cp, soil, weather,
     ]
 
 
-def _build_yield_dataset() -> tuple[np.ndarray, np.ndarray, list[str], LabelEncoder, LabelEncoder, LabelEncoder]:
-    """
-    Build training data for yield prediction by joining:
-      yield_history x crop_parameters x soil x weather
-    Then inject severe climate-mismatch negative examples and augment with
-    gaussian noise.
+def _weather_lookup(weather_rows: list[dict]):
+    """Return weather_for(region_id, season, year) -> weather row or {}.
 
-    Returns (X, y, source, crop_le, region_le, season_le). `source` tags
-    each row "real" (from yield_history.csv), "augmented" (a noise-
-    perturbed copy of a real or synthetic_mismatch row), or
-    "synthetic_mismatch" (an injected severe climate-mismatch example) --
-    see ml/audit_models.py for how this is used to report MAPE split by
-    provenance instead of averaged across rows of wildly different
-    reliability.
+    Each yield row is joined to its own year's weather. The builder used to
+    key weather by (region, season) only, so every year's yield was paired
+    with whichever year happened to be read last -- the model could never
+    learn year-to-year weather effects. Annual/perennial crops have no weather
+    row of their own season, so they fall back to that year's kharif row, then
+    to the latest year on record.
+    """
+    by_year: dict[tuple[str, str, str], dict] = {}
+    latest: dict[tuple[str, str], dict] = {}
+    for r in sorted(weather_rows, key=lambda w: w.get("year", "")):
+        key = (r["region_id"], r["season"].lower())
+        by_year[key + (str(r.get("year", "")),)] = r
+        latest[key] = r
+
+    def weather_for(region_id: str, season: str, year: str) -> dict:
+        for s in (season, "kharif"):
+            row = by_year.get((region_id, s, str(year)))
+            if row:
+                return row
+        return latest.get((region_id, season)) or latest.get((region_id, "kharif")) or {}
+
+    return weather_for
+
+
+def _build_yield_dataset() -> tuple[np.ndarray, np.ndarray, np.ndarray, LabelEncoder, LabelEncoder, LabelEncoder]:
+    """
+    Build yield-prediction training data from real harvests only:
+    yield_history x crop_parameters x soil x that year's weather.
+
+    Returns (X, y, years, crop_le, region_le, season_le). `years` drives the
+    time-based holdout (see _yield_time_split).
+
+    Real rows only, deliberately. Measured on the 2024 harvests with a model
+    trained on 2022-2023:
+      - real rows only                        MAPE  8.3%
+      - + synthetic climate-mismatch rows     MAPE ~20%
+      - + 6x noise augmentation (old recipe)  MAPE ~20%
+      - old deployed model                    MAPE 31%
+    The mismatch rows came from the heuristic climate formula, which can't
+    see irrigation, and 145 of them contradicted real harvests. The augmented
+    copies were also split *after* being generated, so near-copies of test
+    rows sat in the training set. The "unsuited climate" behaviour those rows
+    were meant to teach is now an explicit rule applied at prediction time --
+    ml/predict.py::_apply_climate_guard.
     """
     yield_hist = _load_csv("yield_history.csv", required=True)
     crop_params = {r["crop_id"]: r for r in _load_csv("crop_parameters.csv", required=True)}
-    soil_data = {}
-    for r in _load_csv("soil.csv", required=True):
-        soil_data[r["region_id"]] = r
-    weather_rows = _load_csv("weather.csv", required=True)
-    weather_data = {}
-    for r in weather_rows:
-        key = (r["region_id"], r["season"].lower())
-        weather_data[key] = r
+    soil_data = {r["region_id"]: r for r in _load_csv("soil.csv", required=True)}
+    weather_for = _weather_lookup(_load_csv("weather.csv", required=True))
 
-    all_crops = sorted(crop_params.keys())
-    all_regions = sorted(soil_data.keys())
+    crop_le, region_le, season_le = _fit_label_encoders(
+        sorted(crop_params.keys()), sorted(soil_data.keys()), ALL_SEASONS,
+    )
 
-    crop_le, region_le, season_le = _fit_label_encoders(all_crops, all_regions, ALL_SEASONS)
-
-    rows_X, rows_y, rows_source = [], [], []
-
+    rows_X, rows_y, rows_year = [], [], []
     for row in yield_hist:
         cid = row["crop_id"]
         rid = row["region_id"]
-        season = row.get("season", "kharif").lower()
-        yld = float(row["yield_kg_per_acre"])
-
         if cid not in crop_params or rid not in soil_data:
             continue
-
-        cp = crop_params[cid]
-        soil = soil_data[rid]
-        wkey = (rid, season)
-        weather = weather_data.get(wkey, {})
-
-        features = _yield_features(cid, rid, season, cp, soil, weather,
-                                   crop_le, region_le, season_le,
-                                   irrigation=0.5)
-        rows_X.append(features)
-        rows_y.append(yld)
-        rows_source.append("real")
-
-    # ---- Inject Negative/Mismatched Crop-Climate Examples ----
-    # Trains the model directly on climate bounds (drought, flood) instead
-    # of only ever seeing yields for crop/region/season combos that
-    # actually got planted historically.
-    for rid in all_regions:
-        soil = soil_data[rid]
-        for season in ["kharif", "rabi"]:
-            wkey = (rid, season)
-            weather = weather_data.get(wkey)
-            if not weather:
-                continue
-
-            weather_parsed = {
-                "rainfall_mm": float(weather.get("rainfall_mm", 800)),
-                "avg_temp_c": float(weather.get("avg_temp_c", 28)),
-            }
-
-            for cid, cp_row in crop_params.items():
-                cp = make_crop_param(cp_row)
-                climate_factor = calculate_climate_factor(weather_parsed, cp)
-                if climate_factor < 0.65:
-                    mismatched_yield = float(cp_row["base_yield_kg_per_acre"]) * climate_factor * 0.1
-                    features = _yield_features(cid, rid, season, cp_row, soil, weather,
-                                               crop_le, region_le, season_le,
-                                               irrigation=0.5)
-                    rows_X.append(features)
-                    rows_y.append(mismatched_yield)
-                    rows_source.append("synthetic_mismatch")
-
-    # ---- Data augmentation ----
-    rng = np.random.RandomState(42)
-    aug_X, aug_y, aug_source = [], [], []
-    base_len = len(rows_X)
-    for i in range(base_len):
-        for _ in range(6):
-            noise = rng.uniform(0.90, 1.10, size=len(rows_X[i]))
-            noised = np.array(rows_X[i]) * noise
-            noised[:3] = rows_X[i][:3]
-            aug_X.append(noised.tolist())
-            aug_y.append(rows_y[i] * rng.uniform(0.92, 1.08))
-            # A noised copy of a synthetic_mismatch row (deliberately tiny
-            # yield to expose model overfitting) stays tagged that way rather
-            # than being promoted to "augmented" -- preserves the provenance
-            # signal used by audit_models._split_yield_mape() to exclude
-            # non-realistic rows from honest MAPE reporting.
-            aug_source.append("augmented" if rows_source[i] == "real" else rows_source[i])
-    rows_X.extend(aug_X)
-    rows_y.extend(aug_y)
-    rows_source.extend(aug_source)
+        season = row.get("season", "kharif").lower()
+        year = str(row.get("year", ""))
+        weather = weather_for(rid, season, year)
+        rows_X.append(_yield_features(cid, rid, season, crop_params[cid], soil_data[rid], weather,
+                                      crop_le, region_le, season_le, irrigation=0.5))
+        rows_y.append(float(row["yield_kg_per_acre"]))
+        rows_year.append(int(year) if year.isdigit() else 0)
 
     return (np.array(rows_X, dtype=np.float32),
             np.array(rows_y, dtype=np.float32),
-            rows_source,
+            np.array(rows_year, dtype=np.int32),
             crop_le, region_le, season_le)
 
 
+def _yield_time_split(years: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """(train_mask, test_mask): hold out the most recent harvest year.
+
+    Forecasting a season from earlier seasons is the job the model does in
+    production, so that's what the holdout measures. A random row split lets
+    the model see the same region/crop's other years on both sides.
+    """
+    test = years == years.max()
+    return ~test, test
+
+
+def _time_split(dates: np.ndarray, test_frac: float = 0.2) -> tuple[np.ndarray, np.ndarray]:
+    """(train_mask, test_mask): the last `test_frac` of distinct dates is the test set."""
+    unique = sorted(set(dates.tolist()))
+    cutoff = unique[int(len(unique) * (1.0 - test_frac))]
+    test = dates >= cutoff
+    return ~test, test
+
+
 _RECOMMEND_SAMPLES_PER_REGION_SEASON = 500
+
+# Rare-label top-up. Labels come from compute_smart_score's argmax, which
+# picks some crops almost never (at 500 samples per region+season: maize 12,
+# wheat 15, groundnut 51 of 30,000). A classifier can't learn a crop from a
+# dozen examples, so after the main pass we keep drawing scenarios in the
+# region+seasons where each rare crop has won, keeping only the rare wins,
+# until every crop that won at all has _RECOMMEND_MIN_PER_CLASS examples or
+# the draw budget runs out. Rows are tagged "topup" so evaluation can report
+# headline metrics on the natural distribution only.
+_RECOMMEND_MIN_PER_CLASS = 100
+# ~0.2 ms per draw, so the worst case is ~80 s. Maize wins about 1 draw in
+# 700 even in the region+seasons where it wins at all.
+_RECOMMEND_TOPUP_MAX_DRAWS = 400_000
+
+# Per-farm soil varies around the regional average. Without this the
+# classifier only ever saw one N/P/K/OC value per region and ignored soil
+# entirely, though the scoring formula it imitates responds to it.
+_SOIL_NUTRIENT_SPREAD = 0.3   # N, P, K, OC drawn within +/-30% of the region's value
 
 # Weather sampling for training: a mixture of (a) each region+season's own
 # observed rainfall/temp range (widened, to cover years the 3-year record
@@ -300,218 +300,211 @@ RECOMMEND_FEATURE_NAMES = [
     "budget", "irrigation",
 ]
 
+_BUDGET_CHOICES = [8000, 12000, 18000, 25000, 35000]
 
-def _build_recommendation_dataset() -> tuple[np.ndarray, np.ndarray, LabelEncoder, LabelEncoder, LabelEncoder]:
-    """
-    Build crop recommendation training data: for each (region, season),
-    simulate randomized conditions and label the best crop using the same
-    compute_smart_score() weighting ml/predict.py's _score_single_crop
-    uses to rank crops for a real farmer -- see
-    docs/superpowers/specs/2026-09-06-ml-model-accuracy-design.md section 6.
 
-    Candidate eligibility matches recommend_crops's own filter exactly:
-    true perennials (season == "Perennial") are excluded from kharif/rabi
-    sampling, since a request for "this season" can't recommend a tree
-    that takes years to fruit.
+def _sf(d: dict, k: str, default: float = 0.0) -> float:
+    try:
+        return float(d.get(k, default))
+    except (ValueError, TypeError):
+        return default
 
-    Returns (X, y, crop_le, region_le, season_le).
-    """
+
+def _recommendation_context() -> dict:
+    """Everything a single scenario draw needs, loaded once per build."""
     crop_params_list = _load_csv("crop_parameters.csv", required=True)
-    crop_params = {r["crop_id"]: r for r in crop_params_list}
-    crop_params_objs = {r["crop_id"]: make_crop_param(r) for r in crop_params_list}
     soil_data = {r["region_id"]: r for r in _load_csv("soil.csv", required=True)}
-    weather_rows = _load_csv("weather.csv", required=True)
     # All observed years per (region, season) -- not just one -- so sampling
-    # below reflects each region's actual seasonal climate. See
-    # docs/superpowers/specs/2026-09-11-rabi-rainfall-sampling-design.md:
-    # a flat U(200, 2500)mm range covers real kharif rainfall but not real
-    # rabi rainfall (most regions are well under 200mm in rabi), so the
-    # model never saw realistic rabi conditions during training.
+    # reflects each region's actual seasonal climate. See
+    # docs/superpowers/specs/2026-09-11-rabi-rainfall-sampling-design.md.
     weather_by_region_season: dict[tuple[str, str], list[dict]] = {}
-    for r in weather_rows:
-        key = (r["region_id"], r["season"].lower())
-        weather_by_region_season.setdefault(key, []).append(r)
-    mandi_rows = _load_csv("mandi_prices.csv", required=True)
-
+    for r in _load_csv("weather.csv", required=True):
+        weather_by_region_season.setdefault((r["region_id"], r["season"].lower()), []).append(r)
     mandi_latest: dict[tuple[str, str], float] = {}
-    for r in sorted(mandi_rows, key=lambda x: x["date"]):
+    for r in sorted(_load_csv("mandi_prices.csv", required=True), key=lambda x: x["date"]):
         mandi_latest[(r["region_id"], r["crop_id"])] = float(r["price_inr_per_kg"])
 
-    all_regions = sorted(soil_data.keys())
-    all_seasons = ["kharif", "rabi"]
-
-    crop_le = LabelEncoder().fit(sorted(crop_params.keys()))
-    region_le = LabelEncoder().fit(all_regions)
+    crop_le = LabelEncoder().fit(sorted(r["crop_id"] for r in crop_params_list))
+    region_le = LabelEncoder().fit(sorted(soil_data.keys()))
     season_le = LabelEncoder().fit(ALL_SEASONS)
 
-    rng = np.random.RandomState(42)
-    X_all, y_all = [], []
-
-    def sf(d, k, default=0.0):
-        try:
-            return float(d.get(k, default))
-        except (ValueError, TypeError):
-            return default
-
-    budget_choices = [8000, 12000, 18000, 25000, 35000]
-
-    for rid in all_regions:
-        base_soil = soil_data[rid]
-        for season in all_seasons:
-            # Sample rainfall/temp from THIS region+season's own observed
-            # envelope (3 years, dataset/weather.csv), widened to allow for
-            # years outside the 3 sampled, rather than one hard-coded range
-            # shared across every region and both seasons.
-            #
+    cells = []
+    for rid in sorted(soil_data.keys()):
+        for season in ("kharif", "rabi"):
             # A region can exist in soil.csv without weather rows for every
-            # season yet (e.g. a newly onboarded region, or a partial
-            # refresh_weather_seed.py run) -- skip it rather than crashing
-            # the whole training run, matching _build_yield_dataset's own
-            # `if not weather: continue` guard on the same kind of lookup.
+            # season yet (a newly onboarded region, a partial
+            # refresh_weather_seed.py run) -- skip it rather than crash.
             weather_hist = weather_by_region_season.get((rid, season))
             if not weather_hist:
                 continue
             rain_hist = [float(w["rainfall_mm"]) for w in weather_hist]
             temp_hist = [float(w["avg_temp_c"]) for w in weather_hist]
             # Rainfall is ratio-scale (0mm is meaningful), so widen it
-            # proportionally; floor at 0 since rainfall can't go negative.
-            rain_lo = max(0.0, min(rain_hist) * (1.0 - _RAIN_WIDEN_FRAC))
-            rain_hi = max(rain_hist) * (1.0 + _RAIN_WIDEN_FRAC)
-            # Temperature is interval-scale (0C isn't "no temperature"), so
-            # widen it by a fixed additive margin instead of a percentage.
-            temp_lo = min(temp_hist) - _TEMP_WIDEN_C
-            temp_hi = max(temp_hist) + _TEMP_WIDEN_C
+            # proportionally; temperature is interval-scale, so widen it by a
+            # fixed additive margin instead.
+            cells.append({
+                "rid": rid, "season": season, "soil": soil_data[rid],
+                "region_code": float(region_le.transform([rid])[0]),
+                "season_code": float(season_le.transform([season])[0]),
+                "rain": (max(0.0, min(rain_hist) * (1.0 - _RAIN_WIDEN_FRAC)),
+                         max(rain_hist) * (1.0 + _RAIN_WIDEN_FRAC)),
+                "temp": (min(temp_hist) - _TEMP_WIDEN_C, max(temp_hist) + _TEMP_WIDEN_C),
+            })
 
-            for _ in range(_RECOMMEND_SAMPLES_PER_REGION_SEASON):
-                budget = float(rng.choice(budget_choices))
-                irr = float(rng.uniform(0.05, 0.95))
-                ph = float(rng.uniform(5.0, 8.5))
-                if rng.uniform() < _WEATHER_TAIL_FRAC:
-                    rain = float(rng.uniform(*_WEATHER_TAIL_RAIN_RANGE))
-                    temp = float(rng.uniform(*_WEATHER_TAIL_TEMP_RANGE))
-                else:
-                    rain = float(rng.uniform(rain_lo, rain_hi))
-                    temp = float(rng.uniform(temp_lo, temp_hi))
+    return {
+        "crop_params": {r["crop_id"]: r for r in crop_params_list},
+        "crop_objs": {r["crop_id"]: make_crop_param(r) for r in crop_params_list},
+        "crop_index": {c: i for i, c in enumerate(crop_le.classes_)},
+        "mandi_latest": mandi_latest,
+        "cells": cells,
+        "encoders": (crop_le, region_le, season_le),
+    }
 
-                soil_sim = {
-                    "ph": ph,
-                    "n_kg_per_acre": sf(base_soil, "n_kg_per_acre", 40),
-                    "p_kg_per_acre": sf(base_soil, "p_kg_per_acre", 20),
-                    "k_kg_per_acre": sf(base_soil, "k_kg_per_acre", 20),
-                    "organic_carbon_percent": sf(base_soil, "organic_carbon_percent", 0.5),
-                }
-                weather_sim = {"rainfall_mm": rain, "avg_temp_c": temp}
 
-                scores: dict[str, float] = {}
-                for cid, cp in crop_params.items():
-                    crop_season = cp["season"]
-                    # Match recommend_crops's own candidate filter exactly
-                    # (ml/predict.py): a seasonal request excludes true
-                    # perennials outright, not just down-weights them.
-                    if not _season_match(season, crop_season):
-                        continue
-                    if _is_perennial(crop_season):
-                        continue
+def _draw_labeled_scenario(ctx: dict, cell: dict, rng: np.random.RandomState):
+    """Sample one farm scenario in `cell` and label it with its best crop.
 
-                    cp_obj = crop_params_objs[cid]
+    Returns (features, crop_id), with crop_id None if no crop is eligible.
+    The label is the argmax of the same compute_smart_score() weighting
+    ml/predict.py::_score_single_crop uses to rank crops for a real farmer --
+    see docs/superpowers/specs/2026-09-06-ml-model-accuracy-design.md section 6.
+    """
+    budget = float(rng.choice(_BUDGET_CHOICES))
+    irr = float(rng.uniform(0.05, 0.95))
+    ph = float(rng.uniform(5.0, 8.5))
+    if rng.uniform() < _WEATHER_TAIL_FRAC:
+        rain = float(rng.uniform(*_WEATHER_TAIL_RAIN_RANGE))
+        temp = float(rng.uniform(*_WEATHER_TAIL_TEMP_RANGE))
+    else:
+        rain = float(rng.uniform(*cell["rain"]))
+        temp = float(rng.uniform(*cell["temp"]))
+    lo, hi = 1.0 - _SOIL_NUTRIENT_SPREAD, 1.0 + _SOIL_NUTRIENT_SPREAD
+    base_soil = cell["soil"]
+    soil_sim = {
+        "ph": ph,
+        "n_kg_per_acre": _sf(base_soil, "n_kg_per_acre", 40) * float(rng.uniform(lo, hi)),
+        "p_kg_per_acre": _sf(base_soil, "p_kg_per_acre", 20) * float(rng.uniform(lo, hi)),
+        "k_kg_per_acre": _sf(base_soil, "k_kg_per_acre", 20) * float(rng.uniform(lo, hi)),
+        "organic_carbon_percent": _sf(base_soil, "organic_carbon_percent", 0.5) * float(rng.uniform(lo, hi)),
+    }
+    weather_sim = {"rainfall_mm": rain, "avg_temp_c": temp}
+    rid, season = cell["rid"], cell["season"]
 
-                    # Same deterministic heuristic production falls back to
-                    # when no ML yield model is consulted -- not a bespoke
-                    # approximation of it.
-                    yield_est = calculate_yield_kg_per_acre(cp_obj, soil_sim, weather_sim, irrigation_level=irr)
+    best_crop, best_score = None, -np.inf
+    for cid, cp in ctx["crop_params"].items():
+        crop_season = cp["season"]
+        # Match recommend_crops's own candidate filter exactly (ml/predict.py):
+        # a seasonal request excludes true perennials outright.
+        if not _season_match(season, crop_season) or _is_perennial(crop_season):
+            continue
+        cp_obj = ctx["crop_objs"][cid]
+        # Same deterministic heuristic production falls back to when no ML
+        # yield model is consulted.
+        yield_est = calculate_yield_kg_per_acre(cp_obj, soil_sim, weather_sim, irrigation_level=irr)
+        price = ctx["mandi_latest"].get(
+            (rid, cid),
+            (float(cp["mandi_price_min_inr_per_kg"]) + float(cp["mandi_price_max_inr_per_kg"])) / 2.0,
+        )
+        # roi_percent is scale-invariant in area_acres, so 1.0 is exact.
+        profit = profit_estimator(
+            crop_id=cid, predicted_yield_kg_per_acre=yield_est,
+            area_acres=1.0, budget_per_acre=budget, mandi_price_per_kg=price,
+        )
+        # Called exactly as _score_single_crop calls it -- no irrigation_level
+        # argument -- because labels must reflect what production computes.
+        risk = smart_risk_score(cid, weather_sim, soil_sim, budget)
+        roi_normalized = compute_roi_normalized(profit["roi_percent"])
+        # ml_term forced to roi_normalized (production's own no-model
+        # fallback) and saturation_penalty to 0.0 (no commitment data for a
+        # synthetic scenario) -- breaks the circularity of a classifier
+        # trained on its own prior predictions. See spec section 6.3.
+        score = compute_smart_score(
+            roi_normalized=roi_normalized,
+            confidence_score=risk["confidence_score"],
+            budget_fit=compute_budget_fit(budget, cp_obj.avg_input_cost_inr_per_acre),
+            soil_health=compute_soil_health(
+                soil_sim["n_kg_per_acre"], soil_sim["p_kg_per_acre"], soil_sim["k_kg_per_acre"],
+                cp_obj.npk_n_kg_per_acre, cp_obj.npk_p_kg_per_acre, cp_obj.npk_k_kg_per_acre,
+            ),
+            ml_term=roi_normalized,
+            saturation_penalty=0.0,
+        )
+        if score > best_score:
+            best_crop, best_score = cid, score
 
-                    price = mandi_latest.get(
-                        (rid, cid),
-                        (float(cp["mandi_price_min_inr_per_kg"]) +
-                         float(cp["mandi_price_max_inr_per_kg"])) / 2.0,
-                    )
+    features = [
+        cell["region_code"], cell["season_code"],
+        ph,
+        soil_sim["n_kg_per_acre"], soil_sim["p_kg_per_acre"],
+        soil_sim["k_kg_per_acre"], soil_sim["organic_carbon_percent"],
+        rain, temp, temp - 8, temp + 7,
+        budget, irr,
+    ]
+    return features, best_crop
 
-                    # Real profit_estimator from ml/predict.py. roi_percent
-                    # is scale-invariant in area_acres (revenue and cost
-                    # both scale by it), so area_acres=1.0 is exact here,
-                    # not an approximation, and this inherits
-                    # _budget_yield_multiplier's squared-funding-ratio
-                    # curve instead of a cruder linear stand-in.
-                    profit = profit_estimator(
-                        crop_id=cid, predicted_yield_kg_per_acre=yield_est,
-                        area_acres=1.0, budget_per_acre=budget, mandi_price_per_kg=price,
-                    )
 
-                    # smart_risk_score is called exactly as _score_single_crop
-                    # calls it -- no irrigation_level argument, so it uses
-                    # the function's own 0.5 default regardless of the
-                    # sampled `irr`. This looks inconsistent with the yield
-                    # estimate above (which does use `irr`), but it's what
-                    # production actually computes, and labels must reflect
-                    # that, not an idealized version of it.
-                    risk = smart_risk_score(cid, weather_sim, soil_sim, budget)
+def _build_recommendation_dataset(
+    seed: int = 42,
+    samples_per_region_season: int = _RECOMMEND_SAMPLES_PER_REGION_SEASON,
+    min_per_class: int = _RECOMMEND_MIN_PER_CLASS,
+    max_topup_draws: int = _RECOMMEND_TOPUP_MAX_DRAWS,
+) -> tuple[np.ndarray, np.ndarray, list[str], LabelEncoder, LabelEncoder, LabelEncoder]:
+    """
+    Build crop-recommendation data: for each (region, season), simulate
+    randomized farm scenarios and label each with its best-scoring crop.
 
-                    budget_fit = compute_budget_fit(budget, cp_obj.avg_input_cost_inr_per_acre)
-                    roi_normalized = compute_roi_normalized(profit["roi_percent"])
-                    soil_health = compute_soil_health(
-                        soil_sim["n_kg_per_acre"],
-                        soil_sim["p_kg_per_acre"],
-                        soil_sim["k_kg_per_acre"],
-                        cp_obj.npk_n_kg_per_acre,
-                        cp_obj.npk_p_kg_per_acre,
-                        cp_obj.npk_k_kg_per_acre,
-                    )
+    Candidate eligibility matches recommend_crops's own filter exactly: true
+    perennials are excluded from kharif/rabi sampling, since a request for
+    "this season" can't recommend a tree that takes years to fruit.
 
-                    # ml_term forced to roi_normalized (production's own
-                    # no-model-loaded fallback) and saturation_penalty
-                    # forced to 0.0 (no commitment-log data exists for a
-                    # synthetic scenario) -- breaks the circularity of a
-                    # classifier partly trained on its own prior
-                    # predictions. See spec section 6.3.
-                    score = compute_smart_score(
-                        roi_normalized=roi_normalized,
-                        confidence_score=risk["confidence_score"],
-                        budget_fit=budget_fit,
-                        soil_health=soil_health,
-                        ml_term=roi_normalized,
-                        saturation_penalty=0.0,
-                    )
-                    scores[cid] = score
+    Returns (X, y, source, crop_le, region_le, season_le). `source` tags each
+    row "natural" (the main pass) or "topup" (a rare-crop win kept by the
+    top-up pass). Labels are a deterministic function of the scenario, so a
+    holdout is simply another build with a different `seed` -- no split, so
+    no near-copies of test rows can leak into training. (The old builder
+    appended noised copies with unchanged labels and then split, which both
+    leaked and taught the model labels that no longer matched the features.)
+    """
+    ctx = _recommendation_context()
+    crop_le, region_le, season_le = ctx["encoders"]
+    crop_index = ctx["crop_index"]
+    rng = np.random.RandomState(seed)
+    X_all, y_all, source = [], [], []
+    wins_by_crop: dict[str, set[int]] = {}
 
-                if not scores:
-                    continue
+    for cell_idx, cell in enumerate(ctx["cells"]):
+        for _ in range(samples_per_region_season):
+            features, crop = _draw_labeled_scenario(ctx, cell, rng)
+            if crop is None:
+                continue
+            X_all.append(features)
+            y_all.append(crop_index[crop])
+            source.append("natural")
+            wins_by_crop.setdefault(crop, set()).add(cell_idx)
 
-                # Argmax, not softmax-sampling: once labels come from
-                # compute_smart_score's calibrated 0-100 scale -- the same
-                # scale recommend_crops() ranks real farmers' results on --
-                # the top-scoring crop *is* the correct label, matching
-                # what "the top recommendation" means everywhere else in
-                # this codebase.
-                best_crop = max(scores, key=scores.get)
-
-                features = [
-                    region_le.transform([rid])[0],
-                    season_le.transform([season])[0],
-                    ph,
-                    soil_sim["n_kg_per_acre"],
-                    soil_sim["p_kg_per_acre"],
-                    soil_sim["k_kg_per_acre"],
-                    soil_sim["organic_carbon_percent"],
-                    rain,
-                    temp,
-                    temp - 8,
-                    temp + 7,
-                    budget,
-                    irr,
-                ]
+    counts = Counter(y_all)
+    deficit = {
+        crop: min_per_class - counts[crop_index[crop]]
+        for crop in wins_by_crop
+        if counts[crop_index[crop]] < min_per_class
+    }
+    draws = 0
+    while deficit and draws < max_topup_draws:
+        target_cells = sorted({i for crop in deficit for i in wins_by_crop[crop]})
+        for cell_idx in target_cells:
+            features, crop = _draw_labeled_scenario(ctx, ctx["cells"][cell_idx], rng)
+            draws += 1
+            if crop in deficit:
                 X_all.append(features)
-                y_all.append(crop_le.transform([best_crop])[0])
-
-    # Light augmentation (unchanged from the pre-fix formula).
-    base_len = len(X_all)
-    for i in range(base_len):
-        noised = np.array(X_all[i])
-        noised[2:11] *= rng.uniform(0.92, 1.08, size=9)
-        noised[11] *= rng.uniform(0.9, 1.1)
-        noised[12] = np.clip(noised[12] + rng.uniform(-0.1, 0.1), 0.05, 1.0)
-        X_all.append(noised.tolist())
-        y_all.append(y_all[i])
+                y_all.append(crop_index[crop])
+                source.append("topup")
+                deficit[crop] -= 1
+                if deficit[crop] <= 0:
+                    del deficit[crop]
+            if draws >= max_topup_draws or not deficit:
+                break
 
     return (np.array(X_all, dtype=np.float32),
             np.array(y_all, dtype=np.int32),
+            source,
             crop_le, region_le, season_le)

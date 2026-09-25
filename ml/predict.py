@@ -14,6 +14,7 @@ from PIL import Image
 
 from utils.calculations import (
     CropParameter,
+    calculate_climate_factor,
     calculate_risk_score_and_subscores,
     calculate_yield_kg_per_acre,
     clamp,
@@ -483,6 +484,43 @@ def _yield_feature_row(
     ]
 
 
+# A crop the formula scores this badly for the local climate, in a place with
+# no recorded harvest of it, is capped at a token yield. This used to be taught
+# to the yield model through synthetic "mismatch" training rows, but 145 of
+# those rows contradicted real harvests (the formula can't see irrigation, so
+# it calls e.g. Punjab rice a drought failure) and they dragged real-row MAPE
+# from ~8% to ~20%. The model now trains on real rows only and the rule lives
+# here, applied only where there is no real evidence to the contrary.
+_CLIMATE_MISMATCH_THRESHOLD = 0.65
+_CLIMATE_MISMATCH_YIELD_FRACTION = 0.1
+
+
+def _yield_history_combos() -> set[tuple[str, str, str]]:
+    """(crop_id, region_id, season) triples with at least one recorded harvest."""
+    return {
+        (r["crop_id"], r["region_id"], r.get("season", "").lower())
+        for r in _load_yield_history()
+    }
+
+
+def _apply_climate_guard(
+    pred: float, crop_id: str, region_id: str, season: str,
+    cp: CropParameter, weather: dict, combos: set[tuple[str, str, str]],
+) -> float:
+    s = season.lower()
+    if any((crop_id, region_id, k) in combos for k in (s, "annual", "perennial")):
+        return pred
+    climate_factor = calculate_climate_factor(
+        {"rainfall_mm": float(weather.get("rainfall_mm", 800)),
+         "avg_temp_c": float(weather.get("avg_temp_c", 28))},
+        cp,
+    )
+    if climate_factor >= _CLIMATE_MISMATCH_THRESHOLD:
+        return pred
+    cap = cp.base_yield_kg_per_acre * climate_factor * _CLIMATE_MISMATCH_YIELD_FRACTION
+    return min(pred, cap)
+
+
 def _encoded_season(season: str) -> str:
     """Season label the encoder knows, defaulting to kharif for anything else."""
     s = season.lower()
@@ -518,6 +556,9 @@ def _ml_predict_yield(
             cp, soil, weather, irrigation,
         )], dtype=np.float32)
         pred = _ml_yield_model.predict(features)[0]
+        pred = _apply_climate_guard(
+            float(pred), crop_id, region_id, season, cp, weather, _yield_history_combos(),
+        )
         return round(float(pred), 2)
     except Exception as e:
         # FIX (4.2): Log error instead of silently returning None
@@ -575,7 +616,13 @@ def _ml_predict_yield_batch(
         ], dtype=np.float32)
 
         preds = _ml_yield_model.predict(features)
-        return {c: round(float(preds[i]), 2) for i, c in enumerate(eligible)}
+        combos = _yield_history_combos()
+        return {
+            c: round(_apply_climate_guard(
+                float(preds[i]), c, region_id, season, crop_params_dict[c], weather, combos,
+            ), 2)
+            for i, c in enumerate(eligible)
+        }
     except Exception as e:
         # Mirror the single-crop path: a failure here is not fatal, the caller
         # falls back to the heuristic formula for every crop.
@@ -987,10 +1034,39 @@ def _ml_recommend_crop(
         return None
 
 
+def price_feature_row(
+    crop_code: float, region_code: float, month: int, history: list[float],
+) -> tuple[list[float], float]:
+    """One row in the price model's feature layout, plus the anchor it's scaled by.
+
+    Every price feature is divided by the series' own historical mean, and the
+    model predicts next month's price as a multiple of that same mean. Measured
+    on a time-ordered split, the historical mean on its own beat the old
+    absolute-price model; anchoring to it keeps the model from ever doing worse
+    than that baseline by drifting off the series' level. Shared by training
+    (ml/train_models.py) and serving so the two can't disagree on the layout.
+    """
+    anchor = float(np.mean(history))
+    recent = history[-3:]
+    scale = anchor if anchor > 0 else 1.0
+    row = [
+        crop_code, region_code, month,
+        history[-1] / scale, history[-2] / scale, history[-3] / scale,
+        float(np.mean(recent)) / scale,
+        float(np.std(recent)) / scale,
+        (max(history) - min(history)) / scale,
+    ]
+    return row, scale
+
+
 def _ml_predict_price(
     region_id: str, crop_id: str, recent_prices: list[float], target_month: int, target_year: int,
 ) -> float | None:
-    """Use ML model to predict a single future price point. Returns None if unavailable."""
+    """Use ML model to predict a single future price point. Returns None if unavailable.
+
+    `target_year` is unused: with two years of history a year feature only
+    lets the model extrapolate a trend it has seen once.
+    """
     _load_price_models()
     if _ml_price_model is None or _ml_price_encoders is None:
         return None
@@ -1001,19 +1077,13 @@ def _ml_predict_price(
             return None
         if len(recent_prices) < 3:
             return None
-        lag1, lag2, lag3 = recent_prices[-1], recent_prices[-2], recent_prices[-3]
-        roll_mean = float(np.mean(recent_prices[-3:]))
-        roll_std = float(np.std(recent_prices[-3:]))
-        price_range = float(max(recent_prices) - min(recent_prices))
-        features = np.array([[
+        row, scale = price_feature_row(
             crop_le.transform([crop_id])[0],
             region_le.transform([region_id])[0],
             target_month,
-            target_year - 2024,
-            lag1, lag2, lag3,
-            roll_mean, roll_std, price_range,
-        ]], dtype=np.float32)
-        pred = _ml_price_model.predict(features)[0]
+            [float(p) for p in recent_prices],
+        )
+        pred = _ml_price_model.predict(np.array([row], dtype=np.float32))[0] * scale
         return round(float(max(pred, 0.5)), 2)
     except Exception as e:
         # FIX (4.2): Log error instead of silently returning None
