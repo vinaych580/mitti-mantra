@@ -7,38 +7,48 @@ from __future__ import annotations
 
 from collections import Counter
 
-from ml.dataset_builders import _build_recommendation_dataset, _build_yield_dataset
+import csv
+from pathlib import Path
+
+import numpy as np
+
+from ml.dataset_builders import (
+    _build_recommendation_dataset,
+    _build_yield_dataset,
+    _yield_time_split,
+)
+
+DATASET = Path(__file__).resolve().parents[1] / "dataset"
 
 
-def test_build_yield_dataset_tags_row_provenance():
-    X, y, source, crop_le, region_le, season_le = _build_yield_dataset()
+def test_build_yield_dataset_is_one_row_per_real_harvest():
+    """Real harvests only -- no synthetic climate-mismatch rows or noised
+    copies (see _build_yield_dataset's docstring for why they were dropped)."""
+    X, y, years, crop_le, region_le, season_le = _build_yield_dataset()
 
-    assert len(source) == len(X) == len(y)
-    counts = Counter(source)
-    assert set(counts) <= {"real", "augmented", "synthetic_mismatch"}
-    # yield_history.csv has real rows; the mismatch-injection loop always
-    # finds at least one severe climate mismatch across 30 regions x 2
-    # seasons x 32 crops; augmentation (6x per base row) dominates both.
-    assert counts["real"] > 0
-    assert counts["synthetic_mismatch"] > 0
-    assert counts["augmented"] > 0
+    with (DATASET / "yield_history.csv").open(newline="") as f:
+        history = list(csv.DictReader(f))
+    assert len(X) == len(y) == len(years) == len(history)
+    assert sorted(y.tolist()) == sorted(float(r["yield_kg_per_acre"]) for r in history)
+    assert set(years.tolist()) == {int(r["year"]) for r in history}
 
 
-def test_build_yield_dataset_augmented_rows_inherit_non_real_source():
-    _, _, source, _, _, _ = _build_yield_dataset()
-    counts = Counter(source)
-    # Augmented copies of real rows are tagged "augmented" (6x per real row);
-    # augmented copies of synthetic_mismatch rows stay tagged
-    # "synthetic_mismatch" to preserve the provenance signal for
-    # audit_models._split_yield_mape() -- a noised copy of a deliberately-
-    # tiny value is still not a realistic observed yield.
-    assert counts["augmented"] == counts["real"] * 6
+def test_yield_time_split_holds_out_the_latest_harvest_year():
+    _, _, years, *_ = _build_yield_dataset()
+    train, test = _yield_time_split(years)
+
+    assert test.any() and train.any()
+    assert (years[test] == years.max()).all()
+    assert (years[train] < years.max()).all()
+    assert not np.any(train & test)
 
 
 def test_build_recommendation_dataset_staples_are_recommendable():
-    X, y, crop_le, region_le, season_le = _build_recommendation_dataset()
-    labeled_names = [crop_le.classes_[i] for i in y.tolist()]
-    counts = Counter(labeled_names)
+    X, y, source, crop_le, region_le, season_le = _build_recommendation_dataset()
+    # Only "natural" wins count: the top-up pass pads rare crops to a
+    # minimum, which would satisfy this bar without the crop ever winning
+    # on its own.
+    counts = Counter(crop_le.classes_[i] for i, s in zip(y.tolist(), source) if s == "natural")
     # The concrete regression test for the bug this task fixes: these
     # staples used to never win a single sample (0.00 F1 on the deployed
     # model's real holdout) because the old label formula had no risk/
@@ -59,10 +69,17 @@ def test_build_recommendation_dataset_staples_are_recommendable():
 
 
 def test_build_recommendation_dataset_excludes_true_perennials():
-    X, y, crop_le, region_le, season_le = _build_recommendation_dataset()
+    X, y, source, crop_le, region_le, season_le = _build_recommendation_dataset()
     labeled_crops = {crop_le.classes_[i] for i in set(y.tolist())}
     # cashew/coconut/coffee/mango/tea are "Perennial" season crops -- a
     # kharif/rabi request must never recommend a tree that takes 3-5 years
     # to fruit, matching ml/predict.py::recommend_crops's own filter.
     for perennial in ("cashew", "coconut", "coffee", "mango", "tea"):
         assert perennial not in labeled_crops, f"{perennial} is perennial and must not be a seasonal label"
+
+
+def test_build_recommendation_dataset_tags_row_source():
+    X, y, source, *_ = _build_recommendation_dataset()
+    assert len(source) == len(X) == len(y)
+    assert set(source) <= {"natural", "topup"}
+    assert Counter(source)["natural"] > Counter(source)["topup"]

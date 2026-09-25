@@ -111,7 +111,7 @@ def test_audit_models_unpacks_yield_dataset_6tuple(tmp_path, monkeypatch):
     assert "yield_prediction" in audit_data, "yield_prediction section missing from audit_metrics.json"
     yield_section = audit_data["yield_prediction"]
 
-    expected_keys = {"r2", "mae", "rmse", "mape_pct_real_rows", "mape_pct_full_including_synthetic", "permutation_importances", "robustness_drought_r2", "evaluated_on_persisted_holdout"}
+    expected_keys = {"r2", "mae", "rmse", "mape_pct_real_rows", "baseline_crop_base_yield_mape_pct", "permutation_importances", "robustness_weather_noise_mape_pct", "evaluated_on_persisted_holdout"}
     assert expected_keys.issubset(yield_section.keys()), f"yield_prediction missing keys: {expected_keys - yield_section.keys()}"
 
     # Verify values are sensible (r2 should be a number, permutation_importances should be a dict)

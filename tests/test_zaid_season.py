@@ -6,6 +6,7 @@ ML season vocabulary) -- see docs/superpowers/specs/2026-09-11-zaid-season-compl
 from __future__ import annotations
 
 import csv
+import re
 from pathlib import Path
 
 DATASET_DIR = Path(__file__).resolve().parents[1] / "dataset"
@@ -97,8 +98,11 @@ def test_dashboard_html_season_selects_all_offer_zaid():
 def test_index_html_landing_season_select_offers_zaid():
     frontend_dir = Path(__file__).resolve().parents[1] / "frontend"
     html = (frontend_dir / "index.html").read_text(encoding="utf-8")
-    assert 'id="ldSeason"' in html
-    assert 'value="zaid"' in html
+    # The landing page's crop question (frontend/demo-recommender.js) reads
+    # its season from #askSeason.
+    select = re.search(r'<select[^>]*id="askSeason"[^>]*>(.*?)</select>', html, re.S)
+    assert select, "landing season select #askSeason not found"
+    assert 'value="zaid"' in select.group(1)
 
 
 def test_offline_simulator_has_zaid_crops():

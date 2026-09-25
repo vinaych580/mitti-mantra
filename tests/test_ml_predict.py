@@ -251,22 +251,22 @@ def test_score_single_crop_penalizes_severe_loss_more_than_mild_loss():
 
 
 def test_recommend_crops_never_ranks_a_loss_above_a_clear_profit():
-    """End-to-end regression for the reported bug: given a budget too small
-    for jute (a loss), recommend_crops must not still rank it above a crop
-    that clearly profits under the same budget.
+    """End-to-end regression for the reported bug: a crop that loses money
+    under the farmer's budget (jute, at the time) must not outscore a crop
+    that clearly profits under the same budget, nor be the top pick.
 
-    This used to compare against turmeric's +129% ROI, which was itself an
-    artifact of the old coverage**2 budget curve -- Rs 15,000/acre is 22% of
-    turmeric's input cost and can't establish it (see
-    tests/test_ranking_profitability.py). Soybean, 75% funded, is the clear
-    profit here now.
+    Which crops land on each side depends on the trained yield model -- a
+    retrain moved jute from -28% to +126% ROI here -- so this checks every
+    clear loss against every clear profit rather than naming crops.
     """
     from ml.predict import recommend_crops
 
-    recs = recommend_crops("telangana_medak", "kharif", 15000.0, 6.14, top_k=10)
-    by_crop = {r["crop_id"]: r for r in recs}
+    recs = recommend_crops("telangana_medak", "kharif", 15000.0, 6.14, top_k=50)
+    losses = [r for r in recs if r["roi_percent"] < -30]
+    profits = [r for r in recs if r["roi_percent"] > 50]
 
-    assert by_crop["jute"]["roi_percent"] < 0
-    assert by_crop["soybean"]["roi_percent"] > 0
-    assert by_crop["soybean"]["smart_score"] > by_crop["jute"]["smart_score"]
-    assert recs[0]["crop_id"] != "jute"
+    assert losses and profits, "scenario no longer has both a clear loss and a clear profit"
+    assert recs[0]["roi_percent"] > 0
+    worst_profit = min(profits, key=lambda r: r["smart_score"])
+    best_loss = max(losses, key=lambda r: r["smart_score"])
+    assert best_loss["smart_score"] < worst_profit["smart_score"], (best_loss, worst_profit)
