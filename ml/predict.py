@@ -751,6 +751,22 @@ def smart_risk_score(
     }
 
 
+# Share of a crop's typical input cost that goes into establishing it at all --
+# seed or planting material, land preparation and sowing -- before any spend on
+# nutrition, protection or irrigation. Roughly a third of paid-out cost for most
+# field crops, and more for crops planted from costly material (turmeric's seed
+# rhizome alone runs to a third or more of its input cost), so this is a
+# conservative floor.
+_ESTABLISHMENT_COST_SHARE = 0.35
+
+
+def _budget_coverage(budget_per_acre: float, avg_input_cost_inr_per_acre: float) -> float:
+    """Fraction of the crop's typical input cost the budget covers, capped at 1."""
+    if avg_input_cost_inr_per_acre <= 0:
+        return 1.0
+    return clamp(budget_per_acre / avg_input_cost_inr_per_acre, 0.0, 1.0)
+
+
 def _budget_yield_multiplier(budget_per_acre: float, avg_input_cost_inr_per_acre: float) -> float:
     """Estimate what fraction of the fully-funded predicted yield a given budget can
     realistically achieve.
@@ -763,20 +779,25 @@ def _budget_yield_multiplier(budget_per_acre: float, avg_input_cost_inr_per_acre
     show 700%+ ROI (near-zero cost divided into a full-size, budget-independent
     revenue).
 
-    Yield scales with the *square* of the funding ratio rather than linearly. A
-    linear (proportional) scaling keeps revenue/cost -- and therefore ROI --
-    roughly constant no matter how tiny the budget gets, which is exactly as
-    dishonest as not scaling yield at all: it still reports a healthy ROI on a
-    token budget. Squaring the ratio makes revenue fall faster than cost as
-    budget shrinks, so ROI correctly collapses toward a near-total loss (not a
-    preserved profit ratio) once budget is far below what the crop needs, while
-    still reaching the full predicted yield once budget meets the crop's typical
-    input cost.
+    A budget that can't cover `_ESTABLISHMENT_COST_SHARE` of the crop's input
+    cost can't establish the crop, so it yields nothing; above that floor,
+    yield rises linearly to the full prediction at full funding. Since cost is
+    the farmer's budget, ROI works out to
+    ``(full revenue / full cost) * (c - s) / ((1 - s) * c) - 1`` for coverage
+    ``c`` and floor ``s``: it rises with the budget, never exceeds full-funding
+    ROI, and is a total loss at or below the floor.
+
+    This replaces a coverage**2 curve, whose ROI was
+    ``(full revenue / full cost) * c - 1``. That never reaches a loss for a
+    crop with a large full-funding margin: turmeric at 22% of its ₹68,000/acre
+    input cost showed +130% ROI and ranked first for Medak kharif on a
+    ₹15,000/acre budget that doesn't cover its seed rhizome. Between ~45% and
+    full coverage the two curves are within a few points of each other (0.32
+    vs 0.31 at 56%), so adequately and moderately funded crops barely move.
     """
-    if avg_input_cost_inr_per_acre <= 0:
-        return 1.0
-    ratio = clamp(budget_per_acre / avg_input_cost_inr_per_acre, 0.0, 1.0)
-    return round(ratio ** 2, 6)
+    coverage = _budget_coverage(budget_per_acre, avg_input_cost_inr_per_acre)
+    share = _ESTABLISHMENT_COST_SHARE
+    return round(clamp((coverage - share) / (1.0 - share), 0.0, 1.0), 6)
 
 
 def profit_estimator(
@@ -811,6 +832,7 @@ def profit_estimator(
 
     return {
         "achievable_yield_kg_per_acre": achievable_yield_kg_per_acre,
+        "budget_coverage": round(_budget_coverage(budget_per_acre, crop.avg_input_cost_inr_per_acre), 4),
         "budget_yield_multiplier": yield_multiplier,
         "expected_revenue": round(expected_revenue, 2),
         "expected_profit": round(expected_profit, 2),
@@ -1303,7 +1325,21 @@ def _score_single_crop(
         loss_normalized = max(profit["roi_percent"] / 3.0, -100.0)  # symmetric with roi_normalized's own +100 ceiling
         smart_score = clamp(smart_score + 0.35 * loss_normalized, 0.0, 100.0)
 
-    budget_adequate = profit["budget_yield_multiplier"] >= 1.0
+    budget_adequate = profit["budget_coverage"] >= 1.0
+    coverage_pct = round(profit["budget_coverage"] * 100)
+    if budget_adequate:
+        reason = "Ranked using ML models + location, soil, season fit, budget fit, profit, and risk confidence."
+    elif profit["budget_yield_multiplier"] <= 0:
+        reason = (
+            f"Budget covers only {coverage_pct}% of this crop's typical input cost -- not enough to "
+            "establish it (seed or planting material, land preparation, sowing) -- so no harvest is "
+            "counted and the budget is shown as a loss."
+        )
+    else:
+        reason = (
+            f"Budget covers only {coverage_pct}% of this crop's typical input cost, so yield and ROI "
+            "below are scaled down to what's realistically achievable, not the full-funding potential."
+        )
     rec_entry = {
         "crop_id": crop_id,
         "crop_name": crop.crop_name,
@@ -1321,13 +1357,8 @@ def _score_single_crop(
         "prediction_source": "ml_model" if used_ml_for_yield else "heuristic",
         "crop_cycle": "perennial" if _is_perennial(crop.season) else "seasonal",
         "budget_adequate": budget_adequate,
-        "reason": (
-            "Ranked using ML models + location, soil, season fit, budget fit, profit, and risk confidence."
-            if budget_adequate else
-            f"Budget covers only {round(profit['budget_yield_multiplier'] * 100)}% of this crop's typical "
-            "input cost, so yield and ROI below are scaled down to what's realistically achievable, not "
-            "the full-funding potential."
-        ),
+        "budget_coverage": profit["budget_coverage"],
+        "reason": reason,
     }
     if crop_id in ml_conf_map:
         rec_entry["ml_confidence"] = ml_conf_map[crop_id]
