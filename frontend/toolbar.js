@@ -33,29 +33,29 @@
     const s = document.createElement('style');
     s.id = 'qw-styles';
     s.textContent = `
-      /* ---------- FAB trigger (3-line hamburger) ---------- */
+      /* ---------- FAB trigger ----------
+         Was a green hamburger the same size and colour as the chat button
+         right above it -- and on phones, a second hamburger under the nav's
+         own. It opens language + settings, so it now says so ("अA") and sits
+         a step quieter than the chat button: a small paper disc, centred on
+         the same vertical axis so the two read as one column. */
       .qw-fab {
-        position: fixed; right: 20px; bottom: 20px; z-index: 9999;
-        width: 52px; height: 52px; border-radius: 50%;
-        background: #2f6b3a; color: #fff;
-        border: none; cursor: pointer;
-        box-shadow: 0 8px 22px rgba(47,107,58,0.35);
+        position: fixed; right: 24px; bottom: 20px; z-index: 9999;
+        width: 44px; height: 44px; border-radius: 50%;
+        background: var(--surface, #fff); color: var(--brand-deep, #1f4d28);
+        border: 1px solid rgba(29,26,21,0.12); cursor: pointer;
+        box-shadow: 0 6px 18px rgba(29,26,21,0.14);
         display: grid; place-items: center;
-        transition: transform .3s cubic-bezier(.2,.7,.3,1.2), background .25s;
+        transition: transform .3s cubic-bezier(.2,.7,.3,1.2), background .25s, color .25s;
       }
-      .qw-fab:hover { background: #1f4d28; transform: scale(1.06); }
-      .qw-fab.open  { transform: rotate(135deg); background: #1f4d28; }
-      .qw-fab__lines { position: relative; width: 20px; height: 14px; }
-      .qw-fab__lines span {
-        position: absolute; left: 0; right: 0; height: 2px; border-radius: 2px;
-        background: #fff; transition: transform .35s cubic-bezier(.4,.1,.2,1), opacity .2s;
+      .qw-fab:hover { background: var(--brand, #2f6b3a); color: #fff; transform: scale(1.06); }
+      .qw-fab.open  { background: var(--brand-deep, #1f4d28); color: #fff; }
+      .qw-fab__glyph {
+        font: 600 15px/1 system-ui, -apple-system, 'Segoe UI', sans-serif; letter-spacing: 0;
       }
-      .qw-fab__lines span:nth-child(1) { top: 0; }
-      .qw-fab__lines span:nth-child(2) { top: 50%; margin-top: -1px; }
-      .qw-fab__lines span:nth-child(3) { bottom: 0; }
-      .qw-fab.open .qw-fab__lines span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
-      .qw-fab.open .qw-fab__lines span:nth-child(2) { opacity: 0; }
-      .qw-fab.open .qw-fab__lines span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+      .qw-fab__close { display: none; width: 18px; height: 18px; }
+      .qw-fab.open .qw-fab__glyph { display: none; }
+      .qw-fab.open .qw-fab__close { display: block; }
 
       /* ---------- Popover panel ---------- */
       .qw-panel {
@@ -69,7 +69,7 @@
         transform-origin: bottom right;
         pointer-events: none;
         transition: opacity .25s ease, transform .3s cubic-bezier(.2,.7,.3,1.2);
-        font-family: 'Inter', system-ui, sans-serif;
+        font-family: var(--font-body, 'Inter', system-ui, sans-serif);
       }
       .qw-panel.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
       .qw-panel__label {
@@ -86,6 +86,7 @@
         display: flex; gap: 6px; flex: 1;
       }
       .qw-panel .i18n-switcher button {
+        font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;  /* see i18n.js */
         flex: 1; padding: 8px 10px; border-radius: 10px;
         background: #f4efe3; color: #4a4339; font-weight: 600; font-size: 0.85rem;
       }
@@ -102,7 +103,7 @@
         padding: 10px 12px; border-radius: 12px;
         background: #f7f4ec; border: 1px solid transparent;
         color: #1d1a15; cursor: pointer;
-        font: 600 0.85rem 'Inter', sans-serif;
+        font: 600 0.85rem var(--font-body, 'Inter', sans-serif);
         opacity: 0; transform: translateY(6px);
         transition: background .2s, color .2s, transform .3s ease, opacity .3s ease;
       }
@@ -125,7 +126,7 @@
       body > .i18n-switcher { display: none !important; }
 
       @media (max-width: 500px) {
-        .qw-fab { right: 14px; bottom: 14px; }
+        .qw-fab { right: 18px; bottom: 14px; }
         .qw-panel { right: 14px; bottom: 78px; width: calc(100vw - 28px); max-width: 320px; }
       }
 
@@ -140,13 +141,13 @@
         background: #fff; border-radius: 22px; padding: 26px;
         max-width: 440px; width: 100%;
         box-shadow: 0 24px 60px rgba(29,26,21,0.25);
-        font-family: 'Inter', system-ui, sans-serif;
+        font-family: var(--font-body, 'Inter', system-ui, sans-serif);
       }
-      .qw-modal__h { font-family: 'Fraunces', serif; font-size: 1.3rem; margin: 0 0 10px; color: #1d1a15; }
+      .qw-modal__h { font-family: var(--font-display, 'Fraunces', Georgia, serif); font-size: 1.3rem; margin: 0 0 10px; color: #1d1a15; }
       .qw-modal__text { color: #4a4339; min-height: 80px; font-size: 1rem; line-height: 1.5; }
       .qw-modal__row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
       .qw-modal__btn {
-        padding: 8px 16px; border-radius: 999px; font: 600 0.85rem 'Inter', sans-serif;
+        padding: 8px 16px; border-radius: 999px; font: 600 0.85rem var(--font-body, 'Inter', sans-serif);
         border: none; cursor: pointer;
       }
       .qw-modal__btn--primary { background: #2f6b3a; color: #fff; }
@@ -298,6 +299,28 @@
       }
       html[data-theme="dark"] .features__ambient { opacity: 0.45; }
 
+      /* Landing "Is baar kya boyein?" answer, farm bar, "Using your farm"
+         line and My Farm links: same --brand-deep-on-dark collapse as above,
+         lifted to the same dark-mode green / gold. */
+      html[data-theme="dark"] .answer__row:first-child .answer__crop b,
+      html[data-theme="dark"] .answer__row:first-child .answer__rank,
+      html[data-theme="dark"] .answer__risk.is-low,
+      html[data-theme="dark"] .answer__cta,
+      html[data-theme="dark"] .mm-farm-bar__lbl,
+      html[data-theme="dark"] .mm-farm-bar__edit,
+      html[data-theme="dark"] .mm-farm-bar__cancel,
+      html[data-theme="dark"] .mm-usefarm__btn,
+      html[data-theme="dark"] .farm-pests__more,
+      html[data-theme="dark"] .farm-next a { color: #9ed2a7; }
+      html[data-theme="dark"] .answer__risk.is-mid { color: #e4b87c; }
+      /* The global dark input rule sets a solid background with !important,
+         which also wiped the hero fields' ruled-line look and the chevron. */
+      html[data-theme="dark"] .ask__field input { background: transparent !important; }
+      html[data-theme="dark"] .ask__field select {
+        background: transparent no-repeat right 2px center / 12px url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%23c9bfb0' stroke-width='1.6' stroke-linecap='round'/></svg>") !important;
+      }
+      html[data-theme="dark"] .ask__field select option { background: #23201c; color: #f3ece0; }
+
       /* Dashboard empty states — dark-ink hairlines vanish on dark. */
       html[data-theme="dark"] .tool__empty { border-color: rgba(255,255,255,0.14); }
       html[data-theme="dark"] .tool__empty__ico { border-color: rgba(255,255,255,0.08); }
@@ -364,6 +387,9 @@
       html[data-theme="dark"] .eyebrow { color: var(--accent); }
 
       /* Quick-wins popover in dark mode */
+      html[data-theme="dark"] .qw-fab { color: #9fd3a9; border-color: rgba(255,255,255,0.12); }
+      html[data-theme="dark"] .qw-fab:hover,
+      html[data-theme="dark"] .qw-fab.open { color: #fff; }
       html[data-theme="dark"] .qw-panel {
         background: rgba(35,32,28,0.98) !important;
         border-color: rgba(255,255,255,0.08);
@@ -634,11 +660,11 @@
     const fab = document.createElement('button');
     fab.type = 'button';
     fab.className = 'qw-fab';
-    fab.setAttribute('aria-label', 'Open tools');
+    fab.setAttribute('aria-label', 'Language and tools');
     fab.setAttribute('aria-expanded', 'false');
     fab.setAttribute('aria-haspopup', 'true');
     fab.setAttribute('data-no-translate', '');
-    fab.innerHTML = `<span class="qw-fab__lines"><span></span><span></span><span></span></span>`;
+    fab.innerHTML = `<span class="qw-fab__glyph" aria-hidden="true">अA</span><svg class="qw-fab__close" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>`;
     document.body.appendChild(fab);
 
     function togglePanel(open, { restoreFocus = false } = {}) {
@@ -646,7 +672,7 @@
       panel.classList.toggle('open', willOpen);
       fab.classList.toggle('open', willOpen);
       fab.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
-      fab.setAttribute('aria-label', willOpen ? 'Close tools' : 'Open tools');
+      fab.setAttribute('aria-label', willOpen ? 'Close language and tools' : 'Language and tools');
       if (willOpen) {
         const first = panel.querySelector('button:not([disabled]), select, [tabindex="0"]');
         if (first) setTimeout(() => first.focus(), 0);

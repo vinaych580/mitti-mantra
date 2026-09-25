@@ -49,21 +49,27 @@
   };
   const MONTH_NAMES = ['—', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
+  // English name plus the name used at the mandi, for every crop the API
+  // serves. This used to prefix an emoji, but only 13 of the 35 crops had
+  // one; the rest showed the same 🌱 placeholder, which made the list look
+  // unfinished (and emoji render differently on every Android phone).
   const CROP_LABELS = {
     rice: 'Rice · Dhaan', wheat: 'Wheat · Gehun', maize: 'Maize · Makka',
     sugarcane: 'Sugarcane · Ganna', cotton: 'Cotton · Kapas', pulses: 'Pulses · Dal',
     groundnut: 'Groundnut · Mungfali', soybean: 'Soybean',
     mustard: 'Mustard · Sarson', bajra: 'Bajra · Pearl Millet', jowar: 'Jowar · Sorghum',
-    potato: 'Potato · Aloo', onion: 'Onion · Pyaz'
-  };
-  const CROP_EMOJI = {
-    rice: '🌾', wheat: '🌾', maize: '🌽', sugarcane: '🎋', cotton: '🌿', pulses: '🫘',
-    groundnut: '🥜', soybean: '🌱', mustard: '🌻', bajra: '🌾', jowar: '🌾',
-    potato: '🥔', onion: '🧅'
+    potato: 'Potato · Aloo', onion: 'Onion · Pyaz', tomato: 'Tomato · Tamatar',
+    chilli: 'Chilli · Mirchi', turmeric: 'Turmeric · Haldi', ginger: 'Ginger · Adrak',
+    banana: 'Banana · Kela', coconut: 'Coconut · Nariyal', tea: 'Tea · Chai',
+    coffee: 'Coffee', barley: 'Barley · Jau', sunflower: 'Sunflower · Surajmukhi',
+    ragi: 'Ragi · Finger Millet', urad: 'Urad · Black Gram', moong: 'Moong · Green Gram',
+    mango: 'Mango · Aam', paddy_basmati: 'Basmati Rice', arhar: 'Arhar · Tur',
+    jute: 'Jute · Pat', tobacco: 'Tobacco', cashew: 'Cashew · Kaju',
+    watermelon: 'Watermelon · Tarbooz', cucumber: 'Cucumber · Kheera', muskmelon: 'Muskmelon · Kharbooja'
   };
   const CROP_NAMES = {};
   const titleCase = s => String(s || '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-  const cropLabel = id => (CROP_EMOJI[id] || '🌱') + ' ' + (CROP_LABELS[id] || CROP_NAMES[id] || titleCase(id));
+  const cropLabel = id => CROP_LABELS[id] || CROP_NAMES[id] || titleCase(id);
 
   // Shared chart theming
   const BRAND = '#2f6b3a', BRAND_D = '#1f4d28', ACCENT = '#c88a3a', CLAY = '#a5562a', SKY = '#6ea7c7', INK = '#4a4339';
@@ -773,6 +779,45 @@
     });
   })();
 
+  /* ---------- Multi-crop picker ----------
+     Compare crops used a native <select multiple> with "hold Ctrl/Cmd to
+     select multiple" -- impossible on a phone, where there is no Ctrl and a
+     tap replaces the selection. The select stays (hidden) as the single source
+     the submit handler reads; these checkboxes just drive it. */
+  const COMPARE_MAX = 6;
+  function buildCropChecks(sel) {
+    let box = sel.parentElement.querySelector('.crop-checks');
+    if (!box) {
+      box = document.createElement('div');
+      box.className = 'crop-checks';
+      box.setAttribute('role', 'group');
+      box.setAttribute('aria-label', 'Crops to compare');
+      sel.insertAdjacentElement('afterend', box);
+    }
+    sel.hidden = true;
+    box.innerHTML = Array.from(sel.options).map(o => `
+      <label class="crop-check">
+        <input type="checkbox" value="${escHtml(o.value)}"${o.selected ? ' checked' : ''}>
+        <span>${escHtml(o.textContent)}</span>
+      </label>`).join('');
+    const sync = () => {
+      const checked = $$('input:checked', box).length;
+      $$('input', box).forEach(cb => {
+        const opt = sel.querySelector(`option[value="${cb.value}"]`);
+        if (opt) opt.selected = cb.checked;
+        cb.disabled = !cb.checked && checked >= COMPARE_MAX;
+      });
+      const count = sel.closest('.field')?.querySelector('[data-crop-count]');
+      if (count) count.textContent = `(${checked}/${COMPARE_MAX})`;
+    };
+    box.addEventListener('change', e => {
+      // Belt and braces for the disabled state: never let a seventh stick.
+      if (e.target.checked && $$('input:checked', box).length > COMPARE_MAX) e.target.checked = false;
+      sync();
+    });
+    sync();
+  }
+
   /* ---------- Populate region & crop selects ---------- */
   Promise.all([
     api('/api/regions').catch(() => [
@@ -802,12 +847,14 @@
         return `<option value="${id}"${sel_attr}>${cropLabel(id)}</option>`;
       }).join('');
       sel.innerHTML = (hasAny ? hasAny.outerHTML : '') + opts;
+      if (isMulti) buildCropChecks(sel);
     });
 
     // FIX-2: If a farm is active, pre-select its region_id across every
     // region dropdown — overriding the API default first-option.
     if (savedFarm && savedFarm.region_id) {
       $$('select[data-regions]').forEach(sel => {
+        if (sel.dataset.mmUserDirty === '1') return;   // a farmer's or a deep link's own pick
         const opt = sel.querySelector(`option[value="${savedFarm.region_id}"]`);
         if (opt) sel.value = savedFarm.region_id;
       });
@@ -1134,9 +1181,9 @@
 
     function riskInfo(resilience) {
       const v = Number(resilience) || 0;
-      if (v >= 70) return { text: 'Low risk', cls: 'kpi--good' };
-      if (v >= 40) return { text: 'Medium risk', cls: 'kpi--warn' };
-      return { text: 'High risk', cls: 'kpi--bad' };
+      if (v >= 70) return { text: 'Low', cls: 'kpi--good' };
+      if (v >= 40) return { text: 'Medium', cls: 'kpi--warn' };
+      return { text: 'High', cls: 'kpi--bad' };
     }
 
     // The setup form's selects are created after the page's one-time
@@ -1321,6 +1368,10 @@
           regionName(region_id),
         ]);
         if (seq !== renderSeq) return;
+        const mandi = (!msp && cropId)
+          ? await api(`/api/price-analytics/${region_id}/${cropId}`).catch(() => null)
+          : null;
+        if (seq !== renderSeq) return;
 
         const risk = score && score.pillars ? riskInfo(score.pillars.risk_resilience) : null;
         const alerts = (pest && pest.alerts) || [];
@@ -1347,7 +1398,40 @@
           </div>`;
         }).join('');
 
+        const priceTile = msp
+          ? `<div class="kpi ${msp.mandi_above_msp ? 'kpi--good' : 'kpi--warn'}">
+              <div class="kpi__lbl">Mandi price</div>
+              <div class="kpi__val">${TT(msp.current_mandi_price, INR2(msp.current_mandi_price))}<span style="font-size:.5em">/kg</span></div>
+              <div class="kpi__sub">${(msp.mandi_above_msp ? '+' : '') + FIX(msp.mandi_msp_gap_pct, 1)}% vs MSP (${INR2(msp.msp_inr_per_kg)}/kg)</div>
+            </div>`
+          : (mandi && mandi.current_price != null)
+            ? `<div class="kpi">
+              <div class="kpi__lbl">Mandi price</div>
+              <div class="kpi__val">${TT(mandi.current_price, INR2(mandi.current_price))}<span style="font-size:.5em">/kg</span></div>
+              <div class="kpi__sub"><span>No MSP for this crop</span> · <span>trend</span> <span data-no-translate>${esc(mandi.trend_direction || '—')}</span></div>
+            </div>`
+            : `<div class="kpi">
+              <div class="kpi__lbl">Mandi price</div>
+              <div class="kpi__val kpi__val--note">${cropId ? 'No local record' : 'Pick a crop'}</div>
+              <div class="kpi__sub">${cropId ? '<a href="#" data-goto="arbitrage" style="color:var(--brand-deep);font-weight:600;">Check other mandis →</a>' : '<span>to see its price here</span>'}</div>
+            </div>`;
+
+        const pestStrip = alerts.length
+          ? `<div class="farm-pests ${alertCls}">
+              <div class="farm-pests__head">
+                <span class="kpi__lbl">Pest &amp; disease watch</span>
+                <a href="#" data-goto="pest" class="farm-pests__more">${alerts.length > 2 ? `${alerts.length - 2} <span>more</span> · ` : ''}<span>See full details →</span></a>
+              </div>
+              <div class="farm-pests__rows">${alertRows}</div>
+            </div>`
+          : `<div class="farm-pests kpi--good">
+              <div class="farm-pests__head"><span class="kpi__lbl">Pest &amp; disease watch</span></div>
+              <p class="farm-pests__clear">No alerts for this crop in this weather — all clear right now.</p>
+            </div>`;
+
         out.innerHTML = `
+          <div class="forecast" data-forecast></div>
+
           <div class="feature" style="margin-bottom:20px;">
             <div class="feature__head">
               <div class="feature__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 C9 8 7 12 7 15 a5 5 0 0 0 10 0 c0-3-2-7-5-13z"/></svg></div>
@@ -1375,37 +1459,37 @@
             ${(committed && !committedInTop3) ? `<div class="kpi__sub" style="margin-top:12px;">Currently growing <b data-no-translate>${cropLabel(committed)}</b> · not in today's top matches</div>` : ''}
           </div>
 
-          <div class="kpi-grid">
+          <div class="kpi-grid kpi-grid--farm">
             <div class="kpi ${!pick ? '' : pick.expected_profit < 0 ? 'kpi--bad' : 'kpi--good'}">
               <div class="kpi__lbl">${pick && pick.expected_profit < 0 ? 'Expected loss' : 'Profit'}</div>
               <div class="kpi__val">${pick ? TT(pick.expected_profit, INR(pick.expected_profit)) : '—'}</div>
               <div class="kpi__sub">${pick ? 'ROI ' + PCT(pick.roi_percent) + ' · ' + Math.round(pick.predicted_yield_kg_per_acre) + ' kg/ac' : '<span>Not available for this crop yet</span> · <a href="#" data-goto="simulate" style="color:var(--brand-deep);font-weight:600;">Run a full simulation →</a>'}</div>
             </div>
             <div class="kpi ${risk ? risk.cls : ''}">
-              <div class="kpi__lbl">Risk</div>
-              <div class="kpi__val" style="font-size:1.2rem;">${risk ? risk.text : '—'}</div>
-              <div class="kpi__sub">${risk ? 'Resilience score ' + FIX(score.pillars.risk_resilience, 0) + '/100' : 'Not available right now'}</div>
+              <div class="kpi__lbl">Money risk</div>
+              <div class="kpi__val">${risk ? risk.text : '—'}</div>
+              <div class="kpi__sub">${risk ? '<span>Weather and price swings</span> · ' + FIX(score.pillars.risk_resilience, 0) + '/100 <span>steady</span>' : 'Not available right now'}</div>
             </div>
-            <div class="kpi ${msp ? (msp.mandi_above_msp ? 'kpi--good' : 'kpi--warn') : ''}">
-              <div class="kpi__lbl">Price</div>
-              <div class="kpi__val">${msp ? TT(msp.current_mandi_price, INR2(msp.current_mandi_price)) : '—'}${msp ? '<span style="font-size:.5em">/kg</span>' : ''}</div>
-              <div class="kpi__sub">${msp ? (msp.mandi_above_msp ? '+' : '') + FIX(msp.mandi_msp_gap_pct, 1) + '% vs MSP (' + INR2(msp.msp_inr_per_kg) + '/kg)' : cropId ? 'No MSP data for this crop' : 'Pick a crop to see this'}</div>
-            </div>
-            <div class="kpi ${weather ? (rainCaution ? 'kpi--warn' : 'kpi--info') : ''}">
+            ${priceTile}
+            <div class="kpi ${weather && rainCaution ? 'kpi--warn' : ''}">
               <div class="kpi__lbl">Season rain (avg)</div>
               <div class="kpi__val">${weather ? Math.round(weather.rainfall_mm) + ' mm' : '—'}</div>
               <div class="kpi__sub">${weather ? FIX(weather.avg_temp_c, 0) + '°C avg · ' : ''}<a href="#" data-goto="irrigation" style="color:var(--brand-deep);font-weight:600;">Watering plan →</a></div>
             </div>
-            <div class="kpi ${alertCls}" style="grid-column: span 2;">
-              <div class="kpi__lbl" style="white-space:normal;">Pest &amp; disease</div>
-              ${alertRows || '<div class="kpi__val" style="font-size:1.1rem;">No alerts</div><div class="kpi__sub">All clear right now</div>'}
-              ${alerts.length ? `<div class="kpi__sub" style="margin-top:6px;">${alerts.length > 2 ? (alerts.length - 2) + ' more · ' : ''}<a href="#" data-goto="pest" style="color:var(--brand-deep);font-weight:600;">See full details →</a></div>` : ''}
-            </div>
           </div>
-          <div class="forecast" data-forecast></div>
-          <div style="margin-top:10px;font-size:var(--fs-2xs);color:var(--ink-faint);">
-            ${esc(placeName)} ·<span style="text-transform:capitalize;">${esc(season)}</span> · ${area_acres} ac · ${INR(budget_per_acre)}/ac —
-            <a href="#" data-edit-profile style="color:var(--ink-soft);text-decoration:underline;">Edit your farm details</a>
+          ${pestStrip}
+
+          <nav class="farm-next" aria-label="Next steps for this crop">
+            <span class="kpi__lbl">Next for this crop</span>
+            <a href="#" data-goto="calendar">Crop calendar</a>
+            <a href="#" data-goto="fertilizer">Fertilizer mix</a>
+            <a href="#" data-goto="sell">Best time to sell</a>
+            <a href="#" data-goto="loan">Loan check</a>
+            <a href="#" data-goto="expense">Season ledger</a>
+          </nav>
+          <div style="margin-top:14px;font-size:var(--fs-2xs);color:var(--ink-faint);">
+            <span data-no-translate>${esc(placeName)} · <span style="text-transform:capitalize;">${esc(season)}</span> · ${area_acres} ac · ${INR(budget_per_acre)}/ac</span> —
+            <a href="#" data-edit-profile style="color:var(--ink-soft);text-decoration:underline;">Change farm details</a>
           </div>`;
 
         $$('[data-crop-pick]', out).forEach(btn => btn.addEventListener('click', () => {
@@ -1416,7 +1500,7 @@
           e.preventDefault();
           document.querySelector(`.sidebar__btn[data-tool="${a.dataset.goto}"]`)?.click();
         }));
-        $('[data-edit-profile]', out)?.addEventListener('click', e => { e.preventDefault(); renderSetup(); });
+        $('[data-edit-profile]', out)?.addEventListener('click', e => { e.preventDefault(); window.MM?.profile?.openEditor?.(); });
         renderForecast($('[data-forecast]', out), region_id, seq);
       } catch (err) { if (seq === renderSeq) showError(out, err); }
     }
@@ -3044,7 +3128,7 @@
         const c = t.config || {};
         return `<div style="background:var(--bg-soft);padding:18px;border-radius:var(--r-md);display:flex;flex-direction:column;gap:10px;">
               <div>
-                <div style="font-family:'Fraunces',serif;font-size:1.15rem;font-weight:600;line-height:1.2;">${esc(t.name || t.template_id)}</div>
+                <div style="font-family:var(--font-display, 'Fraunces', Georgia, serif);font-size:1.15rem;font-weight:600;line-height:1.2;">${esc(t.name || t.template_id)}</div>
                 <div style="font-size:.82rem;color:var(--ink-faint);margin-top:3px;">${esc(t.template_id)}</div>
               </div>
               <p style="font-size:.9rem;color:var(--ink-soft);margin:0;flex:1;">${esc(t.description || '')}</p>
@@ -3097,7 +3181,7 @@
     // Pull multi-select values directly (FormData gives only one value)
     const selected = Array.from(form.crop_ids.selectedOptions).map(o => o.value);
     if (selected.length < 2) {
-      out.innerHTML = '<div class="alert alert--gold"><div class="alert__body"><strong>Pick at least 2 crops</strong><p>Hold Ctrl / Cmd and click to select multiple.</p></div></div>';
+      out.innerHTML = '<div class="alert alert--gold"><div class="alert__body"><strong>Pick at least 2 crops</strong><p>Tick two to six crops in the list above.</p></div></div>';
       return;
     }
     showLoading(out, `Simulating ${selected.length} crops in parallel…`);
@@ -3465,11 +3549,11 @@
       const yieldFeats = Object.entries(yieldAud.permutation_importances || {}).slice(0, 5);
 
       const robustness = [];
-      if (typeof recAud.robustness_noisy_weather_accuracy === 'number') {
-        robustness.push(`<li style="margin-bottom: 4px;"><strong>Weather inputs zeroed (sensor failure):</strong> crop-recommendation accuracy ${num(recAud.accuracy, v => PCT(v * 100))} → <b>${PCT(recAud.robustness_noisy_weather_accuracy * 100)}</b>.</li>`);
+      if (typeof recAud.robustness_weather_noise_agreement === 'number') {
+        robustness.push(`<li style="margin-bottom: 4px;"><strong>Weather readings off by up to ±10%:</strong> crop recommendation unchanged in <b>${PCT(recAud.robustness_weather_noise_agreement * 100)}</b> of cases.</li>`);
       }
-      if (typeof yieldAud.robustness_drought_r2 === 'number') {
-        robustness.push(`<li style="margin-bottom: 4px;"><strong>Rainfall zeroed (severe drought):</strong> yield-model R² ${num(yieldAud.r2, v => FIX(v, 3))} → <b>${FIX(yieldAud.robustness_drought_r2, 3)}</b>.</li>`);
+      if (typeof yieldAud.robustness_weather_noise_mape_pct === 'number') {
+        robustness.push(`<li style="margin-bottom: 4px;"><strong>Weather readings off by up to ±10%:</strong> yield error ${num(yieldAud.mape_pct_real_rows, v => FIX(v, 1) + '%')} → <b>${FIX(yieldAud.robustness_weather_noise_mape_pct, 1)}%</b>.</li>`);
       }
 
       out.innerHTML = `
@@ -3483,6 +3567,7 @@
             <div class="kpi__lbl">Yield performance</div>
             <div class="kpi__val">R² ${num(yieldAud.r2, v => FIX(v, 3))}</div>
             <div class="kpi__sub">MAPE ${num(yieldAud.mape_pct_real_rows, v => FIX(v, 1) + '%')} · MAE ${num(yieldAud.mae, v => Math.round(v) + ' kg')}</div>
+            <div class="kpi__sub">Crop base yield alone: MAPE ${num(yieldAud.baseline_crop_base_yield_mape_pct, v => FIX(v, 1) + '%')}</div>
           </div>
           <div class="kpi ${r.recommend_model_loaded ? 'kpi--good' : 'kpi--warn'}">
             <div class="kpi__lbl">Crop recommendation</div>
@@ -3710,15 +3795,18 @@
     // FIX-7: Pre-fill area inputs from drawn farm
     if (savedFarm.acres) {
       const area = +savedFarm.acres.toFixed(2);
-      $$('input[name="area_acres"]').forEach(el => { el.value = area; });
+      // Never over a value the farmer (or a deep link) set on purpose --
+      // the same rule mm-core's profile.applyToForms() follows.
+      $$('input[name="area_acres"]').forEach(el => { if (el.dataset.mmUserDirty !== '1') el.value = area; });
       // Some tools use total_area_acres (optimal mix)
-      $$('input[name="total_area_acres"]').forEach(el => { el.value = area; });
+      $$('input[name="total_area_acres"]').forEach(el => { if (el.dataset.mmUserDirty !== '1') el.value = area; });
     }
 
     // FIX-7: Pre-fill REGION selects — this was the key missing piece.
     // Without this, every tool still defaulted to whatever the API returned first.
     if (savedFarm.region_id) {
       $$('select[data-regions]').forEach(sel => {
+        if (sel.dataset.mmUserDirty === '1') return;   // a farmer's or a deep link's own pick
         const opt = sel.querySelector(`option[value="${savedFarm.region_id}"]`);
         if (opt) sel.value = savedFarm.region_id;
       });

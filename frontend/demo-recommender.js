@@ -1,154 +1,240 @@
 /* =========================================================
-   AgriSim — Live on-page crop recommender
-   Uses AgriSimStateData to produce a plausible ranked list
-   of 3 crops for the chosen state / season / area / budget.
-   Pure client-side — no backend required for the landing page.
+   Mitti Mantra — landing-page hero: "Is baar kya boyein?"
+
+   Answers the headline question for the visitor's own district with the
+   same call the dashboard's My Farm tab makes
+   (/api/crop-comparison/{region}/{season}), so the landing page and the
+   dashboard can never disagree about the top crop.
+
+   This file used to rank crops with an on-page heuristic that charged every
+   crop the visitor's budget as its whole cost. Sugarcane on ₹15,000/acre came
+   out at 1,140% ROI -- the most visible number on the page, and wrong. There
+   is no heuristic any more: the answer is the live model's, or a copy of it
+   saved on this phone, or an honest "connect once" message.
+
+   Also fills the stats paragraph's model figures from /api/ml/status.
    ========================================================= */
 
 (() => {
-  const DATA = window.AgriSimStateData;
-  const form = document.getElementById('liveDemoForm');
-  if (!DATA || !form) return;
+  'use strict';
 
-  const stateSel  = document.getElementById('ldState');
-  const seasonSel = document.getElementById('ldSeason');
-  const areaInp   = document.getElementById('ldArea');
-  const budgetInp = document.getElementById('ldBudget');
-  const runBtn    = document.getElementById('ldRun');
-  const resultEl  = document.getElementById('ldResult');
+  const form = document.getElementById('askForm');
+  const rowsEl = document.getElementById('askRows');
+  if (!form || !rowsEl) return;
 
-  // Rough season map for each crop (used to nudge score)
-  const CROP_SEASON = {
-    Rice: 'kharif', Maize: 'kharif', Cotton: 'kharif', Soybean: 'kharif',
-    Groundnut: 'kharif', Bajra: 'kharif', Jute: 'kharif', Sugarcane: 'any',
-    Ragi: 'kharif', Pulses: 'kharif', Oilseeds: 'kharif', Pineapple: 'any',
-    Banana: 'any', Coconut: 'any', Cashew: 'any', Rubber: 'any', Spices: 'any',
-    Coffee: 'any', Tea: 'any', Cardamom: 'any', Turmeric: 'kharif',
-    Ginger: 'kharif', Millets: 'kharif', Bamboo: 'any', Areca: 'any',
-    Fisheries: 'any',
-    Wheat: 'rabi', Mustard: 'rabi', Gram: 'rabi', Barley: 'rabi',
-    Basmati: 'kharif', Apple: 'any', Apricot: 'any', Saffron: 'rabi',
-    Potato: 'rabi', Vegetables: 'any'
-  };
+  const regionSel = document.getElementById('askRegion');
+  const seasonSel = document.getElementById('askSeason');
+  const areaInp = document.getElementById('askArea');
+  const budgetInp = document.getElementById('askBudget');
+  const whereEl = document.getElementById('askWhere');
+  const srcEl = document.getElementById('askSrc');
+  const ctaEl = document.getElementById('askCta');
 
-  // Populate states
-  const stateNames = Object.keys(DATA.all).sort();
-  stateSel.innerHTML = stateNames.map(n =>
-    `<option value="${n}" ${n === 'Maharashtra' ? 'selected' : ''}>${n}</option>`
-  ).join('');
+  // Sehore, MP -- the district the feature previews further down use, so the
+  // first answer a visitor sees matches the rest of the page.
+  const DEFAULT_REGION = 'mp_sehore';
+  const SAVED_KEY = 'mm_ask_saved_v1';
 
-  function estimateForCrop(crop, stateData, season, area, budget) {
-    const seasonFit = (() => {
-      const s = CROP_SEASON[crop.crop];
-      if (!s || s === 'any') return 1;
-      return s === season ? 1 : 0.55;
-    })();
+  const esc = (s) => (window.MM && window.MM.escapeHtml)
+    ? window.MM.escapeHtml(s)
+    : String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const inr = (n) => '₹' + Math.round(Number(n) || 0).toLocaleString('en-IN');
+  const seasonName = (s) => ({ kharif: 'Kharif', rabi: 'Rabi', zaid: 'Zaid' }[s] || s);
 
-    const score = crop.score * seasonFit;
-    // Yield kg/acre — very rough category-based
-    const baseYield = /Rice|Wheat|Maize|Bajra|Ragi|Barley|Millets/.test(crop.crop) ? 1800
-                   : /Sugarcane/.test(crop.crop) ? 45000
-                   : /Cotton/.test(crop.crop) ? 450
-                   : /Soybean|Groundnut|Mustard|Gram|Pulses|Oilseeds/.test(crop.crop) ? 900
-                   : /Banana|Potato|Vegetables/.test(crop.crop) ? 14000
-                   : /Coconut|Cashew|Apple|Apricot|Pineapple/.test(crop.crop) ? 6000
-                   : /Tea|Coffee|Cardamom|Turmeric|Ginger|Spices|Saffron|Rubber/.test(crop.crop) ? 1200
-                   : 1500;
-    const yieldKgAcre = baseYield * (0.7 + 0.6 * score);
+  // Same thresholds as My Farm's risk tile (dashboard.js riskInfo, which reads
+  // resilience = 100 - risk_score), so one crop never gets two risk words.
+  function riskWord(score) {
+    const v = Number(score) || 0;
+    if (v <= 30) return { text: 'Low risk', cls: 'is-low' };
+    if (v <= 60) return { text: 'Medium risk', cls: 'is-mid' };
+    return { text: 'High risk', cls: 'is-high' };
+  }
 
-    // Unit conversion: state-data.js has mandi prices per-quintal (100kg) for field crops,
-    // and per-kg/per-piece for cash/horticulture crops.
-    const PER_QUINTAL_CROPS = new Set([
-      'Rice', 'Wheat', 'Maize', 'Cotton', 'Soybean', 'Groundnut', 'Bajra', 'Jute',
-      'Sugarcane', 'Ragi', 'Pulses', 'Oilseeds', 'Basmati', 'Mustard', 'Gram',
-      'Barley', 'Turmeric', 'Ginger', 'Millets'
-    ]);
+  function retranslate() {
+    const i18n = window.AgriSimI18n;
+    if (i18n && i18n.getLanguage && i18n.getLanguage() !== 'en') i18n.retranslate();
+  }
 
-    const isPerQuintal = PER_QUINTAL_CROPS.has(crop.crop);
-    const pricePerKg = isPerQuintal ? (crop.mandi / 100) : crop.mandi;
+  /* ---------- Saved answers (offline) ---------- */
+  function readSaved() {
+    try { return JSON.parse(localStorage.getItem(SAVED_KEY) || '{}') || {}; } catch (_) { return {}; }
+  }
+  function saveAnswer(key, recs) {
+    try {
+      const all = readSaved();
+      all[key] = { at: Date.now(), recs };
+      // Keep the six most recent questions -- enough for a farmer comparing a
+      // few budgets, small enough to never matter for storage.
+      const keys = Object.keys(all).sort((a, b) => all[b].at - all[a].at);
+      keys.slice(6).forEach((k) => delete all[k]);
+      localStorage.setItem(SAVED_KEY, JSON.stringify(all));
+    } catch (_) { /* private mode: the live answer still shows */ }
+  }
 
-    let mandiDisplay = '';
-    if (crop.crop === 'Coconut' || crop.crop === 'Pineapple') {
-      mandiDisplay = `₹${crop.mandi}/pc`;
-    } else {
-      mandiDisplay = `₹${pricePerKg % 1 === 0 ? pricePerKg : pricePerKg.toFixed(2)}/kg`;
+  /* ---------- Regions ---------- */
+  async function loadRegions() {
+    let regions = [];
+    try {
+      const get = () => fetch('/api/regions').then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); });
+      regions = (window.MM && window.MM.memoGet)
+        ? await window.MM.memoGet('/api/regions', 5 * 60 * 1000, get)
+        : await get();
+      regions = (regions || []).map((r) => ({ id: r.id || r.region_id, name: r.name || r.region_name || r.id }));
+    } catch (_) {
+      // Offline: farm-state.js ships the same 30 districts with their names.
+      const table = (window.FarmState && window.FarmState.REGION_CENTROIDS) || [];
+      regions = table.map((r) => ({ id: r.region_id, name: r.displayName }));
     }
+    regionSel.innerHTML = regions.map((r) =>
+      `<option value="${esc(r.id)}">${esc(r.name)}</option>`).join('');
+  }
 
-    const revenuePerAcre = yieldKgAcre * pricePerKg;
-    const costPerAcre = Math.max(budget, 5000) * (0.9 + (1 - score) * 0.3);
-    const profitPerAcre = revenuePerAcre - costPerAcre;
-    const profitTotal = profitPerAcre * area;
-    const risk = Math.round((1 - score) * 70 + (seasonFit < 1 ? 15 : 0));
+  // A returning visitor sees their own farm, not the demo district.
+  function applyProfile() {
+    const p = window.MM && window.MM.profile ? window.MM.profile.get() : null;
+    const want = (p && p.region_id) || DEFAULT_REGION;
+    if (Array.from(regionSel.options).some((o) => o.value === want)) regionSel.value = want;
+    if (p) {
+      if (p.season) seasonSel.value = p.season;
+      if (Number(p.area_acres) > 0) areaInp.value = p.area_acres;
+      if (Number(p.budget_per_acre) > 0) budgetInp.value = p.budget_per_acre;
+    }
+  }
+
+  /* ---------- Rendering ---------- */
+  function setBusy(busy) {
+    rowsEl.setAttribute('aria-busy', busy ? 'true' : 'false');
+    form.querySelector('.ask__go').disabled = busy;
+  }
+
+  function note(html) {
+    rowsEl.innerHTML = `<li class="answer__note">${html}</li>`;
+  }
+
+  function whyLine(r) {
+    if (r.budget_adequate !== false) return '<span>Fits your budget</span>';
+    const m = /(\d+)%/.exec(r.reason || '');
+    return m
+      ? `<span>Usual cost covered</span>: <b>${m[1]}%</b> · <span>yield scaled to match</span>`
+      : '<span>Budget below this crop&rsquo;s usual cost</span>';
+  }
+
+  function render(q, recs, source) {
+    // Same rule as My Farm: never offer a loss-maker as a top pick while
+    // profitable crops exist.
+    const profitable = recs.filter((r) => r.expected_profit > 0);
+    const top = (profitable.length ? profitable : recs).slice(0, 3);
+    if (!top.length) {
+      note('No crops could be ranked for this district and season yet. Try another season.');
+      return;
+    }
+    rowsEl.innerHTML = top.map((r, i) => {
+      const risk = riskWord(r.risk_score);
+      const loss = r.expected_profit < 0;
+      return `
+        <li class="answer__row" style="--i:${i}">
+          <span class="answer__rank">${i + 1}</span>
+          <div class="answer__crop">
+            <b data-no-translate>${esc(r.crop_name || r.crop_id)}</b>
+            <small>ROI ${Math.round(r.roi_percent)}% · <span class="answer__risk ${risk.cls}">${risk.text}</span></small>
+          </div>
+          <div class="answer__money${loss ? ' is-loss' : ''}">
+            <b>${inr(r.expected_profit)}</b>
+            <small><span>${loss ? 'Expected loss' : 'Profit'}</span> · ${esc(q.area_acres)} ac</small>
+          </div>
+          <p class="answer__why">${whyLine(r)}</p>
+        </li>`;
+    }).join('');
+
+    const model = top.some((r) => r.prediction_source === 'ml_model');
+    if (source === 'live') {
+      srcEl.innerHTML = model ? '<span>Ranked by the live model</span>' : '<span>Ranked by the rule-based engine</span>';
+    } else {
+      const d = new Date(source.at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+      srcEl.innerHTML = `<span>You're offline — saved answer from</span> ${esc(d)}`;
+    }
+    retranslate();
+  }
+
+  function queryFromForm() {
     return {
-      crop: crop.crop,
-      mandiDisplay,
-      score,
-      yieldKgAcre: Math.round(yieldKgAcre),
-      revenuePerAcre: Math.round(revenuePerAcre),
-      costPerAcre: Math.round(costPerAcre),
-      profitPerAcre: Math.round(profitPerAcre),
-      profitTotal: Math.round(profitTotal),
-      roi: costPerAcre > 0 ? Math.round((profitPerAcre / costPerAcre) * 100) : 0,
-      risk: Math.max(8, Math.min(92, risk))
+      region_id: regionSel.value,
+      season: seasonSel.value,
+      area_acres: Math.max(0.1, parseFloat(areaInp.value) || 4),
+      budget_per_acre: Math.max(1000, parseFloat(budgetInp.value) || 15000),
     };
   }
 
-  function run() {
-    const stateName = stateSel.value;
-    const season    = seasonSel.value;
-    const area      = Math.max(0.5, parseFloat(areaInp.value) || 1);
-    const budget    = Math.max(1000, parseFloat(budgetInp.value) || 15000);
-    const d = DATA.get(stateName);
+  let seq = 0;
+  async function run() {
+    const q = queryFromForm();
+    if (!q.region_id) return;
+    const mySeq = ++seq;
+    const regionLabel = regionSel.options[regionSel.selectedIndex]?.text || q.region_id;
+    whereEl.textContent = `${regionLabel} · ${seasonName(q.season)} · ${q.area_acres} ac · ${inr(q.budget_per_acre)}/ac`;
 
-    if (!d) {
-      resultEl.innerHTML = '<div class="livedemo__empty">No data for that state.</div>';
-      return;
-    }
+    // "Plan this" opens the full recommender with these inputs. mm-core's
+    // deep-link handler only seeds profile fields that are still empty, so a
+    // visitor with a saved farm keeps it.
+    const link = new URLSearchParams({ tool: 'recommend', ...q });
+    ctaEl.href = 'dashboard.html?' + link.toString();
 
-    const ranked = d.topCrops
-      .map(c => estimateForCrop(c, d, season, area, budget))
-      .sort((a, b) => b.profitTotal - a.profitTotal);
-
-    const summary = `
-      <div class="livedemo__summary">
-        <div><span>State</span><b>${stateName}</b></div>
-        <div><span>Season</span><b>${season === 'kharif' ? 'Kharif' : 'Rabi'}</b></div>
-        <div><span>Area</span><b>${area} acres</b></div>
-        <div><span>Rainfall</span><b>${d.rainfall} mm</b></div>
-        <div><span>Soil N</span><b>${d.soilN} kg/ha</b></div>
-      </div>`;
-
-    const cards = ranked.map((r, i) => `
-      <article class="livedemo__card livedemo__card--${i+1}">
-        <div class="livedemo__rank">#${i+1}</div>
-        <h4>${r.crop}</h4>
-        <div class="livedemo__kv">
-          <div><span>Expected profit</span><b>₹${r.profitTotal.toLocaleString('en-IN')}</b><em>over ${area} acres</em></div>
-          <div><span>ROI</span><b>${r.roi}%</b></div>
-          <div><span>Yield</span><b>${r.yieldKgAcre.toLocaleString('en-IN')} <small>kg/acre</small></b></div>
-           <div><span>Mandi</span><b>${r.mandiDisplay}</b></div>
-        </div>
-        <div class="livedemo__bars">
-          <div class="livedemo__bar">
-            <span>Fit ${Math.round(r.score*100)}</span>
-            <i style="width:${Math.round(r.score*100)}%; background:linear-gradient(90deg,var(--brand),var(--accent));"></i>
-          </div>
-          <div class="livedemo__bar">
-            <span>Risk ${r.risk}</span>
-            <i style="width:${r.risk}%; background:linear-gradient(90deg,#8fb04a,#d45c4a);"></i>
-          </div>
-        </div>
-      </article>`).join('');
-
-    resultEl.innerHTML = summary + '<div class="livedemo__cards">' + cards + '</div>';
-    // If a language other than English is active, retranslate the new DOM
-    if (window.AgriSimI18n && window.AgriSimI18n.getLanguage() !== 'en') {
-      window.AgriSimI18n.retranslate();
+    const key = [q.region_id, q.season, q.area_acres, q.budget_per_acre].join('|');
+    setBusy(true);
+    srcEl.textContent = '';
+    note('Ranking crops for your district…');
+    retranslate();
+    try {
+      const qs = new URLSearchParams({ budget_per_acre: q.budget_per_acre, area_acres: q.area_acres });
+      const res = await fetch(`/api/crop-comparison/${encodeURIComponent(q.region_id)}/${encodeURIComponent(q.season)}?${qs}`);
+      if (!res.ok) throw Object.assign(new Error('http'), { status: res.status });
+      const recs = await res.json();
+      if (mySeq !== seq) return;
+      if (!Array.isArray(recs)) throw new Error('shape');
+      saveAnswer(key, recs);
+      render(q, recs, 'live');
+    } catch (err) {
+      if (mySeq !== seq) return;
+      const saved = readSaved()[key];
+      if (saved && Array.isArray(saved.recs)) { render(q, saved.recs, saved); return; }
+      note(err && err.status
+        ? 'Couldn&rsquo;t rank crops just now. Try again in a moment, or open the dashboard.'
+        : 'You&rsquo;re offline, and this question hasn&rsquo;t been asked on this phone before. Connect once and the answer is saved for next time.');
+      retranslate();
+    } finally {
+      if (mySeq === seq) setBusy(false);
     }
   }
 
-  runBtn.addEventListener('click', run);
-  [stateSel, seasonSel].forEach(el => el.addEventListener('change', run));
-  // First paint after a tick so state-data.js has loaded
-  setTimeout(run, 50);
+  form.addEventListener('submit', (e) => { e.preventDefault(); run(); });
+  [regionSel, seasonSel].forEach((el) => el.addEventListener('change', run));
+
+  /* ---------- Model figures in the stats section ---------- */
+  async function fillModelStats() {
+    const yieldEl = document.querySelector('[data-ml="yield"]');
+    const recEl = document.querySelector('[data-ml="recommend"]');
+    if (!yieldEl && !recEl) return;
+    try {
+      const r = await fetch('/api/ml/status');
+      if (!r.ok) return;
+      const models = ((await r.json()).training_report || {}).models || [];
+      const find = (name) => models.find((m) => m.model === name);
+      const y = find('yield_prediction');
+      const c = find('crop_recommendation');
+      if (yieldEl && y && y.metrics && isFinite(y.metrics.r2)) {
+        yieldEl.textContent = `R² ${Number(y.metrics.r2).toFixed(2)}`;
+      }
+      if (recEl && c && c.metrics && isFinite(c.metrics.accuracy)) {
+        const n = c.metrics.num_classes;
+        recEl.textContent = `${Math.round(c.metrics.accuracy * 100)}% top-1 accuracy${n ? ` across ${n} crops` : ''}`;
+      }
+    } catch (_) { /* keep the printed fallback */ }
+  }
+
+  (async () => {
+    await loadRegions();
+    applyProfile();
+    run();
+    fillModelStats();
+  })();
 })();

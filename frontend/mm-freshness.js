@@ -88,6 +88,19 @@
     return (years < 2 ? '1 year' : Math.round(years) + ' years') + ' old';
   }
 
+  /* "Stale data" alone didn't say *what* was stale or how stale, so the pill
+     now names the worst source and its age ("Mandi prices: 10 months old").
+     The panel still lists every source. */
+  var RANK = { stale: 3, aging: 2, fresh: 1, unknown: 0 };
+  function pillText(report, conf) {
+    if (report.offline) return 'Data status';
+    if (report.overall === 'fresh') return conf.text;
+    var worst = (report.sources || [])
+      .filter(function (src) { return src.staleness === report.overall && src.age_days != null; })
+      .sort(function (a, b) { return (RANK[b.staleness] - RANK[a.staleness]) || (b.age_days - a.age_days); })[0];
+    return worst ? worst.label + ': ' + humanAge(worst.age_days) : conf.text;
+  }
+
   function modeLabel(mode) {
     if (mode === 'live') return 'live';
     if (mode === 'seed') return 'seed data';
@@ -104,7 +117,7 @@
       '.mm-fresh{position:relative;display:inline-flex;align-items:center;gap:7px;',
       'padding:6px 12px;border-radius:999px;background:var(--surface);',
       'border:1px solid rgba(29,26,21,.10);box-shadow:var(--shadow-sm);',
-      'font:600 .76rem/1 Inter,system-ui,sans-serif;color:var(--ink-soft);cursor:pointer;}',
+      'font:600 .76rem/1 var(--font-body, Inter, system-ui, sans-serif);color:var(--ink-soft);cursor:pointer;}',
       '.mm-fresh:hover{border-color:rgba(29,26,21,.2);}',
       '.mm-fresh__dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto;}',
       '.mm-fresh--warn{color:var(--clay);}',
@@ -112,7 +125,7 @@
       '.mm-fresh__panel{position:absolute;bottom:calc(100% + 10px);right:0;z-index:9998;',
       'width:min(340px,calc(100vw - 32px));padding:14px;border-radius:var(--r-md);',
       'background:var(--surface);border:1px solid rgba(29,26,21,.10);box-shadow:var(--shadow-lg);',
-      'font:400 .78rem/1.5 Inter,system-ui,sans-serif;color:var(--ink);',
+      'font:400 .78rem/1.5 var(--font-body, Inter, system-ui, sans-serif);color:var(--ink);',
       'display:none;text-align:left;cursor:default;}',
       '.mm-fresh__panel.open{display:block;}',
       '.mm-fresh__panel h4{margin:0 0 4px;font-size:.82rem;font-weight:700;color:var(--ink);}',
@@ -124,9 +137,13 @@
       '.mm-fresh__rmeta{color:var(--ink-faint);font-size:.73rem;}',
       '.mm-fresh__rdetail{color:var(--ink-soft);font-size:.73rem;margin-top:2px;}',
       '.mm-fresh--float{position:fixed;right:88px;bottom:24px;z-index:9997;}',
-      '@media(max-width:640px){.mm-fresh--float{right:12px;bottom:86px;}',
+      // Phones: the bottom-right corner holds the chat + language buttons, so
+      // the pill takes the empty bottom-left corner instead of sitting on them.
+      '@media(max-width:640px){.mm-fresh--float{right:auto;left:12px;bottom:18px;}',
       '.mm-fresh__panel{right:auto;left:0;}}',
-      '@media print{.mm-fresh--float{display:none;}}'
+      '@media print{.mm-fresh--float{display:none;}}',
+      // In the farm bar (top of the page) the panel opens downward.
+      '.mm-fresh--inbar .mm-fresh__panel{bottom:auto;top:calc(100% + 10px);}'
     ].join('');
     document.head.appendChild(s);
   }
@@ -194,10 +211,10 @@
 
     var pill = document.createElement('button');
     pill.type = 'button';
-    pill.className = 'mm-fresh mm-fresh--' + conf.tone + (opts.floating ? ' mm-fresh--float' : '');
+    pill.className = 'mm-fresh mm-fresh--' + conf.tone + (opts.floating ? ' mm-fresh--float' : '') + (opts.inBar ? ' mm-fresh--inbar' : '');
     pill.setAttribute('data-no-translate', '');
     pill.setAttribute('aria-expanded', 'false');
-    pill.title = 'Where these numbers come from';
+    pill.title = 'Where these numbers come from — tap for every source';
 
     var dot = document.createElement('span');
     dot.className = 'mm-fresh__dot';
@@ -205,7 +222,7 @@
     pill.appendChild(dot);
 
     var label = document.createElement('span');
-    label.textContent = report.offline ? 'Data status' : conf.text;
+    label.textContent = pillText(report, conf);
     pill.appendChild(label);
 
     var panel = buildPanel(report);
@@ -240,11 +257,23 @@
       });
       return;
     }
-    // No explicit mount point — float it on the dashboard, where the numbers are.
+    // No explicit mount point. On the dashboard it belongs in the farm bar,
+    // next to the farm those numbers describe -- floating, it sat on top of
+    // the crop list. The bar is built after an async /api/regions call, so
+    // wait for its slot and only float the pill if the bar never appears.
     if (!document.querySelector('.dashx__wrap')) return;
-    get().then(function (report) {
-      render(document.body, report, { floating: true });
-    });
+    var started = Date.now();
+    (function waitForBar() {
+      var slot = document.querySelector('[data-mm-freshness-slot]');
+      if (slot || Date.now() - started > 6000) {
+        get().then(function (report) {
+          if (slot) render(slot, report, { inBar: true });
+          else render(document.body, report, { floating: true });
+        });
+        return;
+      }
+      setTimeout(waitForBar, 120);
+    })();
   }
 
   // mm-core.js short-circuits on `if (window.MM) return;`, so creating window.MM

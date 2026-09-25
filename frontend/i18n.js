@@ -150,9 +150,15 @@
         background: rgba(255,255,255,0.96); backdrop-filter: blur(10px);
         border: 1px solid rgba(0,0,0,0.08); border-radius: 999px;
         box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-        font-family: 'Inter', system-ui, sans-serif;
+        font-family: var(--font-body, 'Inter', system-ui, sans-serif);
       }
+      /* System font on purpose: each label is written in its own script
+         (हिं, తె, ಕ, த), and in the brand stack every one of those glyphs
+         would make the browser download that script's Noto file -- on every
+         page, for every visitor, English readers included. The phone's own
+         fonts draw five short labels perfectly well. */
       .i18n-switcher button {
+        font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
         appearance: none; border: none; background: transparent; cursor: pointer;
         padding: 8px 14px; border-radius: 999px;
         font-size: 0.85rem; font-weight: 600; color: #4a4a4a;

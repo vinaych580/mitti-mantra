@@ -6,6 +6,14 @@
 (() => {
   'use strict';
 
+  /* ---------- Footer year ----------
+     The copyright lines were typed by hand and had drifted (one page said
+     2026, the rest 2025). The markup carries the current year as a fallback
+     for no-JS; this keeps it from going stale again. */
+  document.querySelectorAll('[data-year]').forEach(el => {
+    el.textContent = String(new Date().getFullYear());
+  });
+
   /* ---------- Nav: scrolled state ---------- */
   const nav = document.getElementById('nav');
   if (nav) {

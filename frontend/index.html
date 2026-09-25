@@ -8,7 +8,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@400;600&family=Noto+Sans+Telugu:wght@400;600&family=Noto+Sans+Kannada:wght@400;600&family=Noto+Sans+Tamil:wght@400;600&family=Noto+Serif+Devanagari:wght@500;600&family=Noto+Serif+Telugu:wght@500;600&family=Noto+Serif+Kannada:wght@500;600&family=Noto+Serif+Tamil:wght@500;600&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="assets/logo-192.png" type="image/png">
@@ -24,20 +24,17 @@
       </a>
 
       <ul class="nav__links">
-        <li><a href="#features">Features</a></li>
-        <li><a href="#how">How it works</a></li>
+        <li><a href="index.html" aria-current="page">Home</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
         <li><a href="farm-boundary.html">Draw farm</a></li>
-        <li><a href="marketplace.html" class="nav__market-link">🌾 Marketplace</a></li>
-        <li><a href="book-a-tractor.html" class="nav__tractor-link">
-          Book a Tractor
-        </a></li>
-        <li><a href="/gyan-seva" class="nav__gyanseva-link">🌱 Gyan Seva</a></li>
+        <li><a href="marketplace.html">Marketplace</a></li>
+        <li><a href="book-a-tractor.html">Book a Tractor</a></li>
+        <li><a href="gyan-seva.html">Gyan Seva</a></li>
       </ul>
 
       <div class="nav__cta">
-        <a href="/docs" class="btn btn-ghost">API Docs</a>
         <a href="dashboard.html" class="btn btn-primary">
-          Try it free
+          Open dashboard
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </a>
         <button class="nav__burger" id="burger" aria-label="Menu">
@@ -54,19 +51,24 @@
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
     </button>
     <ul>
-      <li><a href="#features">Features</a></li>
-      <li><a href="#how">How it works</a></li>
+      <li><a href="index.html" aria-current="page">Home</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
       <li><a href="farm-boundary.html">Draw farm</a></li>
-      <li><a href="marketplace.html">🌾 Marketplace</a></li>
+      <li><a href="marketplace.html">Marketplace</a></li>
       <li><a href="book-a-tractor.html">Book a Tractor</a></li>
-      <li><a href="/gyan-seva">🌱 Gyan Seva</a></li>
-      <li><a href="/docs">API Docs</a></li>
+      <li><a href="gyan-seva.html">Gyan Seva</a></li>
     </ul>
-    <a href="dashboard.html" class="btn btn-primary">Try it free</a>
+    <a href="dashboard.html" class="btn btn-primary">Open dashboard</a>
   </aside>
 
   <!-- ============= HERO ============= -->
-  <header class="hero">
+  <!-- The hero used to be three floating cards of made-up numbers ("94% ML
+       confidence", "₹48,250") beside a slogan, while the one live, checkable
+       thing on the page -- the recommender -- sat 7,000px further down. The
+       question a farmer actually brings is now the headline, and the answer
+       underneath it comes from /api/crop-comparison, the same call My Farm
+       makes. See demo-recommender.js. -->
+  <header class="hero hero--ask">
     <div class="hero__bg">
       <img
         src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=1920&q=80"
@@ -81,140 +83,63 @@
 
     <div class="hero__wrap">
       <div class="hero__content">
-        <span class="eyebrow">AI-Powered Farm Intelligence</span>
-        <h1 class="hero__title">
-          Mitti se judao,<br>
-          <em>fasal se pao.</em>
-        </h1>
-        <p class="hero__sub">
-          Smart crop recommendations, yield forecasts, and market insights — trained on real Indian farm data. Built for every kisan, from 2-acre families to 200-acre operations.
-        </p>
-        <div class="hero__cta">
-          <a href="dashboard.html" class="btn btn-primary">
-            Explore your land
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-          </a>
-          <a href="#demo" class="btn btn-ghost">
-            <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 8l6 4-6 4V8z"/></svg>
-            Try demo
-          </a>
-        </div>
+        <span class="eyebrow" data-no-translate>Mitti se judao, fasal se pao</span>
+        <h1 class="hero__title ask__q">Is baar kya boyein?</h1>
+        <p class="ask__gloss" data-no-translate>What should I sow this season?</p>
+        <p class="hero__sub">Tell us where you farm and what you can spend. We rank every crop for your district this season and show the working behind each number.</p>
 
-        <!-- This row used to read "Trusted by 12,000+ kisans" over four stock
-             photos. There is no sign-up and no user count to draw that from, so
-             it now states what a first-time visitor actually gets. -->
+        <form class="ask" id="askForm" novalidate>
+          <label class="ask__field ask__field--wide">
+            <span>Region</span>
+            <select name="region_id" id="askRegion" required></select>
+          </label>
+          <label class="ask__field">
+            <span>Season</span>
+            <select name="season" id="askSeason">
+              <option value="kharif">Kharif</option>
+              <option value="rabi">Rabi</option>
+              <option value="zaid">Zaid</option>
+            </select>
+          </label>
+          <label class="ask__field">
+            <span>Area (acres)</span>
+            <input name="area_acres" id="askArea" type="number" inputmode="decimal" min="0.1" max="10000" step="any" value="4" required>
+          </label>
+          <label class="ask__field">
+            <span>Budget / acre (₹)</span>
+            <input name="budget_per_acre" id="askBudget" type="number" inputmode="numeric" min="1000" step="500" value="15000" required>
+          </label>
+          <button class="btn btn-primary ask__go" type="submit">
+            Rank my crops
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </button>
+        </form>
+
         <ul class="hero__trust">
-          <li>No sign-up &mdash; open the dashboard and start</li>
-          <li>32 crops across 30 districts</li>
-          <li>Works offline once loaded</li>
+          <li>No sign-up — nothing to install</li>
+          <li>35 crops across 30 districts</li>
+          <li>Answers saved for offline use</li>
         </ul>
       </div>
 
-      <!-- Floating UI cards preview -->
-      <div class="hero__cards" aria-hidden="true">
-        <div class="hero-card hero-card--1">
-          <div class="hero-card__row">
-            <div class="hero-card__ico">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 C9 8 7 12 7 15 a5 5 0 0 0 10 0 c0-3-2-7-5-13z"/></svg>
-            </div>
-            <div>
-              <div class="hero-card__title">Recommended crop</div>
-              <div class="hero-card__val">Soybean</div>
-              <div class="hero-card__delta">94% ML confidence</div>
-            </div>
-          </div>
+      <section class="answer" id="askResult" aria-labelledby="askTitle">
+        <div class="answer__head">
+          <h2 class="answer__title" id="askTitle">Best crops for your land</h2>
+          <p class="answer__where" id="askWhere" data-no-translate></p>
         </div>
-
-        <div class="hero-card hero-card--2">
-          <div class="hero-card__row">
-            <div class="hero-card__ico">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-6 4 3 5-8"/></svg>
-            </div>
-            <div>
-              <div class="hero-card__title">Projected yield</div>
-              <div class="hero-card__val">1,820 <small class="hero-card__unit">kg/acre</small></div>
-              <div class="hero-card__delta">↑ 18% vs region avg</div>
-            </div>
-          </div>
-          <div class="hero-card__chart">
-            <span style="height:30%"></span><span style="height:45%"></span><span style="height:40%"></span>
-            <span style="height:60%"></span><span style="height:55%"></span><span style="height:75%"></span>
-            <span style="height:68%"></span><span style="height:85%"></span><span style="height:92%"></span>
-            <span style="height:100%"></span>
-          </div>
+        <div class="answer__cols" aria-hidden="true">
+          <span>Crop</span><span>Expected profit</span>
         </div>
-
-        <div class="hero-card hero-card--3">
-          <div class="hero-card__row">
-            <div class="hero-card__ico">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            </div>
-            <div>
-              <div class="hero-card__title">Expected profit</div>
-              <div class="hero-card__val">₹ 48,250</div>
-              <div class="hero-card__delta">ROI 62%</div>
-            </div>
-          </div>
+        <ol class="answer__rows" id="askRows" aria-live="polite" aria-busy="true">
+          <li class="answer__note">Ranking crops for your district…</li>
+        </ol>
+        <div class="answer__foot">
+          <span class="answer__src" id="askSrc"></span>
+          <a class="answer__cta" id="askCta" href="dashboard.html?tool=recommend">Plan this in the dashboard →</a>
         </div>
-      </div>
+      </section>
     </div>
   </header>
-
-  <!-- ============= GYAN SEVA SECTION ============= -->
-  <section class="gyan-seva-promo reveal">
-    <div class="container">
-      <div class="gyan-seva-promo__card">
-        <div class="gyan-seva-promo__content">
-          <span class="eyebrow">🌱 Gyan Seva</span>
-          <h2 class="gyan-seva-promo__title">Connect with verified agricultural experts for personalized guidance.</h2>
-          <p class="gyan-seva-promo__sub">
-            Facing soil challenges, crop diseases, or irrigation issues? Book a consultation with certified agronomists and receive step-by-step guidance tailored for your plot.
-          </p>
-          <a href="/gyan-seva" class="btn btn-primary">
-            Book Consultation
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-          </a>
-        </div>
-        <div class="gyan-seva-promo__visual">
-          <div class="promo-badge">
-            <span class="promo-badge__dot"></span>
-            Every district covered
-          </div>
-          <ul class="promo-specialisms">
-            <li>Soil testing &amp; amendment</li>
-            <li>Crop disease diagnosis</li>
-            <li>Irrigation &amp; water planning</li>
-            <li>Organic conversion</li>
-          </ul>
-          <p class="promo-note">
-            An illustrative directory, not a credential-checked network &mdash; the
-            page says so plainly and points to the government KVK scientist in your
-            district as the verified alternative.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============= MARQUEE ============= -->
-  <div class="marquee">
-    <div class="marquee__label">Serving farmers across</div>
-    <div class="marquee__track">
-      <span class="marquee__item">🌾 Madhya Pradesh · Sehore</span>
-      <span class="marquee__item">🌿 Uttar Pradesh · Lucknow</span>
-      <span class="marquee__item">☀ Maharashtra · Pune</span>
-      <span class="marquee__item">🌱 Rice · Wheat · Cotton</span>
-      <span class="marquee__item">🌽 Maize · Sugarcane · Pulses</span>
-      <span class="marquee__item">🥜 Groundnut · Soybean</span>
-      <!-- Duplicate for seamless loop -->
-      <span class="marquee__item">🌾 Madhya Pradesh · Sehore</span>
-      <span class="marquee__item">🌿 Uttar Pradesh · Lucknow</span>
-      <span class="marquee__item">☀ Maharashtra · Pune</span>
-      <span class="marquee__item">🌱 Rice · Wheat · Cotton</span>
-      <span class="marquee__item">🌽 Maize · Sugarcane · Pulses</span>
-      <span class="marquee__item">🥜 Groundnut · Soybean</span>
-    </div>
-  </div>
 
   <!-- ============= FEATURES ============= -->
   <section class="features" id="features">
@@ -223,7 +148,7 @@
       <div class="section-head reveal">
         <span class="eyebrow">Built for real farms</span>
         <h2>Everything you need from soil to sale</h2>
-        <p>Thirty-two endpoints. Three ML models. One simple goal — help kisans make the right decision at the right time.</p>
+        <p>Seventy API endpoints. Four trained models. One simple goal — help kisans make the right decision at the right time.</p>
       </div>
 
       <ul class="features__badges reveal">
@@ -267,14 +192,13 @@
             </ul>
           </div>
 
-          <!-- The middle chip claimed "98% accuracy". The deployed classifier
-               scores 0.56 top-1 across 32 crops (ml/models/manifest.json, also
-               served at /api/ml/status); the ranking is what is useful here,
-               not a single-label hit rate. -->
+          <!-- The middle chip claimed "98% accuracy". Accuracy is published live
+               at /api/ml/status and quoted from there in the stats section; the
+               ranking is what is useful here, not a single-label hit rate. -->
           <div class="feature__chips">
             <span class="chip">RandomForest</span>
             <span class="chip">60K training rows</span>
-            <span class="chip">32 crops ranked</span>
+            <span class="chip">35 crops scored</span>
           </div>
         </article>
 
@@ -283,8 +207,8 @@
           <div class="feature__ico">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
           </div>
-          <h3>Intelligent Disease Scan</h3>
-          <p>Photograph a leaf and diagnose it on the spot — no signal needed. Treatment advice comes matched to local subsidies.</p>
+          <h3>Leaf Symptom Screening</h3>
+          <p>Photograph a leaf for a first screen across 18 conditions on maize, potato, soybean and tomato — then confirm anything serious with your KVK.</p>
 
           <div class="feature__preview">
             <div class="diagnosis">
@@ -473,7 +397,7 @@
             </div>
             <div class="showcase__badge__text">
               <strong>20 ML features</strong>
-              Trained on real CSVs
+              Soil, weather &amp; season
             </div>
           </div>
         </div>
@@ -481,7 +405,7 @@
         <div class="showcase__content reveal">
           <span class="eyebrow">Yield prediction</span>
           <h2>Your soil, quantified.</h2>
-          <p>Feed in your soil NPK, pH, organic carbon, rainfall, and irrigation level — get a kg/acre yield estimate backed by 20 features and a RandomForest trained on real Indian farm history.</p>
+          <p>Feed in your soil NPK, pH, organic carbon, rainfall, and irrigation level — get a kg/acre yield estimate from a RandomForest that reads 20 features of your field, season and district.</p>
           <ul class="showcase__list">
             <li>
               <span class="showcase__list__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
@@ -516,18 +440,23 @@
       <div class="stats__head reveal">
         <span class="eyebrow">What&rsquo;s actually under the hood</span>
         <h2>Built on data, not guesswork</h2>
+        <!-- The two figures are filled from /api/ml/status on load (see
+             demo-recommender.js), so a retrain can't leave this paragraph
+             quoting an older model. The text below is only the no-network
+             fallback and should match ml/models/manifest.json. -->
         <p>
-          The yield model scores <strong>R&sup2; 0.81</strong> on held-out data and the crop
-          recommender <strong>56% top-1 accuracy across 32 classes</strong> &mdash; useful for
-          ranking options, not a substitute for your own judgement. Both numbers are
-          published live at <a href="/api/ml/status">/api/ml/status</a>, and every
-          recommendation shows the maths behind it.
+          The yield model scores <strong data-ml="yield">R&sup2; 0.83</strong> on held-out data and the crop
+          recommender <strong data-ml="recommend">84% top-1 accuracy across 23 crops</strong>.
+          Both are trained on this project&rsquo;s own crop, soil and weather tables and have not
+          been tested on real fields yet &mdash; useful for ranking options, not a substitute
+          for your own judgement. The live figures are at <a href="/api/ml/status">/api/ml/status</a>,
+          and every recommendation shows the maths behind it.
         </p>
       </div>
 
       <div class="stats__grid reveal-stagger">
         <div class="stat">
-          <div class="stat__val" data-count="32">0</div>
+          <div class="stat__val" data-count="35">0</div>
           <div class="stat__lbl">Crops modelled</div>
           <div class="stat__desc">Sowing window, water, NPK and cost baselines for each</div>
         </div>
@@ -537,8 +466,8 @@
           <div class="stat__desc">Soil profile, seasonal weather and mandi history per region</div>
         </div>
         <div class="stat">
-          <div class="stat__val" data-count="50">0<small>+</small></div>
-          <div class="stat__lbl">REST endpoints</div>
+          <div class="stat__val" data-count="70">0</div>
+          <div class="stat__lbl">API endpoints</div>
           <div class="stat__desc">Every tool on this site is a documented public API call</div>
         </div>
         <div class="stat">
@@ -609,134 +538,6 @@
     </div>
   </section>
 
-  <!-- ============= PROCESS ============= -->
-  <section class="process" id="how">
-    <div class="container">
-      <div class="section-head reveal">
-        <span class="eyebrow">How it works</span>
-        <h2>Three steps to smarter farming</h2>
-        <p>Tell us about your land, pick a season, and we'll do the rest — from crop ranking to irrigation timing.</p>
-      </div>
-
-      <div class="process__grid reveal-stagger">
-        <div class="step">
-          <div class="step__num">1</div>
-          <h3>Enter your land</h3>
-          <p>Region, area in acres, soil sample numbers. Takes less than a minute.</p>
-        </div>
-        <div class="step">
-          <div class="step__num">2</div>
-          <h3>We predict & rank</h3>
-          <p>Three ML models run in parallel — yield, prices, and crop confidence. Results in milliseconds.</p>
-        </div>
-        <div class="step">
-          <div class="step__num">3</div>
-          <h3>Act with confidence</h3>
-          <p>Get fertilizer plans, irrigation schedules, pest alerts, and sell-timing advice. All in your dashboard.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============= LIVE DEMO ============= -->
-  <section class="demo" id="demo">
-    <div class="container">
-      <div class="section-head reveal">
-        <span class="eyebrow">Try it right here</span>
-        <h2>Live crop recommender</h2>
-        <p>Pick your state, season and budget — we'll rank the three best-fit crops instantly, right on this page. No signup, no video, just the real thing.</p>
-      </div>
-
-      <div class="livedemo reveal">
-        <form class="livedemo__form" id="liveDemoForm" onsubmit="return false;">
-          <label class="livedemo__field">
-            <span>State</span>
-            <select id="ldState"></select>
-          </label>
-          <label class="livedemo__field">
-            <span>Season</span>
-            <select id="ldSeason">
-              <option value="kharif">Kharif (Jun–Oct)</option>
-              <option value="rabi">Rabi (Nov–Apr)</option>
-              <option value="zaid">Zaid (Mar–May)</option>
-            </select>
-          </label>
-          <label class="livedemo__field">
-            <span>Area (acres)</span>
-            <input id="ldArea" type="number" value="4" min="0.5" step="any">
-          </label>
-          <label class="livedemo__field">
-            <span>Budget / acre (₹)</span>
-            <input id="ldBudget" type="number" value="15000" min="1000" step="any">
-          </label>
-          <button class="btn btn-primary livedemo__go" id="ldRun" type="button">
-            Run recommendation
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-          </button>
-        </form>
-
-        <div class="livedemo__result" id="ldResult" data-no-translate>
-          <div class="livedemo__empty">Choose your inputs and hit <b>Run recommendation</b> to see three ranked crops with expected profit, risk, and mandi outlook.</div>
-        </div>
-
-        <div class="livedemo__footer">
-          <span class="livedemo__note">Demo uses on-device heuristics over our crop × state dataset. The full dashboard runs three ML models and blends live mandi data.</span>
-          <a href="dashboard.html" class="livedemo__cta">Open full dashboard →</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============= SHOWCASE 2 ============= -->
-  <section class="showcase" style="background: var(--bg);">
-    <div class="container">
-      <div class="showcase__grid showcase__grid--reverse">
-        <div class="showcase__media reveal">
-          <img
-            src="https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=1000&q=80"
-            srcset="
-              https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=500&q=80 500w,
-              https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=1000&q=80 1000w"
-            sizes="(max-width: 640px) 100vw, 50vw"
-            alt="Farmer checking mobile phone in field" loading="lazy">
-          <div class="showcase__badge">
-            <div class="showcase__badge__ico" style="background: var(--accent-soft); color: var(--accent);">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            </div>
-            <div class="showcase__badge__text">
-              <strong>₹ 48K avg</strong>
-              Extra profit per acre
-            </div>
-          </div>
-        </div>
-
-        <div class="showcase__content reveal">
-          <span class="eyebrow">Market intelligence</span>
-          <h2>Know when to sell. Know what it's worth.</h2>
-          <p>Compare live mandi prices across three regions, forecast six months ahead, and get MSP vs market guidance in real time.</p>
-          <ul class="showcase__list">
-            <li>
-              <span class="showcase__list__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-              <span class="showcase__list__text"><strong>Cross-mandi arbitrage</strong>Find the best price across Sehore, Lucknow, Pune</span>
-            </li>
-            <li>
-              <span class="showcase__list__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-              <span class="showcase__list__text"><strong>Seasonal price pattern</strong>Best month to sell based on 12-month history</span>
-            </li>
-            <li>
-              <span class="showcase__list__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-              <span class="showcase__list__text"><strong>Hold or sell advisor</strong>Expected price gain vs. storage cost, worked out in rupees</span>
-            </li>
-          </ul>
-          <a href="/docs" class="btn btn-primary showcase__cta">
-            Explore the API
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- ============= WORKED EXAMPLES ============= -->
   <!-- This section used to carry three named "farmer testimonials" with stock
        photos. They were invented, and the platform has no user accounts to
@@ -756,7 +557,7 @@
           <p class="quote__text">&ldquo;Pichhle saal gehun lagaya tha, munafa kam raha. Is baar kya boyein?&rdquo;</p>
           <div class="quote__src">
             <strong>Smart recommender</strong>
-            <span>Scores all 32 crops against your soil test, season and budget, then shows the cost, yield and margin behind every rank &mdash; so you can disagree with it.</span>
+            <span>Scores all 35 crops against your district&rsquo;s soil, season and your budget, then shows the cost, yield and margin behind every rank &mdash; so you can disagree with it.</span>
           </div>
           <a class="quote__cta" href="dashboard.html?tool=recommend">Try it on your plot &rarr;</a>
         </article>
@@ -784,13 +585,49 @@
     </div>
   </section>
 
+  <!-- ============= GYAN SEVA SECTION ============= -->
+  <section class="gyan-seva-promo reveal">
+    <div class="container">
+      <div class="gyan-seva-promo__card">
+        <div class="gyan-seva-promo__content">
+          <span class="eyebrow">Gyan Seva</span>
+          <h2 class="gyan-seva-promo__title">Talk a problem through with an agronomist near you.</h2>
+          <p class="gyan-seva-promo__sub">
+            Soil trouble, a disease on the leaves, a water question? Find agronomists by district and specialism, or go straight to the KVK scientist for your area.
+          </p>
+          <a href="gyan-seva.html" class="btn btn-primary">
+            Find an expert
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+        <div class="gyan-seva-promo__visual">
+          <div class="promo-badge">
+            <span class="promo-badge__dot"></span>
+            Listed by district
+          </div>
+          <ul class="promo-specialisms">
+            <li>Soil testing &amp; amendment</li>
+            <li>Crop disease diagnosis</li>
+            <li>Irrigation &amp; water planning</li>
+            <li>Organic conversion</li>
+          </ul>
+          <p class="promo-note">
+            An illustrative directory, not a credential-checked network &mdash; the
+            page says so plainly and points to the government KVK scientist in your
+            district as the verified alternative.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ============= CTA ============= -->
   <section class="cta">
     <div class="cta__wrap reveal">
       <h2>Ready to plan your next harvest?</h2>
-      <p>Free to use. Sign in with Google or email and start farming smarter — powered by real Indian farm data.</p>
+      <p>Free, with no account to make. Your farm details stay on this phone, and every number shows where it came from.</p>
       <a href="dashboard.html" class="btn btn-light">
-        Launch the dashboard
+        Open the dashboard
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
       </a>
     </div>
@@ -801,30 +638,33 @@
     <div class="container">
       <div class="footer__grid">
         <div class="footer__about">
-          <a href="#" class="logo" aria-label="Mitti Mantra home">
+          <a href="index.html" class="logo" aria-label="Mitti Mantra home">
             <img src="assets/logo-128.png" alt="Mitti Mantra — Growing the future" class="logo__img" width="128" height="128">
           </a>
-          <p class="footer__tagline">Growing the future — AI-powered farm intelligence, built with care for Indian kisans. Open-source, data-first, and designed to work on a 2G phone.</p>
+          <p class="footer__tagline">Growing the future — farm planning built with care for Indian kisans. Open-source, data-first, and designed to work on a 2G phone.</p>
         </div>
 
         <div class="footer__col">
           <h4>Product</h4>
           <ul>
-            <li><a href="#features">Features</a></li>
             <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="farm-boundary.html">Draw farm</a></li>
             <li><a href="marketplace.html">Marketplace</a></li>
-            <li><a href="#demo">Demo</a></li>
-            <li><a href="/docs">API</a></li>
+            <li><a href="book-a-tractor.html">Book a Tractor</a></li>
+            <li><a href="gyan-seva.html">Gyan Seva</a></li>
           </ul>
         </div>
 
+        <!-- Each count links to the endpoint that serves it, so the number can be
+             checked rather than taken on trust. Keep them in step with
+             dataset/*.csv (35 crops, 30 regions, 12 schemes). -->
         <div class="footer__col">
           <h4>Data</h4>
           <ul>
-            <li><a href="/api/crops">8 crops</a></li>
-            <li><a href="/api/regions">3 regions</a></li>
-            <li><a href="/api/ml/status">ML models</a></li>
-            <li><a href="/api/government-schemes">Schemes</a></li>
+            <li><a href="/api/crops">35 crops</a></li>
+            <li><a href="/api/regions">30 regions</a></li>
+            <li><a href="/api/government-schemes">12 govt. schemes</a></li>
+            <li><a href="/api/ml/status">Model status</a></li>
           </ul>
         </div>
 
@@ -832,19 +672,16 @@
           <h4>Contact</h4>
           <ul>
             <li><a href="mailto:hello@mittimantra.in">hello@mittimantra.in</a></li>
-            <li><a href="#">Partner with us</a></li>
-            <li><a href="#">Careers</a></li>
-            <li><a href="#">Press kit</a></li>
+            <li><a href="/docs">API docs</a></li>
+            <li><a href="https://github.com/vinaych580/mitti-mantra" rel="noopener">Source code</a></li>
           </ul>
         </div>
       </div>
 
       <div class="footer__bottom">
-        <div>© 2025 Mitti Mantra · Growing the future. Built with ❤ for Bharat.</div>
+        <div>© <span data-year>2026</span> Mitti Mantra · Growing the future. Built with ❤ for Bharat.</div>
         <div class="footer__social">
-          <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg></a>
-          <a href="#" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.58v-2c-3.34.72-4.04-1.6-4.04-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.1-.74.08-.72.08-.72 1.2.1 1.84 1.24 1.84 1.24 1.08 1.85 2.83 1.32 3.52 1 .1-.78.42-1.32.76-1.62-2.67-.3-5.47-1.33-5.47-5.93 0-1.3.46-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.3-1.23 3.3-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.6-2.8 5.63-5.48 5.92.42.36.8 1.1.8 2.22v3.3c0 .32.22.7.84.58A12 12 0 0 0 12 .3"/></svg></a>
-          <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.56c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.95v5.65H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.55V9h3.57v11.45z"/></svg></a>
+          <a href="https://github.com/vinaych580/mitti-mantra" rel="noopener" aria-label="Mitti Mantra on GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.58v-2c-3.34.72-4.04-1.6-4.04-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.1-.74.08-.72.08-.72 1.2.1 1.84 1.24 1.84 1.24 1.08 1.85 2.83 1.32 3.52 1 .1-.78.42-1.32.76-1.62-2.67-.3-5.47-1.33-5.47-5.93 0-1.3.46-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.3-1.23 3.3-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.6-2.8 5.63-5.48 5.92.42.36.8 1.1.8 2.22v3.3c0 .32.22.7.84.58A12 12 0 0 0 12 .3"/></svg></a>
         </div>
       </div>
     </div>

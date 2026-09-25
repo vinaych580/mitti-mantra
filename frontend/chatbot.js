@@ -12,20 +12,20 @@
 
   // --------------- styles ---------------
   const css = `
-  .mm-chat-fab{position:fixed;left:auto;top:auto;right:22px;bottom:110px;width:60px;height:60px;border-radius:50%;
-    background:linear-gradient(135deg,#2e7d32,#66bb6a);color:#fff;border:none;cursor:grab;
-    box-shadow:0 10px 30px rgba(46,125,50,.35);z-index:9998;display:flex;align-items:center;
+  .mm-chat-fab{position:fixed;left:auto;top:auto;right:18px;bottom:76px;width:56px;height:56px;border-radius:50%;
+    background:var(--brand,#2f6b3a);color:#fff;border:none;cursor:grab;
+    box-shadow:0 10px 28px rgba(47,107,58,.35);z-index:9998;display:flex;align-items:center;
     justify-content:center;transition:transform .2s ease, box-shadow .2s ease;touch-action:none;user-select:none;}
-  .mm-chat-fab:hover{transform:translateY(-2px) scale(1.05);}
-  .mm-chat-fab.dragging{cursor:grabbing;transition:none;box-shadow:0 14px 40px rgba(46,125,50,.55);transform:scale(1.08);}
-  .mm-chat-fab svg{width:28px;height:28px;pointer-events:none;}
+  .mm-chat-fab:hover{transform:translateY(-2px) scale(1.05);background:var(--brand-deep,#1f4d28);}
+  .mm-chat-fab.dragging{cursor:grabbing;transition:none;box-shadow:0 14px 40px rgba(47,107,58,.5);transform:scale(1.08);}
+  .mm-chat-fab svg{width:26px;height:26px;pointer-events:none;}
   .mm-chat-panel{position:fixed;right:22px;bottom:184px;width:380px;max-width:calc(100vw - 32px);
     height:560px;max-height:calc(100vh - 200px);background:#fff;border-radius:18px;
     box-shadow:0 20px 60px rgba(0,0,0,.25);display:none;flex-direction:column;overflow:hidden;
-    z-index:9999;font-family:Inter,system-ui,sans-serif;border:1px solid rgba(0,0,0,.06);}
+    z-index:9999;font-family:var(--font-body, 'Inter', system-ui, sans-serif);border:1px solid rgba(0,0,0,.06);}
   .mm-chat-panel.open{display:flex;animation:mmFadeIn .2s ease;}
   @keyframes mmFadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
-  .mm-chat-head{background:linear-gradient(135deg,#1b5e20,#388e3c);color:#fff;padding:14px 16px;
+  .mm-chat-head{background:var(--brand-deep,#1f4d28);color:#fff;padding:14px 16px;
     display:flex;align-items:center;gap:10px;}
   .mm-chat-head h4{margin:0;font-size:15px;font-weight:600;}
   .mm-chat-head p{margin:2px 0 0;font-size:11px;opacity:.85;}
@@ -39,7 +39,7 @@
     word-wrap:break-word;white-space:pre-wrap;}
   .mm-msg.bot{background:#fff;border:1px solid #e5ebe5;color:#1c2a1c;align-self:flex-start;
     border-bottom-left-radius:4px;}
-  .mm-msg.user{background:#2e7d32;color:#fff;align-self:flex-end;border-bottom-right-radius:4px;}
+  .mm-msg.user{background:var(--brand,#2f6b3a);color:#fff;align-self:flex-end;border-bottom-right-radius:4px;}
   .mm-msg code{background:rgba(0,0,0,.06);padding:1px 5px;border-radius:4px;font-size:12px;}
   .mm-msg pre{background:#0f1a0f;color:#d6f5d6;padding:10px;border-radius:8px;overflow-x:auto;
     font-size:11.5px;margin:6px 0;}
@@ -47,28 +47,28 @@
   .mm-msg ul{margin:6px 0;padding-left:18px;}
   .mm-msg h3{margin:6px 0 4px;font-size:14px;}
   .mm-sug{display:flex;flex-wrap:wrap;gap:6px;padding:0 14px 6px;background:#f7faf7;}
-  .mm-sug button{background:#fff;border:1px solid #c8dcc8;color:#2e7d32;border-radius:999px;
+  .mm-sug button{background:#fff;border:1px solid #c8dcc8;color:var(--brand-deep,#1f4d28);border-radius:999px;
     padding:6px 11px;font-size:12px;cursor:pointer;transition:all .15s;}
-  .mm-sug button:hover{background:#2e7d32;color:#fff;}
+  .mm-sug button:hover{background:var(--brand,#2f6b3a);color:#fff;}
   .mm-chat-form{display:flex;gap:8px;padding:10px;border-top:1px solid #e5ebe5;background:#fff;}
   /* 16px, not 13.5px: this input is the whole point of the chat panel, and
      below 16px iOS zooms the viewport the moment it takes focus -- on the one
      control a user is guaranteed to tap. */
   .mm-chat-form input{flex:1;border:1px solid #d6e0d6;border-radius:999px;padding:10px 14px;
     font-size:16px;outline:none;font-family:inherit;}
-  .mm-chat-form input:focus{border-color:#2e7d32;}
-  .mm-chat-form button{background:#2e7d32;color:#fff;border:none;border-radius:999px;
+  .mm-chat-form input:focus{border-color:var(--brand,#2f6b3a);}
+  .mm-chat-form button{background:var(--brand,#2f6b3a);color:#fff;border:none;border-radius:999px;
     padding:0 16px;cursor:pointer;font-weight:600;font-size:13px;}
   .mm-chat-form button:disabled{opacity:.5;cursor:not-allowed;}
-  .mm-chat-form .mm-mic{background:#fff;color:#2e7d32;border:1px solid #c8dcc8;width:38px;padding:0;
+  .mm-chat-form .mm-mic{background:#fff;color:var(--brand,#2f6b3a);border:1px solid #c8dcc8;width:38px;padding:0;
     display:flex;align-items:center;justify-content:center;}
   .mm-chat-form .mm-mic.listening{background:#d32f2f;color:#fff;border-color:#d32f2f;
     animation:mmPulse 1s infinite;}
   @keyframes mmPulse{0%,100%{box-shadow:0 0 0 0 rgba(211,47,47,.6);}50%{box-shadow:0 0 0 6px rgba(211,47,47,0);}}
   .mm-actions{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0;}
-  .mm-actions a{background:linear-gradient(135deg,#2e7d32,#66bb6a);color:#fff;text-decoration:none;
+  .mm-actions a{background:var(--brand,#2f6b3a);color:#fff;text-decoration:none;
     padding:6px 12px;border-radius:999px;font-size:12px;font-weight:600;}
-  .mm-actions a:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(46,125,50,.3);}
+  .mm-actions a:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(47,107,58,.3);background:var(--brand-deep,#1f4d28);}
   .mm-msg table{border-collapse:collapse;margin:6px 0;font-size:12px;width:100%;}
   .mm-msg th,.mm-msg td{border:1px solid #d8e3d8;padding:4px 7px;text-align:left;}
   .mm-msg th{background:#eaf3ea;font-weight:600;}
@@ -80,7 +80,7 @@
   @keyframes mmBlink{0%,80%,100%{opacity:.2;}40%{opacity:1;}}
   @media (max-width:480px){
     .mm-chat-panel{right:8px;left:8px;width:auto;bottom:80px;height:calc(100vh - 100px);}
-    .mm-chat-fab{right:14px;bottom:14px;}
+    .mm-chat-fab{right:12px;bottom:70px;}
   }`;
   const styleEl = document.createElement("style");
   styleEl.textContent = css;
@@ -139,11 +139,15 @@
   panel.addEventListener("keydown", (e) => { if (e.key === "Escape") closeChat(); });
 
   // --------------- drag + position persistence ---------------
-  const FAB_SIZE = 60;
+  // The position is kept as distances from the right and bottom edges, not
+  // left/top pixels. Stored as x/y, a button parked bottom-right on an 800px
+  // window was left stranded mid-page when the window widened -- it kept its
+  // x, and the resize clamp only ever pulled it *in*.
+  const FAB_SIZE = 56;
   const PANEL_W = 380;
   const PANEL_H = 560;
   const GAP = 14;
-  const POS_KEY = "mm_chat_fab_pos";
+  const POS_KEY = "mm_chat_fab_edge";   // was "mm_chat_fab_pos" (x/y); ignored now
 
   function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
 
@@ -157,6 +161,13 @@
     fab.style.bottom = "auto";
     positionPanel(x, y);
     return { x, y };
+  }
+
+  function toEdges(p) {
+    return { r: window.innerWidth - p.x - FAB_SIZE, b: window.innerHeight - p.y - FAB_SIZE };
+  }
+  function fromEdges(e) {
+    return { x: window.innerWidth - e.r - FAB_SIZE, y: window.innerHeight - e.b - FAB_SIZE };
   }
 
   function positionPanel(fx, fy) {
@@ -178,24 +189,35 @@
     panel.style.height = ph + "px";
   }
 
-  function loadPos() {
+  // Default: stacked directly above the language/tools disc, on its centre
+  // line, so the two corner buttons read as one column.
+  function defaultEdges() {
+    const small = window.innerWidth <= 480;
+    return small ? { r: 12, b: 70 } : { r: 18, b: 76 };
+  }
+
+  function loadEdges() {
     try {
       const raw = localStorage.getItem(POS_KEY);
       if (raw) {
-        const p = JSON.parse(raw);
-        if (typeof p.x === "number" && typeof p.y === "number") return p;
+        const e = JSON.parse(raw);
+        if (typeof e.r === "number" && typeof e.b === "number") return e;
       }
     } catch (_) { }
-    // default: bottom-right, above the toolbar/hamburger area
-    return { x: window.innerWidth - FAB_SIZE - 22, y: window.innerHeight - FAB_SIZE - 110 };
+    return null;
   }
 
-  function savePos(p) {
-    try { localStorage.setItem(POS_KEY, JSON.stringify(p)); } catch (_) { }
+  function saveEdges(e) {
+    try { localStorage.setItem(POS_KEY, JSON.stringify(e)); } catch (_) { }
   }
+  try { localStorage.removeItem("mm_chat_fab_pos"); } catch (_) { }
 
-  let current = applyFabPos(loadPos().x, loadPos().y);
-  window.addEventListener("resize", () => { current = applyFabPos(current.x, current.y); });
+  let edges = loadEdges();              // null = never dragged: follow the default
+  let current = applyFabPos(fromEdges(edges || defaultEdges()).x, fromEdges(edges || defaultEdges()).y);
+  window.addEventListener("resize", () => {
+    const e = edges || defaultEdges();
+    current = applyFabPos(fromEdges(e).x, fromEdges(e).y);
+  });
 
   let dragState = null; // { startX, startY, origX, origY, moved }
 
@@ -237,7 +259,8 @@
     try { fab.releasePointerCapture && fab.releasePointerCapture(e.pointerId); } catch (_) { }
     dragState = null;
     if (wasDrag) {
-      savePos(current);
+      edges = toEdges(current);
+      saveEdges(edges);
       suppressClick = true;
     }
   }
@@ -356,7 +379,7 @@
       const ttsBtn = document.createElement("button");
       ttsBtn.type = "button";
       ttsBtn.title = "Listen to answer";
-      ttsBtn.style.cssText = "background:none;border:none;color:#2e7d32;cursor:pointer;font-size:12px;margin-top:6px;display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border-radius:4px;border:1px solid #c8dcc8;";
+      ttsBtn.style.cssText = "background:none;border:none;color:var(--brand,#2f6b3a);cursor:pointer;font-size:12px;margin-top:6px;display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border-radius:4px;border:1px solid #c8dcc8;";
       ttsBtn.innerHTML = `🔊 Listen`;
       ttsBtn.addEventListener("click", () => speakText(text));
       div.appendChild(ttsBtn);

@@ -493,7 +493,14 @@
   function switchView(view) {
     state.view = view;
     $$('.mkt-view').forEach((el) => el.classList.toggle('active', el.dataset.view === view));
-    $$('.mkt-tab').forEach((el) => el.classList.toggle('active', el.dataset.view === view));
+    $$('.mkt-tab').forEach((el) => {
+      const on = el.dataset.view === view;
+      el.classList.toggle('active', on);
+      if (on) el.setAttribute('aria-current', 'page'); else el.removeAttribute('aria-current');
+      // Bring the chosen tab fully into the strip -- on a phone it can be half
+      // hidden behind the edge fade.
+      if (on) el.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    });
     window.scrollTo({ top: $('.mkt-tabs')?.offsetTop - 84 || 0, behavior: 'smooth' });
     if (view === 'browse') renderGrid();
     if (view === 'my-listings') renderMyListings();
@@ -2419,6 +2426,17 @@
     updateCartBadge();
 
     $$('.mkt-tab').forEach((btn) => btn.addEventListener('click', () => switchView(btn.dataset.view)));
+    const tabStrip = $('.mkt-tabs');
+    if (tabStrip) {
+      const syncTabFade = () => {
+        const max = tabStrip.scrollWidth - tabStrip.clientWidth;
+        tabStrip.classList.toggle('fade-start', tabStrip.scrollLeft > 4);
+        tabStrip.classList.toggle('fade-end', tabStrip.scrollLeft < max - 4);
+      };
+      tabStrip.addEventListener('scroll', syncTabFade, { passive: true });
+      window.addEventListener('resize', syncTabFade);
+      syncTabFade();
+    }
     const heroSell = document.getElementById('mktHeroSell');
     const heroBrowse = document.getElementById('mktHeroBrowse');
     if (heroSell) heroSell.addEventListener('click', () => switchView('sell'));

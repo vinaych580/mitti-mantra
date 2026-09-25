@@ -130,9 +130,12 @@
       if (!bar || bar.querySelector('.mm-plotpick')) return;
 
       var wrap = buildWidget();
-      // Sits first so the plot reads as the parent of the region/season below it.
+      // Lives in the bar's always-visible summary row: switching plots is an
+      // everyday action and shouldn't need the bar opened for editing first.
+      var slot = bar.querySelector('.mm-farm-bar__plot-slot');
       var firstField = bar.querySelector('.mm-farm-bar__field');
-      if (firstField) bar.insertBefore(wrap, firstField);
+      if (slot) slot.appendChild(wrap);
+      else if (firstField) firstField.parentNode.insertBefore(wrap, firstField);
       else bar.appendChild(wrap);
 
       refresh(wrap);

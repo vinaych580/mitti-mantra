@@ -30,37 +30,37 @@ colors:
   dark-ink-faint: "#8a8070"
 typography:
   display:
-    fontFamily: "Fraunces, 'Playfair Display', Georgia, serif"
+    fontFamily: "Fraunces, 'Noto Serif Devanagari', 'Noto Serif Telugu', 'Noto Serif Kannada', 'Noto Serif Tamil', Georgia, serif"
     fontSize: "clamp(2.4rem, 5.8vw, 5.2rem)"
     fontWeight: 500
     lineHeight: 1.08
     letterSpacing: "-0.02em"
   headline:
-    fontFamily: "Fraunces, 'Playfair Display', Georgia, serif"
+    fontFamily: "Fraunces, 'Noto Serif Devanagari', 'Noto Serif Telugu', 'Noto Serif Kannada', 'Noto Serif Tamil', Georgia, serif"
     fontSize: "clamp(2rem, 4vw, 3.4rem)"
     fontWeight: 500
     lineHeight: 1.08
     letterSpacing: "-0.02em"
   title:
-    fontFamily: "Fraunces, 'Playfair Display', Georgia, serif"
+    fontFamily: "Fraunces, 'Noto Serif Devanagari', 'Noto Serif Telugu', 'Noto Serif Kannada', 'Noto Serif Tamil', Georgia, serif"
     fontSize: "clamp(1.25rem, 1.8vw, 1.6rem)"
     fontWeight: 600
     lineHeight: 1.08
     letterSpacing: "-0.02em"
   body:
-    fontFamily: "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+    fontFamily: "Inter, 'Noto Sans Devanagari', 'Noto Sans Telugu', 'Noto Sans Kannada', 'Noto Sans Tamil', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
     fontSize: "16px"
     fontWeight: 400
     lineHeight: 1.6
     letterSpacing: "normal"
   label:
-    fontFamily: "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+    fontFamily: "Inter, 'Noto Sans Devanagari', 'Noto Sans Telugu', 'Noto Sans Kannada', 'Noto Sans Tamil', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
     fontSize: "0.72rem"
     fontWeight: 600
     lineHeight: 1.4
     letterSpacing: "0.1em"
   eyebrow:
-    fontFamily: "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+    fontFamily: "Inter, 'Noto Sans Devanagari', 'Noto Sans Telugu', 'Noto Sans Kannada', 'Noto Sans Tamil', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
     fontSize: "0.78rem"
     fontWeight: 600
     lineHeight: 1.4
@@ -203,8 +203,10 @@ A genuine second palette exists and is normative: paper inverts to `#141110`, su
 
 ## Typography
 
-**Display Font:** Fraunces (with Playfair Display, Georgia, serif)
-**Body Font:** Inter (with system sans-serif stack)
+**Display Font:** Fraunces, then Noto Serif Devanagari / Telugu / Kannada / Tamil (token `--font-display`)
+**Body Font:** Inter, then Noto Sans Devanagari / Telugu / Kannada / Tamil, then the system sans stack (token `--font-body`)
+
+**Indic scripts.** Fraunces and Inter carry no Indic glyphs, so the Noto faces are the brand's voice in Hindi, Telugu, Kannada and Tamil — they are part of the system, not a fallback accident. Google Fonts serves them with `unicode-range` subsets, so an English page downloads none of them. In those languages headings drop the `-0.02em` tracking and open to `1.35` line-height (matras and vowel signs need the room), all letter-spacing goes to zero (tracking breaks conjunct shaping), and `em` inside headings is upright, since these scripts have no true italic. Always set type through the two tokens; never name a family directly.
 
 **Character:** Fraunces is a soft, slightly wobbly serif with real warmth in its curves — it gives headings the feel of something printed and considered rather than rendered. Inter underneath is neutral and operational, and carries every number, label, and control. The pairing is the whole thesis in miniature: a warm voice introducing exact information.
 
