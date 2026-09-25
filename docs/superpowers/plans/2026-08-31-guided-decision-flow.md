@@ -77,7 +77,10 @@ async function api(url, opts = {}) {
 function tryParseJSON(s) { try { return JSON.parse(s); } catch { return null; } }
 ```
 
-Region geolocation copy comes from `farm-boundary.js:454-492` — reuse the exact three status messages (device unsupported / permission denied / timeout), which Step 1 needs verbatim.
+Region geolocation copy comes from `farm-boundary.js:461-487` — reuse the three status messages (device unsupported / permission denied / timeout) verbatim except swapping "village" for "region" (this page's fallback is a region picker, not a village search, so that one substitution is a real adaptation, not drift). The exact source strings, confirmed by direct read, are:
+- Unsupported: `'This device cannot share its location. Search for your village instead.'`
+- Permission denied: `'Location permission denied. Allow it in your browser, or search for your village.'` (no "instead")
+- Timeout: `'Could not get a GPS fix in time. Try again outdoors, or search for your village.'` (has "outdoors", no "instead")
 
 The 30 `region_id`s (from `dataset/soil.csv`) and their real district-headquarters centroid coordinates — sourced from public geographic records, cross-checked against three ground-truth points already embedded in this repo's own training-data filenames (`dataset/training/features_30.9_75.85_wheat.json` → `punjab_ludhiana`; `features_23.2_77.08_soybean.json` → `mp_sehore`; `features_17.61_78.26_rice.json` → `telangana_medak`) — are listed in Step 1 of this task below. These are approximate town centroids for "nearest of 30" routing, not survey coordinates; that's sufficient given Step 1's 150km sanity threshold.
 
@@ -249,7 +252,7 @@ MM_REGION_GEO_UTIL.nearestRegion(19.0, 72.8)  // Mumbai — not one of the 30 re
       <div class="decide-status" id="decideLocateStatus" role="status"></div>
       <div class="decide-actions">
         <span></span>
-        <button type="button" class="btn btn-primary" id="decideStep1Next" disabled>Next →</button>
+        <button type="button" class="btn btn-primary" id="decideStep1Next" disabled>Next</button>
       </div>
     </section>
 
@@ -442,9 +445,9 @@ MM_REGION_GEO_UTIL.nearestRegion(19.0, 72.8)  // Mumbai — not one of the 30 re
         (err) => {
           locateBtn.disabled = false;
           const msg = err.code === err.PERMISSION_DENIED
-            ? 'Location permission denied. Allow it in your browser, or search for your region instead.'
+            ? 'Location permission denied. Allow it in your browser, or search for your region.'
             : err.code === err.TIMEOUT
-            ? 'Could not get a GPS fix in time. Try again, or search for your region instead.'
+            ? 'Could not get a GPS fix in time. Try again outdoors, or search for your region.'
             : 'Location unavailable. Search for your region instead.';
           setLocateStatus(msg, 'error');
         },
@@ -471,9 +474,9 @@ Start the backend (`uvicorn backend.main:app --reload --port 8000`) and open `ht
 
 Expected:
 - Region dropdown populates with 30 options (e.g. "Telangana · Medak").
-- "Next →" stays disabled until a region is chosen.
-- Picking a region from the dropdown enables "Next →".
-- Clicking "Use my location" and denying the browser's permission prompt shows: "Location permission denied. Allow it in your browser, or search for your region instead." — and the dropdown remains usable.
+- "Next" stays disabled until a region is chosen.
+- Picking a region from the dropdown enables "Next".
+- Clicking "Use my location" and denying the browser's permission prompt shows: "Location permission denied. Allow it in your browser, or search for your region." — and the dropdown remains usable.
 - In the browser console, `MMDecide.state.region_id` reflects the chosen region after selection.
 
 - [ ] **Step 6: Commit**
@@ -525,7 +528,7 @@ Replace `<section class="decide-step" data-step="2"></section>` with:
         </div>
       </form>
       <div class="decide-actions">
-        <button type="button" class="btn btn-ghost" data-step2-back>← Back</button>
+        <button type="button" class="btn btn-ghost" data-step2-back>Back</button>
         <button type="button" class="btn btn-primary" id="decideStep2Next">Run recommendation</button>
       </div>
     </section>
@@ -578,7 +581,7 @@ Update the boot block:
 
 - [ ] **Step 3: Verify in the browser**
 
-Reload `decide.html`, complete Step 1, click "Next →". Expected:
+Reload `decide.html`, complete Step 1, click "Next". Expected:
 - Step 2 shows Season/Area/Budget fields, pre-filled with defaults (4 acres, ₹15,000).
 - Leaving Area blank and clicking "Run recommendation" shows the browser's native "fill out this field" validation and does not advance.
 - With valid values, clicking "Run recommendation" advances to (currently empty) Step 3.
@@ -621,11 +624,13 @@ Replace `<section class="decide-step" data-step="3"></section>` with:
       </div>
       <div class="output" data-out="recommend" id="decideAnswerOut"></div>
       <div class="decide-actions">
-        <button type="button" class="btn btn-ghost" data-step3-back>← Back</button>
-        <button type="button" class="btn btn-primary" id="decideStep3Next">Next →</button>
+        <button type="button" class="btn btn-ghost" data-step3-back>Back</button>
+        <button type="button" class="btn btn-primary" id="decideStep3Next" disabled>Next</button>
       </div>
     </section>
 ```
+
+"Next" starts disabled — a fast double-click can't skip past a failed recommendation call. `renderAnswer()` (Step 2 below) re-enables it once a real result renders; if the call fails, the catch block never calls `renderAnswer()`, so it stays disabled.
 
 - [ ] **Step 2: Wire Step 3 in `frontend/decide.js`**
 
@@ -636,6 +641,8 @@ Add the formatting helpers (module scope, near the top, alongside the other shar
   const FIX = (n, d = 1) => (Number(n) || 0).toFixed(d);
   const PCT = n => FIX(n, 1) + '%';
 ```
+
+The "Full ranking" list below always includes `top` itself, not just `runnerUps` — this is required, not decorative. `mm-enhance.js`'s "Why this crop?" drawer and risk gauge only attach to `.list-row` elements (`mm-enhance.js:101`); the top pick's `.kpi-grid` card is not a `.list-row` and would never get decorated on its own. Including `top` as the first row of the ranked list is what makes the decoration actually appear on the crop that matters most — the same pattern `dashboard.js`'s own "Ranked alternatives" list already uses (it lists all ranks, including #1, for the identical reason).
 
 ```js
   function renderAnswer(top, runnerUps) {
@@ -663,9 +670,9 @@ Add the formatting helpers (module scope, near the top, alongside the other shar
           <div class="kpi__val">${Math.round(top.risk_score)}/100</div></div>
       </div>
       ${reasonsList}
-      ${runnerUps.length ? '<h4 style="font-size:.85rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin:16px 0 12px;">Other options</h4>' : ''}
+      <h4 style="font-size:.85rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin:16px 0 12px;">Full ranking</h4>
       <div class="decide-runnerups">
-        ${runnerUps.map(r => `
+        ${[top, ...runnerUps].map(r => `
           <div class="list-row">
             <div class="list-row__name">${r.crop_name}
               <small>Yield ${Math.round(r.predicted_yield_kg_per_acre)} kg/ac · Risk ${Math.round(r.risk_score)}/100 · Score ${FIX(r.smart_score, 1)}</small>
@@ -720,12 +727,6 @@ Update the boot block:
   });
 ```
 
-Also disable "Next →" on Step 3 until a recommendation exists, so a fast double-click can't skip past a failed call — change the button's initial markup to `disabled` (the `renderAnswer` code above already enables it once a real result renders):
-
-```html
-<button type="button" class="btn btn-primary" id="decideStep3Next" disabled>Next →</button>
-```
-
 - [ ] **Step 3: Verify in the browser**
 
 Complete Steps 1–2 with a real region (e.g. Telangana · Medak, kharif, 4 acres, ₹15,000/acre). On Step 3, expected:
@@ -733,7 +734,7 @@ Complete Steps 1–2 with a real region (e.g. Telangana · Medak, kharif, 4 acre
 - A "Why this crop" reasons block with real sentences (not placeholder text) — confirms `/api/crop`'s `reasons` field is flowing through.
 - Two runner-up crops listed below.
 - Open the browser's element inspector on the top-pick's rendered row and confirm a `<details class="mm-why">` element was injected by `mm-enhance.js` — click it and confirm the "Why this crop?" bar chart renders with real numbers, not all "—". This is the concrete proof the `data-out="recommend"` + exact-text-format reuse actually works, not just that it looks plausible.
-- "Next →" is disabled until the answer finishes loading.
+- "Next" is disabled until the answer finishes loading.
 
 - [ ] **Step 4: Commit**
 
@@ -785,8 +786,8 @@ Replace `<section class="decide-step" data-step="4"></section>` with:
       </div>
       <div class="output" data-out="simulate" id="decideTweakOut"></div>
       <div class="decide-actions">
-        <button type="button" class="btn btn-ghost" data-step4-back>← Back</button>
-        <button type="button" class="btn btn-primary" id="decideStep4Next">Next →</button>
+        <button type="button" class="btn btn-ghost" data-step4-back>Back</button>
+        <button type="button" class="btn btn-primary" id="decideStep4Next">Next</button>
       </div>
     </section>
 ```
@@ -935,11 +936,11 @@ Replace `<section class="decide-step" data-step="5"></section>` with:
         <button type="button" class="btn btn-ghost" disabled title="Reserved for a future feature: run this strategy under +1°C / +2°C / -20% rainfall scenarios.">
           How does this hold up in a bad year? <span class="decide-badge">Upcoming</span>
         </button>
-        <a class="btn btn-primary" id="decideOpenDashboard" href="dashboard.html">Open full dashboard →</a>
+        <a class="btn btn-primary" id="decideOpenDashboard" href="dashboard.html">Open full dashboard</a>
         <button type="button" class="btn btn-ghost" id="decideAskChat">Ask the chatbot</button>
       </div>
       <div class="decide-actions">
-        <button type="button" class="btn btn-ghost" data-step5-back>← Back</button>
+        <button type="button" class="btn btn-ghost" data-step5-back>Back</button>
         <span></span>
       </div>
     </section>
@@ -1023,8 +1024,8 @@ In `frontend/dashboard.html`, immediately after `<aside class="sidebar">` (aroun
 
 - From `index.html`, click the hero's primary CTA — it should land on `decide.html`, not `dashboard.html`.
 - From `dashboard.html`, confirm the new "New here? Get one answer →" link appears above the first sidebar group and navigates to `decide.html`.
-- Complete the full 5-step flow. On Step 5: the disabled "bad year" button shows an "Upcoming" badge and a tooltip on hover; "Open full dashboard →" navigates to `dashboard.html` with `tool=simulate` and the chosen region/season/crop pre-filled — confirm the simulate tool actually shows those values on arrival; "Ask the chatbot" opens the floating chat widget without navigating away.
-- Click "← Back" from Step 5 through to Step 1 and confirm every step still shows its previously-entered values (state was never cleared).
+- Complete the full 5-step flow. On Step 5: the disabled "bad year" button shows an "Upcoming" badge and a tooltip on hover; "Open full dashboard" navigates to `dashboard.html` with `tool=simulate` and the chosen region/season/crop pre-filled — confirm the simulate tool actually shows those values on arrival; "Ask the chatbot" opens the floating chat widget without navigating away.
+- Click "Back" from Step 5 through to Step 1 and confirm every step still shows its previously-entered values (state was never cleared).
 
 - [ ] **Step 6: Commit**
 
@@ -1109,6 +1110,8 @@ const CORE = [
 
 - [ ] **Step 2: Add new-string translations to `frontend/i18n-data.js`**
 
+`i18n.js` looks up each DOM text node by its exact trimmed string (`i18n.js:80-90`) — a button rendered as `Next →` will never match a catalog entry keyed `'Next'`. This is why Tasks 1-5's Next/Back/"Open full dashboard" buttons carry no arrow character: an arrow icon would need to be a separate element (the pattern `index.html`'s own buttons already use — an inline `<svg>`, never a literal `→`/`←` in the text), and plain text is the simpler fix here. Don't reintroduce arrow characters into these three labels — doing so silently breaks their translation with no error anywhere.
+
 For each string below, check whether the exact English key already exists anywhere in `CATALOG.hi`/`.te`/`.kn` first (several form-field labels this page reuses — `'Region'`, `'Season'`, `'Area (acres)'`, `'Budget / acre (₹)'`, `'Kharif'`, `'Rabi'`, `'Run recommendation'`, `'Upcoming'` — already exist and need no new entry; `decide.html`/`decide.js` reuse those exact strings verbatim rather than inventing new wording). Add only the entries below, which are genuinely new, to the `hi`, `te`, and `kn` blocks of `CATALOG` (one key/value pair per language block, matching the file's existing structure). These are a first-pass translation of short, common UI phrases — worth a native-speaker review pass before this ships to real farmers, same bar the file's own header comment holds the rest of the catalog to.
 
 ```js
@@ -1118,14 +1121,14 @@ For each string below, check whether the exact English key already exists anywhe
 'Use my location': 'मेरा स्थान उपयोग करें',
 'Finding your location…': 'आपका स्थान खोजा जा रहा है…',
 'This device cannot share its location. Search for your region instead.': 'यह डिवाइस अपना स्थान साझा नहीं कर सकता। इसके बजाय अपना क्षेत्र खोजें।',
-'Location permission denied. Allow it in your browser, or search for your region instead.': 'स्थान की अनुमति नहीं दी गई। इसे अपने ब्राउज़र में अनुमति दें, या इसके बजाय अपना क्षेत्र खोजें।',
-'Could not get a GPS fix in time. Try again, or search for your region instead.': 'समय पर GPS सिग्नल नहीं मिला। फिर से कोशिश करें, या इसके बजाय अपना क्षेत्र खोजें।',
+'Location permission denied. Allow it in your browser, or search for your region.': 'स्थान की अनुमति नहीं दी गई। इसे अपने ब्राउज़र में अनुमति दें, या अपना क्षेत्र खोजें।',
+'Could not get a GPS fix in time. Try again outdoors, or search for your region.': 'समय पर GPS सिग्नल नहीं मिला। बाहर फिर से कोशिश करें, या अपना क्षेत्र खोजें।',
 'Location unavailable. Search for your region instead.': 'स्थान उपलब्ध नहीं है। इसके बजाय अपना क्षेत्र खोजें।',
 'Use this': 'इसे उपयोग करें',
 'When and how much?': 'कब और कितना?',
 'Tell us your season, budget, and land.': 'अपना मौसम, बजट और ज़मीन बताएं।',
 'Your answer': 'आपका जवाब',
-'Other options': 'अन्य विकल्प',
+'Full ranking': 'पूरी रैंकिंग',
 'Tweak it': 'इसे समायोजित करें',
 'See how budget and irrigation change the outcome.': 'देखें कि बजट और सिंचाई परिणाम को कैसे बदलते हैं।',
 'Irrigation level': 'सिंचाई स्तर',
@@ -1144,14 +1147,14 @@ For each string below, check whether the exact English key already exists anywhe
 'Use my location': 'నా లొకేషన్ ఉపయోగించండి',
 'Finding your location…': 'మీ లొకేషన్ కనుగొంటోంది…',
 'This device cannot share its location. Search for your region instead.': 'ఈ పరికరం తన లొకేషన్‌ను షేర్ చేయలేదు. బదులుగా మీ ప్రాంతాన్ని వెతకండి.',
-'Location permission denied. Allow it in your browser, or search for your region instead.': 'లొకేషన్ అనుమతి తిరస్కరించబడింది. మీ బ్రౌజర్‌లో అనుమతించండి, లేదా బదులుగా మీ ప్రాంతాన్ని వెతకండి.',
-'Could not get a GPS fix in time. Try again, or search for your region instead.': 'సమయానికి GPS సిగ్నల్ లభించలేదు. మళ్ళీ ప్రయత్నించండి, లేదా బదులుగా మీ ప్రాంతాన్ని వెతకండి.',
+'Location permission denied. Allow it in your browser, or search for your region.': 'లొకేషన్ అనుమతి తిరస్కరించబడింది. మీ బ్రౌజర్‌లో అనుమతించండి, లేదా మీ ప్రాంతాన్ని వెతకండి.',
+'Could not get a GPS fix in time. Try again outdoors, or search for your region.': 'సమయానికి GPS సిగ్నల్ లభించలేదు. బయట మళ్ళీ ప్రయత్నించండి, లేదా మీ ప్రాంతాన్ని వెతకండి.',
 'Location unavailable. Search for your region instead.': 'లొకేషన్ అందుబాటులో లేదు. బదులుగా మీ ప్రాంతాన్ని వెతకండి.',
 'Use this': 'దీన్ని ఉపయోగించండి',
 'When and how much?': 'ఎప్పుడు మరియు ఎంత?',
 'Tell us your season, budget, and land.': 'మీ సీజన్, బడ్జెట్ మరియు భూమిని తెలియజేయండి.',
 'Your answer': 'మీ సమాధానం',
-'Other options': 'ఇతర ఎంపికలు',
+'Full ranking': 'పూర్తి ర్యాంకింగ్',
 'Tweak it': 'దీన్ని సర్దుబాటు చేయండి',
 'See how budget and irrigation change the outcome.': 'బడ్జెట్ మరియు నీటిపారుదల ఫలితాన్ని ఎలా మారుస్తాయో చూడండి.',
 'Irrigation level': 'నీటిపారుదల స్థాయి',
@@ -1170,14 +1173,14 @@ For each string below, check whether the exact English key already exists anywhe
 'Use my location': 'ನನ್ನ ಸ್ಥಳ ಬಳಸಿ',
 'Finding your location…': 'ನಿಮ್ಮ ಸ್ಥಳ ಹುಡುಕಲಾಗುತ್ತಿದೆ…',
 'This device cannot share its location. Search for your region instead.': 'ಈ ಸಾಧನವು ತನ್ನ ಸ್ಥಳವನ್ನು ಹಂಚಿಕೊಳ್ಳಲು ಸಾಧ್ಯವಿಲ್ಲ. ಬದಲಿಗೆ ನಿಮ್ಮ ಪ್ರದೇಶವನ್ನು ಹುಡುಕಿ.',
-'Location permission denied. Allow it in your browser, or search for your region instead.': 'ಸ್ಥಳದ ಅನುಮತಿ ನಿರಾಕರಿಸಲಾಗಿದೆ. ನಿಮ್ಮ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಅನುಮತಿಸಿ, ಅಥವಾ ಬದಲಿಗೆ ನಿಮ್ಮ ಪ್ರದೇಶವನ್ನು ಹುಡುಕಿ.',
-'Could not get a GPS fix in time. Try again, or search for your region instead.': 'ಸಮಯಕ್ಕೆ GPS ಸಿಗ್ನಲ್ ಸಿಗಲಿಲ್ಲ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ, ಅಥವಾ ಬದಲಿಗೆ ನಿಮ್ಮ ಪ್ರದೇಶವನ್ನು ಹುಡುಕಿ.',
+'Location permission denied. Allow it in your browser, or search for your region.': 'ಸ್ಥಳದ ಅನುಮತಿ ನಿರಾಕರಿಸಲಾಗಿದೆ. ನಿಮ್ಮ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಅನುಮತಿಸಿ, ಅಥವಾ ನಿಮ್ಮ ಪ್ರದೇಶವನ್ನು ಹುಡುಕಿ.',
+'Could not get a GPS fix in time. Try again outdoors, or search for your region.': 'ಸಮಯಕ್ಕೆ GPS ಸಿಗ್ನಲ್ ಸಿಗಲಿಲ್ಲ. ಹೊರಗೆ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ, ಅಥವಾ ನಿಮ್ಮ ಪ್ರದೇಶವನ್ನು ಹುಡುಕಿ.',
 'Location unavailable. Search for your region instead.': 'ಸ್ಥಳ ಲಭ್ಯವಿಲ್ಲ. ಬದಲಿಗೆ ನಿಮ್ಮ ಪ್ರದೇಶವನ್ನು ಹುಡುಕಿ.',
 'Use this': 'ಇದನ್ನು ಬಳಸಿ',
 'When and how much?': 'ಯಾವಾಗ ಮತ್ತು ಎಷ್ಟು?',
 'Tell us your season, budget, and land.': 'ನಿಮ್ಮ ಋತು, ಬಜೆಟ್ ಮತ್ತು ಭೂಮಿಯನ್ನು ತಿಳಿಸಿ.',
 'Your answer': 'ನಿಮ್ಮ ಉತ್ತರ',
-'Other options': 'ಇತರ ಆಯ್ಕೆಗಳು',
+'Full ranking': 'ಪೂರ್ಣ ಶ್ರೇಣಿ',
 'Tweak it': 'ಇದನ್ನು ಹೊಂದಿಸಿ',
 'See how budget and irrigation change the outcome.': 'ಬಜೆಟ್ ಮತ್ತು ನೀರಾವರಿ ಫಲಿತಾಂಶವನ್ನು ಹೇಗೆ ಬದಲಾಯಿಸುತ್ತವೆ ಎಂದು ನೋಡಿ.',
 'Irrigation level': 'ನೀರಾವರಿ ಮಟ್ಟ',
