@@ -9,7 +9,7 @@
       "top_score": 92.48,
       "top_yield_kg_ac": 901.19,
       "top_profit_inr": 36953.6,
-      "latency_ms": 278,
+      "latency_ms": 302,
       "ml_used": true
     },
     {
@@ -18,10 +18,10 @@
       "season": "kharif",
       "status": "PASS",
       "top_crop": "Jute",
-      "top_score": 72.17,
-      "top_yield_kg_ac": 655.59,
-      "top_profit_inr": 16140.53,
-      "latency_ms": 46,
+      "top_score": 74.18,
+      "top_yield_kg_ac": 710.05,
+      "top_profit_inr": 18727.38,
+      "latency_ms": 36,
       "ml_used": true
     },
     {
@@ -30,10 +30,10 @@
       "season": "kharif",
       "status": "PASS",
       "top_crop": "Pulses (Chickpea/Tur)",
-      "top_score": 65.66,
-      "top_yield_kg_ac": 590.82,
-      "top_profit_inr": 25335.28,
-      "latency_ms": 51,
+      "top_score": 67.29,
+      "top_yield_kg_ac": 621.53,
+      "top_profit_inr": 27431.85,
+      "latency_ms": 39,
       "ml_used": true
     },
     {
@@ -45,7 +45,7 @@
       "top_score": 68.27,
       "top_yield_kg_ac": 915.28,
       "top_profit_inr": 29546.68,
-      "latency_ms": 51,
+      "latency_ms": 52,
       "ml_used": true
     },
     {
@@ -53,16 +53,16 @@
       "region_id": "guj_anand",
       "season": "kharif",
       "status": "PASS",
-      "top_crop": "Turmeric",
-      "top_score": 70.87,
-      "top_yield_kg_ac": 433.78,
-      "top_profit_inr": 26209.1,
-      "latency_ms": 54,
+      "top_crop": "Jute",
+      "top_score": 60.41,
+      "top_yield_kg_ac": 740.53,
+      "top_profit_inr": 20175.17,
+      "latency_ms": 55,
       "ml_used": true
     }
   ],
   "all_pass": true,
   "passed": 5,
   "total": 5,
-  "generated_at": 1790186559.6937194
+  "generated_at": 1790333341.5536585
 }
