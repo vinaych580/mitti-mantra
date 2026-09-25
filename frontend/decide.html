@@ -62,8 +62,6 @@
       <span class="decide-progress__dot" data-dot="1"></span>
       <span class="decide-progress__dot" data-dot="2"></span>
       <span class="decide-progress__dot" data-dot="3"></span>
-      <span class="decide-progress__dot" data-dot="4"></span>
-      <span class="decide-progress__dot" data-dot="5"></span>
     </div>
 
     <!-- STEP 1: Location -->
@@ -102,6 +100,7 @@
             <select name="season">
               <option value="kharif">Kharif</option>
               <option value="rabi">Rabi</option>
+              <option value="zaid">Zaid</option>
             </select>
           </div>
           <div class="field"><label>Area (acres)</label>
@@ -129,15 +128,13 @@
       <div class="output" data-out="recommend" id="decideAnswerOut"></div>
       <div class="decide-actions">
         <button type="button" class="btn btn-ghost" data-step3-back>Back</button>
-        <button type="button" class="btn btn-primary" id="decideStep3Next" disabled>Next</button>
+        <button type="button" class="btn btn-primary" id="decideStep3Next" disabled hidden>Next</button>
       </div>
     </section>
 
-    <!-- STEP 4: filled in Task 4 -->
-    <section class="decide-step" data-step="4"></section>
-
-    <!-- STEP 5: filled in Task 5 -->
-    <section class="decide-step" data-step="5"></section>
+    <!-- Steps 4-5 (tweak-and-resimulate, commit): planned, not built yet.
+         Restore their sections, progress dots and step 3's Next button,
+         and raise TOTAL_STEPS in decide.js, when they land. -->
   </main>
 
   <script src="mm-core.js" defer></script>

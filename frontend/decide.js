@@ -67,7 +67,10 @@
     irrigation_level: 0.5,
     recommendation: null
   };
-  const TOTAL_STEPS = 5;
+  // Steps 4-5 (tweak-and-resimulate, commit) are planned but not built yet
+  // -- see docs/superpowers/plans/2026-08-31-guided-decision-flow.md. Until
+  // they are, the answer is the last step rather than a way into a blank page.
+  const TOTAL_STEPS = 3;
   let currentStep = 1;
   const regionsById = {};
 
@@ -201,6 +204,8 @@
           budget_per_acre: state.budget_per_acre
         });
       }
+      // New inputs need a new answer -- step 3 only fetches when none is held.
+      state.recommendation = null;
       goNext();
     });
   }
