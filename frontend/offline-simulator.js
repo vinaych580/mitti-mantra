@@ -31,12 +31,12 @@
     // "unknown crop" error for them.
     jowar:     { name: 'Jowar',     season: 'kharif', base_yield:  900, water_mm:  500, temp_min: 20, temp_max: 38, n: 40, p: 25, k: 25, base_cost: 13000 },
     potato:    { name: 'Potato',    season: 'rabi',   base_yield: 9000, water_mm:  550, temp_min: 10, temp_max: 26, n: 80, p: 40, k: 100, base_cost: 42000 },
-    onion:     { name: 'Onion',     season: 'rabi',   base_yield: 12000, water_mm:  650, temp_min: 13, temp_max: 30, n: 50, p: 30, k: 40, base_cost: 38000 },
+    onion:     { name: 'Onion',     season: 'rabi',   base_yield: 12000, water_mm:  650, temp_min: 13, temp_max: 30, n: 50, p: 30, k: 40, base_cost: 52000 },
     // Zaid (summer) crops -- values sourced from dataset/crop_parameters.csv
     // so offline mode doesn't hit an "unknown crop" error for them.
-    watermelon:{ name: 'Watermelon', season: 'zaid',  base_yield: 14000, water_mm:  480, temp_min: 24, temp_max: 42, n: 60, p: 30, k: 60, base_cost: 28000 },
-    cucumber:  { name: 'Cucumber',   season: 'zaid',  base_yield: 10000, water_mm:  400, temp_min: 22, temp_max: 38, n: 50, p: 25, k: 50, base_cost: 24000 },
-    muskmelon: { name: 'Muskmelon',  season: 'zaid',  base_yield:  9000, water_mm:  420, temp_min: 24, temp_max: 40, n: 55, p: 28, k: 55, base_cost: 26000 },
+    watermelon:{ name: 'Watermelon', season: 'zaid',  base_yield: 14000, water_mm:  480, temp_min: 24, temp_max: 42, n: 60, p: 30, k: 60, base_cost: 67000 },
+    cucumber:  { name: 'Cucumber',   season: 'zaid',  base_yield: 10000, water_mm:  400, temp_min: 22, temp_max: 38, n: 50, p: 25, k: 50, base_cost: 70000 },
+    muskmelon: { name: 'Muskmelon',  season: 'zaid',  base_yield:  9000, water_mm:  420, temp_min: 24, temp_max: 40, n: 55, p: 28, k: 55, base_cost: 60000 },
   };
 
   const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));

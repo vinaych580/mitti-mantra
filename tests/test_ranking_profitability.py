@@ -145,3 +145,38 @@ def test_live_fully_funded_turmeric_roi_is_plausible():
     turmeric = next(r for r in recs if r["crop_id"] == "turmeric")
     assert turmeric["budget_adequate"] is True
     assert turmeric["roi_percent"] < 300.0, turmeric
+
+
+# Published Indian farm-economics studies put gross returns at roughly 1.2-3x
+# full cost of cultivation, and even paid-out-cost-only guides for the most
+# lucrative vegetables stop near 5x. Past 5x (400% ROI) a crop's reference
+# numbers have always been a data error rather than a great crop: turmeric's
+# fresh yield against a cured price, tobacco's per-hectare yield stored per
+# acre, cashew's raw-nut yield against a kernel price, and horticultural input
+# costs a third of what the crop takes (2026-09-25 audit).
+REFERENCE_ROI_CEILING = 400.0
+
+
+@pytest.mark.parametrize("crop_id", sorted(P._load_crop_parameters()))
+def test_reference_economics_are_plausible(crop_id):
+    assert _full_funding_roi(crop_id) <= REFERENCE_ROI_CEILING, (
+        f"{crop_id}: {_full_funding_roi(crop_id):.0f}% ROI at full funding -- check its yield "
+        "basis (per acre, form sold), price basis (farm-gate) and input cost"
+    )
+
+
+def test_mandi_prices_match_crop_parameter_price_basis():
+    """A price series on a different basis from crop_parameters (cashew's
+    kernel prices against a raw-nut yield) would slip past the reference check."""
+    params = P._load_crop_parameters()
+    prices = defaultdict(list)
+    with (DATASET / "mandi_prices.csv").open(newline="") as f:
+        for row in csv.DictReader(f):
+            prices[row["crop_id"]].append(float(row["price_inr_per_kg"]))
+    off = {}
+    for crop_id, series in prices.items():
+        c = params[crop_id]
+        mean = sum(series) / len(series)
+        if not 0.5 * c.mandi_price_min_inr_per_kg <= mean <= 1.5 * c.mandi_price_max_inr_per_kg:
+            off[crop_id] = round(mean, 1)
+    assert not off, f"mandi_prices mean outside crop_parameters band: {off}"

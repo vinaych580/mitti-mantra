@@ -74,11 +74,13 @@ CROP_BASE = {
     # Turmeric is priced cured (dried, polished), so its yield is cured too:
     # ~20% of the ~9,400 kg/acre of fresh rhizome harvested.
     "turmeric": (1880, 92), "ginger": (8600, 74), "banana": (34500, 17),
-    "coconut": (10800, 22), "tea": (1400, 190), "coffee": (900, 280),
+    "coconut": (2700, 22), "tea": (1400, 190), "coffee": (900, 280),
     "barley": (1600, 22), "sunflower": (920, 58), "ragi": (1420, 38),
-    "urad": (620, 92), "moong": (610, 88), "mango": (8400, 54),
+    "urad": (620, 92), "moong": (610, 88), "mango": (8400, 30),
     "paddy_basmati": (2200, 45), "arhar": (720, 78),
-    "jute": (1800, 48), "tobacco": (1600, 180), "cashew": (450, 950),
+    # Tobacco yield is per acre (1,500-1,700 kg/ha per the Tobacco Board);
+    # cashew is priced as the raw nut farmers sell, not the processed kernel.
+    "jute": (1800, 48), "tobacco": (650, 180), "cashew": (450, 120),
 }
 
 # ---------- 1. weather.csv ----------

@@ -30,7 +30,7 @@
 - `area_acres`: Cultivated area in acres.
 - `production_kg`: Total production in kg.
 
-Yields everywhere in this dataset are in the form the crop is sold at mandi, so `yield x price_inr_per_kg` is revenue. Turmeric is priced cured (dried, polished), so its yields are cured weight -- about 20% of the fresh rhizome harvested.
+Yields everywhere in this dataset are in the form the crop is sold at mandi, so `yield x price_inr_per_kg` is revenue. Turmeric is priced cured (dried, polished), so its yields are cured weight -- about 20% of the fresh rhizome harvested. Every figure is per acre (tobacco's yield was once a per-hectare figure), and prices are what the farmer's produce fetches (cashew is the raw nut, not the kernel; mango is farm-gate, not retail). Coconut is kg of dehusked nuts, about 2 nuts per kg.
 
 ## `mandi_prices.csv`
 
@@ -53,6 +53,6 @@ Yields everywhere in this dataset are in the form the crop is sold at mandi, so 
 - `temp_min_c`: Lower bound of suitable temperature.
 - `temp_max_c`: Upper bound of suitable temperature.
 - `growing_degree_days`: Approximate growing-degree-day requirement.
-- `avg_input_cost_inr_per_acre`: Baseline input cost per acre.
+- `avg_input_cost_inr_per_acre`: Baseline input cost per acre at the yield level of `base_yield_kg_per_acre`: seed or planting material, fertiliser, protection, irrigation and hired plus family labour -- the basis of published farm-economics studies, not a paid-out-inputs-only estimate. Horticultural crops (ginger, chilli, tomato, banana, onion, the melons, cucumber) were corrected to this basis in 2026-09; tests/test_ranking_profitability.py guards it.
 - `mandi_price_min_inr_per_kg`: Conservative mandi price band floor.
 - `mandi_price_max_inr_per_kg`: Conservative mandi price band ceiling.
