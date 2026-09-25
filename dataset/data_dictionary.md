@@ -26,9 +26,11 @@
 - `crop_id`: Crop identifier.
 - `year`: Production year.
 - `season`: Crop season.
-- `yield_kg_per_acre`: Yield in kg/acre.
+- `yield_kg_per_acre`: Yield in kg/acre, in marketable form (see note below).
 - `area_acres`: Cultivated area in acres.
 - `production_kg`: Total production in kg.
+
+Yields everywhere in this dataset are in the form the crop is sold at mandi, so `yield x price_inr_per_kg` is revenue. Turmeric is priced cured (dried, polished), so its yields are cured weight -- about 20% of the fresh rhizome harvested.
 
 ## `mandi_prices.csv`
 
@@ -43,7 +45,7 @@
 - `crop_id`: Canonical crop key.
 - `crop_name`: Display name.
 - `season`: Typical crop season.
-- `base_yield_kg_per_acre`: Baseline yield for simulation.
+- `base_yield_kg_per_acre`: Baseline yield for simulation, in marketable form (turmeric: cured).
 - `water_requirement_mm`: Seasonal crop water need in mm.
 - `npk_n_kg_per_acre`: Recommended nitrogen application.
 - `npk_p_kg_per_acre`: Recommended phosphorus application.

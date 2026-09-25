@@ -101,3 +101,47 @@ def test_reason_reports_budget_coverage_not_yield_multiplier():
     turmeric = next(r for r in recs if r["crop_id"] == "turmeric")
     assert turmeric["budget_adequate"] is False
     assert "22%" in turmeric["reason"]
+
+
+# --- Yields must be in the form the crop is sold (2026-09-25) ---
+#
+# Turmeric's yields were fresh rhizome (~9,500 kg/acre) while its prices are
+# cured turmeric (Rs 70-120/kg); curing leaves ~20% of the fresh weight, so
+# a fully funded acre showed ~1,227% ROI and topped rankings at any budget
+# that could establish it. See dataset/data_dictionary.md.
+
+import csv
+from collections import defaultdict
+from pathlib import Path
+
+DATASET = Path(__file__).resolve().parents[1] / "dataset"
+
+
+def _full_funding_roi(crop_id):
+    c = P._load_crop_parameters()[crop_id]
+    price = (c.mandi_price_min_inr_per_kg + c.mandi_price_max_inr_per_kg) / 2.0
+    return (c.base_yield_kg_per_acre * price / c.avg_input_cost_inr_per_acre - 1.0) * 100.0
+
+
+def test_turmeric_yield_is_on_the_cured_basis_its_price_is_quoted_in():
+    assert _full_funding_roi("turmeric") < 300.0
+
+
+def test_yield_history_is_on_the_same_basis_as_crop_parameters():
+    """A crop converted in one file but not the other would reintroduce the
+    mismatch through the yield model, which trains on yield_history."""
+    base = {cid: c.base_yield_kg_per_acre for cid, c in P._load_crop_parameters().items()}
+    ratios = defaultdict(list)
+    with (DATASET / "yield_history.csv").open(newline="") as f:
+        for row in csv.DictReader(f):
+            if row["crop_id"] in base:
+                ratios[row["crop_id"]].append(float(row["yield_kg_per_acre"]) / base[row["crop_id"]])
+    off = {c: round(sum(r) / len(r), 2) for c, r in ratios.items() if not 0.7 <= sum(r) / len(r) <= 1.3}
+    assert not off, f"yield_history mean / base_yield out of range: {off}"
+
+
+def test_live_fully_funded_turmeric_roi_is_plausible():
+    recs = P.recommend_crops("telangana_medak", "kharif", 70000, 4, top_k=50)
+    turmeric = next(r for r in recs if r["crop_id"] == "turmeric")
+    assert turmeric["budget_adequate"] is True
+    assert turmeric["roi_percent"] < 300.0, turmeric

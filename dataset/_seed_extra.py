@@ -71,7 +71,9 @@ CROP_BASE = {
     "groundnut": (1040, 60), "soybean": (1080, 52), "mustard": (890, 64),
     "bajra": (840, 28), "jowar": (890, 33), "potato": (9200, 14),
     "onion": (12000, 18), "tomato": (14500, 16), "chilli": (3200, 98),
-    "turmeric": (9400, 92), "ginger": (8600, 74), "banana": (34500, 17),
+    # Turmeric is priced cured (dried, polished), so its yield is cured too:
+    # ~20% of the ~9,400 kg/acre of fresh rhizome harvested.
+    "turmeric": (1880, 92), "ginger": (8600, 74), "banana": (34500, 17),
     "coconut": (10800, 22), "tea": (1400, 190), "coffee": (900, 280),
     "barley": (1600, 22), "sunflower": (920, 58), "ragi": (1420, 38),
     "urad": (620, 92), "moong": (610, 88), "mango": (8400, 54),
