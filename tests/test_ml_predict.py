@@ -252,8 +252,14 @@ def test_score_single_crop_penalizes_severe_loss_more_than_mild_loss():
 
 def test_recommend_crops_never_ranks_a_loss_above_a_clear_profit():
     """End-to-end regression for the reported bug: given a budget too small
-    for jute (-28% ROI), recommend_crops must not still rank it above
-    turmeric, whose ROI under the same budget is a healthy +129%.
+    for jute (a loss), recommend_crops must not still rank it above a crop
+    that clearly profits under the same budget.
+
+    This used to compare against turmeric's +129% ROI, which was itself an
+    artifact of the old coverage**2 budget curve -- Rs 15,000/acre is 22% of
+    turmeric's input cost and can't establish it (see
+    tests/test_ranking_profitability.py). Soybean, 75% funded, is the clear
+    profit here now.
     """
     from ml.predict import recommend_crops
 
@@ -261,6 +267,6 @@ def test_recommend_crops_never_ranks_a_loss_above_a_clear_profit():
     by_crop = {r["crop_id"]: r for r in recs}
 
     assert by_crop["jute"]["roi_percent"] < 0
-    assert by_crop["turmeric"]["roi_percent"] > 0
-    assert by_crop["turmeric"]["smart_score"] > by_crop["jute"]["smart_score"]
+    assert by_crop["soybean"]["roi_percent"] > 0
+    assert by_crop["soybean"]["smart_score"] > by_crop["jute"]["smart_score"]
     assert recs[0]["crop_id"] != "jute"
