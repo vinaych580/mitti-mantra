@@ -75,14 +75,24 @@
   const BRAND = '#2f6b3a', BRAND_D = '#1f4d28', ACCENT = '#c88a3a', CLAY = '#a5562a', SKY = '#6ea7c7', INK = '#4a4339';
   const CHART_DEFAULTS = () => {
     if (!window.Chart) return;
+    // Axis ticks and legends were Soft Ink in both themes -- ~2:1 on the
+    // dark surface, so every chart's labels vanished in dark mode. Follow the
+    // theme's own Soft Ink (#c9bfb0 in dark, per toolbar.js) instead.
+    const dark = document.documentElement.getAttribute('data-theme') === 'dark';
     Chart.defaults.font.family = "'Inter', sans-serif";
     Chart.defaults.font.size = 12;
-    Chart.defaults.color = INK;
-    Chart.defaults.borderColor = 'rgba(29,26,21,.08)';
+    Chart.defaults.color = dark ? '#c9bfb0' : INK;
+    Chart.defaults.borderColor = dark ? 'rgba(243,236,224,.1)' : 'rgba(29,26,21,.08)';
     Chart.defaults.animation.duration = 700;
     Chart.defaults.animation.easing = 'easeOutCubic';
   };
   CHART_DEFAULTS();
+  // Charts already on screen re-resolve against the new defaults when the
+  // theme is toggled, instead of keeping the old theme's ink until re-run.
+  new MutationObserver(() => {
+    CHART_DEFAULTS();
+    CHART_REGISTRY.forEach((chart) => chart.update('none'));
+  }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
   // Destroy a Chart.js instance stored on an element before creating a new one
   const CHART_REGISTRY = new Map();
@@ -123,16 +133,20 @@
       return `rgb(${Math.round(200 - k * 130)}, ${Math.round(230 - k * 30)}, ${Math.round(210 - k * 90)})`;
     };
 
+    // The cell fills are fixed light pastels in both themes, so the text on
+    // them is fixed dark ink (Soil Ink / Soft Ink) rather than var(--ink):
+    // in dark mode --ink turns near-white and the profit figures fell to
+    // ~1.2:1 against the pale green. Dark ink holds >= 4.5:1 on every fill.
     return `
       <div style="overflow-x:auto;">
         <table style="border-collapse:separate;border-spacing:4px;margin:0 auto;font-size:.82rem;">
           <thead>
             <tr>
               <th></th>
-              <th colspan="${ps.length}" style="text-align:center;font-weight:600;color:var(--ink-faint);padding-bottom:6px;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;">Price change →</th>
+              <th colspan="${ps.length}" style="text-align:center;font-weight:600;color:var(--ink-soft);padding-bottom:6px;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;">Price change →</th>
             </tr>
             <tr>
-              <th style="font-weight:600;color:var(--ink-faint);font-size:.74rem;padding:6px;">Yield ↓</th>
+              <th style="font-weight:600;color:var(--ink-soft);font-size:.74rem;padding:6px;">Yield ↓</th>
               ${ps.map(p => `<th style="font-weight:600;color:var(--ink-soft);padding:6px 10px;">${p > 0 ? '+' : ''}${p}%</th>`).join('')}
             </tr>
           </thead>
@@ -144,15 +158,15 @@
       const c = lookup[`${y}_${p}`];
       if (!c) return '<td></td>';
       const isBase = y === 0 && p === 0;
-      return `<td style="background:${colorFor(c.projected_profit)};padding:10px 12px;border-radius:6px;min-width:72px;text-align:center;font-weight:${isBase ? 700 : 500};color:var(--ink);${isBase ? 'outline:2px solid var(--brand-deep);outline-offset:-2px;' : ''}">
+      return `<td style="background:${colorFor(c.projected_profit)};padding:10px 12px;border-radius:6px;min-width:72px;text-align:center;font-weight:${isBase ? 700 : 500};color:#1d1a15;${isBase ? 'outline:2px solid var(--brand-deep);outline-offset:-2px;' : ''}">
                     ${INR(c.projected_profit)}
-                    <div style="font-size:.68rem;color:var(--ink-faint);margin-top:2px;">${FIX(c.projected_roi_pct, 0)}% ROI</div>
+                    <div style="font-size:.68rem;color:#4a4339;margin-top:2px;">${FIX(c.projected_roi_pct, 0)}% ROI</div>
                   </td>`;
     }).join('')}
               </tr>`).join('')}
           </tbody>
         </table>
-        <div style="text-align:center;margin-top:10px;font-size:.78rem;color:var(--ink-faint);">Base profit (0%, 0%) highlighted · green = higher profit</div>
+        <div style="text-align:center;margin-top:10px;font-size:.78rem;color:var(--ink-soft);">Base profit (0%, 0%) highlighted · green = higher profit</div>
       </div>`;
   }
 
@@ -311,6 +325,20 @@
   function showLoading(el, text = 'Working…') {
     el.innerHTML = `<div class="loading"><div class="spinner"></div><span>${text}</span></div>`;
   }
+  // The band at the top of the screen that a scrolled-to element would hide
+  // beneath: the fixed nav plus the Farm Profile bar that sticks under it.
+  // Measuring only the nav's 72px left every scroll target's top edge tucked
+  // behind the bar. Measured live because the bar changes height (summary vs.
+  // edit mode, wrapping onto two lines on a phone).
+  function stickyChromeBottom() {
+    let bottom = 0;
+    document.querySelectorAll('#nav, .mm-farm-bar').forEach((el) => {
+      const cs = getComputedStyle(el);
+      if (cs.position === 'fixed') bottom = Math.max(bottom, el.getBoundingClientRect().bottom);
+      else if (cs.position === 'sticky') bottom = Math.max(bottom, (parseFloat(cs.top) || 0) + el.offsetHeight);
+    });
+    return bottom || 72;
+  }
   /* Telemetry panels sit above the fold, so a backend hiccup was the
      first thing a user read — as raw HTTP text ("404 · File not found").
      Keep the failure honest but calm, and never leak the status line. */
@@ -432,6 +460,81 @@
     outputs.forEach((el) => observer.observe(el, { childList: true, subtree: true }));
   })();
 
+  /* ---------- A finished run lands on the top of its result ----------
+     Pressing Simulate used to drop the user in the middle of their answer:
+     from scrollY 550 the page ended at 2,578, looking at the sensitivity grid
+     at the *bottom* of a 2,200px result, and they had to scroll up to find the
+     headline numbers. The cause is the browser's scroll anchoring -- it pins
+     an element below the output and holds it still on screen while the result
+     grows above it, which drags the viewport down by the result's height.
+     Nothing on this page benefits from anchoring (the content that loads late
+     sits below the tools, not above them), so it's off, and a run the user
+     started is then brought to the result's top edge explicitly.
+
+     Only a run that showed the loading state counts as "fresh": that's every
+     fetch-backed tool, and it naturally leaves out the Season ledger, whose
+     synchronous re-render after each "Add expense" would otherwise yank the
+     page away from the form someone is still typing into. */
+  (function revealFreshResults() {
+    document.documentElement.style.overflowAnchor = 'none';
+
+    const armed = new WeakMap(); // output -> { sawLoading, at }
+    const arm = (out) => { if (out) armed.set(out, { sawLoading: false, at: Date.now() }); };
+    // Forms and buttons rendered *inside* a result (e.g. "Apply" on a
+    // template card) act on that result -- they aren't new runs.
+    document.addEventListener('submit', (e) => {
+      const form = e.target;
+      if (!form.matches || !form.matches('form[data-form]') || form.closest('.output')) return;
+      arm(form.closest('.tool')?.querySelector('.output'));
+    }, true);
+    document.addEventListener('click', (e) => {
+      const b = e.target.closest && e.target.closest('.tool button[data-action]');
+      if (!b || b.closest('.output')) return;
+      arm(b.closest('.tool')?.querySelector('.output'));
+    }, true);
+
+    function revealTop(out) {
+      const chrome = stickyChromeBottom();
+      const r = out.getBoundingClientRect();
+      // Already readable from its first line: leave the page where it is.
+      // Only moving when the top is hidden or low on screen keeps a short
+      // answer that's already in view from causing any motion at all.
+      if (r.top >= chrome && (r.bottom <= innerHeight || r.top <= innerHeight * 0.4)) return;
+      window.mmScroll.to(window.scrollY + r.top - chrome - 12);
+    }
+
+    const observer = new MutationObserver((records) => {
+      const seen = new Set();
+      records.forEach(({ target }) => {
+        if (seen.has(target)) return;
+        seen.add(target);
+        const state = armed.get(target);
+        if (!state) return;
+        if (Date.now() - state.at > 60000) { armed.delete(target); return; }
+        if (target.firstElementChild?.classList.contains('loading')) { state.sawLoading = true; return; }
+        if (!state.sawLoading) return;
+        armed.delete(target);
+        // Wait a frame so charts and tables finish laying out first.
+        requestAnimationFrame(() => revealTop(target));
+      });
+    });
+    document.querySelectorAll('.output').forEach((el) => observer.observe(el, { childList: true }));
+
+    // Focus-driven scrolling (Tab into a field, the invalid-field jump above)
+    // honours scroll-padding-top, which style.css sizes for the nav alone --
+    // so a focused field could land hidden under the Farm Profile bar.
+    const syncScrollPadding = () => {
+      document.documentElement.style.scrollPaddingTop = (stickyChromeBottom() + 16) + 'px';
+    };
+    syncScrollPadding();
+    window.addEventListener('resize', syncScrollPadding);
+    window.addEventListener('load', () => {
+      syncScrollPadding();
+      const bar = document.querySelector('.mm-farm-bar');
+      if (bar && 'ResizeObserver' in window) new ResizeObserver(syncScrollPadding).observe(bar);
+    });
+  })();
+
   /* ---------- Constraint failures never disappear silently ----------
      A form that fails HTML validation never fires `submit`, so the tool's own
      handler -- and every error path in it -- is skipped and the Run button
@@ -449,7 +552,7 @@
   }, true);
 
   /* ---------- Sidebar: collapsible groups ----------
-     On desktop the 22-tool rail is a scannable palette. Linearised onto a
+     On desktop the 24-tool rail is a scannable palette. Linearised onto a
      375px phone it became a 1,346px wall -- 37% of the document, sitting
      above the content, with no way to reach a tool except scrolling past all
      of them. The seven group labels already in the markup are the structure
@@ -466,7 +569,7 @@
   // groups (leaving the search box and "no matches" status outside it, since
   // neither is a tab), each button becomes role=tab with a roving tabindex,
   // and each .tool panel becomes its labelled tabpanel. This is what lets
-  // Up/Down move between tools directly instead of tabbing through all 22.
+  // Up/Down move between tools directly instead of tabbing through all 24.
   const tablist = document.createElement('div');
   tablist.className = 'sidebar__tablist';
   tablist.setAttribute('role', 'tablist');
@@ -544,7 +647,7 @@
     b.setAttribute('aria-controls', `tool-panel-${tool}`);
     b.setAttribute('aria-selected', String(b.classList.contains('active')));
     // Roving tabindex: exactly one tab is a Tab stop; arrow keys move among
-    // the rest without pulling Tab through all 22 of them.
+    // the rest without pulling Tab through all 24 of them.
     b.tabIndex = b.classList.contains('active') ? 0 : -1;
   });
   tools.forEach(t => {
@@ -631,8 +734,7 @@
     // invisible) whenever the user was already near the top.
     const nextTool = tools.find(t => t.dataset.tool === target);
     if (nextTool) {
-      const navH = document.getElementById('nav')?.offsetHeight || 72;
-      const y = nextTool.getBoundingClientRect().top + window.scrollY - navH - 20;
+      const y = nextTool.getBoundingClientRect().top + window.scrollY - stickyChromeBottom() - 12;
       window.mmScroll.to(y);
     }
   }
@@ -690,7 +792,7 @@
     ndvi: ['Sub-field health zones', 'NDVI vegetation index', 'Stress hotspots', 'Zone-wise action list'],
     carbon: ['Estimated carbon credits', 'Revenue potential', 'Qualifying practices', 'Sequestration per acre'],
     iot: ['Live sensor readings', 'Pump control state', 'Irrigation trigger thresholds', 'Moisture history'],
-    ml: ['Model versions & status', 'Training accuracy', 'Last retrain date', 'Feature counts']
+    ml: ['Every model in use & how it was tested', 'Crop-recommendation confusion matrix', 'Per-crop precision & recall', 'Scenario checks & retrain dates']
   };
 
   const CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
@@ -721,7 +823,7 @@
   renderEmptyStates();
 
   /* ---------- Sidebar tool filter ----------
-     22 tools in a list that overflows the viewport by ~400px, with no
+     24 tools in a list that overflows the viewport by ~400px, with no
      way to jump to one by name. */
   (function initSidebarFilter() {
     const sidebar = document.querySelector('.sidebar');
@@ -3162,9 +3264,10 @@
             simForm.labour_cost_per_acre.value = Math.round(c.budget_per_acre * 0.25);
             simForm.other_costs_per_acre.value = Math.round(c.budget_per_acre * 0.33);
           }
-          // Switch to simulate tab
+          // Switch to simulate tab. The tab switch scrolls to the simulator's
+          // top itself; a scrollTo(0) here used to override it and land on the
+          // page header instead of the form this button just filled in.
           document.querySelector('.sidebar__btn[data-tool="simulate"]')?.click();
-          window.mmScroll.to(0);
         });
       });
     } catch (err) { showError(out, err); }
@@ -3536,6 +3639,120 @@
         </li>`).join('')}</ul>`
     : '<p style="font-size:.85rem;color:var(--ink-faint);padding-top:10px;">Not recorded in the last audit.</p>';
 
+  const cropName = id => String(id).split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  const when = ts => (typeof ts === 'number' && isFinite(ts))
+    ? new Date(ts * 1000).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+    : '—';
+  const loadedTag = ok => ok === undefined ? '' : ok
+    ? '<span class="ml-tag ml-tag--ok">✓ Loaded</span>'
+    : '<span class="ml-tag ml-tag--off">— Offline</span>';
+
+  // One row per model in manifest.json, the file written by the training run
+  // that produced the models actually serving predictions.
+  const MODEL_INFO = {
+    crop_recommendation: { name: 'Crop recommendation', job: 'Picks the best crops for a region, season, soil & budget', loaded: 'recommend_model_loaded' },
+    yield_prediction: { name: 'Yield prediction', job: 'Estimates kg/acre for a crop on your land', loaded: 'yield_model_loaded' },
+    price_forecasting: { name: 'Price forecast', job: 'Projects mandi prices for sell-or-hold advice', loaded: 'price_model_loaded' },
+    crop_disease: { name: 'Disease screening', job: 'Flags likely leaf diseases from a photo', loaded: 'disease_model_loaded' },
+  };
+  function modelRow(m, r) {
+    const info = MODEL_INFO[m.model] || { name: cropName(m.model), job: '' };
+    const k = m.metrics || {};
+    let tested = '—', result = '—', baseline = '';
+    if (m.model === 'crop_recommendation') {
+      tested = `${num(k.test_samples, v => v.toLocaleString('en-IN'))} held-out farms · ${num(k.num_classes, v => v)} crops`;
+      result = `Accuracy ${num(k.accuracy, v => PCT(v * 100))} · macro F1 ${num(k.f1_macro, v => FIX(v, 2))}`;
+    } else if (m.model === 'yield_prediction') {
+      tested = `${num(k.test_samples, v => v)} rows from the ${escHtml(k.test_year ?? '—')} harvest, a year it never trained on`;
+      result = `Typical error ${num(k.mape_pct, v => FIX(v, 1) + '%')} · R² ${num(k.r2, v => FIX(v, 3))}`;
+      const bl = k.baselines?.crop_base_yield;
+      if (bl) baseline = `Crop's standard yield alone: ${num(bl.mape_pct, v => FIX(v, 1) + '%')} error`;
+    } else if (m.model === 'price_forecasting') {
+      tested = `${num(k.test_samples, v => v)} monthly prices from ${escHtml(k.test_from ?? '—')} on`;
+      result = `Typical error ${num(k.mape_pct, v => FIX(v, 1) + '%')}`;
+      const gb = k.gradient_boosting;
+      if (gb) baseline = `Kept over gradient boosting, which scored worse (${num(gb.mape_pct, v => FIX(v, 1) + '%')} error)`;
+    } else if (m.model === 'crop_disease') {
+      tested = `${num(k.val_samples, v => v)} held-out leaf photos · ${(k.classes_covered || []).length} conditions`;
+      result = `Accuracy ${num(k.test_accuracy, v => PCT(v * 100))} · macro F1 ${num(k.macro_f1, v => FIX(v, 2))}`;
+    }
+    const trained = num(k.train_samples, v => v.toLocaleString('en-IN'));
+    return `<tr>
+      <td><strong>${escHtml(info.name)}</strong><small>${escHtml(info.job)}</small></td>
+      <td>${escHtml(m.algorithm || '—')}${loadedTag(r[info.loaded])}</td>
+      <td>${trained}</td>
+      <td>${tested}</td>
+      <td>${result}${baseline ? `<small>${baseline}</small>` : ''}</td>
+    </tr>`;
+  }
+
+  // Rows are the true crop, columns the predicted one. Shading is each cell's
+  // share of its row, not the raw count: test rows per crop run from 50 to
+  // ~4,700, so raw counts would light up only the biggest crops.
+  function confusionHeatmap(cm) {
+    const labels = cm.labels || [], M = cm.matrix || [];
+    if (!labels.length) return '';
+    const rowTotals = M.map(row => row.reduce((a, b) => a + b, 0));
+    const head = labels.map(l => `<th scope="col"><span>${escHtml(cropName(l))}</span></th>`).join('');
+    const body = M.map((row, i) => {
+      const cells = row.map((n, j) => {
+        const share = rowTotals[i] ? n / rowTotals[i] : 0;
+        // Floor any non-zero cell at 8% so a single miss is still visible.
+        const pct = n ? Math.max(8, Math.round(share * 100)) : 0;
+        const verdict = i === j ? 'correct' : `recommended as ${cropName(labels[j])}`;
+        const tip = `${cropName(labels[i])} → ${verdict}: ${n.toLocaleString('en-IN')} of ${rowTotals[i].toLocaleString('en-IN')} (${FIX(share * 100, 1)}%)`;
+        return `<td${i === j ? ' class="is-diag"' : ''} style="--p:${pct}%" data-tip="${escHtml(tip)}" aria-label="${escHtml(tip)}"></td>`;
+      }).join('');
+      return `<tr><th scope="row">${escHtml(cropName(labels[i]))}</th>${cells}</tr>`;
+    }).join('');
+    return `
+      <div class="ml-cm__scroll">
+        <table class="ml-cm">
+          <caption class="visually-hidden">Crop recommendation confusion matrix: rows are the true crop, columns the recommended crop.</caption>
+          <thead><tr><th scope="col" class="ml-cm__corner">True ↓ · Recommended →</th>${head}</tr></thead>
+          <tbody>${body}</tbody>
+        </table>
+        <div class="ml-tip" hidden></div>
+      </div>
+      <div class="ml-cm__legend" aria-hidden="true">
+        <span>0%</span><span class="ml-cm__ramp"></span><span>100% of that crop's test farms</span>
+      </div>`;
+  }
+
+  // The same matrix read the other way: which mix-ups matter most, measured
+  // as a share of the true crop's rows (3+ rows, so one stray miss on a
+  // 50-row crop doesn't top the list).
+  function topConfusions(cm, limit = 5) {
+    const labels = cm.labels || [], M = cm.matrix || [];
+    const pairs = [];
+    M.forEach((row, i) => {
+      const total = row.reduce((a, b) => a + b, 0);
+      row.forEach((n, j) => {
+        if (i !== j && n >= 3 && total) pairs.push({ t: labels[i], p: labels[j], n, total, share: n / total });
+      });
+    });
+    pairs.sort((a, b) => b.share - a.share);
+    return pairs.slice(0, limit);
+  }
+
+  function wireHeatmapTooltip(root) {
+    const wrap = root.querySelector('.ml-cm__scroll');
+    const tip = wrap?.querySelector('.ml-tip');
+    if (!wrap || !tip) return;
+    wrap.addEventListener('mouseover', e => {
+      const td = e.target.closest('td[data-tip]');
+      if (!td) { tip.hidden = true; return; }
+      tip.textContent = td.dataset.tip;
+      tip.hidden = false;
+      const w = wrap.getBoundingClientRect(), c = td.getBoundingClientRect();
+      const x = c.left - w.left + wrap.scrollLeft + c.width / 2;
+      const half = tip.offsetWidth / 2;
+      tip.style.left = Math.min(Math.max(x, half + 4), wrap.scrollWidth - half - 4) + 'px';
+      tip.style.top = (c.top - w.top + wrap.scrollTop) + 'px';
+    });
+    wrap.addEventListener('mouseleave', () => { tip.hidden = true; });
+  }
+
   $('[data-action="ml-status"]')?.addEventListener('click', async () => {
     const out = $('[data-out="ml"]');
     showLoading(out, 'Checking model status…');
@@ -3544,6 +3761,10 @@
       const aud = r.audit_metrics || {};
       const recAud = aud.crop_recommendation || {};
       const yieldAud = aud.yield_prediction || {};
+      const report = r.training_report || {};
+      const models = report.models || [];
+      const disease = models.find(m => m.model === 'crop_disease');
+      const validation = r.validation_report;
 
       const recFeats = Object.entries(recAud.permutation_importances || {}).slice(0, 5);
       const yieldFeats = Object.entries(yieldAud.permutation_importances || {}).slice(0, 5);
@@ -3555,6 +3776,14 @@
       if (typeof yieldAud.robustness_weather_noise_mape_pct === 'number') {
         robustness.push(`<li style="margin-bottom: 4px;"><strong>Weather readings off by up to ±10%:</strong> yield error ${num(yieldAud.mape_pct_real_rows, v => FIX(v, 1) + '%')} → <b>${FIX(yieldAud.robustness_weather_noise_mape_pct, 1)}%</b>.</li>`);
       }
+
+      const cm = recAud.confusion_matrix;
+      const confusions = cm ? topConfusions(cm) : [];
+      const perCrop = Object.keys(recAud.per_class_f1 || {})
+        .map(c => ({ c, f1: recAud.per_class_f1[c], p: recAud.per_class_precision?.[c], r: recAud.per_class_recall?.[c], n: recAud.per_class_support?.[c] }))
+        .sort((a, b) => a.f1 - b.f1);
+      const bands = yieldAud.error_bands || {};
+      const bandKeys = [5, 10, 20].filter(b => typeof bands[`within_${b}_pct`] === 'number');
 
       out.innerHTML = `
         <div class="kpi-grid">
@@ -3581,6 +3810,61 @@
           </div>
         </div>
 
+        <p class="ml-dates">Trained ${when(report.trained_at)} · last audited ${when(aud.audited_at)}${validation ? ` · scenario checks ${escHtml(validation.passed)}/${escHtml(validation.total)} passed` : ''}</p>
+
+        ${models.length ? `
+        <div class="chart-box">
+          <div class="chart-box__title">Models in use</div>
+          <div class="ml-table-wrap">
+            <table class="ml-table">
+              <thead><tr><th scope="col">Model</th><th scope="col">Algorithm</th><th scope="col">Trained on</th><th scope="col">Tested on (unseen data)</th><th scope="col">Result</th></tr></thead>
+              <tbody>${models.map(m => modelRow(m, r)).join('')}</tbody>
+            </table>
+          </div>
+        </div>` : ''}
+
+        ${cm ? `
+        <div class="chart-box">
+          <div class="chart-box__title">Crop recommendation · confusion matrix</div>
+          <p class="ml-note">Each row is the crop that was actually right for a test farm; each column is what the model recommended. A dark diagonal means it mostly gets it right; shading off the diagonal shows which crops it mixes up. Hover a cell for the count.</p>
+          ${confusionHeatmap(cm)}
+        </div>` : ''}
+
+        ${confusions.length ? `
+        <div class="chart-box">
+          <div class="chart-box__title">Most common mix-ups</div>
+          <ol class="ml-mixups">${confusions.map(x => `
+            <li><span><strong>${escHtml(cropName(x.t))}</strong> recommended as <strong>${escHtml(cropName(x.p))}</strong></span>
+              <span>${x.n.toLocaleString('en-IN')} of ${x.total.toLocaleString('en-IN')} test farms · ${FIX(x.share * 100, 1)}%</span></li>`).join('')}
+          </ol>
+        </div>` : ''}
+
+        ${perCrop.length ? `
+        <div class="chart-box">
+          <div class="chart-box__title">Per-crop scores · weakest first</div>
+          <p class="ml-note"><b>Precision</b>: when it recommends this crop, how often that's right. <b>Recall</b>: of the farms where this crop was right, how many it caught. <b>F1</b> balances the two.</p>
+          <div class="ml-table-wrap">
+            <table class="ml-table ml-table--num">
+              <thead><tr><th scope="col">Crop</th><th scope="col">Test farms</th><th scope="col">Precision</th><th scope="col">Recall</th><th scope="col">F1</th></tr></thead>
+              <tbody>${perCrop.map(x => `<tr>
+                <th scope="row">${escHtml(cropName(x.c))}</th>
+                <td>${num(x.n, v => v.toLocaleString('en-IN'))}</td>
+                <td>${num(x.p, v => PCT(v * 100))}</td>
+                <td>${num(x.r, v => PCT(v * 100))}</td>
+                <td><span class="ml-bar" aria-hidden="true"><span style="width:${Math.round((x.f1 || 0) * 100)}%"></span></span>${num(x.f1, v => FIX(v, 2))}</td>
+              </tr>`).join('')}</tbody>
+            </table>
+          </div>
+        </div>` : ''}
+
+        ${bandKeys.length ? `
+        <div class="chart-box">
+          <div class="chart-box__title">Yield prediction · how close each prediction lands</div>
+          <div class="kpi-grid">${bandKeys.map(b => `
+            <div class="kpi"><div class="kpi__lbl">Within ±${b}% of actual</div><div class="kpi__val">${PCT(bands[`within_${b}_pct`] * 100)}</div><div class="kpi__sub">of ${num(yieldAud.test_samples, v => v)} test rows</div></div>`).join('')}
+          </div>
+        </div>` : ''}
+
         <div class="chart-grid" style="margin-top: 20px;">
           <div class="chart-box">
             <div class="chart-box__title">Crop recommendation · permutation importance</div>
@@ -3600,6 +3884,30 @@
           </div>
         </div>` : ''}
 
+        ${validation?.test_cases?.length ? `
+        <div class="chart-box" style="margin-top: 20px;">
+          <div class="chart-box__title">End-to-end scenario checks</div>
+          <div class="ml-table-wrap">
+            <table class="ml-table">
+              <thead><tr><th scope="col">Scenario</th><th scope="col">Top crop</th><th scope="col">Score</th><th scope="col">Response time</th><th scope="col">Result</th></tr></thead>
+              <tbody>${validation.test_cases.map(t => `<tr>
+                <td>${escHtml(t.test)}</td>
+                <td>${escHtml(t.top_crop || '—')}</td>
+                <td>${num(t.top_score, v => FIX(v, 1))}</td>
+                <td>${num(t.latency_ms, v => (v / 1000).toFixed(1) + ' s')}</td>
+                <td>${t.status === 'PASS' ? '<span class="ml-tag ml-tag--ok">✓ Pass</span>' : `<span class="ml-tag ml-tag--off">✕ ${escHtml(t.status || 'Fail')}</span>`}</td>
+              </tr>`).join('')}</tbody>
+            </table>
+          </div>
+        </div>` : ''}
+
+        ${disease ? `
+        <div class="chart-box">
+          <div class="chart-box__title">Disease screening · conditions it can recognise</div>
+          <div class="ml-chips">${(disease.metrics?.classes_covered || []).map(c => `<span>${escHtml(cropName(c))}</span>`).join('')}</div>
+          ${disease.note ? `<p class="ml-note" style="margin-top:12px;">${escHtml(disease.note)}</p>` : ''}
+        </div>` : ''}
+
         <div class="alert"><div class="alert__body">
           <strong>Production model directory</strong>
           <p style="font-family:monospace;font-size:.82rem;word-break:break-all;">${escHtml(r.model_dir)}</p>
@@ -3612,6 +3920,7 @@
             ? `Farmer-uploaded sensor readings are informing calculations for ${r.data_sources.regions_with_sensor_data} region(s) — see the Smart IoT Pump tool.`
             : 'No live sensor uploads yet — calculations use seed data until a CSV/XML/JSON export is uploaded via the Smart IoT Pump tool.'}</p>
         </div></div>`;
+      wireHeatmapTooltip(out);
     } catch (err) { showError(out, err); }
   });
   $('[data-action="ml-train"]')?.addEventListener('click', async () => {

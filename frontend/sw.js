@@ -15,7 +15,7 @@
 // v52: code-quality pass touched most shell scripts (dashboard, mm-core,
 // toolbar, chatbot, farm-boundary, marketplace, book-a-tractor, gyan-seva)
 // and book-a-tractor.html; same reasoning -- ship them as one set.
-const VERSION = 'mittimantra-v55';
+const VERSION = 'mittimantra-v56';
 const CORE = [
   './',
   './index.html',

@@ -98,16 +98,18 @@ Tool groups (the left sidebar in `dashboard.html`):
 
 | Group | Tools |
 |---|---|
-| Overview | Farm score |
-| Plan | Smart recommend · Yield & profit simulate · Rotation planner |
-| Strategies | Strategy templates · Compare crops · Optimal mix |
-| Market | Price forecast · MSP comparison · Sell advisor · Cross-mandi arbitrage |
-| Field | Crop calendar · Irrigation · Fertilizer · Pest alerts · Disease screening |
-| Finance | Loan feasibility · Govt. schemes · Satellite NDVI · Carbon credits · Smart IoT pump |
+| Overview | My farm · Farm score |
+| Plan | Smart recommend · Compare crops · Yield & profit simulate · Optimal mix · Rotation planner · Strategy templates |
+| Market | Price forecast · Sell advisor · MSP comparison · Cross-mandi arbitrage |
+| Field | Crop calendar · Irrigation · Smart IoT pump · Fertilizer |
+| Crop health | Pest alerts · Disease screening · Satellite NDVI |
+| Finance | Loan feasibility · Season ledger · Govt. schemes · Carbon credits |
 | System | ML status |
 
-(NDVI, carbon credits and the IoT pump currently sit under the **Finance**
-group in the sidebar markup.)
+ML status reads `/api/ml/status`, which returns `manifest.json` (models in
+use), `audit_metrics.json` (holdout metrics, including the crop-recommendation
+confusion matrix and per-crop precision/recall written by
+`ml/audit_models.py`) and `validation_report.json` (end-to-end scenario checks).
 
 Expense tracker (`data-tool="expense"`) is the one tool with no backend
 call at all: entries are stored in `localStorage` (`mm_expenses`), scoped

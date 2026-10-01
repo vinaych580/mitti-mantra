@@ -25,7 +25,7 @@
   .mm-why summary::-webkit-details-marker{display:none;}
   .mm-why[open] summary{background:var(--brand);color:#fff;}
   .mm-why__body{margin-top:8px;padding:10px 12px;background:var(--brand-soft);border-radius:10px;
-    border:1px solid rgba(47,107,58,.15);font-size:.82rem;line-height:1.5;color:var(--ink);}
+    border:1px solid rgba(47,107,58,.15);font-size:var(--fs-2xs);line-height:1.5;color:var(--ink);}
   .mm-factor{display:flex;align-items:center;gap:8px;margin:4px 0;}
   .mm-factor__lbl{flex:0 0 110px;font-weight:600;color:var(--ink-soft);}
   .mm-factor__bar{flex:1;height:6px;background:var(--bg-soft);border-radius:3px;overflow:hidden;}
@@ -133,7 +133,7 @@
         d.className = "mm-why";
         d.innerHTML = `<summary>Why this crop? ▾</summary>
           <div class="mm-why__body">${bars}
-            <div style="margin-top:6px;font-size:.72rem;color:#78877a;">
+            <div style="margin-top:6px;font-size:.72rem;color:var(--ink-faint);">
               Ranked by the ML model using soil fit, rainfall match, expected profit
               (₹${profit}) and risk. Confidence shown in the KPI card above.
             </div>

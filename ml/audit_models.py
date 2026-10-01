@@ -5,7 +5,7 @@ from pathlib import Path
 import joblib
 import numpy as np
 
-from sklearn.metrics import accuracy_score, f1_score, precision_recall_fscore_support, r2_score, mean_absolute_error, mean_squared_error
+from sklearn.metrics import accuracy_score, confusion_matrix, f1_score, precision_recall_fscore_support, r2_score, mean_absolute_error, mean_squared_error
 from sklearn.inspection import permutation_importance
 
 logger = logging.getLogger("ModelAudit")
@@ -131,7 +131,7 @@ class ModelAuditor:
         # behind each figure visible.
         rec_crop_le = rec_encoders["crop"]
         present_labels = sorted(set(y_test_rec.tolist()) | set(pred_rec.tolist()))
-        _, _, per_class_f1, per_class_support = precision_recall_fscore_support(
+        per_class_precision, per_class_recall, per_class_f1, per_class_support = precision_recall_fscore_support(
             y_test_rec, pred_rec, labels=present_labels, zero_division=0,
         )
         per_class_f1_named = {
@@ -142,6 +142,17 @@ class ModelAuditor:
             rec_crop_le.classes_[label]: int(n)
             for label, n in zip(present_labels, per_class_support)
         }
+        per_class_precision_named = {
+            rec_crop_le.classes_[label]: round(float(v), 4)
+            for label, v in zip(present_labels, per_class_precision)
+        }
+        per_class_recall_named = {
+            rec_crop_le.classes_[label]: round(float(v), 4)
+            for label, v in zip(present_labels, per_class_recall)
+        }
+        # Same rows and label order as the per-crop figures above: rows are the
+        # true crop, columns the predicted one, so row i sums to support[i].
+        cm_rec = confusion_matrix(y_test_rec, pred_rec, labels=present_labels)
         zero_f1_crops = sorted(name for name, f1_val in per_class_f1_named.items() if f1_val == 0.0)
 
         pi_rec = permutation_importance(
@@ -185,6 +196,14 @@ class ModelAuditor:
         noisy_pred_y = yield_model.predict(self._weather_noise(X_test_y, weather_cols_y))
         noisy_mape, _ = self._split_yield_mape(y_test_y, noisy_pred_y, source_test_y)
 
+        # How far off a single prediction tends to be, which an average (MAPE)
+        # hides: the share of holdout rows landing within each error band.
+        ape_y = np.abs((np.asarray(y_test_y) - pred_yield) / np.asarray(y_test_y)) * 100.0
+        yield_error_bands = {
+            f"within_{band}_pct": round(float(np.mean(ape_y <= band)), 4)
+            for band in (5, 10, 20)
+        }
+
         audit_output = {
             "crop_recommendation": {
                 "algorithm": type(rec_model).__name__,
@@ -192,6 +211,13 @@ class ModelAuditor:
                 "f1_macro": round(float(f1), 4),
                 "per_class_f1": per_class_f1_named,
                 "per_class_support": per_class_support_named,
+                "per_class_precision": per_class_precision_named,
+                "per_class_recall": per_class_recall_named,
+                "confusion_matrix": {
+                    "labels": [rec_crop_le.classes_[label] for label in present_labels],
+                    "matrix": cm_rec.tolist(),
+                    "note": "Rows are the true crop, columns the predicted crop; whole holdout, top-up rows included.",
+                },
                 "zero_f1_crops": zero_f1_crops,
                 "permutation_importances": pi_rec_importances,
                 "robustness_weather_noise_agreement": round(noise_agreement, 4),
@@ -207,6 +233,7 @@ class ModelAuditor:
                 "baseline_crop_base_yield_mape_pct": round(float(baseline_mape), 2),
                 "permutation_importances": pi_yield_importances,
                 "robustness_weather_noise_mape_pct": round(float(noisy_mape), 2),
+                "error_bands": yield_error_bands,
                 "test_samples": int(len(X_test_y)),
                 "evaluated_on_persisted_holdout": yield_holdout is not None,
             },

@@ -944,7 +944,15 @@ def model_status():
         import json
         with open(audit_path, "r") as f:
             audit = json.load(f)
-            
+
+    # End-to-end scenario checks written by ml/train_models.py after training.
+    validation = None
+    validation_path = os.path.join(model_dir, "validation_report.json")
+    if os.path.exists(validation_path):
+        import json
+        with open(validation_path, "r") as f:
+            validation = json.load(f)
+
     from utils.sensor_log import regions_with_recent_data
     sensor_regions = regions_with_recent_data()
 
@@ -960,6 +968,7 @@ def model_status():
         "training_enabled": os.getenv("ENABLE_MODEL_TRAINING", "false").lower() == "true",
         "training_report": manifest,
         "audit_metrics": audit,
+        "validation_report": validation,
         "data_sources": {
             "sensor_uploads_available": bool(sensor_regions),
             "regions_with_sensor_data": len(sensor_regions),

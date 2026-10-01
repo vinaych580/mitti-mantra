@@ -245,6 +245,9 @@
       html[data-theme="dark"] .kpi--warn .kpi__val { color: #e4b87c; }
       html[data-theme="dark"] .kpi--info  { background: rgba(110,167,199,0.18) !important; }
       html[data-theme="dark"] .kpi--info .kpi__val { color: #8ec2de; }
+      /* Sidebar group labels are Deep Leaf at 75% opacity -- on the dark
+         rail that's dark green on near-black and the groups disappeared. */
+      html[data-theme="dark"] .sidebar__label { color: #9ed2a7; }
       html[data-theme="dark"] .chip--green { background: rgba(47,107,58,0.22) !important; color: #9ed2a7; }
       html[data-theme="dark"] .chip--gold  { background: rgba(200,138,58,0.22) !important; color: #e4b87c; }
 

@@ -645,7 +645,7 @@ section {
   flex: none;
 }
 
-/* ---------- Hero: "Is baar kya boyein?" ----------
+/* ---------- Hero: "Zameen aapki, faisla sahi." ----------
    The farmer's own question is the headline and the answer sits beside it
    as a ledger -- ruled rows, rank, crop, rupees -- the one page of a field
    notebook that matters before sowing. Numbers stay in Inter per the Serif
@@ -756,12 +756,24 @@ section {
   margin-top: 32px;
 }
 
+/* Frosted glass over the hero photo: the field shows through, blurred,
+   with a light top edge catching the "sun". */
 .answer {
-  background: var(--surface);
-  border: 1px solid var(--border);
+  position: relative;
+  background:
+    linear-gradient(155deg,
+      color-mix(in srgb, var(--surface) 20%, transparent) 0%,
+      color-mix(in srgb, var(--surface) 6%, transparent) 100%);
+  -webkit-backdrop-filter: blur(10px) saturate(170%);
+  backdrop-filter: blur(10px) saturate(170%);
+  border: 1px solid color-mix(in srgb, #fff 16%, transparent);
   border-radius: var(--r-lg);
-  box-shadow: var(--shadow-lg);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #fff 22%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, #fff 4%, transparent),
+    0 24px 60px -18px rgba(0, 0, 0, .55);
   padding: 28px 28px 22px;
+  isolation: isolate;
   opacity: 0;
   animation: fadeUp 1s var(--ease) .75s forwards;
 }
@@ -2838,6 +2850,13 @@ body.mm-menu-open .qw-panel {
   .form-row--4 {
     grid-template-columns: 1fr 1fr;
   }
+
+  /* Half of a 375px screen cut the selected option to "Telangar" and
+     "Rice · Dh" -- the farmer couldn't read which region or crop was
+     chosen. Numbers fit in half a row; a named choice needs the whole. */
+  .form-row > .field:has(select) {
+    grid-column: 1 / -1;
+  }
 }
 
 .output {
@@ -3033,11 +3052,12 @@ body.mm-menu-open .qw-panel {
   font-weight: 600;
   letter-spacing: .1em;
   text-transform: uppercase;
-  color: var(--ink-faint);
+  /* Soft Ink, not Faint Ink: at .72rem Faint Ink is 3.2:1 on the tile
+     washes (Legibility Over Palette Rule). Labels wrap rather than
+     truncate -- "Yield vs regional …" hid what the number was comparing. */
+  color: var(--ink-soft);
   margin-bottom: 6px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  text-wrap: balance;
 }
 
 .kpi__val {
@@ -3295,7 +3315,9 @@ body.mm-menu-open .qw-panel {
 }
 
 .kpi--info .kpi__val {
-  color: var(--sky);
+  /* Monsoon Blue itself is 2.26:1 on the blue wash -- fails even as large
+     text. The deep info blue keeps the hue at 6.4:1. */
+  color: var(--info);
 }
 
 .kpi--bad {
@@ -3614,7 +3636,10 @@ body.mm-menu-open .qw-panel {
 
 .chart-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* minmax(0, 1fr), not 1fr: a bare 1fr can't shrink below a Chart.js
+     canvas's intrinsic width, so at ~1024px the two columns resolved to
+     336px each and pushed the second chart past the card's edge. */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
   margin-bottom: 14px;
 }
@@ -5124,8 +5149,9 @@ body.page-farm-boundary {
   cursor: pointer;
   list-style: none;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
+  gap: 2px 10px;
   font-size: var(--fs-xs);
   color: var(--ink-soft);
   padding: 4px 0;
@@ -5148,7 +5174,7 @@ body.page-farm-boundary {
 }
 
 .weather-override>summary .muted {
-  color: var(--ink-faint);
+  color: var(--ink-soft);
   font-size: var(--fs-2xs);
 }
 
@@ -6796,7 +6822,7 @@ body {
 .kpi__lbl {
   font-size: 0.74rem;
   letter-spacing: 0.12em;
-  color: var(--ink-faint);
+  color: var(--ink-soft);
 }
 
 .kpi__val {
@@ -6879,7 +6905,7 @@ body {
 }
 
 /* --- Sidebar groups as disclosures on touch ---------------------------------
-   Desktop keeps the flat 22-tool palette: it is scannable at a glance and the
+   Desktop keeps the flat 24-tool palette: it is scannable at a glance and the
    whole point of a persistent rail. Below 860px that same markup ran 1,346px
    tall -- 37% of the dashboard document -- and sat above the content, so
    reaching any tool meant scrolling past every tool. Collapsing onto the seven
@@ -6998,4 +7024,236 @@ body {
   .crop-check {
     min-height: 44px;
   }
+}
+
+/* --- ML status: model table, confusion matrix, per-crop scores ---
+   The heatmap is one hue running from the card surface to --ml-heat, so the
+   dark theme gets its own lighter end instead of a dark green that would
+   vanish into a dark card. */
+:root { --ml-heat: var(--brand-deep); }
+html[data-theme="dark"] { --ml-heat: #7fc68f; }
+
+.ml-dates {
+  margin: 4px 0 16px;
+  font-size: var(--fs-2xs);
+  color: var(--ink-faint);
+}
+
+.ml-note {
+  margin: -4px 0 14px;
+  font-size: var(--fs-2xs);
+  line-height: 1.5;
+  color: var(--ink-soft);
+  max-width: 70ch;
+}
+
+.ml-table-wrap { overflow-x: auto; }
+
+.output .ml-table {
+  /* .ml-table-wrap already scrolls. The generic `.output table
+     { display: block }` rail made the table its own clipped scroller and
+     squeezed the Result column to 83px, which is what made each row ~220px
+     tall. A real table with a floor width scrolls inside the wrap instead. */
+  display: table;
+  width: 100%;
+  min-width: 680px;
+  border-collapse: collapse;
+  font-size: var(--fs-2xs);
+}
+
+.ml-table th,
+.ml-table td {
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--border);
+}
+
+.ml-table thead th {
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+
+.ml-table tbody th { font-weight: 600; color: var(--ink); }
+.ml-table td { color: var(--ink-soft); }
+.ml-table td strong { color: var(--ink); }
+
+.ml-table small {
+  display: block;
+  margin-top: 3px;
+  font-size: .74rem;
+  color: var(--ink-faint);
+}
+
+/* The Result column carries the actual verdict (error %, R²) but was the
+   one left to absorb every other column's width -- 83px, wrapping into a
+   220px-tall row. */
+.output .ml-table:not(.ml-table--num) td:last-child { min-width: 200px; }
+
+/* The per-crop scores table is five short numeric columns: it fits a
+   phone at its natural width and needs no floor. */
+.output .ml-table--num { min-width: 0; }
+
+.ml-table--num td {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.ml-bar {
+  display: inline-block;
+  width: 56px;
+  height: 6px;
+  margin-right: 8px;
+  vertical-align: middle;
+  background: var(--surface);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.ml-bar > span {
+  display: block;
+  height: 100%;
+  background: var(--ml-heat);
+  border-radius: 3px;
+}
+
+.ml-tag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: .72rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.ml-tag--ok { background: var(--brand-soft); color: var(--brand-deep); }
+.ml-tag--off { background: var(--danger-soft); color: var(--danger); }
+html[data-theme="dark"] .ml-tag--ok { color: #9ed2a7; }
+
+.ml-cm__scroll {
+  position: relative;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.ml-cm {
+  border-collapse: separate;
+  border-spacing: 2px;
+  font-size: .72rem;
+}
+
+.ml-cm thead th {
+  height: 96px;
+  vertical-align: bottom;
+  padding: 0;
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+
+.ml-cm thead th span {
+  display: inline-block;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+  padding-bottom: 4px;
+}
+
+.ml-cm__corner {
+  text-align: left;
+  font-size: .68rem;
+  color: var(--ink-faint) !important;
+  white-space: nowrap;
+  padding: 0 8px 4px 0 !important;
+}
+
+.ml-cm tbody th {
+  padding-right: 8px;
+  text-align: right;
+  font-weight: 500;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.ml-cm td {
+  width: 22px;
+  min-width: 22px;
+  height: 22px;
+  padding: 0;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--ml-heat) var(--p), var(--surface));
+}
+
+.ml-cm td:hover {
+  outline: 2px solid var(--ink);
+  outline-offset: 1px;
+}
+
+.ml-cm td.is-diag { box-shadow: inset 0 0 0 1px var(--border); }
+
+.ml-tip {
+  position: absolute;
+  z-index: 2;
+  transform: translate(-50%, calc(-100% - 8px));
+  max-width: 260px;
+  padding: 6px 10px;
+  border-radius: var(--r-sm);
+  background: var(--ink);
+  color: var(--bg);
+  font-size: .74rem;
+  line-height: 1.35;
+  pointer-events: none;
+  white-space: normal;
+  box-shadow: var(--shadow-sm);
+}
+
+.ml-cm__legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: .72rem;
+  color: var(--ink-faint);
+}
+
+.ml-cm__ramp {
+  width: 120px;
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--surface), var(--ml-heat));
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.ml-mixups {
+  margin: 0;
+  padding-left: 20px;
+  font-size: var(--fs-2xs);
+  color: var(--ink-soft);
+}
+
+.ml-mixups li { padding: 6px 0; }
+.ml-mixups li > span { display: block; }
+.ml-mixups li > span + span {
+  font-size: .74rem;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.ml-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ml-chips span {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: .74rem;
+  color: var(--ink-soft);
 }

@@ -694,8 +694,11 @@
       // network on a slow connection and silently dropped the prefill. Wait for
       // the button, then for the options, with a hard cap.
       whenReady(`.sidebar__btn[data-tool="${tool}"]`, 6000, (btn) => {
+        // The click scrolls to the tool itself (and keeps the rail button in
+        // view). A second scrollIntoView on the rail button here used to win
+        // that race -- on a phone the rail sits above the tools, so a deep
+        // link opened the right tool but left the page on the tool list.
         btn.click();
-        btn.scrollIntoView({ behavior: "smooth", block: "start" });
         profile.applyToForms();
         const form = document.querySelector(`form[data-form="${tool}"]`);
         if (form) {
@@ -717,8 +720,10 @@
             openUseFarm(form, { focus: false });
           }
         }
-        // Drop the parameters so a reload or a shared URL doesn't replay them.
-        ["tool", "region_id", "season", "crop_id", "area_acres", "budget_per_acre"]
+        // Drop the one-off prefill so a reload or a shared URL doesn't replay
+        // it. `tool` stays: the dashboard keeps ?tool= in step with the open
+        // tool so a reload returns to the same view.
+        ["region_id", "season", "crop_id", "area_acres", "budget_per_acre"]
           .forEach((k) => q.delete(k));
         const rest = q.toString();
         history.replaceState({}, "", location.pathname + (rest ? "?" + rest : "") + location.hash);

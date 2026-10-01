@@ -78,7 +78,7 @@
 
       // Sidebar group labels
       'Plan': 'योजना',
-      'Strategies': 'रणनीतियां',
+      'Crop health': 'फसल स्वास्थ्य',
       'Market': 'बाज़ार',
       'Field': 'खेत',
       'Finance': 'वित्त',
@@ -466,7 +466,7 @@
       'Season rain (avg)': 'मौसमी बारिश (औसत)',
       // Landing hero, shared nav/footer, farm bar, "Using your farm",
       // My Farm overview and the compare-crops picker (2026-09 redesign).
-      'Is baar kya boyein?': 'इस बार क्या बोएं?',
+      'Zameen aapki, faisla sahi.': 'ज़मीन आपकी, फ़ैसला सही।',
       'Tell us where you farm and what you can spend. We rank every crop for your district this season and show the working behind each number.': 'बताइए आप कहाँ खेती करते हैं और कितना खर्च कर सकते हैं। हम इस मौसम के लिए आपके ज़िले की हर फ़सल को क्रम देते हैं और हर आंकड़े का हिसाब दिखाते हैं।',
       'Rank my crops': 'मेरी फ़सलें क्रम से दिखाएं',
       'No sign-up — nothing to install': 'कोई साइन-अप नहीं — कुछ इंस्टॉल नहीं करना',
@@ -555,7 +555,7 @@
       'Dashboard': 'డాష్‌బోర్డ్',
 
       'Plan': 'ప్రణాళిక',
-      'Strategies': 'వ్యూహాలు',
+      'Crop health': 'పంట ఆరోగ్యం',
       'Market': 'మార్కెట్',
       'Field': 'పొలం',
       'Finance': 'ఆర్థికం',
@@ -930,7 +930,7 @@
       'Season rain (avg)': 'సీజన్ వర్షం (సగటు)',
       // Landing hero, shared nav/footer, farm bar, "Using your farm",
       // My Farm overview and the compare-crops picker (2026-09 redesign).
-      'Is baar kya boyein?': 'ఈసారి ఏ పంట వేయాలి?',
+      'Zameen aapki, faisla sahi.': 'భూమి మీది, నిర్ణయం సరైనది.',
       'Tell us where you farm and what you can spend. We rank every crop for your district this season and show the working behind each number.': 'మీరు ఎక్కడ వ్యవసాయం చేస్తారో, ఎంత ఖర్చు పెట్టగలరో చెప్పండి. ఈ సీజన్‌కు మీ జిల్లాలోని ప్రతి పంటకు ర్యాంక్ ఇచ్చి, ప్రతి సంఖ్య వెనుక లెక్కను చూపిస్తాం.',
       'Rank my crops': 'నా పంటలకు ర్యాంక్ ఇవ్వండి',
       'No sign-up — nothing to install': 'సైన్-అప్ అవసరం లేదు — ఏదీ ఇన్‌స్టాల్ చేయనక్కర్లేదు',
@@ -1011,7 +1011,7 @@
       'Dashboard': 'ಡ್ಯಾಶ್‌ಬೋರ್ಡ್',
 
       'Plan': 'ಯೋಜನೆ',
-      'Strategies': 'ತಂತ್ರಗಳು',
+      'Crop health': 'ಬೆಳೆ ಆರೋಗ್ಯ',
       'Market': 'ಮಾರುಕಟ್ಟೆ',
       'Field': 'ಹೊಲ',
       'Finance': 'ಹಣಕಾಸು',
@@ -1386,7 +1386,7 @@
       'Season rain (avg)': 'ಋತುವಿನ ಮಳೆ (ಸರಾಸರಿ)',
       // Landing hero, shared nav/footer, farm bar, "Using your farm",
       // My Farm overview and the compare-crops picker (2026-09 redesign).
-      'Is baar kya boyein?': 'ಈ ಬಾರಿ ಯಾವ ಬೆಳೆ ಬಿತ್ತಬೇಕು?',
+      'Zameen aapki, faisla sahi.': 'ಜಮೀನು ನಿಮ್ಮದು, ನಿರ್ಧಾರ ಸರಿಯಾದದ್ದು.',
       'Tell us where you farm and what you can spend. We rank every crop for your district this season and show the working behind each number.': 'ನೀವು ಎಲ್ಲಿ ಕೃಷಿ ಮಾಡುತ್ತೀರಿ ಮತ್ತು ಎಷ್ಟು ಖರ್ಚು ಮಾಡಬಹುದು ಎಂದು ತಿಳಿಸಿ. ಈ ಹಂಗಾಮಿಗೆ ನಿಮ್ಮ ಜಿಲ್ಲೆಯ ಪ್ರತಿಯೊಂದು ಬೆಳೆಗೆ ಶ್ರೇಣಿ ನೀಡಿ, ಪ್ರತಿ ಸಂಖ್ಯೆಯ ಲೆಕ್ಕಾಚಾರವನ್ನು ತೋರಿಸುತ್ತೇವೆ.',
       'Rank my crops': 'ನನ್ನ ಬೆಳೆಗಳಿಗೆ ಶ್ರೇಣಿ ನೀಡಿ',
       'No sign-up — nothing to install': 'ಸೈನ್-ಅಪ್ ಬೇಕಿಲ್ಲ — ಏನನ್ನೂ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಬೇಕಿಲ್ಲ',
@@ -1467,7 +1467,7 @@
       'Dashboard': 'டாஷ்போர்டு',
 
       'Plan': 'திட்டம்',
-      'Strategies': 'உத்திகள்',
+      'Crop health': 'பயிர் ஆரோக்கியம்',
       'Market': 'சந்தை',
       'Field': 'வயல்',
       'Finance': 'நிதி',
@@ -1842,7 +1842,7 @@
       'Season rain (avg)': 'பருவ மழை (சராசரி)',
       // Landing hero, shared nav/footer, farm bar, "Using your farm",
       // My Farm overview and the compare-crops picker (2026-09 redesign).
-      'Is baar kya boyein?': 'இந்த முறை என்ன பயிரிடலாம்?',
+      'Zameen aapki, faisla sahi.': 'நிலம் உங்களுடையது, முடிவு சரியானது.',
       'Tell us where you farm and what you can spend. We rank every crop for your district this season and show the working behind each number.': 'நீங்கள் எங்கே விவசாயம் செய்கிறீர்கள், எவ்வளவு செலவிட முடியும் என்று சொல்லுங்கள். இந்தப் பருவத்துக்கு உங்கள் மாவட்டத்தின் ஒவ்வொரு பயிரையும் வரிசைப்படுத்தி, ஒவ்வொரு எண்ணுக்கும் பின்னால் உள்ள கணக்கைக் காட்டுவோம்.',
       'Rank my crops': 'என் பயிர்களை வரிசைப்படுத்து',
       'No sign-up — nothing to install': 'பதிவு தேவையில்லை — எதையும் நிறுவ வேண்டாம்',
