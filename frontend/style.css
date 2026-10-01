@@ -2316,6 +2316,23 @@ section {
   transition-delay: .68s;
 }
 
+/* Scroll-linked reveal: site-ui.js adds .reveal-scrub and writes --rp (0..1)
+   every frame while the element is scrolled into place, then removes the
+   class and hands over to .in-view. Must stay below the rules above -- it
+   has to win over `.reveal-stagger.in-view>*` for cards still on their way
+   in after the first of their group has landed. */
+.reveal.reveal-scrub,
+.reveal-stagger>.reveal-scrub {
+  opacity: var(--rp, 0);
+  transform: translateY(calc((1 - var(--rp, 0)) * var(--rd, 32px)));
+  transition: none;
+  will-change: opacity, transform;
+}
+
+.reveal-stagger>.reveal-scrub {
+  --rd: 24px;
+}
+
 /* ---------- Mobile menu panel ---------- */
 .mobile-panel {
   position: fixed;

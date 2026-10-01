@@ -1,0 +1,8 @@
+{
+  "name": "agrisim",
+  "private": true,
+  "description": "Front-end vendor dependencies. There is no build step: files are copied from node_modules into frontend/vendor/ and committed.",
+  "dependencies": {
+    "lenis": "^1.3.26"
+  }
+}

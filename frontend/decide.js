@@ -84,7 +84,7 @@
       dot.classList.toggle('is-active', i === n);
       dot.classList.toggle('is-done', i < n);
     });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.mmScroll.to(0);
     document.dispatchEvent(new CustomEvent('decide:step-shown', { detail: { step: n } }));
   }
   const goNext = () => { if (currentStep < TOTAL_STEPS) showStep(currentStep + 1); };

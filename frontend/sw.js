@@ -15,7 +15,7 @@
 // v52: code-quality pass touched most shell scripts (dashboard, mm-core,
 // toolbar, chatbot, farm-boundary, marketplace, book-a-tractor, gyan-seva)
 // and book-a-tractor.html; same reasoning -- ship them as one set.
-const VERSION = 'mittimantra-v54';
+const VERSION = 'mittimantra-v55';
 const CORE = [
   './',
   './index.html',
@@ -30,6 +30,7 @@ const CORE = [
   './assets/logo-192.png',
   './assets/logo-512.png',
   './site-ui.js',
+  './vendor/lenis.min.js',
   './state-data.js',
   './india-globe.js',
   './scene3d-loader.js',

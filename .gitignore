@@ -67,3 +67,6 @@ catboost_info/
 # Stray archives / node artifacts (no package.json/npm tooling in this repo)
 *.zip
 package-lock.json
+
+# Node (front-end vendor files are copied into frontend/vendor/)
+node_modules/

@@ -310,6 +310,26 @@ Nav, scroll animations, number counters, and **service-worker
 registration** (`navigator.serviceWorker.register('/sw.js')` once the
 document loads).
 
+It also loads **Lenis** (`vendor/lenis.min.js`) for smooth wheel
+scrolling — on demand, and only on fine-pointer devices with motion
+allowed, since Lenis leaves touch scrolling native. The instance is
+exposed as `window.mmLenis`. There is no build step: the file is copied
+from `node_modules/lenis/dist/` (see the root `package.json`) and
+committed; re-copy it after bumping the version.
+
+With Lenis running, three things hang off its per-frame scroll position:
+
+- **Scroll-linked reveals** — `.reveal` / `.reveal-stagger` content below
+  the fold rises in with the scroll (`.reveal-scrub` + `--rp` in
+  `style.css`) instead of playing the observer's one-shot fade. Latched:
+  scrolling back never hides it again.
+- **Parallax** — hero photo, hero foreground and the showcase photo.
+- **`window.mmScroll.to(y)` / `.intoView(el, 'start' | 'center')`** — use
+  these for any programmatic smooth scroll instead of `window.scrollTo` /
+  `scrollIntoView({ behavior: 'smooth' })`. A native smooth scroll started
+  while Lenis is easing a wheel gesture gets overridden; these don't, and
+  they fall back to native scrolling when Lenis isn't running.
+
 ### `i18n-data.js` + `i18n.js`
 
 `i18n.js` is the switcher for **English, Hindi, Telugu and Kannada**,

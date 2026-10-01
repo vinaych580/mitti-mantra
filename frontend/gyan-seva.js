@@ -910,7 +910,7 @@
       </div>`;
     const cta = document.getElementById('gsHighStakesCompareCta');
     if (cta) cta.addEventListener('click', () => {
-      expertsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      window.mmScroll.intoView(expertsContainer);
     });
   }
 
@@ -1262,12 +1262,12 @@
       </div>
     `;
 
-    bookingSummaryPlaceholder.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.mmScroll.intoView(bookingSummaryPlaceholder);
 
     document.getElementById('gsBookingSecondOpinionCta')?.addEventListener('click', () => {
       state.compareIds = [String(expert.id)];
       renderCompareBar();
-      expertsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      window.mmScroll.intoView(expertsContainer);
     });
 
     renderMyBookingsPanel();
@@ -1301,7 +1301,7 @@
         </div>
         <p style="font-size:.82rem;color:var(--ink-soft);margin-top:14px;">Once you log an outcome for both under "My Consultations", you'll see a side-by-side result of what each expert's advice actually led to.</p>
       </div>`;
-    bookingSummaryPlaceholder.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.mmScroll.intoView(bookingSummaryPlaceholder);
 
     state.compareIds = [];
     renderCompareBar();
@@ -1707,7 +1707,7 @@
       if (topicSelect) { topicSelect.value = ''; state.consultationTopic = ''; }
       state.visibleCount = 15;
       updateResults();
-      document.querySelector('.gs-layout')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      window.mmScroll.intoView(document.querySelector('.gs-layout'));
     });
 
     retranslate();
@@ -1826,7 +1826,7 @@
           if (matchedTopic && topicSelect) { topicSelect.value = matchedTopic; state.consultationTopic = matchedTopic; }
           state.visibleCount = 15;
           updateResults();
-          document.querySelector('.gs-layout')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          window.mmScroll.intoView(document.querySelector('.gs-layout'));
         });
       } catch (_) {
         resultBox.innerHTML = `<p class="gs-scan-disclaimer">Screening is unavailable right now — the backend may be offline. You can still book an expert directly below.</p>`;

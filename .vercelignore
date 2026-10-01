@@ -64,3 +64,8 @@ dataset/training/
 dataset/raw/
 dataset/processed/
 dataset/dynamic/
+
+# Node — vendor files are already copied into frontend/vendor/
+node_modules
+package.json
+package-lock.json

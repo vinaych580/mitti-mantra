@@ -852,7 +852,7 @@
       if (/\b(run|go|chalao|start|simulate now|show)\b/.test(text)) {
         activeForm.requestSubmit?.() || activeForm.submit();
       } else {
-        activeForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        window.mmScroll.intoView(activeForm, 'center');
       }
     }, 250);
 

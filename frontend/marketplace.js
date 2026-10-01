@@ -501,7 +501,7 @@
       // hidden behind the edge fade.
       if (on) el.scrollIntoView({ block: 'nearest', inline: 'nearest' });
     });
-    window.scrollTo({ top: $('.mkt-tabs')?.offsetTop - 84 || 0, behavior: 'smooth' });
+    window.mmScroll.to($('.mkt-tabs')?.offsetTop - 84 || 0);
     if (view === 'browse') renderGrid();
     if (view === 'my-listings') renderMyListings();
     if (view === 'my-requests') renderMyRequests();

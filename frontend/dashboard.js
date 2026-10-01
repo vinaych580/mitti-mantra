@@ -445,7 +445,7 @@
     const label = el.closest('.field')?.querySelector('label')?.textContent?.trim() || el.name || 'A field';
     window.MM?.toast?.(`${label}: ${el.validationMessage}`, 4000);
     el.closest('.tool')?.classList.add('active');
-    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    window.mmScroll.intoView(el, 'center');
   }, true);
 
   /* ---------- Sidebar: collapsible groups ----------
@@ -633,7 +633,7 @@
     if (nextTool) {
       const navH = document.getElementById('nav')?.offsetHeight || 72;
       const y = nextTool.getBoundingClientRect().top + window.scrollY - navH - 20;
-      window.scrollTo({ top: Math.max(y, 0), behavior: 'smooth' });
+      window.mmScroll.to(y);
     }
   }
 
@@ -3164,7 +3164,7 @@
           }
           // Switch to simulate tab
           document.querySelector('.sidebar__btn[data-tool="simulate"]')?.click();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          window.mmScroll.to(0);
         });
       });
     } catch (err) { showError(out, err); }
@@ -3903,7 +3903,7 @@
     const host = document.getElementById('farmPickup');
     if (!host) return;
 
-    host.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    window.mmScroll.intoView(host, 'center');
     host.classList.add('farm-pickup--flash');
     setTimeout(() => host.classList.remove('farm-pickup--flash'), 2600);
 
