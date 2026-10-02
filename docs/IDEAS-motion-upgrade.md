@@ -51,4 +51,4 @@ Piece 4 (GSAP + ScrollTrigger) is not built. Open problems with it as written:
 - **`.showcase` is already animated.** Its two halves are `.reveal` elements driven by `scrubReveals`, and its photo is moved by `driveParallax`. A pinned ScrollTrigger on the same block would fight both.
 - **Weight.** About 115 KB of minified script for two effects, on a site that counts bytes for metered connections. Desktop only, but it also goes into the service-worker precache for everyone.
 
-A word-by-word headline entrance needs about twenty lines of CSS and inline script and no library. If a pinned section is still wanted, it is the only thing here that GSAP is the right tool for.
+Decision: GSAP skipped. The word-by-word headline entrance was built without it: an inline script in `index.html` splits the headline before first paint and `style.css` staggers the words (`.hero__word`, `wordUp`). The full sentence stays in a hidden span so `i18n.js` translates it unchanged, and the words are redrawn from it on `mm:lang-changed`. If a pinned scroll-storytelling section is ever wanted, that is the one thing here GSAP is the right tool for.

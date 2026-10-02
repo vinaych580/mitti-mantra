@@ -545,6 +545,36 @@ section {
   animation: fadeUp 1s var(--ease) .35s forwards;
 }
 
+/* index.html splits the headline into .hero__word spans before first paint;
+   the words then rise in one after another in place of the single fade. */
+.hero__title.is-split {
+  opacity: 1;
+  animation: none;
+}
+
+.hero__word {
+  display: inline-block;
+  opacity: 0;
+  animation: wordUp .7s var(--ease) calc(.3s + var(--i, 0) * .09s) forwards;
+}
+
+.hero__title.is-settled .hero__word {
+  opacity: 1;
+  animation: none;
+}
+
+@keyframes wordUp {
+  from {
+    opacity: 0;
+    transform: translateY(.45em);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .hero__title em {
   font-style: italic;
   color: var(--brand);
