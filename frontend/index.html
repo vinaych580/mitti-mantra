@@ -84,7 +84,49 @@
     <div class="hero__wrap">
       <div class="hero__content">
         <span class="eyebrow" data-no-translate>Mitti se judao, fasal se pao</span>
-        <h1 class="hero__title ask__q">Zameen aapki, faisla sahi.</h1>
+        <h1 class="hero__title ask__q" id="heroTitle">Zameen aapki, faisla sahi.</h1>
+        <script>
+          /* Headline entrance, word by word. Inline and synchronous so the
+             words are in place before the first paint -- from a deferred
+             script the split could land after the headline's own fade had
+             begun and restart it. Without this (script blocked, reduced
+             motion) the headline keeps its single fadeUp from style.css.
+
+             i18n.js translates whole text nodes, and the words are no longer
+             one. So the sentence is kept intact in a hidden span for i18n to
+             translate as before, and the visible words are redrawn from it
+             whenever the language changes. */
+          (() => {
+            const h = document.getElementById('heroTitle');
+            if (!h || h.children.length || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            const src = document.createElement('span');
+            src.hidden = true;
+            src.textContent = h.textContent;
+            const words = document.createElement('span');
+            words.setAttribute('data-no-translate', '');
+            const render = () => {
+              words.textContent = '';
+              src.textContent.trim().split(/\s+/).forEach((word, i) => {
+                if (i) words.append(' ');
+                const w = document.createElement('span');
+                w.className = 'hero__word';
+                w.style.setProperty('--i', i);
+                w.textContent = word;
+                words.append(w);
+              });
+            };
+            render();
+            h.textContent = '';
+            h.append(src, words);
+            h.classList.add('is-split');
+            document.addEventListener('mm:lang-changed', () => {
+              // A language switch swaps the words in place; the entrance
+              // only ever plays once.
+              h.classList.add('is-settled');
+              render();
+            });
+          })();
+        </script>
         <p class="ask__gloss" data-no-translate>Your land. The right crop, backed by the numbers.</p>
         <p class="hero__sub">Tell us where you farm and what you can spend. We rank every crop for your district this season and show the working behind each number.</p>
 

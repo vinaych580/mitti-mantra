@@ -258,16 +258,21 @@
      (touch devices, reduced motion, page locked behind a modal). */
   const scrollPadTop = () => parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
   window.mmScroll = {
-    to(top) {
+    // `instant` skips the easing: for a jump that something else is already
+    // animating over (a view transition), where a second motion underneath
+    // would only fight it.
+    to(top, { instant = false } = {}) {
       top = Math.max(top, 0);
       if (lenis && !lenis.isStopped) {
         // Lenis re-measures the page on a debounce. A jump made right after
         // content grew (a dashboard result rendering) would be clamped to
         // the old, shorter page and stop short of its target.
         lenis.resize();
-        lenis.scrollTo(top, { duration: 1.1 });
+        lenis.scrollTo(top, instant ? { immediate: true } : { duration: 1.1 });
       } else {
-        window.scrollTo({ top, behavior: noMotion ? 'auto' : 'smooth' });
+        // 'instant', not 'auto': auto defers to the stylesheet's
+        // scroll-behavior: smooth.
+        window.scrollTo({ top, behavior: instant ? 'instant' : noMotion ? 'auto' : 'smooth' });
       }
     },
     // Same landing spot as el.scrollIntoView({ block }), for 'start' and

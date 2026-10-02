@@ -25,6 +25,21 @@
     .decide-progress__dot.is-done { background: var(--brand); opacity: .6; }
     .decide-step { display: none; }
     .decide-step.is-active { display: block; }
+    /* Step changes run as a view transition (decide.js). Only the active step
+       carries the name, so the outgoing and incoming steps pair up as one
+       group; data-step-dir on <html> says which way to slide. */
+    @media (prefers-reduced-motion: no-preference) {
+      .decide-step.is-active { view-transition-name: decide-step; }
+      ::view-transition-group(decide-step) { animation: none; }
+      ::view-transition-old(decide-step) { animation: decide-out .18s var(--ease) both; }
+      ::view-transition-new(decide-step) { animation: decide-in .32s var(--ease) both; }
+      [data-step-dir="back"]::view-transition-old(decide-step) { animation-name: decide-out-back; }
+      [data-step-dir="back"]::view-transition-new(decide-step) { animation-name: decide-in-back; }
+    }
+    @keyframes decide-out { to { opacity: 0; transform: translateX(-28px); } }
+    @keyframes decide-in { from { opacity: 0; transform: translateX(28px); } }
+    @keyframes decide-out-back { to { opacity: 0; transform: translateX(28px); } }
+    @keyframes decide-in-back { from { opacity: 0; transform: translateX(-28px); } }
     .decide-actions { display: flex; justify-content: space-between; gap: 12px; margin-top: 24px; }
     .decide-status { margin-top: 10px; font-size: var(--fs-xs); color: var(--ink-soft); min-height: 1.4em; }
     .decide-status--busy { color: var(--ink-faint); }

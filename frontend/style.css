@@ -545,6 +545,36 @@ section {
   animation: fadeUp 1s var(--ease) .35s forwards;
 }
 
+/* index.html splits the headline into .hero__word spans before first paint;
+   the words then rise in one after another in place of the single fade. */
+.hero__title.is-split {
+  opacity: 1;
+  animation: none;
+}
+
+.hero__word {
+  display: inline-block;
+  opacity: 0;
+  animation: wordUp .7s var(--ease) calc(.3s + var(--i, 0) * .09s) forwards;
+}
+
+.hero__title.is-settled .hero__word {
+  opacity: 1;
+  animation: none;
+}
+
+@keyframes wordUp {
+  from {
+    opacity: 0;
+    transform: translateY(.45em);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .hero__title em {
   font-style: italic;
   color: var(--brand);
@@ -5222,6 +5252,60 @@ body.page-farm-boundary {
     animation-iteration-count: 1 !important;
     transition-duration: .01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* ---- Page-to-page transitions ----
+   Navigating between pages cross-fades the content instead of flashing
+   white, and the nav -- the same bar on every page -- is its own group so it
+   holds still while everything under it changes. Opt-in is per document:
+   both the page being left and the page arriving need this rule, which they
+   get by sharing this stylesheet. The safety net above cannot reach the
+   ::view-transition pseudo-elements (they are not matched by `*`), so
+   reduced-motion is honoured by never opting in. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+
+  .nav {
+    view-transition-name: site-nav;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: .28s;
+    animation-timing-function: var(--ease);
+  }
+}
+
+/* ---- Scroll progress ----
+   A hairline along the foot of the nav that fills as the page is read.
+   Driven by the scroll position itself, so it costs no script and cannot
+   lag the scroll. On a page too short to scroll the timeline is inactive
+   and the bar stays at its resting scaleX(0). */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .nav::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 2px;
+      background: var(--brand);
+      transform: scaleX(0);
+      transform-origin: 0 50%;
+      pointer-events: none;
+      animation: nav-progress linear both;
+      animation-timeline: scroll(root block);
+    }
+  }
+}
+
+@keyframes nav-progress {
+  to {
+    transform: scaleX(1);
   }
 }
 

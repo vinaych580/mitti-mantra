@@ -74,17 +74,35 @@
   let currentStep = 1;
   const regionsById = {};
 
+  const noMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   function showStep(n) {
+    const back = n < currentStep;
     currentStep = n;
-    $$('.decide-step').forEach(sec => {
-      sec.classList.toggle('is-active', Number(sec.dataset.step) === n);
-    });
-    $$('.decide-progress__dot').forEach(dot => {
-      const i = Number(dot.dataset.dot);
-      dot.classList.toggle('is-active', i === n);
-      dot.classList.toggle('is-done', i < n);
-    });
-    window.mmScroll.to(0);
+    const swap = () => {
+      $$('.decide-step').forEach(sec => {
+        sec.classList.toggle('is-active', Number(sec.dataset.step) === n);
+      });
+      $$('.decide-progress__dot').forEach(dot => {
+        const i = Number(dot.dataset.dot);
+        dot.classList.toggle('is-active', i === n);
+        dot.classList.toggle('is-done', i < n);
+      });
+    };
+    // Where the browser can, the outgoing step slides away and the next one
+    // slides in (decide.html styles the direction off data-step-dir). The
+    // jump back to the top happens inside the swap, hidden by the transition,
+    // rather than as a second scroll animation running underneath it.
+    if (document.startViewTransition && !noMotion) {
+      document.documentElement.dataset.stepDir = back ? 'back' : 'forward';
+      document.startViewTransition(() => {
+        swap();
+        window.mmScroll.to(0, { instant: true });
+      });
+    } else {
+      swap();
+      window.mmScroll.to(0);
+    }
     document.dispatchEvent(new CustomEvent('decide:step-shown', { detail: { step: n } }));
   }
   const goNext = () => { if (currentStep < TOTAL_STEPS) showStep(currentStep + 1); };

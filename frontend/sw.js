@@ -15,7 +15,10 @@
 // v52: code-quality pass touched most shell scripts (dashboard, mm-core,
 // toolbar, chatbot, farm-boundary, marketplace, book-a-tractor, gyan-seva)
 // and book-a-tractor.html; same reasoning -- ship them as one set.
-const VERSION = 'mittimantra-v56';
+// v57: decide.html and the two scripts only it loads (decide.js,
+// region-geo.js) join the precache. They were cached only once visited, so
+// offline a first-time visitor to the guided flow got index.html instead.
+const VERSION = 'mittimantra-v57';
 const CORE = [
   './',
   './index.html',
@@ -25,6 +28,7 @@ const CORE = [
   './gyan-seva.html',
   './book-a-tractor.html',
   './login.html',
+  './decide.html',
   './style.css',
   './assets/logo-128.png',
   './assets/logo-192.png',
@@ -36,6 +40,8 @@ const CORE = [
   './scene3d-loader.js',
   './demo-recommender.js',
   './dashboard.js',
+  './decide.js',
+  './region-geo.js',
   './offline-simulator.js',
   './farm-boundary.js',
   './farm-state.js',
