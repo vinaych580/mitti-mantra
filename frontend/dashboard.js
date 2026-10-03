@@ -1194,8 +1194,10 @@
             maxZoom: 19,
             attribution: 'Imagery © Esri'
           }).addTo(telemetryMapObj);
-          L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}.png', {
-            maxZoom: 19, opacity: 0.8, attribution: '© OSM © CartoDB'
+          // Keyless labels from the imagery's own provider (CARTO's label
+          // tiles now serve an "API KEY REQUIRED" watermark).
+          L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
+            maxZoom: 19, attribution: 'Labels © Esri'
           }).addTo(telemetryMapObj);
         } else {
           telemetryMapObj.setView(coords, farmActive ? 15 : 12);
