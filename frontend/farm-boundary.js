@@ -100,7 +100,8 @@
     poly.end   = t(DRAW_STRINGS.end);
   }
 
-  // i18n-data.js loads after this file, so wait for the document to finish.
+  // A non-English catalog arrives after this file runs (i18n.js fetches it
+  // on demand); mm:lang-changed fires once it has been applied.
   document.addEventListener('DOMContentLoaded', localiseDrawTooltips);
   document.addEventListener('mm:lang-changed', localiseDrawTooltips);
   localiseDrawTooltips();

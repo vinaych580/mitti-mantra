@@ -5,7 +5,7 @@ chatbot.py used to match English regex only — a farmer typing in Hindi,
 Telugu or Kannada (or Hinglish/Tinglish/Kanglish, i.e. those languages typed
 in Latin script) got the English fallback message no matter what they asked.
 The dashboard's own UI has spoken Hindi/Telugu/Kannada since i18n.js was
-rewritten around a static catalog (see frontend/i18n-data.js); the chatbot was
+rewritten around a static catalog (see frontend/i18n/<lang>.js); the chatbot was
 the one place still deaf to anything but English.
 
 This module supplies everything chatbot.py needs to fix that:

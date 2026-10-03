@@ -556,7 +556,7 @@
     injectStyles();
 
     // The popover panel. Its labels (Language, Tools, Dark mode, Voice, Read
-    // aloud, WhatsApp, Save PDF) are hand-translated in i18n-data.js, so this
+    // aloud, WhatsApp, Save PDF) are hand-translated in i18n/<lang>.js, so this
     // no longer opts out of translation the way it did when i18n.js machine-
     // translated arbitrary text and risked mangling short button labels.
     const panel = document.createElement('div');
