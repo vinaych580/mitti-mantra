@@ -7341,3 +7341,82 @@ html[data-theme="dark"] .ml-tag--ok { color: #9ed2a7; }
   font-size: .74rem;
   color: var(--ink-soft);
 }
+
+/* ---- Disease screening history (dashboard) ----
+   The farmer's own record of past screens, under the screening tool. Rows
+   are quiet; only the repeat-finding callout carries colour, because that is
+   the one thing in the list that asks for action. */
+.scan-history {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-strong);
+}
+.scan-history__head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.scan-history__head h3 {
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  margin: 0;
+}
+.scan-history__meta { font-size: var(--fs-2xs); color: var(--ink-soft); }
+.scan-history__clear { margin-left: auto; font-size: var(--fs-2xs); padding: 6px 12px; }
+.scan-history__callout {
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  border-radius: var(--r-sm);
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+  font-size: var(--fs-2xs);
+  line-height: 1.5;
+}
+.scan-history__callout a { color: var(--brand-deep); font-weight: 600; white-space: nowrap; }
+.scan-history__list { list-style: none; margin: 0; padding: 0; }
+.scan-history__row {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) auto 32px;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.scan-history__row:last-child { border-bottom: 0; }
+.scan-history__row.is-new { animation: scanRowIn .6s var(--ease) both; }
+@keyframes scanRowIn {
+  from { opacity: 0; transform: translateY(-6px); background: var(--brand-soft); }
+  to { opacity: 1; transform: none; background: transparent; }
+}
+.scan-history__date {
+  font-size: var(--fs-2xs);
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+.scan-history__what { display: flex; flex-direction: column; min-width: 0; }
+.scan-history__what b { font-size: var(--fs-xs); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.scan-history__what small { font-size: var(--fs-3xs); color: var(--ink-soft); }
+.scan-history__row .chip { text-transform: capitalize; }
+.scan-history__del {
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink-faint);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background .2s, color .2s;
+}
+.scan-history__del:hover,
+.scan-history__del:focus-visible { background: var(--danger-soft); color: var(--danger); }
+.scan-history__more { margin: 8px 0 0; font-size: var(--fs-2xs); color: var(--ink-soft); }
+@media (max-width: 640px) {
+  .scan-history__row { grid-template-columns: 48px minmax(0, 1fr) 32px; }
+  .scan-history__row .chip { grid-column: 2; justify-self: start; }
+  .scan-history__del { grid-row: 1; grid-column: 3; }
+}
+html[data-theme="dark"] .scan-history__callout { background: rgba(200, 138, 58, .14); color: #e9c48f; }

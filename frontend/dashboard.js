@@ -4410,58 +4410,115 @@
     });
   }
 
-  // Queue logging helper
-  function queueOfflineLog(crop, disease, confidence, severity, region) {
-    let logs = [];
-    try {
-      logs = JSON.parse(localStorage.getItem('mittimantra_disease_logs') || '[]');
-    } catch (_) { }
-    logs.push({
+  /* ---- Screening history ----
+     Every screen is kept on this device (mittimantra_disease_logs). The log
+     used to be a "sync queue" with nothing to sync to -- no endpoint accepts
+     it -- so it was written and never shown. It is now the farmer's own
+     record: what was screened, when, and whether the same problem keeps
+     coming back on the same crop, which is the point at which a person,
+     not a photo heuristic, should look at the field. */
+  const SCAN_LOG_KEY = 'mittimantra_disease_logs';
+  const MAX_STORED_DISEASE_LOGS = 50;
+  const scanHistory = {
+    list() {
+      try {
+        const logs = JSON.parse(localStorage.getItem(SCAN_LOG_KEY) || '[]');
+        return Array.isArray(logs) ? logs.filter(l => l && l.timestamp) : [];
+      } catch (_) { return []; }
+    },
+    save(logs) {
+      try { localStorage.setItem(SCAN_LOG_KEY, JSON.stringify(logs.slice(-MAX_STORED_DISEASE_LOGS))); return true; }
+      catch (_) { return false; }
+    },
+    add(entry) {
+      const logs = this.list();
+      logs.push(entry);
+      this.save(logs);
+    },
+    remove(timestamp) { this.save(this.list().filter(l => l.timestamp !== timestamp)); },
+    clear() { try { localStorage.removeItem(SCAN_LOG_KEY); } catch (_) { } },
+  };
+
+  function queueOfflineLog(crop, disease, confidence, severity, region, lesionPct) {
+    scanHistory.add({
       crop_id: crop,
       disease: disease,
       confidence: confidence,
       severity: severity,
+      lesion_pct: typeof lesionPct === 'number' ? +lesionPct.toFixed(1) : null,
       region_id: region,
       timestamp: new Date().toISOString(),
       offline: !navigator.onLine
     });
-    try {
-      localStorage.setItem('mittimantra_disease_logs', JSON.stringify(logs));
-    } catch (_) { }
-
-    if (navigator.onLine) {
-      syncOfflineLogs();
-    }
+    renderScanHistory(true);
   }
 
-  // M-8: There is no backend endpoint that actually accepts these logs
-  // (only /api/disease/predict exists, which just runs a single scan) — this
-  // only ever console.log'd, so it was never really "syncing" anything. It
-  // used to then unconditionally wipe the local queue regardless, which
-  // discarded a user's scan history with no record of it anywhere. Until a
-  // real sync endpoint exists, keep the logs in localStorage (capped so the
-  // queue can't grow unbounded) instead of deleting them.
-  const MAX_STORED_DISEASE_LOGS = 50;
-  async function syncOfflineLogs() {
-    if (!navigator.onLine) return;
-    let logs = [];
-    try {
-      logs = JSON.parse(localStorage.getItem('mittimantra_disease_logs') || '[]');
-    } catch (_) { return; }
-    if (!logs.length) return;
+  const isHealthyFinding = (d) => /healthy/i.test(String(d || ''));
+  const prettyCrop = (c) => String(c || '').replace(/_/g, ' ').replace(/^./, ch => ch.toUpperCase());
 
-    // Nothing durable to sync to yet — this is a local record only.
-    console.log("Crop disease diagnostic logs pending sync (no backend endpoint yet):", logs);
-    if (logs.length > MAX_STORED_DISEASE_LOGS) {
-      try {
-        localStorage.setItem(
-          'mittimantra_disease_logs',
-          JSON.stringify(logs.slice(-MAX_STORED_DISEASE_LOGS))
-        );
-      } catch (_) { }
+  function renderScanHistory(justAdded) {
+    const host = document.getElementById('diseaseHistory');
+    if (!host) return;
+    const logs = scanHistory.list().sort((a, b) => Date.parse(b.timestamp) - Date.parse(a.timestamp));
+    if (!logs.length) { host.hidden = true; host.innerHTML = ''; return; }
+    host.hidden = false;
+
+    // The same problem on the same crop more than once in the last 45 days.
+    const since = Date.now() - 45 * 864e5;
+    const repeats = {};
+    logs.forEach(l => {
+      if (isHealthyFinding(l.disease) || Date.parse(l.timestamp) < since) return;
+      const k = l.crop_id + '|' + l.disease;
+      repeats[k] = (repeats[k] || 0) + 1;
+    });
+    const recurring = Object.entries(repeats).filter(([, n]) => n >= 2).sort((a, b) => b[1] - a[1])[0];
+
+    const sevTone = { early: 'green', moderate: 'gold', severe: 'red' };
+    const fmtDate = (iso) => new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+    const rows = logs.slice(0, 8).map((l, i) => `
+      <li class="scan-history__row${justAdded && i === 0 ? ' is-new' : ''}">
+        <span class="scan-history__date">${escHtml(fmtDate(l.timestamp))}</span>
+        <span class="scan-history__what">
+          <b>${escHtml(l.disease || 'Unclear result')}</b>
+          <small>${escHtml(prettyCrop(l.crop_id))}${typeof l.confidence === 'number' ? ' · ' + Math.round(l.confidence * 100) + '% match' : ''}${typeof l.lesion_pct === 'number' ? ' · ' + l.lesion_pct + '% leaf area' : ''}</small>
+        </span>
+        <span class="chip chip--${isHealthyFinding(l.disease) ? 'green' : (sevTone[l.severity] || 'gold')}">${escHtml(isHealthyFinding(l.disease) ? 'Healthy' : (l.severity || '—'))}</span>
+        <button type="button" class="scan-history__del" data-scan-del="${escHtml(l.timestamp)}" aria-label="Delete this screening">×</button>
+      </li>`).join('');
+
+    let callout = '';
+    if (recurring) {
+      const [crop, disease] = recurring[0].split('|');
+      callout = `
+        <div class="scan-history__callout" role="note">
+          <b>${escHtml(disease)}</b> on ${escHtml(prettyCrop(crop).toLowerCase())} has come up ${recurring[1] === 2 ? 'twice' : recurring[1] + ' times'} in the last six weeks.
+          A repeat finding is the moment to have someone look at the field itself.
+          <a href="gyan-seva.html">Talk to a local expert →</a>
+        </div>`;
     }
+
+    host.innerHTML = `
+      <div class="scan-history__head">
+        <h3>Your screenings</h3>
+        <span class="scan-history__meta">${logs.length} saved on this device</span>
+        <button type="button" class="btn btn-ghost scan-history__clear" data-scan-clear>Clear</button>
+      </div>
+      ${callout}
+      <ol class="scan-history__list">${rows}</ol>
+      ${logs.length > 8 ? `<p class="scan-history__more">Showing the latest 8 of ${logs.length}.</p>` : ''}`;
+    if (window.AgriSimI18n && window.AgriSimI18n.getLanguage() !== 'en') window.AgriSimI18n.retranslate();
   }
-  window.addEventListener('online', syncOfflineLogs);
+
+  document.addEventListener('click', (e) => {
+    const del = e.target.closest('[data-scan-del]');
+    if (del) { scanHistory.remove(del.getAttribute('data-scan-del')); renderScanHistory(false); return; }
+    if (e.target.closest('[data-scan-clear]')) {
+      if (!confirm('Delete every saved screening on this device?')) return;
+      scanHistory.clear();
+      renderScanHistory(false);
+    }
+  });
+  renderScanHistory(false);
 
   // Render the costed, area-scaled treatment plan from /api/disease/predict's
   // action_plan field. Falls back to the plain treatment list (see call site)
@@ -4606,7 +4663,7 @@
         const severitySource = typeof r.lesion_area_pct === 'number' ? 'Measured on your photo' : 'Estimated on-device';
 
         // 3. Queue Analytics Log
-        queueOfflineLog(matchedCrop, diseaseName, confidence, severity, regionId);
+        queueOfflineLog(matchedCrop, diseaseName, confidence, severity, regionId, lesionPct);
 
         // 4. Render Results UI
         const sevClass = severity === 'early' ? 'good' : severity === 'moderate' ? 'warn' : 'red';
