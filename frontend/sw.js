@@ -18,7 +18,12 @@
 // v57: decide.html and the two scripts only it loads (decide.js,
 // region-geo.js) join the precache. They were cached only once visited, so
 // offline a first-time visitor to the guided flow got index.html instead.
-const VERSION = 'mittimantra-v57';
+// v58: all-round upgrade. i18n-data.js split into i18n/<lang>.js (loaded on
+// demand); login.html + auth.js replaced by your-data.html/.js; new
+// mm-palette.js on every page; Data/*.js re-encoded column by column;
+// farm-boundary.js no longer loads Turf. Shipped as one set so no visitor
+// pairs new markup with an old script.
+const VERSION = 'mittimantra-v58';
 const CORE = [
   './',
   './index.html',
