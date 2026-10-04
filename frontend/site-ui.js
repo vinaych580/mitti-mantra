@@ -332,6 +332,50 @@
     });
   }
 
+  /* ---------- Instant page loads (Speculation Rules) ----------
+     Fetches a page's HTML the moment a visitor shows they are about to open
+     it -- a short hover on desktop, the start of a tap on touch -- so the
+     click lands on a document that is already here, and the cross-fade above
+     plays without a wait. Prefetch rather than prerender: a prerender runs
+     the page's scripts and API calls (and its local usage counters) for a
+     page that may never be opened. Skipped entirely under Data Saver.
+     Browsers without support ignore all of this. */
+  const saveData = navigator.connection && navigator.connection.saveData;
+  if (!saveData && window.HTMLScriptElement && HTMLScriptElement.supports &&
+      HTMLScriptElement.supports('speculationrules')) {
+    const rules = document.createElement('script');
+    rules.type = 'speculationrules';
+    rules.textContent = JSON.stringify({
+      prefetch: [{
+        where: {
+          and: [
+            { href_matches: '/*' },
+            { not: { href_matches: '/api/*' } },
+            { not: { href_matches: '/docs*' } },
+            { not: { selector_matches: '[target="_blank"], [download], [rel~="nofollow"]' } },
+          ],
+        },
+        eagerness: fineHover ? 'moderate' : 'conservative',
+      }],
+    });
+    document.head.appendChild(rules);
+  }
+
+  /* ---------- Skipped page transitions ----------
+     A cross-page view transition is skipped when the tab is hidden or a
+     second navigation interrupts the first. Nothing is wrong when that
+     happens, but the browser rejects the transition's promises, and with no
+     handler it reports each one as an uncaught error. */
+  const quietTransition = (e) => {
+    const vt = e.viewTransition;
+    if (!vt) return;
+    vt.ready?.catch(() => {});
+    vt.updateCallbackDone?.catch(() => {});
+    vt.finished?.catch(() => {});
+  };
+  window.addEventListener('pageswap', quietTransition);
+  window.addEventListener('pagereveal', quietTransition);
+
   /* ---------- Subtle parallax on hero image ---------- */
   const heroBgImg = document.querySelector('.hero__bg img');
   let dropNativeParallax = null;
