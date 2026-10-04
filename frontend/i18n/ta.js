@@ -503,4 +503,23 @@
   "Backup restored. Your farm is back on this phone.": "காப்புப்பிரதி மீட்டமைக்கப்பட்டது. உங்கள் பண்ணை இந்த ஃபோனுக்குத் திரும்பியது.",
   "That isn't a Mitti Mantra backup file.": "இது மிட்டி மந்திரா காப்புப்பிரதிக் கோப்பு அல்ல.",
   "All Mitti Mantra data on this phone has been deleted.": "இந்த ஃபோனில் உள்ள மிட்டி மந்திரா தரவு அனைத்தும் நீக்கப்பட்டது.",
+
+  // Quick jump (mm-palette.js) and the links into the guided decide page.
+  "Farm Score": "பண்ணை மதிப்பெண்",
+  "What should I sow?": "என்ன விதைக்கலாம்?",
+  "Rather answer one question at a time?": "ஒவ்வொரு கேள்விக்காகப் பதில் சொல்ல விரும்புகிறீர்களா?",
+  "Go step by step →": "படிப்படியாகச் செல்லுங்கள் →",
+  "New here? Get one answer →": "புதியவரா? ஒரே பதிலைப் பெறுங்கள் →",
+  "Search pages, tools and actions": "பக்கங்கள், கருவிகள் மற்றும் செயல்களைத் தேடுங்கள்",
+  "Dashboard tools": "டாஷ்போர்டு கருவிகள்",
+  "Pages": "பக்கங்கள்",
+  "Actions": "செயல்கள்",
+  "Recent": "சமீபத்தியவை",
+  "Tool": "கருவி",
+  "Page": "பக்கம்",
+  "Action": "செயல்",
+  "No matches. Try another word.": "எதுவும் கிடைக்கவில்லை. வேறு சொல்லை முயற்சிக்கவும்.",
+  "Switch light / dark mode": "ஒளி / இருண்ட பயன்முறையை மாற்று",
+  "Ask the assistant": "உதவியாளரிடம் கேளுங்கள்",
+  "Back up my data": "என் தரவைக் காப்புப்பிரதி எடு",
 };

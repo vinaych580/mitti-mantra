@@ -34,6 +34,7 @@ const CORE = [
   './assets/logo-192.png',
   './assets/logo-512.png',
   './site-ui.js',
+  './mm-palette.js',
   './vendor/lenis.min.js',
   './state-data.js',
   './india-globe.js',

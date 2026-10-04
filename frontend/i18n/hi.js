@@ -528,4 +528,23 @@
   "Backup restored. Your farm is back on this phone.": "बैकअप वापस आ गया। आपका खेत इस फ़ोन पर लौट आया है।",
   "That isn't a Mitti Mantra backup file.": "यह मिट्टी मंत्र की बैकअप फ़ाइल नहीं है।",
   "All Mitti Mantra data on this phone has been deleted.": "इस फ़ोन से मिट्टी मंत्र का सारा डेटा हटा दिया गया है।",
+
+  // Quick jump (mm-palette.js) and the links into the guided decide page.
+  "Farm Score": "खेत स्कोर",
+  "What should I sow?": "क्या बोऊं?",
+  "Rather answer one question at a time?": "एक-एक सवाल का जवाब देना चाहेंगे?",
+  "Go step by step →": "कदम-दर-कदम चलें →",
+  "New here? Get one answer →": "नए हैं? एक सीधा जवाब पाएं →",
+  "Search pages, tools and actions": "पेज, टूल और काम खोजें",
+  "Dashboard tools": "डैशबोर्ड टूल",
+  "Pages": "पेज",
+  "Actions": "काम",
+  "Recent": "हाल ही में",
+  "Tool": "टूल",
+  "Page": "पेज",
+  "Action": "काम",
+  "No matches. Try another word.": "कुछ नहीं मिला। कोई दूसरा शब्द आज़माएं।",
+  "Switch light / dark mode": "हल्का / गहरा मोड बदलें",
+  "Ask the assistant": "सहायक से पूछें",
+  "Back up my data": "मेरे डेटा का बैकअप लें",
 };
