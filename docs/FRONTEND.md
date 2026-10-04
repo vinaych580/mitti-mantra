@@ -18,11 +18,12 @@ stylesheet is the Google Fonts link for Fraunces + Inter.
 | `gyan-seva.html` | Expert consultation — consultant directory, ranking, booking, AI pre-screening, second opinions |
 | `book-a-tractor.html` | Tractor catalogue, spec comparison, nearby-tractor map, bookings, owner listings, demand intelligence |
 | `farm-boundary.html` | Draw-a-polygon tool backed by Leaflet + SoilGrids |
-| `login.html` | Sign-in shell. **Authentication is removed** — `auth.js` is a no-op stub, so this page cannot actually sign anyone in |
+| `decide.html` | Guided "what should I sow?" flow: three questions to one ranked answer, for farmers who'd rather not start from 24 tools |
+| `your-data.html` | Back up, restore and delete everything saved on this device (there are no accounts). Also served at `/login` and `/your-data` |
 
 FastAPI also serves extensionless aliases for these
 (`/dashboard`, `/marketplace`, `/gyan-seva`, `/book-a-tractor`,
-`/farm-boundary`, `/login`, plus `/book-consultation` and
+`/farm-boundary`, `/your-data` (and the older `/login`), plus `/book-consultation` and
 `/book-a-consultation`), so links can omit the `.html`.
 
 ## Script layering (load order)
@@ -37,7 +38,8 @@ order. The ordering rules that matter:
 - `mm-plots.js` also needs `farm-state.js` loaded first.
 - `mm-enhance.js` loads **after** `dashboard.js` so it can observe its
   rendered output.
-- `i18n-data.js` must load **before** `i18n.js` — it supplies the catalog.
+- `i18n.js` fetches `i18n/<lang>.js` itself, and only for a non-English
+  language; no page loads a catalog with a `<script>` tag.
 - The `Data/*.js` catalogs must load **before** the page module that reads
   them (`marketplace.js`, `gyan-seva.js`, `book-a-tractor.js`).
 
@@ -45,17 +47,22 @@ Load order is now per-page rather than one global chain:
 
 | Page | CDN | Local scripts, in order |
 |---|---|---|
-| `index.html` | three.js | `mm-core` · `mm-analytics` · `mm-freshness` · `site-ui` · `state-data` · `india-globe` · `demo-recommender` · `i18n-data` · `i18n` · `toolbar` · `chatbot` |
-| `dashboard.html` | leaflet, chart.js | `mm-core` · `mm-analytics` · `mm-freshness` · `site-ui` · `offline-simulator` · `farm-state` · `mm-plots` · `dashboard` · `mm-enhance` · `i18n-data` · `i18n` · `toolbar` · `chatbot` |
-| `marketplace.html` | chart.js, leaflet | `mm-core` · `site-ui` · `farm-state` · `toolbar` · `Data/marketplace-listings` · `marketplace` |
-| `gyan-seva.html` | — | `mm-core` · `site-ui` · `state-data` · `farm-state` · `Data/consultants` · `i18n-data` · `i18n` · `gyan-seva` |
-| `book-a-tractor.html` | leaflet | `mm-core` · `site-ui` · `farm-state` · `Data/tractors` · `i18n-data` · `i18n` · `book-a-tractor` · `map-tractors` |
-| `farm-boundary.html` | leaflet, leaflet-draw, turf | `site-ui` · `farm-state` · `farm-boundary` · `i18n-data` · `i18n` · `toolbar` |
-| `login.html` | firebase-app-compat, firebase-auth-compat | `firebase-config` · `auth` |
+| `index.html` | three.js (on demand) | `mm-core` · `mm-analytics` · `mm-freshness` · `site-ui` · `mm-palette` · `state-data` · `farm-state` · `scene3d-loader` · `demo-recommender` · `i18n` · `toolbar` · `chatbot` |
+| `dashboard.html` | chart.js · leaflet (when the map nears view) | `mm-core` · `mm-analytics` · `mm-freshness` · `site-ui` · `mm-palette` · `offline-simulator` · `farm-state` · `mm-plots` · `dashboard` · `mm-enhance` · `i18n` · `toolbar` · `chatbot` |
+| `decide.html` | — | `mm-core` · `site-ui` · `mm-palette` · `offline-simulator` · `region-geo` · `decide` · `mm-enhance` · `i18n` · `toolbar` · `chatbot` |
+| `marketplace.html` | — | `mm-core` · `site-ui` · `mm-palette` · `farm-state` · `toolbar` · `Data/marketplace-listings` · `marketplace` |
+| `gyan-seva.html` | — | `mm-core` · `toolbar` · `site-ui` · `mm-palette` · `state-data` · `farm-state` · `Data/consultants` · `i18n` · `gyan-seva` |
+| `book-a-tractor.html` | leaflet | `mm-core` · `toolbar` · `site-ui` · `mm-palette` · `farm-state` · `Data/tractors` · `i18n` · `book-a-tractor` · `map-tractors` |
+| `farm-boundary.html` | leaflet, leaflet-draw | `site-ui` · `mm-palette` · `farm-state` · `farm-boundary` · `i18n` · `toolbar` |
+| `your-data.html` | — | `mm-core` · `site-ui` · `mm-palette` · `your-data` · `i18n` · `toolbar` |
 
-Note that `farm-boundary.html` deliberately does **not** load `mm-core.js`,
-and only `index.html` / `dashboard.html` load the chatbot. `marketplace.html`
-is now the only page besides `login.html` without the i18n pair.
+This table is generated from the pages' `<script>` tags; regenerate it rather
+than hand-editing when a page's scripts change. `farm-boundary.html`
+deliberately does **not** load `mm-core.js`, and only `index.html`,
+`dashboard.html` and `decide.html` load the chatbot. `marketplace.html` is
+the only page without `i18n.js`. Measuring a drawn plot no longer needs
+Turf: `farm-boundary.js` carries the three formulas it used (area, centroid,
+perimeter) and matches Turf 7 to floating-point noise.
 
 ## Module responsibilities
 
@@ -332,20 +339,25 @@ With Lenis running, three things hang off its per-frame scroll position:
   while Lenis is easing a wheel gesture gets overridden; these don't, and
   they fall back to native scrolling when Lenis isn't running.
 
-### `i18n-data.js` + `i18n.js`
+### `i18n.js` + `i18n/<lang>.js`
 
-`i18n.js` is the switcher for **English, Hindi, Telugu and Kannada**,
-driven by `data-i18n="key"` attributes on static markup.
+`i18n.js` is the switcher for **English, Hindi, Telugu, Kannada and Tamil**,
+driven by `data-i18n="key"` attributes on static markup. Each language's
+catalog is its own file (`i18n/hi.js`, `i18n/te.js`, …) fetched only when
+that language is chosen, so an English reader downloads none of them.
+`AgriSimI18n.t(text)` translates a string a script builds itself (chat
+greetings, toasts) without it having to sit in the DOM first.
 
-`i18n-data.js` is the catalog it reads, and it exists to fix a real
-problem: `i18n.js` used to send every visible string to a free
+The catalogs exist to fix a real problem: `i18n.js` used to send every visible string to a free
 machine-translation API at runtime. That needed a network round trip per
 string, and it got agronomy terms wrong. The catalog is now a static
 dictionary of the site's actual UI strings, translated once by hand and
 looked up offline:
 
 ```js
-window.MM_I18N_CATALOG = { hi: { "Source string": "…" }, te: { … }, kn: { … } }
+// i18n/hi.js
+(window.MM_I18N_CATALOG = window.MM_I18N_CATALOG || {}).hi = { "Source string": "…" };
+// i18n.js
 window.MM_I18N_GLOSSARY = ["MSP", "PM-KISAN", …]   // never translated
 ```
 
@@ -355,15 +367,24 @@ scoped to the chrome a farmer sees on every visit: nav, dashboard sidebar,
 tool headers, shared form labels, common buttons and the cross-page menus.
 Long marketing prose and free-form ML JSON output are out of scope.
 
-### `auth.js` — deliberate no-op stub
+### `your-data.js` — no accounts, so: backup and restore
 
-Authentication has been **removed** from the product. `auth.js` is kept
-only so legacy references to `window.mmAuth` don't throw: every method is a
-stub (`currentUser()` → `null`, `signInWithGoogle()` → rejected promise,
-`onAuthStateChanged(cb)` → calls back with `null`). `login.html` and
-`firebase-config.js` remain alongside it but sign nobody in. Anything that
-looks account-scoped in the UI — marketplace listings, saved plots — is
-actually per-browser `localStorage`.
+There is no authentication. Everything that looks account-scoped — saved
+plots, committed crops, bookings, marketplace listings, screenings,
+expenses — is per-browser `localStorage` under the `mittimantra_`, `mm_` and
+`agrisim_` prefixes. `your-data.js` lists it, writes it to one JSON file
+(or shares the file on phones that support it), restores a file after
+showing what it contains, and deletes it all on request. Caches and
+per-screen state are left out of backups; the device id is kept so a
+seller's listings stay theirs on a new phone. The old `login.html` /
+`auth.js` stub and the Firebase SDK it loaded are gone.
+
+### `mm-palette.js` — quick jump
+
+Ctrl/⌘+K, `/`, or the search button it adds to every page's nav. Finds
+dashboard tools, pages and actions by English name, by the name in the
+current language, or by everyday Hinglish keywords. Add a tool to `ITEMS`
+when you add one to the dashboard sidebar.
 
 ### `toolbar.js`
 
@@ -376,12 +397,17 @@ both can coexist. It also injects the dark-theme stylesheet (see below).
 
 | File | Contents |
 |---|---|
-| `Data/consultants.js` | `window.CONSULTANTS_DATA` — 2,292 consultants |
-| `Data/tractors.js` | `window.TRACTORS_DATA` — 528 tractors, incl. lat/lng |
+| `Data/consultants.js` | `window.CONSULTANTS_DATA` — 2,292 consultants (639 KB) |
+| `Data/tractors.js` | `window.TRACTORS_DATA` — 528 tractors, incl. lat/lng (67 KB) |
 | `Data/marketplace-listings.js` | `window.MARKETPLACE_DATA` — 37 listings, 6 demand signals, 2 pool orders (`source: 'DEMO_DATA'`) |
 
 `generate_consultants.js` and `generate_tractors.js` in the same folder are
-the generators that produced those catalogs.
+the generators that produced those catalogs. Both write through
+`encode-columns.js`: records are stored column by column, repetitive columns
+as a dictionary plus indexes, and a ten-line decoder at the top of the file
+rebuilds the plain array of objects the pages read. Note that
+`consultants.js` was hand-edited after generation (some bios), so re-running
+its generator would overwrite those edits.
 
 ### `sw.js` — service worker
 
@@ -419,5 +445,5 @@ Accessibility toggles in `mm-core.js` add `body.mm-hc` (high contrast) and
 
 - **A new dashboard tool:** add a `<section class="tool" data-tool="x">…</section>` with a form `data-form="x"` and an output `data-out="x"`. Wire a submit handler in `dashboard.js`. The Farm Profile bar will auto-fill fields named like profile keys, and `mm-enhance.js` will auto-add the "Data as of" footer.
 - **A new chatbot intent:** add a handler in `backend/chatbot.py` and a regex branch in `answer()`. Include deep-link `actions` via `_build_actions()` so the reply drives the user back into the dashboard.
-- **A new language:** add a `LANGS` entry in `i18n.js` and a catalog block in `i18n-data.js`; mark static strings with `data-i18n="key"`. Do not reintroduce runtime machine translation.
+- **A new language:** add a `LANGS` entry in `i18n.js`, a catalog file `i18n/<code>.js`, and that file to `CORE` in `sw.js`; mark static strings with `data-i18n="key"`. Do not reintroduce runtime machine translation.
 - **A new page:** register it in `CORE` in `sw.js` (and bump `VERSION`), and add the extensionless route in `backend/main.py` if you want a clean URL.

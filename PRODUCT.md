@@ -36,9 +36,9 @@ Three things a neighboring product could not truthfully copy:
 
 - **Zero-build, single-process deployment.** FastAPI serves both `/api/*` and the static `frontend/` from one URL. No bundler step stands between an edit and a running site.
 - **Low-connectivity rural use is a design premise.** PWA with a service worker (`frontend/sw.js`), precached shell, and an `offline-simulator.js` fallback path.
-- **Language.** UI ships English / Hindi / Telugu via `data-i18n` attributes and `i18n.js` + `i18n-data.js`.
+- **Language.** UI ships English / Hindi / Telugu via `data-i18n` attributes and `i18n.js` + per-language catalogs in `i18n/` (Kannada and Tamil have since been added).
 - **Unified Farm Profile.** Region / season / area / budget are set once and auto-fill every tool; the chatbot inherits the same context. Deep links (`/dashboard.html?tool=…&region_id=…`) activate a specific tool with the profile applied.
-- **Surfaces currently built:** landing (`index.html`), 14-tool dashboard (`dashboard.html`), marketplace (`marketplace.html`), Gyan Seva expert consultation (`gyan-seva.html`), Book a Tractor (`book-a-tractor.html`), farm boundary drawing (`farm-boundary.html`), login (`login.html`, currently orphaned — see below).
+- **Surfaces currently built:** landing (`index.html`), 14-tool dashboard (`dashboard.html`), marketplace (`marketplace.html`), Gyan Seva expert consultation (`gyan-seva.html`), Book a Tractor (`book-a-tractor.html`), farm boundary drawing (`farm-boundary.html`), guided decision (`decide.html`), and on-device data backup/restore (`your-data.html`, which replaced the orphaned `login.html`).
 
 ## Capabilities and Constraints
 
@@ -57,7 +57,7 @@ Three things a neighboring product could not truthfully copy:
 
 **Explicitly undecided / open:**
 
-- **Authentication is removed.** `frontend/auth.js` is a deliberate no-op stub; `login.html` exists but no real auth backend does. Anything user-scoped persists to `localStorage` keyed by a per-browser device id. Whether real accounts ever arrive is undecided.
+- **Authentication is removed.** There is no auth backend; the old `login.html` / `auth.js` stub is gone, and `your-data.html` lets a farmer back up and restore their on-device data instead. Anything user-scoped persists to `localStorage` keyed by a per-browser device id. Whether real accounts ever arrive is undecided.
 - **No database.** CSV flat files are the source of truth, read through a shared mtime-aware cache (`utils/csv_cache.py`). Expense logging has no server-side store at all — `/api/expense/*` is disabled (503) because the old shared-file store had no tenant isolation, so entries are logged client-side to `localStorage` instead. A future SQL migration is intended but unscheduled.
 - **Project trajectory is genuinely mixed** — a judged hackathon/competition build, a portfolio showcase, *and* a build with real ambition toward a farmer pilot, all at once. Do not resolve this tension by quietly picking one. Work should hold up under a judge's scrutiny and stay honest enough to put in front of a real farmer.
 

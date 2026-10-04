@@ -52,3 +52,10 @@ Piece 4 (GSAP + ScrollTrigger) is not built. Open problems with it as written:
 - **Weight.** About 115 KB of minified script for two effects, on a site that counts bytes for metered connections. Desktop only, but it also goes into the service-worker precache for everyone.
 
 Decision: GSAP skipped. The word-by-word headline entrance was built without it: an inline script in `index.html` splits the headline before first paint and `style.css` staggers the words (`.hero__word`, `wordUp`). The full sentence stays in a hidden span so `i18n.js` translates it unchanged, and the words are redrawn from it on `mm:lang-changed`. If a pinned scroll-storytelling section is ever wanted, that is the one thing here GSAP is the right tool for.
+
+## Follow-up (2026-10-04, branch `all-round-upgrade`)
+
+- **Instant page loads, natively.** Speculation Rules in `site-ui.js` prefetch a page's HTML on a short hover (desktop) or the start of a tap (touch), so the cross-page view transition plays without a network wait. Prefetch, not prerender: prerender runs the target page's scripts, API calls and usage counters for pages that may never open. Off under Data Saver.
+- **Quick jump palette** (`mm-palette.js`, Ctrl/⌘+K or `/`) enters with `@starting-style` on the system's `--ease`; no script animation.
+- **Still no GSAP**, for the reasons above. A spring easing via CSS `linear()` was considered and left out: DESIGN.md asks for motion that steadies rather than bounces, and earlier bounce easings in this repo were flagged as exceptions.
+- **Fuse.js** (piece 5) was not needed: the palette searches ~40 items with a small scorer (prefix > word > substring > letters-in-order) and matches Hinglish keywords.

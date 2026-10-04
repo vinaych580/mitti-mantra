@@ -44,7 +44,7 @@ _Mitti se judao, fasal se pao._
 | Layer | Stack |
 |---|---|
 | Backend | FastAPI, Pydantic v2, scikit-learn, pandas |
-| Frontend | Vanilla JS, Three.js, Leaflet + Turf, Chart.js — no build step |
+| Frontend | Vanilla JS, Three.js, Leaflet, Chart.js, Lenis — no build step |
 | Data | CSV seed data + live fetchers (SoilGrids v2, Open-Meteo, data.gov.in mandi) |
 | Caching | File + in-memory `@cached` decorator (`data_ingestion/cache.py`) |
 | PWA | Service Worker (`frontend/sw.js`) with three strategies |
@@ -86,7 +86,10 @@ frontend/               Zero-build static site (served by FastAPI)
   demo-recommender.js   Client-side on-page recommender
   farm-boundary.js      Leaflet map + polygon + soil fetch
   site-ui.js            Nav, reveal animations, PWA register
-  i18n.js               EN / HI / TE switcher
+  i18n.js               EN / HI / TE / KN / TA switcher; catalogs in i18n/<lang>.js, loaded on demand
+  mm-palette.js         Ctrl/⌘+K quick jump to any tool, page or action
+  decide.html           Guided "what should I sow?" flow
+  your-data.html        Back up / restore / delete on-device data (no accounts)
   toolbar.js            Floating dark-mode / voice / TTS / WhatsApp / PDF
   sw.js                 Service worker — precache + 3 caching strategies
   style.css             "Clay" design system
