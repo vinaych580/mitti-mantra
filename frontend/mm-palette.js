@@ -256,7 +256,9 @@
     if (!root || root.hidden) return;
     root.hidden = true;
     document.documentElement.classList.remove('mm-palette-open');
-    window.mmLenis?.start();
+    // A modal or the mobile menu may still hold the page (site-ui.js stops
+    // Lenis while <body> is overflow:hidden); don't scroll under it.
+    if (getComputedStyle(document.body).overflowY !== 'hidden') window.mmLenis?.start();
     if (returnFocus && document.contains(returnFocus)) returnFocus.focus();
   }
 
