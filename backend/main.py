@@ -1976,9 +1976,12 @@ if os.path.exists(frontend_dir):
     async def dashboard_route(request: Request):
         return FileResponse(os.path.join(frontend_dir, "dashboard.html"))
 
+    # /login predates the "Your data" page that replaced the sign-in stub;
+    # old links land there.
+    @app.api_route("/your-data", methods=["GET"])
     @app.api_route("/login", methods=["GET"])
-    async def login_route(request: Request):
-        return FileResponse(os.path.join(frontend_dir, "login.html"))
+    async def your_data_route(request: Request):
+        return FileResponse(os.path.join(frontend_dir, "your-data.html"))
 
     @app.api_route("/farm-boundary", methods=["GET"])
     async def farm_boundary_route(request: Request):

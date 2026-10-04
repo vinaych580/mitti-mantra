@@ -42,7 +42,11 @@
     },
     {
       "source": "/login",
-      "destination": "/frontend/login.html"
+      "destination": "/frontend/your-data.html"
+    },
+    {
+      "source": "/your-data",
+      "destination": "/frontend/your-data.html"
     },
     {
       "source": "/farm-boundary",

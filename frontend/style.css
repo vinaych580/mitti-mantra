@@ -7420,3 +7420,54 @@ html[data-theme="dark"] .ml-tag--ok { color: #9ed2a7; }
   .scan-history__del { grid-row: 1; grid-column: 3; }
 }
 html[data-theme="dark"] .scan-history__callout { background: rgba(200, 138, 58, .14); color: #e9c48f; }
+
+/* ---- Your data (your-data.html) ----
+   Shares the sign-in page's shell (.login, .login__card). Sections are
+   separated by hairlines rather than boxed, so the page reads as one short
+   list of things you can do, top to bottom. */
+.data-card { max-width: 560px; }
+.data-section { padding: 20px 0; border-top: 1px solid var(--border-strong); }
+.data-section:last-child { padding-bottom: 0; }
+.data-section__title {
+  font-family: var(--font-body);
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0 0 10px;
+}
+.data-section__meta { font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--ink-faint); }
+.data-section__note { font-size: var(--fs-xs); color: var(--ink-soft); line-height: 1.5; margin: 0 0 14px; }
+.data-summary { list-style: none; margin: 0; padding: 0; }
+.data-summary__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 9px 0;
+  font-size: var(--fs-xs);
+  border-bottom: 1px solid var(--border);
+}
+.data-summary__row:last-child { border-bottom: 0; }
+.data-summary__row b { font-variant-numeric: tabular-nums; font-weight: 600; }
+.data-empty { font-size: var(--fs-xs); color: var(--ink-soft); margin: 0; }
+.data-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.data-file { position: relative; overflow: hidden; cursor: pointer; }
+.data-file input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.data-file:focus-within { outline: 2px solid var(--brand); outline-offset: 2px; }
+.data-preview {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: var(--r-md);
+  background: var(--bg-soft);
+}
+.data-preview__head { font-weight: 600; font-size: var(--fs-xs); margin: 0 0 6px; }
+.data-preview__head span { font-weight: 500; color: var(--ink-soft); }
+.data-preview__warn { font-size: var(--fs-2xs); color: var(--accent-deep); margin: 10px 0 12px; }
+.data-section--danger .data-section__title { color: var(--danger); }
+.data-delete { color: var(--danger); border-color: rgba(139, 47, 47, .3); }
+.data-delete:hover { background: var(--danger-soft); }
+@media (max-width: 640px) {
+  .data-card { padding: 28px 20px 24px; }
+  .data-actions .btn { flex: 1 1 auto; justify-content: center; }
+}

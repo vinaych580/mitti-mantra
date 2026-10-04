@@ -4,7 +4,7 @@
    Architecture notes (see docs / final report for the full rationale):
 
    • This app has no real backend authentication or multi-tenant database
-     (see frontend/auth.js — a stub — and the 503s on /api/expense/*). The
+     (no accounts; see your-data.html for backup — and the 503s on /api/expense/*). The
      existing "Book a Tractor" and "Gyan Seva" features already establish the
      pattern this file follows: demo catalog data (Data/marketplace-listings.js)
      rendered client-side, with anything the user creates (listings, buy
