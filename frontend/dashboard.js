@@ -1003,7 +1003,50 @@
     return tbl;
   })();
 
+  /* Leaflet is fetched only when the telemetry map is about to scroll into
+     view. It used to load with the page: 144 KB of script ahead of this file
+     and a render-blocking stylesheet from unpkg, for one map well below the
+     fold that a farmer checking a price never reaches. */
+  const LEAFLET = {
+    css: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
+    cssSri: 'sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=',
+    js: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
+    jsSri: 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=',
+  };
+  let leafletPromise = null;
+  function loadLeaflet() {
+    if (window.L && window.L.map) return Promise.resolve(window.L);
+    if (leafletPromise) return leafletPromise;
+    const add = (tag, attrs) => new Promise((resolve, reject) => {
+      const el = Object.assign(document.createElement(tag), attrs, { crossOrigin: 'anonymous' });
+      el.onload = resolve;
+      el.onerror = reject;
+      document.head.appendChild(el);
+    });
+    leafletPromise = Promise.all([
+      add('link', { rel: 'stylesheet', href: LEAFLET.css, integrity: LEAFLET.cssSri }),
+      add('script', { src: LEAFLET.js, integrity: LEAFLET.jsSri }),
+    ]).then(() => window.L, (err) => { leafletPromise = null; throw err; });
+    return leafletPromise;
+  }
+
+  // Resolves once `el` is within a screen of the viewport.
+  function whenNearViewport(el) {
+    if (!('IntersectionObserver' in window)) return Promise.resolve();
+    return new Promise((resolve) => {
+      const io = new IntersectionObserver((entries) => {
+        if (entries.some(e => e.isIntersecting)) { io.disconnect(); resolve(); }
+      }, { rootMargin: '100% 0px' });
+      io.observe(el);
+    });
+  }
+
+  // The weather that drives the pest overlay can arrive before the map
+  // exists; the map draws it once it does.
+  let lastPestOverlay = null;
+
   function drawPestRiskOverlay(coords, w) {
+    lastPestOverlay = { regionId: activeTelemetryRegionId, coords, w };
     if (!telemetryMapObj) return;
 
     // Remove any previous pest risk layers
@@ -1184,9 +1227,10 @@
     // the REGION_COORDS table (now covering all 30 regions). Default is India centre.
 
     const mapDiv = document.getElementById('telemetryMap');
-    if (mapDiv && typeof L !== 'undefined') {
+    if (mapDiv) {
       mapDiv.style.display = 'block';
-      setTimeout(() => {
+      const mapReady = (window.L && window.L.map) ? Promise.resolve() : whenNearViewport(mapDiv).then(loadLeaflet);
+      mapReady.then(() => {
         if (activeTelemetryRegionId !== regionId) return;
         if (!telemetryMapObj) {
           telemetryMapObj = L.map('telemetryMap', { zoomControl: false }).setView(coords, farmActive ? 15 : 12);
@@ -1236,21 +1280,22 @@
               .bindPopup(`<b>${regionName || regionId}</b><br>GPS Active.`).openPopup();
           }
         } else {
-          // No farm active: show a placeholder square + marker as before
-          const offset = 0.003;
-          const poly = [
-            [coords[0] - offset, coords[1] - offset],
-            [coords[0] - offset, coords[1] + offset],
-            [coords[0] + offset, coords[1] + offset],
-            [coords[0] + offset, coords[1] - offset]
-          ];
-          L.polygon(poly, { color: BRAND_GRN, fillColor: BRAND_GRN, fillOpacity: 0.25 }).addTo(telemetryMapObj);
+          // No farm drawn: mark the region centre and say so. This used to
+          // draw a square "plot" around it and claim "GPS Active", which
+          // showed a farmer a field that was never theirs.
           L.marker(coords).addTo(telemetryMapObj)
-            .bindPopup(`<b>${regionName || regionId}</b><br>GPS Active.`).openPopup();
+            .bindPopup(`<b>${escHtml(regionName || regionId)}</b><br>Region centre. <a href="farm-boundary.html">Draw your farm</a> to see your own plot here.`).openPopup();
         }
 
         telemetryMapObj.invalidateSize();
-      }, 100);
+        if (lastPestOverlay && lastPestOverlay.regionId === regionId) {
+          drawPestRiskOverlay(lastPestOverlay.coords, lastPestOverlay.w);
+        }
+      }).catch(() => {
+        // Offline with nothing cached: hide the empty frame rather than
+        // leave a grey box. The cards above still carry the numbers.
+        if (!telemetryMapObj) mapDiv.style.display = 'none';
+      });
     }
   }
 
