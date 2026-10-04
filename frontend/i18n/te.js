@@ -459,4 +459,17 @@
     'Crops to compare — pick 2 to 6': 'పోల్చడానికి పంటలు — 2 నుంచి 6 ఎంచుకోండి',
     'Pick at least 2 crops': 'కనీసం 2 పంటలు ఎంచుకోండి',
     'Tick two to six crops in the list above.': 'పై జాబితాలో రెండు నుంచి ఆరు పంటలను టిక్ చేయండి.',
+
+  // Chat assistant: panel subtitle, read-aloud button, and the messages
+  // chatbot.js writes itself when a request fails.
+  "Ask about crops, prices, schemes & more": "పంటలు, ధరలు, పథకాలు మరియు మరిన్నింటి గురించి అడగండి",
+  "Listen": "వినండి",
+  "Listen to answer": "సమాధానం వినండి",
+  "Assistant is typing": "సహాయకుడు టైప్ చేస్తున్నారు",
+  "The assistant isn't available right now. Please try again in a little while.": "సహాయకుడు ప్రస్తుతం అందుబాటులో లేరు. దయచేసి కొద్దిసేపటి తర్వాత మళ్ళీ ప్రయత్నించండి.",
+  "I couldn't read that message. Try asking in a shorter sentence.": "ఆ సందేశాన్ని నేను చదవలేకపోయాను. చిన్న వాక్యంలో అడిగి చూడండి.",
+  "Sorry, something went wrong on my side. Please try asking again.": "క్షమించండి, నా వైపు ఏదో పొరపాటు జరిగింది. దయచేసి మళ్ళీ అడగండి.",
+  "I didn't get an answer for that. Please try rephrasing your question.": "దీనికి సమాధానం దొరకలేదు. దయచేసి ప్రశ్నను వేరే మాటల్లో అడగండి.",
+  "I couldn't reach the assistant. Please try again in a moment.": "సహాయకుడిని చేరుకోలేకపోయాను. దయచేసి కాసేపట్లో మళ్ళీ ప్రయత్నించండి.",
+  "You're offline. Reconnect and ask again.": "మీరు ఆఫ్‌లైన్‌లో ఉన్నారు. ఇంటర్నెట్‌కు కనెక్ట్ అయి మళ్ళీ అడగండి.",
 };

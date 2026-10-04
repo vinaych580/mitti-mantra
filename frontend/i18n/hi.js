@@ -483,5 +483,18 @@
     // Landing hero, shared nav/footer, farm bar, "Using your farm",
     // My Farm overview and the compare-crops picker (2026-09 redesign).
     // Landing hero, shared nav/footer, farm bar, "Using your farm",
-    // My Farm overview and the compare-crops picker (2026-09 redesign).
+    // My Farm overview and the compare-crops picker (2026-09 redesign).,
+
+  // Chat assistant: panel subtitle, read-aloud button, and the messages
+  // chatbot.js writes itself when a request fails.
+  "Ask about crops, prices, schemes & more": "फ़सल, भाव, योजनाओं और बहुत कुछ के बारे में पूछें",
+  "Listen": "सुनें",
+  "Listen to answer": "जवाब सुनें",
+  "Assistant is typing": "सहायक लिख रहा है",
+  "The assistant isn't available right now. Please try again in a little while.": "सहायक अभी उपलब्ध नहीं है। कृपया थोड़ी देर बाद फिर कोशिश करें।",
+  "I couldn't read that message. Try asking in a shorter sentence.": "मैं वह संदेश पढ़ नहीं पाया। छोटे वाक्य में पूछकर देखें।",
+  "Sorry, something went wrong on my side. Please try asking again.": "माफ़ कीजिए, मेरी तरफ़ से कुछ गड़बड़ हो गई। कृपया फिर से पूछें।",
+  "I didn't get an answer for that. Please try rephrasing your question.": "इसका जवाब नहीं मिला। कृपया सवाल को दूसरे शब्दों में पूछें।",
+  "I couldn't reach the assistant. Please try again in a moment.": "सहायक से संपर्क नहीं हो सका। कृपया थोड़ी देर में फिर कोशिश करें।",
+  "You're offline. Reconnect and ask again.": "आप ऑफ़लाइन हैं। इंटरनेट से जुड़कर फिर पूछें।",
 };

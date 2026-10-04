@@ -459,4 +459,17 @@
     'Crops to compare — pick 2 to 6': 'ஒப்பிட பயிர்கள் — 2 முதல் 6 தேர்ந்தெடுக்கவும்',
     'Pick at least 2 crops': 'குறைந்தது 2 பயிர்களைத் தேர்ந்தெடுக்கவும்',
     'Tick two to six crops in the list above.': 'மேலே உள்ள பட்டியலில் இரண்டு முதல் ஆறு பயிர்களைக் குறியிடுங்கள்.',
+
+  // Chat assistant: panel subtitle, read-aloud button, and the messages
+  // chatbot.js writes itself when a request fails.
+  "Ask about crops, prices, schemes & more": "பயிர்கள், விலைகள், திட்டங்கள் மற்றும் பலவற்றைப் பற்றி கேளுங்கள்",
+  "Listen": "ஒலியில் கேளுங்கள்",
+  "Listen to answer": "பதிலை ஒலியில் கேளுங்கள்",
+  "Assistant is typing": "உதவியாளர் தட்டச்சு செய்கிறார்",
+  "The assistant isn't available right now. Please try again in a little while.": "உதவியாளர் இப்போது கிடைக்கவில்லை. சிறிது நேரம் கழித்து மீண்டும் முயற்சிக்கவும்.",
+  "I couldn't read that message. Try asking in a shorter sentence.": "அந்தச் செய்தியை என்னால் படிக்க முடியவில்லை. சிறிய வாக்கியத்தில் கேட்டுப் பாருங்கள்.",
+  "Sorry, something went wrong on my side. Please try asking again.": "மன்னிக்கவும், என் பக்கத்தில் ஏதோ தவறு நடந்தது. மீண்டும் கேட்கவும்.",
+  "I didn't get an answer for that. Please try rephrasing your question.": "இதற்கு பதில் கிடைக்கவில்லை. கேள்வியை வேறு வார்த்தைகளில் கேட்கவும்.",
+  "I couldn't reach the assistant. Please try again in a moment.": "உதவியாளரை அடைய முடியவில்லை. சிறிது நேரத்தில் மீண்டும் முயற்சிக்கவும்.",
+  "You're offline. Reconnect and ask again.": "நீங்கள் ஆஃப்லைனில் உள்ளீர்கள். இணையத்துடன் இணைந்து மீண்டும் கேளுங்கள்.",
 };

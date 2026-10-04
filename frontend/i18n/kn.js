@@ -459,4 +459,17 @@
     'Crops to compare — pick 2 to 6': 'ಹೋಲಿಸಲು ಬೆಳೆಗಳು — 2 ರಿಂದ 6 ಆಯ್ಕೆಮಾಡಿ',
     'Pick at least 2 crops': 'ಕನಿಷ್ಠ 2 ಬೆಳೆಗಳನ್ನು ಆಯ್ಕೆಮಾಡಿ',
     'Tick two to six crops in the list above.': 'ಮೇಲಿನ ಪಟ್ಟಿಯಲ್ಲಿ ಎರಡರಿಂದ ಆರು ಬೆಳೆಗಳನ್ನು ಗುರುತಿಸಿ.',
+
+  // Chat assistant: panel subtitle, read-aloud button, and the messages
+  // chatbot.js writes itself when a request fails.
+  "Ask about crops, prices, schemes & more": "ಬೆಳೆಗಳು, ಬೆಲೆಗಳು, ಯೋಜನೆಗಳು ಮತ್ತು ಇನ್ನಷ್ಟರ ಬಗ್ಗೆ ಕೇಳಿ",
+  "Listen": "ಆಲಿಸಿ",
+  "Listen to answer": "ಉತ್ತರವನ್ನು ಆಲಿಸಿ",
+  "Assistant is typing": "ಸಹಾಯಕ ಟೈಪ್ ಮಾಡುತ್ತಿದ್ದಾರೆ",
+  "The assistant isn't available right now. Please try again in a little while.": "ಸಹಾಯಕ ಈಗ ಲಭ್ಯವಿಲ್ಲ. ದಯವಿಟ್ಟು ಸ್ವಲ್ಪ ಸಮಯದ ನಂತರ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+  "I couldn't read that message. Try asking in a shorter sentence.": "ಆ ಸಂದೇಶವನ್ನು ನನಗೆ ಓದಲಾಗಲಿಲ್ಲ. ಚಿಕ್ಕ ವಾಕ್ಯದಲ್ಲಿ ಕೇಳಿ ನೋಡಿ.",
+  "Sorry, something went wrong on my side. Please try asking again.": "ಕ್ಷಮಿಸಿ, ನನ್ನ ಕಡೆಯಿಂದ ಏನೋ ತಪ್ಪಾಗಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಕೇಳಿ.",
+  "I didn't get an answer for that. Please try rephrasing your question.": "ಇದಕ್ಕೆ ಉತ್ತರ ಸಿಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಪ್ರಶ್ನೆಯನ್ನು ಬೇರೆ ಪದಗಳಲ್ಲಿ ಕೇಳಿ.",
+  "I couldn't reach the assistant. Please try again in a moment.": "ಸಹಾಯಕನನ್ನು ತಲುಪಲಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಸ್ವಲ್ಪ ಹೊತ್ತಿನಲ್ಲಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+  "You're offline. Reconnect and ask again.": "ನೀವು ಆಫ್‌ಲೈನ್‌ನಲ್ಲಿದ್ದೀರಿ. ಇಂಟರ್ನೆಟ್‌ಗೆ ಸಂಪರ್ಕಿಸಿ ಮತ್ತೆ ಕೇಳಿ.",
 };
