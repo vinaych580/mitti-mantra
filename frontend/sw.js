@@ -23,7 +23,11 @@
 // mm-palette.js on every page; Data/*.js re-encoded column by column;
 // farm-boundary.js no longer loads Turf. Shipped as one set so no visitor
 // pairs new markup with an old script.
-const VERSION = 'mittimantra-v59';
+// v60: site-ui.js (wheel scrolling stalled once a page grew), decide.js
+// (ranking rows) and india-globe.js (textures pinned past a redirect that
+// broke them in Firefox). Stale-while-revalidate would otherwise serve the
+// broken copies for one more load.
+const VERSION = 'mittimantra-v60';
 const CORE = [
   './',
   './index.html',

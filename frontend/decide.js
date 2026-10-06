@@ -256,8 +256,9 @@
       ${reasonsList}
       <h4 style="font-size:.85rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin:16px 0 12px;">Full ranking</h4>
       <div class="decide-runnerups">
-        ${[top, ...runnerUps].map(r => `
+        ${[top, ...runnerUps].map((r, i) => `
           <div class="list-row">
+            <div class="list-row__bullet">${i + 1}</div>
             <div class="list-row__name">${r.crop_name}
               <small>Yield ${Math.round(r.predicted_yield_kg_per_acre)} kg/ac · Risk ${Math.round(r.risk_score)}/100 · Score ${FIX(r.smart_score, 1)}</small>
               ${r.reasons && r.reasons[0] ? `<div style="font-size:.76rem;color:var(--brand-deep);margin-top:4px;">• ${r.reasons[0]}</div>` : ''}
