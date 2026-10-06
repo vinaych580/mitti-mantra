@@ -547,4 +547,7 @@
   "Switch light / dark mode": "हल्का / गहरा मोड बदलें",
   "Ask the assistant": "सहायक से पूछें",
   "Back up my data": "मेरे डेटा का बैकअप लें",
+
+  // Home page answer: a top crop with no harvest record in the district.
+  "Not grown in this district before": "इस ज़िले में पहले नहीं उगाई गई",
 };

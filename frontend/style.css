@@ -7648,3 +7648,6 @@ html[data-theme="dark"] .mm-palette__item.is-active {
   color: var(--ink);
 }
 html[data-theme="dark"] .mm-palette__item.is-active .mm-palette__ico { color: #9fd0ae; }
+
+/* A ranked crop with no harvest record in the district (demo-recommender.js). */
+.answer__new { color: var(--accent-deep); font-weight: 600; }

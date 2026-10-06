@@ -23,7 +23,7 @@
 // mm-palette.js on every page; Data/*.js re-encoded column by column;
 // farm-boundary.js no longer loads Turf. Shipped as one set so no visitor
 // pairs new markup with an old script.
-const VERSION = 'mittimantra-v58';
+const VERSION = 'mittimantra-v59';
 const CORE = [
   './',
   './index.html',

@@ -1290,9 +1290,21 @@ def _score_single_crop(
         crop.npk_k_kg_per_acre,
     )
 
-    # Blend ML confidence into smart_score if available
-    ml_score = ml_conf_map.get(crop_id, 0.0) * 100.0
-    ml_term = ml_score if _ml_recommend_model is not None else roi_normalized
+    # The recommendation classifier's confidence is reported on the result
+    # (ml_confidence) but no longer moves the ranking. Its training labels are
+    # the argmax of this same compute_smart_score, with ml_term set to
+    # roi_normalized (ml/dataset_builders.py) -- so the best it can do is
+    # agree with the formula, never add to it (see the "Approach C" note in
+    # docs/superpowers/specs/2026-09-06-ml-model-accuracy-design.md). What it
+    # did add was distortion: trained on widened synthetic weather with the
+    # district as a feature, it voted for one crop per district at ~100%
+    # confidence and 0% for everything else, and that vote was worth a flat
+    # 15 points. It put jute -- grown in Bengal and Tripura, not central
+    # India -- first for kharif in 12 of 30 districts even after the risk
+    # score stopped favouring it, and bajra (Rs 16,536 profit) over pulses
+    # (Rs 118,986) in Pune. Using the label's own term here makes the live
+    # ranking exactly the definition the classifier is trained to learn.
+    ml_term = roi_normalized
 
     sat = region_saturation.get(crop_id)
     saturation_ratio = sat["ratio"] if sat is not None else None
@@ -1456,6 +1468,14 @@ def recommend_crops(
         region_id, season, crop_params, soil, weather, 0.5,
     )
 
+    # Crops with recorded harvests in this district (yield_history.csv). A
+    # top pick nobody nearby grows -- jute in Guntur -- can be the formula's
+    # honest answer on profit, but the farmer should know there are no
+    # neighbours, seed dealers or buyers with experience of it.
+    grown_here = {
+        row["crop_id"] for row in _cached_index_by("yield_history.csv", "region_id").get(region_id, [])
+    }
+
     recommendations: list[dict[str, Any]] = []
     for crop_id, crop in candidates:
         # FIX (3.2): Extracted per-crop scoring into reusable function
@@ -1466,6 +1486,7 @@ def recommend_crops(
             region_crop_price, ml_conf_map, region_saturation,
             ml_yield=batched_yields.get(crop_id),
         )
+        rec_entry["grown_locally"] = crop_id in grown_here
         recommendations.append(rec_entry)
 
     ranked = rank_recommendations(recommendations)

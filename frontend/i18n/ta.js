@@ -522,4 +522,7 @@
   "Switch light / dark mode": "ஒளி / இருண்ட பயன்முறையை மாற்று",
   "Ask the assistant": "உதவியாளரிடம் கேளுங்கள்",
   "Back up my data": "என் தரவைக் காப்புப்பிரதி எடு",
+
+  // Home page answer: a top crop with no harvest record in the district.
+  "Not grown in this district before": "இந்த மாவட்டத்தில் இதற்கு முன் பயிரிடப்படவில்லை",
 };

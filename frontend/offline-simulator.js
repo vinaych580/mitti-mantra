@@ -41,11 +41,21 @@
 
   const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 
+  // FAO CROPWAT's USDA-SCS method, a seasonal total spread over four months.
+  function effectiveRainfall(total, months = 4) {
+    const p = Math.max(+total || 0, 0) / months;
+    return months * (p <= 250 ? p * (125 - 0.2 * p) / 125 : 125 + 0.1 * p);
+  }
+
   function fitScore(crop, ctx) {
     const { rainfall_mm = 800, avg_temp_c = 27, soil_ph = 6.8,
             n_kg_per_acre = 40, irrigation_level = 0.5 } = ctx;
-    // Water fit — rainfall + irrigation should match crop water need.
-    const availableWater = rainfall_mm + irrigation_level * 400;
+    // Water fit — usable rain + irrigation should match crop water need.
+    // Usable, not total: same USDA-SCS effective-rainfall rule the server's
+    // risk score uses (utils/calculations.py effective_rainfall_mm). On the
+    // raw total, a normal 1,200 mm monsoon zeroed soybean's water fit and
+    // gave jute a perfect one.
+    const availableWater = effectiveRainfall(rainfall_mm) + irrigation_level * 400;
     const waterRatio = availableWater / crop.water_mm;
     const waterFit = 1 - Math.min(1, Math.abs(1 - waterRatio) * 0.9);
     // Temp fit — inside [min, max] gets full marks, outside degrades.

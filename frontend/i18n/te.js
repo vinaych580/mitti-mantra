@@ -522,4 +522,7 @@
   "Switch light / dark mode": "లైట్ / డార్క్ మోడ్ మార్చండి",
   "Ask the assistant": "సహాయకుడిని అడగండి",
   "Back up my data": "నా డేటాను బ్యాకప్ చేయండి",
+
+  // Home page answer: a top crop with no harvest record in the district.
+  "Not grown in this district before": "ఈ జిల్లాలో ఇంతకు ముందు పండించలేదు",
 };

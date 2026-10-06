@@ -72,8 +72,8 @@ A typical `POST /api/recommend`:
 2. **`recommend_crops()`** in `ml/predict.py` is called.
 3. It pulls soil/weather/crop/yield rows via the shared `utils.csv_cache.load()` — parsed once, indexed by `region_id` on first access, served from memory thereafter.
 4. ML model is loaded lazily (`_load_ml_models`) and cached for the process lifetime.
-5. Feature vectors are built and `predict_proba` returns per-crop confidence.
-6. Smart-score ranking blends ML confidence, ROI, risk, budget fit and soil health.
+5. Feature vectors are built and `predict_proba` returns per-crop confidence (reported as `ml_confidence`).
+6. Smart-score ranking blends ROI, risk, budget fit, soil health and regional saturation. The classifier's vote is not part of it: it was trained to imitate this same formula, and counting it again let one crop (jute) sweep most kharif districts. Flood and drought risk use effective rainfall (USDA-SCS), not raw seasonal totals.
 7. Response is serialized, GZip middleware compresses it (responses > 800 B), `Cache-Control: private, max-age=30` header is attached.
 8. Browser renders the list → `mm-enhance.js` MutationObserver decorates each row with a "Why this crop?" drawer + risk gauge + source footer.
 

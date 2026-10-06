@@ -112,11 +112,15 @@
   }
 
   function whyLine(r) {
-    if (r.budget_adequate !== false) return '<span>Fits your budget</span>';
+    // A crop nobody in the district has a harvest record for can still be the
+    // best answer on paper; say so, since there will be no neighbours, seed
+    // dealers or buyers who know it.
+    const local = r.grown_locally === false ? ' · <span class="answer__new">Not grown in this district before</span>' : '';
+    if (r.budget_adequate !== false) return '<span>Fits your budget</span>' + local;
     const m = /(\d+)%/.exec(r.reason || '');
-    return m
+    return (m
       ? `<span>Usual cost covered</span>: <b>${m[1]}%</b> · <span>yield scaled to match</span>`
-      : '<span>Budget below this crop&rsquo;s usual cost</span>';
+      : '<span>Budget below this crop&rsquo;s usual cost</span>') + local;
   }
 
   function render(q, recs, source) {

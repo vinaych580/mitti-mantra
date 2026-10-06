@@ -127,3 +127,56 @@ def test_score_single_crop_and_recommendation_dataset_derive_identical_values(mo
     assert captured_predict_kwargs["budget_fit"] == dataset_budget_fit
     assert captured_predict_kwargs["roi_normalized"] == dataset_roi_normalized
     assert captured_predict_kwargs["soil_health"] == dataset_soil_health
+
+
+# ---------------------------------------------------------------------------
+# Effective rainfall in the climate-risk score.
+#
+# The risk score used to compare a season's *total* rainfall with a crop's
+# water requirement, so any normal monsoon looked like a flood to a crop that
+# needs little water: Sehore's 1,209 mm kharif gave soybean -- the district's
+# main kharif crop -- a 95% flood risk, while jute (1,400 mm requirement, not
+# grown anywhere in Madhya Pradesh) scored 0% and topped the recommendation.
+# ---------------------------------------------------------------------------
+from utils.calculations import calculate_risk_score_and_subscores, effective_rainfall_mm  # noqa: E402
+from ml.predict import _load_crop_parameters  # noqa: E402
+
+
+def test_effective_rainfall_follows_usda_scs_and_is_continuous():
+    # <= 250 mm/month: P(125 - 0.2P)/125 per month
+    assert abs(effective_rainfall_mm(400, months=4) - 4 * 100 * (125 - 20) / 125) < 1e-9
+    # > 250 mm/month: 125 + 0.1P per month
+    assert abs(effective_rainfall_mm(1200, months=4) - 4 * (125 + 30)) < 1e-9
+    # the two branches meet at 250 mm/month
+    assert abs(effective_rainfall_mm(1000 - 1e-6, months=4) - effective_rainfall_mm(1000 + 1e-6, months=4)) < 1e-3
+    assert effective_rainfall_mm(0) == 0
+    # never more than what fell
+    for p in (10, 100, 500, 1500, 3000):
+        assert 0 < effective_rainfall_mm(p) <= p
+
+
+def test_normal_monsoon_is_not_a_flood_for_a_low_water_crop():
+    crops = _load_crop_parameters()
+    weather = {"rainfall_mm": 1209.2, "avg_temp_c": 26.6}
+    soil = {}
+    _, soy = calculate_risk_score_and_subscores(crops["soybean"], weather, soil)
+    _, jute = calculate_risk_score_and_subscores(crops["jute"], weather, soil)
+    assert soy["flood"] < 20, soy
+    # jute needs 1,400 mm; a central-Indian monsoon doesn't deliver that to the crop
+    assert jute["drought"] > soy["drought"], (jute, soy)
+
+
+def test_jute_does_not_top_central_indian_kharif_recommendations():
+    from ml.predict import recommend_crops
+    for region in ("mp_sehore", "mh_pune", "telangana_medak"):
+        top = recommend_crops(region, "kharif", 15000, 4, top_k=3)
+        assert top[0]["crop_id"] != "jute", (region, [r["crop_id"] for r in top])
+
+
+def test_recommendations_say_whether_the_district_has_grown_the_crop():
+    from ml.predict import recommend_crops
+    by_crop = {r["crop_id"]: r for r in recommend_crops("wb_bardhaman", "kharif", 15000, 4, top_k=50)}
+    assert by_crop["jute"]["grown_locally"] is True     # yield_history.csv: Bardhaman jute
+    guntur = {r["crop_id"]: r for r in recommend_crops("ap_guntur", "kharif", 15000, 4, top_k=50)}
+    assert guntur["jute"]["grown_locally"] is False     # no Guntur jute on record
+    assert guntur["chilli"]["grown_locally"] is True

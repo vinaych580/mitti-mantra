@@ -16,7 +16,10 @@ Two things have to stay true through that change:
      implementation, on both the ML path and the heuristic-fallback path a
      fresh serverless instance takes before its warm-up thread finishes.
 
-The golden fixtures were generated from the pre-refactor code.
+The golden fixtures were generated from the pre-refactor code, and last
+regenerated (2026-10-06) when flood/drought risk moved to effective rainfall,
+the classifier stopped voting in smart_score, and rows gained `grown_locally`.
+Yields, profits and ROI were unchanged by that regeneration.
 """
 from __future__ import annotations
 

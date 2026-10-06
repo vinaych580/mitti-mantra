@@ -522,4 +522,7 @@
   "Switch light / dark mode": "ಲೈಟ್ / ಡಾರ್ಕ್ ಮೋಡ್ ಬದಲಿಸಿ",
   "Ask the assistant": "ಸಹಾಯಕನನ್ನು ಕೇಳಿ",
   "Back up my data": "ನನ್ನ ಡೇಟಾ ಬ್ಯಾಕಪ್ ಮಾಡಿ",
+
+  // Home page answer: a top crop with no harvest record in the district.
+  "Not grown in this district before": "ಈ ಜಿಲ್ಲೆಯಲ್ಲಿ ಹಿಂದೆ ಬೆಳೆದಿಲ್ಲ",
 };
