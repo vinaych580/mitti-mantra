@@ -85,6 +85,16 @@ _ml_price_lock = threading.Lock()
 _ml_recommend_lock = threading.Lock()
 _ml_disease_lock = threading.Lock()
 _ML_LOAD_LOCKS = (_ml_yield_lock, _ml_price_lock, _ml_recommend_lock, _ml_disease_lock)
+# The per-group locks above still let two groups unpickle at once -- the
+# warm-up thread on the yield forest while a request pulls in the recommender.
+# Both unpickles import scikit-learn's submodules, and two threads doing that
+# concurrently trip CPython's import deadlock detector ("deadlock detected by
+# _ModuleLock('sklearn.ensemble...')"). The loader caught that, marked yield as
+# resolved with no model, and the process served heuristic yields -- which make
+# soybean a loss and put jute on top in Sehore -- until it was restarted.
+# This lock serialises only the joblib.load itself; a request for a group that
+# is already resident returns on its flag check and never touches it.
+_joblib_load_lock = threading.Lock()
 _cache_lock = threading.Lock()
 
 
@@ -106,7 +116,8 @@ def _load_joblib(name: str):
     path = MODEL_DIR / name
     if not path.exists():
         return None
-    return joblib.load(path)
+    with _joblib_load_lock:
+        return joblib.load(path)
 
 
 def _load_yield_models():
