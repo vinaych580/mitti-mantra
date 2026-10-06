@@ -25,52 +25,88 @@
     console.error('[farm-boundary] FarmState not loaded. Did you include farm-state.js before farm-boundary.js?');
     return;
   }
-  /* ── Turf: loaded on demand, not at page load ──────────
-     Turf is only used to measure a plot the user has drawn (see
-     computeAndShow), but at 543 KB / ~190 ms of parse it was previously the
-     single most expensive thing on this page's critical path -- paid by
-     everyone who opened the map, including those who never drew anything.
-     It is fetched in the background as soon as the map is up, so by the time
-     a plot is finished it is almost always already resident; computeAndShow
-     awaits it either way. */
-  const TURF_URL = 'https://unpkg.com/@turf/turf@7.1.0/turf.min.js';
-  const TURF_SRI = 'sha256-xFr0VRlS+kHwSTz0jDU5sYAHdPKr/AMexq9yrM8Yvp8=';
-  let turfPromise = null;
+  /* ── Plot geometry ─────────────────────────────────────
+     Area, centroid and perimeter of the drawn plot. These used to come from
+     Turf (543 KB, fetched from unpkg), which this page only ever called for
+     these three numbers -- so measuring a plot needed a network round trip
+     and failed outright offline, on a page farmers open in the field. The
+     formulas below are the ones Turf 7 uses (spherical ring area after
+     Chamberlain & Duquette; vertex-mean centroid; haversine path length),
+     with Turf's earth radius, so results match it to floating-point noise. */
+  const geo = (() => {
+    const RAD = Math.PI / 180;
+    const R = 6371008.8; // @turf/helpers earthRadius, used by area and length
 
-  function loadTurf() {
-    if (window.turf) return Promise.resolve(window.turf);
-    // Memoised: two quick draws must not start two downloads.
-    if (turfPromise) return turfPromise;
-    turfPromise = new Promise((resolve, reject) => {
-      const s = document.createElement('script');
-      s.src = TURF_URL;
-      s.integrity = TURF_SRI;
-      s.crossOrigin = 'anonymous';
-      s.async = true;
-      s.onload = () => window.turf
-        ? resolve(window.turf)
-        : reject(new Error('Turf loaded but exposed no global'));
-      s.onerror = () => {
-        // Let a later attempt retry rather than caching the failure forever.
-        turfPromise = null;
-        reject(new Error('Turf failed to load'));
-      };
-      document.head.appendChild(s);
-    });
-    return turfPromise;
-  }
+    // Polygon rings of a Feature/geometry, flattened across a MultiPolygon.
+    function polygonsOf(gj) {
+      const g = gj && gj.type === 'Feature' ? gj.geometry : gj;
+      if (!g) return [];
+      if (g.type === 'Polygon') return [g.coordinates];
+      if (g.type === 'MultiPolygon') return g.coordinates;
+      return [];
+    }
+
+    function ringArea(ring) {
+      const n = ring.length - 1; // last point repeats the first
+      if (n <= 2) return 0;
+      let total = 0;
+      for (let i = 0; i < n; i++) {
+        const lower = ring[i];
+        const middle = ring[i + 1 === n ? 0 : i + 1];
+        const upper = ring[i + 2 >= n ? (i + 2) % n : i + 2];
+        total += (upper[0] - lower[0]) * RAD * Math.sin(middle[1] * RAD);
+      }
+      return total * R * R / 2;
+    }
+
+    function haversine(a, b) {
+      const dLat = (b[1] - a[1]) * RAD;
+      const dLon = (b[0] - a[0]) * RAD;
+      const h = Math.sin(dLat / 2) ** 2 +
+        Math.sin(dLon / 2) ** 2 * Math.cos(a[1] * RAD) * Math.cos(b[1] * RAD);
+      return 2 * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h)) * R;
+    }
+
+    return {
+      // m²; holes subtract.
+      area(gj) {
+        return polygonsOf(gj).reduce((sum, rings) => sum + rings.reduce(
+          (s, ring, i) => s + (i === 0 ? 1 : -1) * Math.abs(ringArea(ring)), 0), 0);
+      },
+      // [lon, lat]: the mean of every vertex, closing points excluded.
+      centroid(gj) {
+        let x = 0, y = 0, n = 0;
+        polygonsOf(gj).forEach(rings => rings.forEach(ring => {
+          ring.slice(0, -1).forEach(([lon, lat]) => { x += lon; y += lat; n++; });
+        }));
+        return n ? [x / n, y / n] : [0, 0];
+      },
+      // Metres around every ring.
+      perimeter(gj) {
+        let m = 0;
+        polygonsOf(gj).forEach(rings => rings.forEach(ring => {
+          for (let i = 1; i < ring.length; i++) m += haversine(ring[i - 1], ring[i]);
+        }));
+        return m;
+      },
+    };
+  })();
+  window.mmPlotGeo = geo;
 
   /* ── Map initialisation ────────────────────────────── */
   const map = L.map(mapEl, { zoomControl: true }).setView([22.5, 79], 5);
 
-  // Satellite base + label overlay
+  // Satellite base + label overlay. The labels used to come from CARTO's
+  // voyager_only_labels tiles, which now need an API key and serve an
+  // "API KEY REQUIRED" watermark instead. Esri's reference layer is keyless
+  // and comes from the same service as the imagery underneath it.
   L.tileLayer(
     'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     { attribution: 'Imagery © Esri', maxZoom: 19 }
   ).addTo(map);
   L.tileLayer(
-    'https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}.png',
-    { attribution: '© OSM © CartoDB', maxZoom: 19, opacity: 0.85 }
+    'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
+    { attribution: 'Labels © Esri', maxZoom: 19 }
   ).addTo(map);
 
   /* ── Drawing hints ─────────────────────────────────── */
@@ -100,7 +136,8 @@
     poly.end   = t(DRAW_STRINGS.end);
   }
 
-  // i18n-data.js loads after this file, so wait for the document to finish.
+  // A non-English catalog arrives after this file runs (i18n.js fetches it
+  // on demand); mm:lang-changed fires once it has been applied.
   document.addEventListener('DOMContentLoaded', localiseDrawTooltips);
   document.addEventListener('mm:lang-changed', localiseDrawTooltips);
   localiseDrawTooltips();
@@ -128,12 +165,6 @@
     edit: { featureGroup: drawnItems, remove: false }
   });
   map.addControl(drawControl);
-
-  // Map is up and interactive — start pulling Turf down now, in the
-  // background, so the seconds the user spends placing vertices hide the
-  // download. A rejection here is not an error yet: computeAndShow retries
-  // and reports it only if a measurement is actually needed.
-  loadTurf().catch(() => {});
 
   /* ── Primary "Draw plot boundary" control ──────────────────────────
      A single labelled button that starts the same polygon handler
@@ -383,32 +414,13 @@
   async function computeAndShow(layer) {
     const gj      = layer.toGeoJSON();
 
-    // Normally already resolved from the warm-up kicked off at map init.
-    let turf;
-    try {
-      turf = await loadTurf();
-    } catch (_) {
-      summaryEl.innerHTML =
-        '<div class="farmmap__empty">Could not load the measurement library. ' +
-        'Check your connection and draw the plot again.</div>';
-      actionsEl.style.display = 'none';
-      setPeek('Measurement unavailable — check your connection', false);
-      setSheetOpen(true);
-      retranslate();
-      return;
-    }
-
-    const sqm     = turf.area(gj);                          // m²
+    const sqm     = geo.area(gj);                           // m²
     const hectares = sqm / 10000;
     const acres   = sqm / 4046.8564224;
-    const centroid = turf.centroid(gj).geometry.coordinates; // [lon, lat]
+    const centroid = geo.centroid(gj);                      // [lon, lat]
     const lon = centroid[0];
     const lat  = centroid[1];
-
-    let perimeterM = 0;
-    try {
-      perimeterM = turf.length(turf.polygonToLine(gj), { units: 'meters' });
-    } catch (_) {}
+    const perimeterM = geo.perimeter(gj);
 
     // Nearest backend region (always succeeds — pure math)
     const region_id = FarmState.getNearestRegionId(centroid);

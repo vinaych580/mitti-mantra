@@ -255,6 +255,7 @@
     .mkt-card__grade { font-size: .68rem; font-weight: 700; padding: 3px 8px; border-radius: 999px; background: var(--brand-soft); color: var(--brand-deep); white-space: nowrap; }
     .mkt-card__price { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; color: var(--brand-deep); }
     .mkt-card__price small { font-size: .6em; color: var(--ink-soft); font-family: var(--font-body); font-weight: 500; }
+    .mkt-card__nego { display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent-deep); font-family: var(--font-body); font-size: .62rem; font-weight: 600; letter-spacing: .02em; vertical-align: middle; }
     .mkt-card__meta { display: flex; justify-content: space-between; font-size: .74rem; color: var(--ink-soft); gap: 8px; flex-wrap: wrap; }
     .mkt-card__seller { display: flex; flex-direction: column; gap: 2px; padding-top: 8px; border-top: 1px dashed rgba(29,26,21,.1); font-size: .78rem; }
     .mkt-card__seller-name { font-weight: 700; color: var(--ink); }
@@ -713,10 +714,12 @@
     <ul>
       <li><a href="index.html">Home</a></li>
       <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="decide.html">What should I sow?</a></li>
       <li><a href="farm-boundary.html">Draw farm</a></li>
       <li><a href="marketplace.html" aria-current="page">Marketplace</a></li>
       <li><a href="book-a-tractor.html">Book a Tractor</a></li>
       <li><a href="gyan-seva.html">Gyan Seva</a></li>
+      <li><a href="your-data.html">Your data</a></li>
     </ul>
     <a href="dashboard.html" class="btn btn-primary">Open dashboard</a>
   </aside>
@@ -916,6 +919,7 @@
 
   <script defer src="mm-core.js"></script>
   <script defer src="site-ui.js"></script>
+  <script defer src="mm-palette.js"></script>
   <script defer src="farm-state.js"></script>
   <script defer src="toolbar.js"></script>
   <script defer src="Data/marketplace-listings.js"></script>

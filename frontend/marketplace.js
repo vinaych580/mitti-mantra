@@ -4,7 +4,7 @@
    Architecture notes (see docs / final report for the full rationale):
 
    • This app has no real backend authentication or multi-tenant database
-     (see frontend/auth.js — a stub — and the 503s on /api/expense/*). The
+     (no accounts; see your-data.html for backup — and the 503s on /api/expense/*). The
      existing "Book a Tractor" and "Gyan Seva" features already establish the
      pattern this file follows: demo catalog data (Data/marketplace-listings.js)
      rendered client-side, with anything the user creates (listings, buy
@@ -606,7 +606,7 @@
           <h3>${esc(l.name)}<small>${esc(l.variety || '')}</small></h3>
           <span class="mkt-card__grade">${esc(l.grade)}</span>
         </div>
-        <div class="mkt-card__price">${inr(l.pricePerUnit)}<small>/ ${esc(l.unit)}</small></div>
+        <div class="mkt-card__price">${inr(l.pricePerUnit)}<small>/ ${esc(l.unit)}</small>${l.priceNegotiable ? '<span class="mkt-card__nego">Negotiable</span>' : ''}</div>
         <div class="mkt-card__meta">
           <span>📦 ${Number(l.quantityAvailable).toLocaleString('en-IN')} ${esc(l.unit)} available</span>
           <span>🧮 MOQ ${l.minOrderQty} ${esc(l.unit)}</span>
@@ -1021,7 +1021,8 @@
           <div class="mm-success-details">
             <div class="mm-success-row"><span>Request ID</span><strong>${esc(extra.order.id)}</strong></div>
             <div class="mm-success-row"><span>Quantity requested</span><strong>${extra.order.requestedQuantity} ${esc(l.unit)}</strong></div>
-            <div class="mm-success-row"><span>Estimated total</span><strong>${inr(extra.order.requestedQuantity * l.pricePerUnit)}</strong></div>
+            ${extra.order.offeredPrice < l.pricePerUnit ? `<div class="mm-success-row"><span>Your offer</span><strong>${inr(extra.order.offeredPrice)} / ${esc(l.unit)} (listed ${inr(l.pricePerUnit)})</strong></div>` : ''}
+            <div class="mm-success-row"><span>Estimated total</span><strong>${inr(extra.order.requestedQuantity * extra.order.offeredPrice)}</strong></div>
             <div class="mm-success-row"><span>Status</span><strong>Requested</strong></div>
           </div>
           <p class="mkt-note">Demo: this app has no live backend, so the seller can't be notified automatically. Open <strong>My Requests</strong> to simulate the seller's response for demonstration.</p>
@@ -1035,6 +1036,11 @@
     if (screen === 'request-form') {
       const qty = extra && extra.qty ? extra.qty : l.minOrderQty;
       const bulk = qty > l.quantityAvailable;
+      // A forward booking's deposit is computed from the listed price, so
+      // offers apply to standard requests only. Half the listed price is the
+      // floor: low enough to bargain, not so low it's an insult.
+      const negotiable = !!l.priceNegotiable && !forward;
+      const offerFloor = Math.max(1, Math.ceil(l.pricePerUnit * 0.5));
       card().innerHTML = `
         <button class="mm-modal-close" id="mktDetailClose" aria-label="Close">✕</button>
         <div class="mm-modal-header">
@@ -1059,8 +1065,15 @@
               </div>
               <div class="mm-form-group"><label>Quantity (${esc(l.unit)})</label><input type="number" id="reqQty" class="mm-form-input" min="${l.minOrderQty}" step="1" value="${qty}" required></div>
             </div>
+            ${negotiable ? `
+            <div class="mm-form-group">
+              <label>Your offer (₹ per ${esc(l.unit)})</label>
+              <input type="number" id="reqOffer" class="mm-form-input" min="${offerFloor}" max="${l.pricePerUnit}" step="1" value="${l.pricePerUnit}" required>
+              <p class="mkt-note" style="margin-top:6px;">The seller marked this price as negotiable. Offer between ${inr(offerFloor)} and the listed ${inr(l.pricePerUnit)}.</p>
+            </div>` : ''}
             <div class="mm-calc-box">
               <div class="mm-calc-row"><span>Listed price</span><span>${inr(l.pricePerUnit)} / ${esc(l.unit)}</span></div>
+              ${negotiable ? `<div class="mm-calc-row"><span>Your offer</span><span id="reqCalcOffer">${inr(l.pricePerUnit)} / ${esc(l.unit)}</span></div>` : ''}
               <div class="mm-calc-row"><span>Quantity</span><span id="reqCalcQty">${qty} ${esc(l.unit)}</span></div>
               <div class="mm-calc-row total"><span>Estimated total</span><span id="reqCalcTotal">${inr(qty * l.pricePerUnit)}</span></div>
               ${forward ? `
@@ -1076,7 +1089,6 @@
                 <select id="reqDelivery" class="mm-form-input">
                   <option value="farmer_pickup">Farmer pickup (buyer collects)</option>
                   <option value="buyer_transport">Buyer-arranged transport</option>
-                  <option value="platform_assisted">Platform-assisted logistics (coming soon)</option>
                 </select>
               </div>
               <div class="mm-form-group"><label>Payment Method</label>
@@ -1117,10 +1129,19 @@
         });
       }
       const qtyInput = document.getElementById('reqQty');
+      const offerInput = document.getElementById('reqOffer');
+      // The buyer's price per unit: their offer on a negotiable listing
+      // (kept within the allowed range), otherwise the listed price.
+      const unitPrice = () => {
+        if (!offerInput) return l.pricePerUnit;
+        const v = Number(offerInput.value);
+        return isFinite(v) && v > 0 ? Math.min(Math.max(Math.round(v), offerFloor), l.pricePerUnit) : l.pricePerUnit;
+      };
       const recalc = () => {
         const q = Math.max(1, Number(qtyInput.value) || 1);
         document.getElementById('reqCalcQty').textContent = `${q} ${l.unit}`;
-        document.getElementById('reqCalcTotal').textContent = inr(q * l.pricePerUnit);
+        document.getElementById('reqCalcTotal').textContent = inr(q * unitPrice());
+        if (offerInput) document.getElementById('reqCalcOffer').textContent = `${inr(unitPrice())} / ${l.unit}`;
         if (forward) {
           const total = q * l.pricePerUnit;
           const dep = Math.round(total * FORWARD_DEPOSIT_PCT);
@@ -1129,10 +1150,12 @@
         }
       };
       qtyInput.addEventListener('input', recalc);
+      if (offerInput) offerInput.addEventListener('input', recalc);
       document.getElementById('mktRequestForm').addEventListener('submit', (ev) => {
         ev.preventDefault();
         const q = Math.max(1, Number(qtyInput.value) || 1);
         const total = q * l.pricePerUnit;
+        const offer = unitPrice();
         const order = {
           id: 'REQ-' + Math.random().toString(36).slice(2, 8).toUpperCase(),
           listingId: l.id, sellerId: l.sellerId, sellerName: l.sellerName,
@@ -1141,7 +1164,7 @@
           buyerPhone: document.getElementById('reqPhone').value.trim(),
           buyerType: document.getElementById('reqBuyerType').value,
           productName: l.name, unit: l.unit,
-          requestedQuantity: q, offeredPrice: l.pricePerUnit, finalPrice: null,
+          requestedQuantity: q, offeredPrice: offer, listedPrice: l.pricePerUnit, finalPrice: null,
           status: 'REQUESTED',
           bookingType: forward ? 'forward' : 'standard',
           depositAmount: forward ? Math.round(total * FORWARD_DEPOSIT_PCT) : null,
@@ -1184,7 +1207,7 @@
           <p class="mkt-detail__desc">${esc(l.description || '')}</p>
 
           <div class="mkt-detail__kpis">
-            <div class="kpi"><div class="kpi__lbl">Price</div><div class="kpi__val" style="font-size:1.2rem;">${inr(l.pricePerUnit)}<small style="font-size:.55em;">/${esc(l.unit)}</small></div></div>
+            <div class="kpi"><div class="kpi__lbl">Price${l.priceNegotiable ? ' · negotiable' : ''}</div><div class="kpi__val" style="font-size:1.2rem;">${inr(l.pricePerUnit)}<small style="font-size:.55em;">/${esc(l.unit)}</small></div></div>
             <div class="kpi"><div class="kpi__lbl">Available</div><div class="kpi__val" style="font-size:1.2rem;">${Number(l.quantityAvailable).toLocaleString('en-IN')} <small style="font-size:.55em;">${esc(l.unit)}</small></div></div>
             <div class="kpi"><div class="kpi__lbl">Min. order</div><div class="kpi__val" style="font-size:1.2rem;">${l.minOrderQty} <small style="font-size:.55em;">${esc(l.unit)}</small></div></div>
           </div>
@@ -1512,9 +1535,9 @@
             <div class="mm-form-group"><label>Price per unit (₹)</label><input type="number" id="selPrice" class="mm-form-input" min="1" step="1" required value="${editing?.pricePerUnit ?? ''}"></div>
             <div class="mm-form-group">
               <label>Pricing type</label>
-              <select class="mm-form-input" disabled title="Negotiable pricing is planned for a future release">
-                <option>Fixed price</option>
-                <option disabled>Negotiable (coming soon)</option>
+              <select class="mm-form-input" id="selPricing">
+                <option value="fixed"${editing?.priceNegotiable ? '' : ' selected'}>Fixed price</option>
+                <option value="negotiable"${editing?.priceNegotiable ? ' selected' : ''}>Negotiable — buyers can offer less</option>
               </select>
             </div>
           </div>
@@ -1649,6 +1672,7 @@
         unit: document.getElementById('selUnit').value,
         minOrderQty: Number(document.getElementById('selMoq').value),
         pricePerUnit: Number(document.getElementById('selPrice').value),
+        priceNegotiable: document.getElementById('selPricing').value === 'negotiable',
         harvestDate: document.getElementById('selHarvest').value,
         expectedAvailability: document.getElementById('selAvailFrom').value,
         state: document.getElementById('selState').value.trim(),
@@ -1925,6 +1949,7 @@
         <div class="mkt-req-row__meta">
           <span>Seller: ${esc(o.sellerName)}</span>
           <span>Estimated total: ${inr(o.requestedQuantity * effectivePrice)}</span>
+          ${o.listedPrice && o.offeredPrice < o.listedPrice ? `<span>Your offer: ${inr(o.offeredPrice)}/${esc(o.unit)} (listed ${inr(o.listedPrice)})</span>` : ''}
           <span>Payment: ${esc(o.paymentStatus)}</span>
           ${o.batchId ? `<span>🧺 Sent together with other cart requests</span>` : ''}
         </div>
@@ -1963,9 +1988,15 @@
     const transitions = {
       cancel: () => { o.status = 'CANCELLED'; },
       'simulate-accept': () => { o.status = 'ACCEPTED'; o.finalPrice = o.offeredPrice; },
-      // Demo counter-offer: a fixed +4% above the buyer's ask, clearly a
-      // simulated stand-in for real seller negotiation, not a pricing model.
-      'simulate-counter': () => { o.status = 'COUNTER_OFFER'; o.finalPrice = Math.round(o.offeredPrice * 1.04); },
+      // Demo counter-offer, clearly a simulated stand-in for real seller
+      // negotiation, not a pricing model: halfway between a below-list offer
+      // and the listed price, or a fixed +4% on a request at the listed price.
+      'simulate-counter': () => {
+        o.status = 'COUNTER_OFFER';
+        o.finalPrice = o.listedPrice && o.offeredPrice < o.listedPrice
+          ? Math.round((o.offeredPrice + o.listedPrice) / 2)
+          : Math.round(o.offeredPrice * 1.04);
+      },
       'accept-counter': () => { o.status = 'ACCEPTED'; },
       'reject-counter': () => { o.status = 'CANCELLED'; },
       'simulate-pickup': () => { o.status = 'PICKUP_PENDING'; },
@@ -2140,7 +2171,6 @@
           <select id="coDelivery" class="mm-form-input">
             <option value="farmer_pickup">Farmer pickup (buyer collects)</option>
             <option value="buyer_transport">Buyer-arranged transport</option>
-            <option value="platform_assisted">Platform-assisted logistics (coming soon)</option>
           </select>
         </div>
         <p class="mkt-note">This sends ${lines.length} separate request${lines.length === 1 ? '' : 's'}, one per seller, so each can respond individually. No platform fee is applied in this demo.</p>

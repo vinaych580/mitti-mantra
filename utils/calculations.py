@@ -128,6 +128,25 @@ def calculate_yield_kg_per_acre(
     return round(crop.base_yield_kg_per_acre * soil_factor * climate_factor * irrigation_factor * variety_factor * date_factor, 2)
 
 
+def effective_rainfall_mm(seasonal_rainfall_mm: float, months: int = 4) -> float:
+    """The part of a season's rain a crop can actually use, in mm.
+
+    Uses the USDA Soil Conservation Service method as applied by FAO's
+    CROPWAT (FAO Irrigation and Drainage Paper 56 practice): per month,
+    Peff = P(125 - 0.2P)/125 when P <= 250 mm, else 125 + 0.1P. The rest
+    runs off or drains below the roots. weather.csv carries seasonal totals,
+    so the total is spread evenly over `months` -- four by default, the
+    length of the kharif monsoon (June-September) and of a typical
+    120-day field-crop season.
+    """
+    total = max(float(seasonal_rainfall_mm), 0.0)
+    if total == 0.0 or months <= 0:
+        return 0.0
+    p = total / months
+    per_month = p * (125.0 - 0.2 * p) / 125.0 if p <= 250.0 else 125.0 + 0.1 * p
+    return per_month * months
+
+
 def calculate_risk_score_and_subscores(
     crop: CropParameter,
     weather: dict[str, float],
@@ -137,14 +156,24 @@ def calculate_risk_score_and_subscores(
     rainfall = weather.get("rainfall_mm", crop.water_requirement_mm)
     avg_temp = weather.get("avg_temp_c", (crop.temp_min_c + crop.temp_max_c) / 2.0)
 
+    # Drought and waterlogging are judged on the rain the crop can use, not
+    # the season's total. Comparing the raw total with a crop's water need
+    # read every normal monsoon as a flood for crops that need little water:
+    # Sehore's 1,209 mm kharif gave soybean -- the district's main kharif
+    # crop -- a 95% flood risk, and jute (1,400 mm need, grown in Bengal, not
+    # Madhya Pradesh) none at all, so jute topped kharif recommendations in
+    # 19 of 30 districts. A crop missing its rain is a drought; more usable
+    # rain than it needs means a saturated root zone.
+    usable = effective_rainfall_mm(rainfall) if "rainfall_mm" in weather else rainfall
+
     drought = clamp(
-        (crop.water_requirement_mm - rainfall) / max(crop.water_requirement_mm, 1.0) * 100.0,
+        (crop.water_requirement_mm - usable) / max(crop.water_requirement_mm, 1.0) * 100.0,
         0.0, 100.0,
     )
     # Irrigation mitigates drought risk
     drought = clamp(drought - (25.0 * irrigation_level), 5.0, 95.0)
 
-    flood = clamp((rainfall - crop.water_requirement_mm) / max(crop.water_requirement_mm, 1.0) * 100.0, 0.0, 95.0)
+    flood = clamp((usable - crop.water_requirement_mm) / max(crop.water_requirement_mm, 1.0) * 100.0, 0.0, 95.0)
 
     # Temperature / Heat / Cold stress risk
     if avg_temp > crop.temp_max_c:

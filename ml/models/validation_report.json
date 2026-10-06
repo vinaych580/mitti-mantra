@@ -6,10 +6,10 @@
       "season": "rabi",
       "status": "PASS",
       "top_crop": "Mustard (Sarson)",
-      "top_score": 92.47,
-      "top_yield_kg_ac": 900.97,
-      "top_profit_inr": 36940.92,
-      "latency_ms": 1275,
+      "top_score": 92.03,
+      "top_yield_kg_ac": 897.11,
+      "top_profit_inr": 36718.39,
+      "latency_ms": 1157,
       "ml_used": true
     },
     {
@@ -17,11 +17,11 @@
       "region_id": "mh_nashik",
       "season": "kharif",
       "status": "PASS",
-      "top_crop": "Jute",
-      "top_score": 74.2,
-      "top_yield_kg_ac": 710.46,
-      "top_profit_inr": 18746.85,
-      "latency_ms": 174,
+      "top_crop": "Soybean",
+      "top_score": 55.73,
+      "top_yield_kg_ac": 645.3,
+      "top_profit_inr": 11889.65,
+      "latency_ms": 205,
       "ml_used": true
     },
     {
@@ -30,10 +30,10 @@
       "season": "kharif",
       "status": "PASS",
       "top_crop": "Pulses (Chickpea/Tur)",
-      "top_score": 67.27,
-      "top_yield_kg_ac": 621.17,
-      "top_profit_inr": 27407.28,
-      "latency_ms": 181,
+      "top_score": 70.33,
+      "top_yield_kg_ac": 622.26,
+      "top_profit_inr": 27481.69,
+      "latency_ms": 163,
       "ml_used": true
     },
     {
@@ -42,10 +42,10 @@
       "season": "rabi",
       "status": "PASS",
       "top_crop": "Mustard (Sarson)",
-      "top_score": 68.26,
-      "top_yield_kg_ac": 915.08,
-      "top_profit_inr": 29536.94,
-      "latency_ms": 177,
+      "top_score": 68.1,
+      "top_yield_kg_ac": 911.03,
+      "top_profit_inr": 29339.83,
+      "latency_ms": 201,
       "ml_used": true
     },
     {
@@ -54,15 +54,15 @@
       "season": "kharif",
       "status": "PASS",
       "top_crop": "Jute",
-      "top_score": 75.46,
-      "top_yield_kg_ac": 749.4,
-      "top_profit_inr": 20596.5,
-      "latency_ms": 187,
+      "top_score": 56.72,
+      "top_yield_kg_ac": 736.06,
+      "top_profit_inr": 19962.85,
+      "latency_ms": 198,
       "ml_used": true
     }
   ],
   "all_pass": true,
   "passed": 5,
   "total": 5,
-  "generated_at": 1790341524.8629265
+  "generated_at": 1791194189.5558338
 }

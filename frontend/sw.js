@@ -18,7 +18,12 @@
 // v57: decide.html and the two scripts only it loads (decide.js,
 // region-geo.js) join the precache. They were cached only once visited, so
 // offline a first-time visitor to the guided flow got index.html instead.
-const VERSION = 'mittimantra-v57';
+// v58: all-round upgrade. i18n-data.js split into i18n/<lang>.js (loaded on
+// demand); login.html + auth.js replaced by your-data.html/.js; new
+// mm-palette.js on every page; Data/*.js re-encoded column by column;
+// farm-boundary.js no longer loads Turf. Shipped as one set so no visitor
+// pairs new markup with an old script.
+const VERSION = 'mittimantra-v59';
 const CORE = [
   './',
   './index.html',
@@ -27,13 +32,14 @@ const CORE = [
   './marketplace.html',
   './gyan-seva.html',
   './book-a-tractor.html',
-  './login.html',
+  './your-data.html',
   './decide.html',
   './style.css',
   './assets/logo-128.png',
   './assets/logo-192.png',
   './assets/logo-512.png',
   './site-ui.js',
+  './mm-palette.js',
   './vendor/lenis.min.js',
   './state-data.js',
   './india-globe.js',
@@ -45,7 +51,10 @@ const CORE = [
   './offline-simulator.js',
   './farm-boundary.js',
   './farm-state.js',
-  './i18n-data.js',
+  './i18n/hi.js',
+  './i18n/te.js',
+  './i18n/kn.js',
+  './i18n/ta.js',
   './i18n.js',
   './toolbar.js',
   './mm-core.js',
@@ -58,7 +67,7 @@ const CORE = [
   './gyan-seva.js',
   './book-a-tractor.js',
   './map-tractors.js',
-  './auth.js',
+  './your-data.js',
   './Data/marketplace-listings.js',
   './Data/india-states.geo.json',
   './assets/marketplace/rice.webp',

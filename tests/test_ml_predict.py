@@ -270,3 +270,40 @@ def test_recommend_crops_never_ranks_a_loss_above_a_clear_profit():
     worst_profit = min(profits, key=lambda r: r["smart_score"])
     best_loss = max(losses, key=lambda r: r["smart_score"])
     assert best_loss["smart_score"] < worst_profit["smart_score"], (best_loss, worst_profit)
+
+def test_model_groups_never_unpickle_at_the_same_time(monkeypatch):
+    """Two threads unpickling sklearn models at once can deadlock on imports.
+
+    The startup warm-up loads the yield forest while a request loads the
+    recommender; when both unpickles overlapped, CPython's import deadlock
+    detector fired and the yield model stayed unloaded for the life of the
+    process. Every joblib.load must run alone.
+    """
+    import threading
+    import time
+
+    import joblib
+
+    import ml.predict as P
+
+    state = {"inside": 0, "most": 0}
+    guard = threading.Lock()
+
+    def slow_load(path):
+        with guard:
+            state["inside"] += 1
+            state["most"] = max(state["most"], state["inside"])
+        time.sleep(0.05)
+        with guard:
+            state["inside"] -= 1
+        return object()
+
+    monkeypatch.setattr(joblib, "load", slow_load)
+    names = ["yield_model.joblib", "recommend_model.joblib", "price_model.joblib"]
+    threads = [threading.Thread(target=P._load_joblib, args=(n,)) for n in names * 2]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+
+    assert state["most"] == 1

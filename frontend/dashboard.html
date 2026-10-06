@@ -14,15 +14,6 @@
     href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@400;600&family=Noto+Sans+Telugu:wght@400;600&family=Noto+Sans+Kannada:wght@400;600&family=Noto+Sans+Tamil:wght@400;600&family=Noto+Serif+Devanagari:wght@500;600&family=Noto+Serif+Telugu:wght@500;600&family=Noto+Serif+Kannada:wght@500;600&family=Noto+Serif+Tamil:wght@500;600&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <!-- Deferred, like every other script on this page. Undeferred it blocked
-       parsing and first paint on a cross-origin round-trip to unpkg for a
-       map that lives well below the fold. `defer` keeps execution in document
-       order, so Leaflet is still defined before dashboard.js (the only file
-       here that touches `L`) runs. Integrity hash matches book-a-tractor.html,
-       which already loads this exact file this way. -->
-  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <link rel="icon" href="assets/logo-192.png" type="image/png">
   <link rel="apple-touch-icon" href="assets/logo-192.png">
 </head>
@@ -62,10 +53,12 @@
     <ul>
       <li><a href="index.html">Home</a></li>
       <li><a href="dashboard.html" aria-current="page">Dashboard</a></li>
+      <li><a href="decide.html">What should I sow?</a></li>
       <li><a href="farm-boundary.html">Draw farm</a></li>
       <li><a href="marketplace.html">Marketplace</a></li>
       <li><a href="book-a-tractor.html">Book a Tractor</a></li>
       <li><a href="gyan-seva.html">Gyan Seva</a></li>
+      <li><a href="your-data.html">Your data</a></li>
     </ul>
   </aside>
 
@@ -77,6 +70,7 @@
 
       <!-- ========== SIDEBAR ========== -->
       <aside class="sidebar">
+        <a class="sidebar__guide" href="decide.html">New here? Get one answer →</a>
         <div class="sidebar__group">
           <div class="sidebar__label">Overview</div>
           <button class="sidebar__btn active" data-tool="home">
@@ -884,6 +878,7 @@
           <canvas id="diseaseResizeCanvas" width="224" height="224" style="display: none;"></canvas>
 
           <div id="diseaseResultsBox" style="display: none; margin-top: 24px;"></div>
+          <div id="diseaseHistory" class="scan-history" hidden></div>
         </section>
 
         <!-- 12. LOAN -->
@@ -1135,12 +1130,12 @@
   <script defer src="mm-analytics.js"></script>
   <script defer src="mm-freshness.js"></script>
   <script defer src="site-ui.js"></script>
+  <script defer src="mm-palette.js"></script>
   <script defer src="offline-simulator.js"></script>
   <script defer src="farm-state.js"></script>
   <script defer src="mm-plots.js"></script>
   <script defer src="dashboard.js"></script>
   <script defer src="mm-enhance.js"></script>
-  <script defer src="i18n-data.js"></script>
   <script defer src="i18n.js"></script>
   <script defer src="toolbar.js"></script>
   <script defer src="chatbot.js"></script>

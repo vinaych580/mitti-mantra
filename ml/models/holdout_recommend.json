@@ -1,6 +1,6 @@
 {
   "model": "recommend",
-  "n_samples": 15180,
+  "n_samples": 15181,
   "n_features": 13,
   "row_hashes_sample": [
     "550fc852b7c89c8699c71cdb27169970",
@@ -24,10 +24,10 @@
     "2ee097f849cdf4d8893318b5158dfba4",
     "eede96edaa13aede1f878f75ed419bf2"
   ],
-  "row_hash_set_size": 15180,
-  "saved_at": 1790341427.1109178,
+  "row_hash_set_size": 15181,
+  "saved_at": 1791193987.7695758,
   "source_counts": {
     "natural": 15000,
-    "topup": 180
+    "topup": 181
   }
 }

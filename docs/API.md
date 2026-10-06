@@ -103,7 +103,8 @@ Top-K crops for a farm profile.
 | `roi_percent` | `(revenue - cost) / cost × 100` |
 | `risk_score` | 0–100, higher = riskier |
 | `smart_score` | 0–100 composite rank |
-| `ml_confidence` | 0–1 per-class probability |
+| `ml_confidence` | 0–1 per-class probability (informational; not part of `smart_score`) |
+| `grown_locally` | `true` if the district has harvest records for this crop |
 | `prediction_source` | `"ml_model"` or `"heuristic"` |
 
 ### `POST /api/simulate`

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your data · Mitti Mantra</title>
+  <meta name="description" content="Everything you save in Mitti Mantra stays on your phone. Back it up to a file, move it to another phone, or delete it.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@400;600&family=Noto+Sans+Telugu:wght@400;600&family=Noto+Sans+Kannada:wght@400;600&family=Noto+Sans+Tamil:wght@400;600&family=Noto+Serif+Devanagari:wght@500;600&family=Noto+Serif+Telugu:wght@500;600&family=Noto+Serif+Kannada:wght@500;600&family=Noto+Serif+Tamil:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="assets/logo-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/logo-192.png">
+</head>
+<body class="login-body">
+
+  <nav class="nav scrolled" id="nav">
+    <div class="nav__wrap">
+      <a href="index.html" class="logo" aria-label="Mitti Mantra home">
+        <img src="assets/logo-128.png" alt="Mitti Mantra — Growing the future" class="logo__img" width="128" height="128">
+      </a>
+      <div class="nav__cta">
+        <a href="dashboard.html" class="btn btn-primary btn--sm">Open dashboard</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- There are no accounts in Mitti Mantra: everything a farmer saves lives
+       in this browser. This page used to be a sign-in form wired to an auth
+       stub that rejected every attempt. What a farmer actually needs from
+       "an account" here is not to lose his plots and bookings when he changes
+       phones, so that is what this page does. -->
+  <main class="login">
+    <div class="login__card data-card">
+      <div class="login__header">
+        <img src="assets/logo-192.png" alt="" class="login__logo" width="56" height="56">
+        <h1 class="login__title">Your data</h1>
+        <p class="login__sub">Mitti Mantra has no accounts. Everything you save stays on this phone, in this browser. Back it up to keep it safe, or to move it to a new phone.</p>
+      </div>
+
+      <section class="data-section" aria-labelledby="dataSavedTitle">
+        <h2 class="data-section__title" id="dataSavedTitle">Saved on this phone <span class="data-section__meta" id="dataSize" data-no-translate></span></h2>
+        <ul class="data-summary" id="dataSummary" aria-live="polite"></ul>
+        <p class="data-empty" id="dataEmpty" hidden>Nothing saved yet. Set up your farm on the dashboard and it will appear here.</p>
+      </section>
+
+      <section class="data-section" aria-labelledby="dataBackupTitle">
+        <h2 class="data-section__title" id="dataBackupTitle">Back up</h2>
+        <p class="data-section__note">Saves one small file. Keep it somewhere safe, or send it to yourself.</p>
+        <div class="data-actions">
+          <button type="button" class="btn btn-primary" id="dataDownload">Download backup</button>
+          <button type="button" class="btn btn-ghost" id="dataShare" hidden>Share backup</button>
+        </div>
+      </section>
+
+      <section class="data-section" aria-labelledby="dataRestoreTitle">
+        <h2 class="data-section__title" id="dataRestoreTitle">Restore</h2>
+        <p class="data-section__note">Open a backup file from this or another phone.</p>
+        <label class="btn btn-ghost data-file">
+          <input type="file" id="dataFile" accept="application/json,.json">
+          <span>Choose backup file</span>
+        </label>
+        <div class="data-preview" id="dataPreview" hidden></div>
+      </section>
+
+      <section class="data-section data-section--danger" aria-labelledby="dataDeleteTitle">
+        <h2 class="data-section__title" id="dataDeleteTitle">Delete</h2>
+        <p class="data-section__note">Removes everything Mitti Mantra has saved on this phone. This can't be undone, so back up first if you might want it later.</p>
+        <button type="button" class="btn btn-ghost data-delete" id="dataDelete">Delete all my data</button>
+      </section>
+    </div>
+  </main>
+
+  <script defer src="mm-core.js"></script>
+  <script defer src="site-ui.js"></script>
+  <script defer src="mm-palette.js"></script>
+  <script defer src="your-data.js"></script>
+  <script defer src="i18n.js"></script>
+  <script defer src="toolbar.js"></script>
+</body>
+</html>

@@ -378,9 +378,9 @@
       // Append TTS Audio Speaker Icon
       const ttsBtn = document.createElement("button");
       ttsBtn.type = "button";
-      ttsBtn.title = "Listen to answer";
+      ttsBtn.title = tr("Listen to answer");
       ttsBtn.style.cssText = "background:none;border:none;color:var(--brand,#2f6b3a);cursor:pointer;font-size:12px;margin-top:6px;display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border-radius:4px;border:1px solid #c8dcc8;";
-      ttsBtn.innerHTML = `🔊 Listen`;
+      ttsBtn.innerHTML = `🔊 <span>${tr("Listen")}</span>`;
       ttsBtn.addEventListener("click", () => speakText(text));
       div.appendChild(ttsBtn);
     }
@@ -428,13 +428,69 @@
     body.scrollTop = body.scrollHeight;
   }
 
-  function greet() {
-    addMsg("bot",
-      "Namaste! I'm **Mitti Mantra's assistant**. I can help with crop " +
+  // The greeting and its chips in the site's language. These are the
+  // backend's own strings (engine/chatbot_i18n.py REPLY: greeting, sug_*), so
+  // a tapped chip is a phrase the assistant is known to understand. The
+  // greeting used to be English whatever language the page was in.
+  const GREETINGS = {
+    "hi": {
+      "text": "नमस्ते! मैं **मिट्टी मंत्र का सहायक** हूं — फ़सल सिफारिशें, मंडी भाव, MSP, सिंचाई, कीट और सरकारी योजनाओं में मदद कर सकता हूं, असली भारतीय कृषि डेटा के साथ।\n\nपूछ के देखें: _\"तेलंगाना मेडक के लिए खरीफ़ में ₹15000 बजट और 3 एकड़ पर फ़सल सिफारिश करें\"_ या _\"गेहूं का MSP क्या है?\"_",
+      "chips": [
+        "आप क्या कर सकते हैं?",
+        "मेरे क्षेत्र के लिए फ़सल सिफारिश",
+        "गेहूं का MSP",
+        "चावल के लिए कीट चेतावनी"
+      ]
+    },
+    "te": {
+      "text": "నమస్తే! నేను **మిట్టి మంత్ర సహాయకుడిని** — పంట సిఫారసులు, మండీ ధరలు, MSP, నీటిపారుదల, పురుగులు మరియు ప్రభుత్వ పథకాలలో సహాయం చేయగలను, నిజమైన భారత వ్యవసాయ డేటాతో.\n\nఇలా అడగండి: _\"తెలంగాణ మెదక్ కోసం ఖరీఫ్‌లో ₹15000 బడ్జెట్, 3 ఎకరాలకు పంట సిఫారసు చేయండి\"_ లేదా _\"గోధుమల MSP ఎంత?\"_",
+      "chips": [
+        "మీరు ఏమి చేయగలరు?",
+        "నా ప్రాంతం కోసం పంట సిఫారసు",
+        "గోధుమల MSP",
+        "వరికి పురుగు హెచ్చరికలు"
+      ]
+    },
+    "kn": {
+      "text": "ನಮಸ್ತೆ! ನಾನು **ಮಿಟ್ಟಿ ಮಂತ್ರ ಸಹಾಯಕ** — ಬೆಳೆ ಶಿಫಾರಸುಗಳು, ಮಂಡಿ ಬೆಲೆಗಳು, MSP, ನೀರಾವರಿ, ಕೀಟಗಳು ಮತ್ತು ಸರ್ಕಾರಿ ಯೋಜನೆಗಳಲ್ಲಿ ಸಹಾಯ ಮಾಡಬಲ್ಲೆ, ನಿಜವಾದ ಭಾರತೀಯ ಕೃಷಿ ಡೇಟಾದೊಂದಿಗೆ.\n\nಹೀಗೆ ಕೇಳಿ: _\"ತೆಲಂಗಾಣ ಮೆದಕ್‌ಗೆ ಖರೀಫ್‌ನಲ್ಲಿ ₹15000 ಬಜೆಟ್, 3 ಎಕರೆಗಳಿಗೆ ಬೆಳೆ ಶಿಫಾರಸು ಮಾಡಿ\"_ ಅಥವಾ _\"ಗೋಧಿಯ MSP ಎಷ್ಟು?\"_",
+      "chips": [
+        "ನೀವು ಏನು ಮಾಡಬಲ್ಲಿರಿ?",
+        "ನನ್ನ ಪ್ರದೇಶಕ್ಕೆ ಬೆಳೆ ಶಿಫಾರಸು",
+        "ಗೋಧಿಯ MSP",
+        "ಅಕ್ಕಿಗೆ ಕೀಟ ಎಚ್ಚರಿಕೆಗಳು"
+      ]
+    }
+  };
+  const EN_GREETING = {
+    text: "Namaste! I'm **Mitti Mantra's assistant**. I can help with crop " +
       "recommendations, mandi prices, MSP, irrigation, pests and government schemes — " +
-      "all using real Indian farm data from this site.");
-    setSuggestions(["What can you do?", "Recommend crops for Telangana Medak", "MSP of wheat", "Pest alerts for rice"]);
+      "all using real Indian farm data from this site.",
+    chips: ["What can you do?", "Recommend crops for Telangana Medak", "MSP of wheat", "Pest alerts for rice"],
+  };
+  const siteLang = () => (window.AgriSimI18n && window.AgriSimI18n.getLanguage()) ||
+    document.documentElement.getAttribute("lang") || "en";
+  // UI strings this file writes itself; translated from the page catalog.
+  const tr = (s) => (window.AgriSimI18n && window.AgriSimI18n.t ? window.AgriSimI18n.t(s) : s);
+
+  // True until the farmer sends something, so a language switch can redo
+  // the greeting without touching a conversation already under way.
+  let onlyGreeted = false;
+  function greet() {
+    const lang = siteLang();
+    const g = GREETINGS[lang] || EN_GREETING;
+    body.innerHTML = "";
+    // The assistant doesn't understand Tamil yet: say so in Tamil rather
+    // than greet in Tamil and then answer in English.
+    const text = lang === "ta"
+      ? "உதவியாளர் தற்போது ஆங்கிலத்தில் மட்டுமே பதிலளிக்கிறது.\n\n" + g.text
+      : g.text;
+    addMsg("bot", text);
+    setSuggestions(g.chips);
+    onlyGreeted = true;
   }
+  document.addEventListener("mm:lang-changed", () => {
+    if (onlyGreeted && body.childElementCount) greet();
+  });
 
   // --------------- session memory ---------------
   let sessionCtx = {};
@@ -472,11 +528,12 @@
     if (!msg || _sending) return;
     _sending = true;
     input.value = "";
+    onlyGreeted = false;
     addMsg("user", msg);
     setSuggestions([]);
     const typing = document.createElement("div");
     typing.className = "mm-msg bot";
-    typing.setAttribute("aria-label", "Assistant is typing");
+    typing.setAttribute("aria-label", tr("Assistant is typing"));
     typing.innerHTML = '<span class="mm-typing"><span></span><span></span><span></span></span>';
     body.appendChild(typing);
     body.scrollTop = body.scrollHeight;
@@ -503,20 +560,20 @@
       } catch (_) {
         typing.remove();
         console.error("[chat] non-JSON response from", API, res.status);
-        addMsg("bot", "The assistant isn't available right now. Please try again in a little while.");
+        addMsg("bot", tr("The assistant isn't available right now. Please try again in a little while."));
         return;
       }
       typing.remove();
       if (!res.ok) {
         console.error("[chat] API error", res.status, formatApiError(data));
-        addMsg("bot", res.status === 422
+        addMsg("bot", tr(res.status === 422
           ? "I couldn't read that message. Try asking in a shorter sentence."
-          : "Sorry, something went wrong on my side. Please try asking again.");
+          : "Sorry, something went wrong on my side. Please try asking again."));
         return;
       }
       if (data.reply == null || data.reply === "") {
         console.error("[chat] empty reply", data);
-        addMsg("bot", "I didn't get an answer for that. Please try rephrasing your question.");
+        addMsg("bot", tr("I didn't get an answer for that. Please try rephrasing your question."));
         return;
       }
       addMsg("bot", data.reply);
@@ -526,9 +583,9 @@
     } catch (err) {
       typing.remove();
       console.error("[chat] request failed", err);
-      addMsg("bot", navigator.onLine
+      addMsg("bot", tr(navigator.onLine
         ? "I couldn't reach the assistant. Please try again in a moment."
-        : "You're offline. Reconnect and ask again.");
+        : "You're offline. Reconnect and ask again."));
     } finally {
       // FIX (5.2): Always release the send mutex
       _sending = false;
