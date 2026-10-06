@@ -219,7 +219,12 @@
       // which computes to a box that overflows itself vertically -- exactly
       // what allowNestedScroll looks for, so Lenis would take <body> for a
       // nested scroller and hand every wheel event back to the browser.
-      // This is the same height:auto that lenis.css ships.
+      // <html> is pinned too, and it is the box Lenis watches to notice the
+      // page growing: held at viewport height it never resizes, so content
+      // rendered later (a decide answer, a dashboard result) left Lenis with
+      // the old scroll limit and the wheel stopped dead above it.
+      // This is the same height:auto that lenis.css ships for both.
+      document.documentElement.style.height = 'auto';
       document.body.style.height = 'auto';
       lenis =new window.Lenis({
         autoRaf: true,

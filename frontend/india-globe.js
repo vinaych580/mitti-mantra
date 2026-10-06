@@ -115,9 +115,13 @@
   });
   world.add(new THREE.Mesh(new THREE.SphereGeometry(GLOBE_R + 0.003, 96, 96), landMat));
 
+  // Pinned: an unversioned unpkg URL answers with a 302 to the current
+  // release, and Firefox fails a cross-origin redirect the service worker
+  // hands back -- the image neither loads nor errors, so the fallback below
+  // never ran and the globe rendered with no land.
   const TEX_URLS = [
-    'https://unpkg.com/three-globe/example/img/earth-topology.png',
-    'https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-topology.png'
+    'https://unpkg.com/three-globe@2.45.3/example/img/earth-topology.png',
+    'https://cdn.jsdelivr.net/npm/three-globe@2.45.3/example/img/earth-topology.png'
   ];
   (function tryLoad(i) {
     if (i >= TEX_URLS.length) return;
@@ -133,8 +137,8 @@
   });
   world.add(new THREE.Mesh(new THREE.SphereGeometry(GLOBE_R + 0.004, 96, 96), bumpMat));
   const BUMP_URLS = [
-    'https://unpkg.com/three-globe/example/img/earth-day.jpg',
-    'https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-day.jpg'
+    'https://unpkg.com/three-globe@2.45.3/example/img/earth-day.jpg',
+    'https://cdn.jsdelivr.net/npm/three-globe@2.45.3/example/img/earth-day.jpg'
   ];
   (function tryLoad(i) {
     if (i >= BUMP_URLS.length) return;
