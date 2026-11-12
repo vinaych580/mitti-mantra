@@ -1,5 +1,42 @@
+from datetime import date
 from pydantic import BaseModel, Field, field_validator
 from typing import Dict, Any, List, Optional
+
+# Upper bounds shared by every request model (defect N-8: 1e9 acres at
+# Rs 1e12/acre used to return 200 with a profit of -1e21). Same limits as
+# backend/season_routes.py.
+MAX_AREA_ACRES = 100_000
+MAX_BUDGET_PER_ACRE = 10_000_000
+
+
+def _check_area(v: float) -> float:
+    if v <= 0:
+        raise ValueError("area_acres must be greater than 0")
+    if v > MAX_AREA_ACRES:
+        raise ValueError(f"area_acres must not exceed {MAX_AREA_ACRES:,}")
+    return v
+
+
+def _check_budget(v: float) -> float:
+    if v <= 0:
+        raise ValueError("budget_per_acre must be greater than 0")
+    if v > MAX_BUDGET_PER_ACRE:
+        raise ValueError(f"budget_per_acre must not exceed {MAX_BUDGET_PER_ACRE:,}")
+    return v
+
+
+def _check_area_or_budget(v: float, field_name: str) -> float:
+    return _check_budget(v) if "budget" in field_name else _check_area(v)
+
+
+def parse_sowing_date(v: Optional[str]) -> Optional[str]:
+    """Accept YYYY-MM-DD only; '2026-13-45' is a 422, not a silent default (N-17)."""
+    if v is None or v == "":
+        return None
+    try:
+        return date.fromisoformat(str(v)).isoformat()
+    except ValueError as exc:
+        raise ValueError("sowing_date must be a real date in YYYY-MM-DD format") from exc
 class SimulationRequest(BaseModel):
     crop_id: str
     area_acres: float
@@ -15,9 +52,12 @@ class SimulationRequest(BaseModel):
     @field_validator("area_acres")
     @classmethod
     def area_must_be_positive(cls, v: float) -> float:
-        if v <= 0:
-            raise ValueError("area_acres must be greater than 0")
-        return v
+        return _check_area(v)
+
+    @field_validator("sowing_date")
+    @classmethod
+    def sowing_date_is_a_date(cls, v: Optional[str]) -> Optional[str]:
+        return parse_sowing_date(v)
 
     @field_validator("mandi_price_per_kg")
     @classmethod
@@ -41,10 +81,8 @@ class RecommendationRequest(BaseModel):
 
     @field_validator("budget_per_acre", "area_acres")
     @classmethod
-    def must_be_positive(cls, v: float) -> float:
-        if v <= 0:
-            raise ValueError("Value must be greater than 0")
-        return v
+    def must_be_positive(cls, v: float, info) -> float:
+        return _check_area_or_budget(v, info.field_name)
 
 class CommitmentRequest(BaseModel):
     region_id: str
@@ -79,10 +117,8 @@ class RotationRequest(BaseModel):
 
     @field_validator("budget_per_acre", "area_acres")
     @classmethod
-    def must_be_positive_rot(cls, v: float) -> float:
-        if v <= 0:
-            raise ValueError("Value must be greater than 0")
-        return v
+    def must_be_positive_rot(cls, v: float, info) -> float:
+        return _check_area_or_budget(v, info.field_name)
 
 class BatchSimRequest(BaseModel):
     crop_ids: List[str]
@@ -104,10 +140,13 @@ class BatchSimRequest(BaseModel):
 
     @field_validator("area_acres", "budget_per_acre")
     @classmethod
-    def batch_must_be_positive(cls, v: float) -> float:
-        if v <= 0:
-            raise ValueError("Value must be greater than 0")
-        return v
+    def batch_must_be_positive(cls, v: float, info) -> float:
+        return _check_area_or_budget(v, info.field_name)
+
+    @field_validator("sowing_date")
+    @classmethod
+    def batch_sowing_date_is_a_date(cls, v: Optional[str]) -> Optional[str]:
+        return parse_sowing_date(v)
 
 
 class CropMixRequest(BaseModel):
@@ -122,9 +161,13 @@ class CropMixRequest(BaseModel):
 
     @field_validator("total_area_acres", "total_budget")
     @classmethod
-    def must_be_positive_mix(cls, v: float) -> float:
+    def must_be_positive_mix(cls, v: float, info) -> float:
         if v <= 0:
-            raise ValueError("Value must be greater than 0")
+            raise ValueError(f"{info.field_name} must be greater than 0")
+        if info.field_name == "total_area_acres":
+            return _check_area(v)
+        if v > MAX_BUDGET_PER_ACRE * MAX_AREA_ACRES:
+            raise ValueError("total_budget is too large")
         return v
 
 class LoanRequest(BaseModel):
@@ -170,8 +213,8 @@ class NDVIQuery(BaseModel):
 class FarmScoreQuery(BaseModel):
     region_id: str
     season: str
-    budget_per_acre: float = Field(gt=0)
-    area_acres: float = Field(gt=0, le=100_000)
+    budget_per_acre: float = Field(gt=0, le=MAX_BUDGET_PER_ACRE)
+    area_acres: float = Field(gt=0, le=MAX_AREA_ACRES)
     crop_id: Optional[str] = None
     lat: Optional[float] = Field(None, ge=-90, le=90)
     lon: Optional[float] = Field(None, ge=-180, le=180)
@@ -217,8 +260,8 @@ class IoTTriggerRequest(BaseModel):
 class CropRecQuery(BaseModel):
     region_id: str
     season: str
-    budget_per_acre: float = Field(..., gt=0, description="Financial budget constraint per acre in INR")
-    area_acres: float = Field(..., gt=0, description="Total farm area size in acres")
+    budget_per_acre: float = Field(..., gt=0, le=MAX_BUDGET_PER_ACRE, description="Financial budget constraint per acre in INR")
+    area_acres: float = Field(..., gt=0, le=MAX_AREA_ACRES, description="Total farm area size in acres")
 
 class YieldPredQuery(BaseModel):
     crop_id: str
@@ -229,13 +272,15 @@ class YieldPredQuery(BaseModel):
 class ProfitEstRequest(BaseModel):
     crop_id: str
     predicted_yield_kg_per_acre: float = Field(..., ge=0, description="Predicted yield volume in kg per acre")
-    area_acres: float = Field(..., gt=0, description="Total farm area size in acres")
-    budget_per_acre: float = Field(..., gt=0, description="Allocated budget limit per acre in INR")
+    area_acres: float = Field(..., gt=0, le=MAX_AREA_ACRES, description="Total farm area size in acres")
+    budget_per_acre: float = Field(..., gt=0, le=MAX_BUDGET_PER_ACRE, description="Allocated budget limit per acre in INR")
     mandi_price_per_kg: Optional[float] = Field(None, ge=0, description="Current market price per kg in INR")
 
 class IrrigationQuery(BaseModel):
     crop_id: str
-    sowing_date: Optional[str] = Field("2025-06-15", description="Estimated sowing date in YYYY-MM-DD format")
+    # Query-parameter model (used with Depends()), so the format check is a
+    # Field pattern FastAPI turns into a 422; the route checks it is a real date.
+    sowing_date: Optional[str] = Field(None, pattern=r"^\d{4}-\d{2}-\d{2}$", description="Sowing date in YYYY-MM-DD format; defaults to the crop's calendar sowing date for the current or next season")
     rainfall_mm: Optional[float] = Field(800, ge=0, description="Seasonal cumulative rainfall in mm")
     irrigation_level: Optional[float] = Field(0.5, ge=0.0, le=1.0, description="Irrigation level multiplier (0.0 to 1.0)")
 

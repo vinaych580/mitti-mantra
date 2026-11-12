@@ -175,8 +175,33 @@ def test_jute_does_not_top_central_indian_kharif_recommendations():
 
 def test_recommendations_say_whether_the_district_has_grown_the_crop():
     from ml.predict import recommend_crops
-    by_crop = {r["crop_id"]: r for r in recommend_crops("wb_bardhaman", "kharif", 15000, 4, top_k=50)}
+    by_crop = {r["crop_id"]: r for r in recommend_crops("wb_bardhaman", "kharif", 15000, 4, top_k=50, include_losses=True)}
     assert by_crop["jute"]["grown_locally"] is True     # yield_history.csv: Bardhaman jute
-    guntur = {r["crop_id"]: r for r in recommend_crops("ap_guntur", "kharif", 15000, 4, top_k=50)}
+    guntur = {r["crop_id"]: r for r in recommend_crops("ap_guntur", "kharif", 15000, 4, top_k=50, include_losses=True)}
     assert guntur["jute"]["grown_locally"] is False     # no Guntur jute on record
     assert guntur["chilli"]["grown_locally"] is True
+
+
+# --- FAO-33 water response (Phase 0, defects N-1 and N-2) -----------------
+
+def test_water_response_falls_with_rain_and_rises_with_irrigation():
+    from utils.calculations import water_response_factor
+    from ml.predict import _load_crop_parameters
+
+    crops = _load_crop_parameters()
+    for crop_id in ("rice", "maize", "cotton", "wheat"):
+        crop = crops[crop_id]
+        dry = water_response_factor(crop, 300, 0.5)
+        wet = water_response_factor(crop, 900, 0.5)
+        assert dry < wet or wet == 1.0
+        assert water_response_factor(crop, 300, 1.0) >= water_response_factor(crop, 300, 0.0)
+        assert water_response_factor(crop, 300, 1.0) == 1.0  # full irrigation meets the need
+        assert 0.0 <= water_response_factor(crop, 0, 0.0) < 1.0
+
+
+def test_water_response_does_not_penalise_surplus_rain():
+    from utils.calculations import water_response_factor
+    from ml.predict import _load_crop_parameters
+
+    maize = _load_crop_parameters()["maize"]
+    assert water_response_factor(maize, 3000, 0.5) == 1.0

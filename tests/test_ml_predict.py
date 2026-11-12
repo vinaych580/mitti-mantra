@@ -261,7 +261,7 @@ def test_recommend_crops_never_ranks_a_loss_above_a_clear_profit():
     """
     from ml.predict import recommend_crops
 
-    recs = recommend_crops("telangana_medak", "kharif", 15000.0, 6.14, top_k=50)
+    recs = recommend_crops("telangana_medak", "kharif", 15000.0, 6.14, top_k=50, include_losses=True)
     losses = [r for r in recs if r["roi_percent"] < -30]
     profits = [r for r in recs if r["roi_percent"] > 50]
 

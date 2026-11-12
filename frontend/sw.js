@@ -27,7 +27,10 @@
 // (ranking rows) and india-globe.js (textures pinned past a redirect that
 // broke them in Firefox). Stale-while-revalidate would otherwise serve the
 // broken copies for one more load.
-const VERSION = 'mittimantra-v60';
+// v62: Phase 0 -- season pages on the shared nav, mic buttons with a
+// listening state, capped offline cache, typical-budget defaults, and the
+// kn/ta season strings. Every precached season file changed.
+const VERSION = 'mittimantra-v62';
 const CORE = [
   './',
   './index.html',
@@ -38,6 +41,12 @@ const CORE = [
   './book-a-tractor.html',
   './your-data.html',
   './decide.html',
+  './season.html',
+  './season.css',
+  './season-plan.js',
+  './season-ui.js',
+  './season-home.js',
+  './season-voice.js',
   './style.css',
   './assets/logo-128.png',
   './assets/logo-192.png',

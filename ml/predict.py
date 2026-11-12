@@ -6,7 +6,7 @@ import math
 import threading
 from datetime import datetime
 from pathlib import Path
-from statistics import mean
+from statistics import mean, median
 from typing import Any
 
 import numpy as np
@@ -440,6 +440,30 @@ def _season_match(input_season: str, crop_season: str) -> bool:
 #: Seasons a farmer actually picks in the UI when deciding what to sow now.
 GROWING_SEASONS = ("kharif", "rabi", "zaid")
 
+#: Seasons whose crops are grown on irrigation, not on the season's rain.
+#: Zaid (March-June) gets 20-100 mm of rain in most districts, so scoring a
+#: 400 mm watermelon against that rainfall called every zaid crop a climate
+#: mismatch and capped moong at 6-16 kg/acre (defect N-3). The yield model has
+#: almost no zaid training rows either, so zaid uses the heuristic with the
+#: crop's water need assumed met by irrigation; the irrigation level still
+#: scales the yield.
+IRRIGATED_SEASONS = ("zaid",)
+
+
+def normalise_season(season: str) -> str:
+    """Lower-case and validate a season name; the error names the field."""
+    s = str(season or "").strip().lower()
+    known = {key[1] for key in _load_weather_by_region()}
+    if s not in known:
+        options = ", ".join(sorted(known))
+        raise ValueError(f"season: '{season}' is not supported; use one of {options}")
+    return s
+
+
+def _require_known_region(region_id: str, weather_data: dict, soil_data: dict) -> None:
+    if region_id not in soil_data or not any(k[0] == region_id for k in weather_data):
+        raise ValueError(f"region_id: unknown region '{region_id}'")
+
 
 def _is_perennial(crop_season: str) -> bool:
     return "perennial" in (crop_season or "").lower()
@@ -651,8 +675,16 @@ def _predict_yield_with_source(
     seed_variety: str | None = None,
     sowing_date: str | None = None,
     ml_pred: float | None | _Unset = _UNSET,
+    force_heuristic: bool = False,
 ) -> tuple[float, bool]:
     """Return (yield_kg_per_acre, used_ml_model).
+
+    `force_heuristic` skips the model. The season planner uses it for its
+    rainfall and irrigation scenarios: the deployed yield model gives weather
+    and irrigation importances below 0.003, so it cannot respond to them
+    (defects N-1, N-2), while the deterministic climate and irrigation factors
+    in utils/calculations.py do. Irrigated seasons (IRRIGATED_SEASONS) always
+    take the heuristic, with the crop's water need treated as met.
 
     Callers that need to report provenance used to re-run `_ml_predict_yield`
     afterwards purely to find out whether the model had been used -- doubling
@@ -672,6 +704,13 @@ def _predict_yield_with_source(
     crop = crop_params[crop_id]
     if not _season_match(season, crop.season):
         return 0.0, False
+
+    irrigated_season = season.lower() in IRRIGATED_SEASONS
+    if irrigated_season:
+        force_heuristic = True
+        weather = {**weather, "water_supply_mm": crop.water_requirement_mm}
+    if force_heuristic:
+        ml_pred = None
 
     # Try ML model first
     if isinstance(ml_pred, _Unset):
@@ -770,6 +809,10 @@ def smart_risk_score(
 # conservative floor.
 _ESTABLISHMENT_COST_SHARE = 0.35
 
+#: Most a farmer is assumed to spend per acre, as a multiple of the crop's
+#: typical input cost; budget above it is reported as unspent, not as cost.
+SPEND_HEADROOM = 1.15
+
 
 def _budget_coverage(budget_per_acre: float, avg_input_cost_inr_per_acre: float) -> float:
     """Fraction of the crop's typical input cost the budget covers, capped at 1."""
@@ -811,13 +854,47 @@ def _budget_yield_multiplier(budget_per_acre: float, avg_input_cost_inr_per_acre
     return round(clamp((coverage - share) / (1.0 - share), 0.0, 1.0), 6)
 
 
+def typical_budget_per_acre(region_id: str, season: str, crop_id: str | None = None) -> float:
+    """Default input budget per acre: what the crop typically costs to grow.
+
+    With a crop, its typical input cost. Without one, the median typical cost
+    of the seasonal crops that can be sown in this season. The old flat
+    Rs 15,000/acre default sat below rice (Rs 27,000) and cotton (Rs 32,000),
+    so default rankings scored the major crops underfunded (defect N-7).
+    `region_id` is validated so a bad region fails here, not later.
+    """
+    crop_params = _load_crop_parameters()
+    season = normalise_season(season)
+    _require_known_region(region_id, _load_weather_by_region(), _load_soil_by_region())
+    if crop_id:
+        if crop_id not in crop_params:
+            raise ValueError(f"crop_id: unknown crop '{crop_id}'")
+        return float(crop_params[crop_id].avg_input_cost_inr_per_acre)
+    costs = [
+        c.avg_input_cost_inr_per_acre for c in crop_params.values()
+        if _season_match(season, c.season) and not _is_perennial(c.season)
+        and c.avg_input_cost_inr_per_acre > 0
+    ]
+    if not costs:
+        raise ValueError(f"season: no seasonal crops for '{season}'")
+    return float(median(costs))
+
+
 def profit_estimator(
     crop_id: str,
     predicted_yield_kg_per_acre: float,
     area_acres: float,
     budget_per_acre: float,
     mandi_price_per_kg: float | None = None,
+    cap_spend: bool = True,
 ) -> dict[str, float]:
+    """Yield, revenue, cost and profit for a crop on a given budget.
+
+    `cap_spend=False` counts the whole budget as cost, the behaviour before
+    the spend cap. Only ml/dataset_builders.py uses it, so the recommendation
+    classifier's training labels stay what the deployed model was trained on
+    until Phase 2 retires that classifier.
+    """
     # FIX (5.4): Validate numeric inputs
     predicted_yield_kg_per_acre = _validate_non_negative(predicted_yield_kg_per_acre, "predicted_yield_kg_per_acre")
     area_acres = _validate_non_negative(area_acres, "area_acres")
@@ -833,10 +910,24 @@ def profit_estimator(
     yield_multiplier = _budget_yield_multiplier(budget_per_acre, crop.avg_input_cost_inr_per_acre)
     achievable_yield_kg_per_acre = round(predicted_yield_kg_per_acre * yield_multiplier, 2)
     total_yield = achievable_yield_kg_per_acre * area_acres
-    total_cost = budget_per_acre * area_acres
+    # A farmer does not pour a ₹1,00,000/acre budget into a ₹32,000/acre crop.
+    # Spend is capped a little above the crop's typical input cost and the
+    # rest is reported as unspent -- counting it all as cost showed cotton at
+    # -₹1,77,491 on a large budget (defect N-7).
+    spend_per_acre = budget_per_acre
+    if cap_spend and crop.avg_input_cost_inr_per_acre > 0:
+        spend_per_acre = min(budget_per_acre, crop.avg_input_cost_inr_per_acre * SPEND_HEADROOM)
+    total_cost = spend_per_acre * area_acres
+    unspent_budget = (budget_per_acre - spend_per_acre) * area_acres
     expected_revenue = total_yield * price
     expected_profit = expected_revenue - total_cost
-    roi_percent = (expected_profit / total_cost * 100.0) if total_cost else 0.0
+    # Return on the farmer's whole budget, not on the part a crop spends:
+    # every crop is compared on the same capital, and money left unspent
+    # earns 0%. Dividing by spend alone inflated cheap crops' ROI as soon as
+    # the budget exceeded their cost (mustard, ragi and urad crowded rice and
+    # wheat out of the top three).
+    budget_total = budget_per_acre * area_acres
+    roi_percent = (expected_profit / budget_total * 100.0) if budget_total else 0.0
 
     optimistic_profit = (total_yield * 1.1 * price * 1.08) - total_cost
     pessimistic_profit = (total_yield * 0.88 * price * 0.9) - total_cost
@@ -850,6 +941,8 @@ def profit_estimator(
         "roi_percent": round(roi_percent, 2),
         "optimistic_profit": round(optimistic_profit, 2),
         "pessimistic_profit": round(pessimistic_profit, 2),
+        "spent_cost": round(total_cost, 2),
+        "unspent_budget": round(unspent_budget, 2),
         # max(total_yield, 1.0) avoids the div-by-zero *and* the misleading "you
         # break even at Rs 0/kg" that a zero-yield ternary would report when an
         # underfunded budget scales achievable yield down to ~0 -- mirrors
@@ -994,14 +1087,26 @@ def location_based_insights(region_id: str, season: str = "kharif") -> dict[str,
     soil_data = _load_soil_by_region()
     mandi_rows = _load_mandi_prices()
 
+    season = normalise_season(season)
+    _require_known_region(region_id, weather_data, soil_data)
     weather_key = (region_id, season)
-    if weather_key not in weather_data or region_id not in soil_data:
-        raise ValueError(f"Unsupported region_id: {region_id} or season: {season}")
+    if weather_key not in weather_data:
+        raise ValueError(f"season: no {season} weather data for region_id '{region_id}'")
 
     weather = weather_data[weather_key]
     soil = soil_data[region_id]
-    local_prices = [row for row in mandi_rows if row["region_id"] == region_id]
-    top_price_rows = sorted(local_prices, key=lambda x: float(x["price_inr_per_kg"]), reverse=True)[:3]
+    # One row per crop, its latest month -- ranking every monthly row listed
+    # the same crop several times (defect N-19).
+    latest_by_crop: dict[str, dict[str, str]] = {}
+    for row in mandi_rows:
+        if row["region_id"] != region_id:
+            continue
+        seen = latest_by_crop.get(row["crop_id"])
+        if seen is None or row.get("date", "") >= seen.get("date", ""):
+            latest_by_crop[row["crop_id"]] = row
+    top_price_rows = sorted(
+        latest_by_crop.values(), key=lambda x: float(x["price_inr_per_kg"]), reverse=True,
+    )[:3]
 
     rainfall = float(weather["rainfall_mm"])
     rain_band = "high rainfall" if rainfall >= 800 else ("moderate rainfall" if rainfall >= 450 else "low rainfall")
@@ -1015,7 +1120,8 @@ def location_based_insights(region_id: str, season: str = "kharif") -> dict[str,
         "soil_ph": float(soil["ph"]),
         "rainfall_trend_hint": f"This region is currently in a {rain_band} band.",
         "best_priced_local_crops": [
-            {"crop_id": row["crop_id"], "price_inr_per_kg": float(row["price_inr_per_kg"])}
+            {"crop_id": row["crop_id"], "price_inr_per_kg": float(row["price_inr_per_kg"]),
+             "price_as_of": row.get("date")}
             for row in top_price_rows
         ],
     }
@@ -1136,9 +1242,11 @@ def _prepare_region_data(
     weather_data = _load_weather_by_region()
     soil_data = _load_soil_by_region()
 
+    season = normalise_season(season)
+    _require_known_region(region_id, weather_data, soil_data)
     weather_key = (region_id, season)
-    if weather_key not in weather_data or region_id not in soil_data:
-        raise ValueError(f"Unsupported region_id: {region_id} or season: {season}")
+    if weather_key not in weather_data:
+        raise ValueError(f"season: no {season} weather data for region_id '{region_id}'")
 
     raw_weather = weather_data[weather_key]
     raw_soil = soil_data[region_id]
@@ -1372,6 +1480,10 @@ def _score_single_crop(
         "predicted_yield_kg_per_acre": profit["achievable_yield_kg_per_acre"],
         "potential_yield_kg_per_acre": predicted_yield,
         "expected_profit": profit["expected_profit"],
+        "planned_cost": profit["spent_cost"],
+        "unspent_budget": profit["unspent_budget"],
+        "price_per_kg": price,
+        "water_requirement_mm": crop.water_requirement_mm,
         "roi_percent": profit["roi_percent"],
         "risk_score": risk["risk_score"],
         "smart_score": round(smart_score, 2),
@@ -1396,9 +1508,43 @@ def rank_recommendations(recs: list[dict[str, Any]]) -> list[dict[str, Any]]:
     still outscore a clearly profitable one (jute at -Rs 2,540 above groundnut
     at +Rs 52,973 for Medak kharif). A farmer asking what to sow should never
     see a money-losing crop ranked above one that makes money; the score only
-    orders crops *within* each tier. The sort is stable.
+    orders crops *within* the profitable tier. Money-losing crops follow in
+    order of smallest loss: ordering them by score put jowar at -Rs 58,794
+    above rice at -Rs 4,152 for Bardhaman kharif (defect N-4). The sort is
+    stable.
     """
-    return sorted(recs, key=lambda r: (r["expected_profit"] > 0, r["smart_score"]), reverse=True)
+    profitable = [r for r in recs if r["expected_profit"] > 0]
+    losing = [r for r in recs if r["expected_profit"] <= 0]
+    profitable.sort(key=lambda r: r["smart_score"], reverse=True)
+    losing.sort(key=lambda r: r["expected_profit"], reverse=True)
+    return profitable + losing
+
+
+def _all_lose_reason(recs: list[dict[str, Any]], season: str) -> str:
+    if recs and all(not r.get("budget_adequate", True) for r in recs):
+        return "budget_too_low"
+    if season.lower() in IRRIGATED_SEASONS:
+        return "season_needs_irrigation"
+    return "no_profitable_crop"
+
+
+def apply_loss_guard(ranked: list[dict[str, Any]], season: str) -> list[dict[str, Any]]:
+    """What a farmer is shown: never a money-losing crop beside one that pays.
+
+    If at least one crop is expected to make money, the losers are dropped --
+    a short list beats one padded with losses. If none does, the losses are
+    kept (least loss first) and every row is flagged `all_options_lose` with a
+    `loss_reason`, so the screen says so plainly instead of calling them top
+    crops (defect N-3).
+    """
+    profitable = [r for r in ranked if r["expected_profit"] > 0]
+    if profitable:
+        return profitable
+    reason = _all_lose_reason(ranked, season)
+    for r in ranked:
+        r["all_options_lose"] = True
+        r["loss_reason"] = reason
+    return ranked
 
 
 def recommend_crops(
@@ -1407,12 +1553,19 @@ def recommend_crops(
     budget_per_acre: float,
     area_acres: float,
     top_k: int = 3,
+    include_losses: bool = False,
 ) -> list[dict[str, Any]]:
     """Recommend top-k crops for a region/season, ranked by composite smart_score.
+
+    By default money-losing crops are left out whenever a profitable one
+    exists (see `apply_loss_guard`). Internal callers that need every
+    candidate scored -- the crop-mix optimiser, comparison tables -- pass
+    `include_losses=True`.
 
     FIX (3.2): Decomposed into _prepare_region_data() and _score_single_crop()
     for testability and single-responsibility adherence.
     """
+    season = normalise_season(season)
     # FIX (5.4): Validate inputs
     budget_per_acre = _validate_non_negative(budget_per_acre, "budget_per_acre")
     area_acres = _validate_non_negative(area_acres, "area_acres")
@@ -1490,4 +1643,6 @@ def recommend_crops(
         recommendations.append(rec_entry)
 
     ranked = rank_recommendations(recommendations)
+    if not include_losses:
+        ranked = apply_loss_guard(ranked, season)
     return ranked[:top_k]

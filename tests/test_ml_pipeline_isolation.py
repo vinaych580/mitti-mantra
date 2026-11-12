@@ -9,6 +9,8 @@ Regression tests for Task 5 refactoring and downstream impact on ml/audit_models
 """
 from __future__ import annotations
 
+import pytest
+
 import json
 import shutil
 from pathlib import Path
@@ -21,6 +23,7 @@ import ml.dataset_builders as D
 from ml.audit_models import ModelAuditor
 
 
+@pytest.mark.slow
 def test_evaluate_models_does_not_write_production_artifacts(tmp_path, monkeypatch):
     monkeypatch.setattr(E, "MODEL_DIR", tmp_path)
 
@@ -37,6 +40,7 @@ def test_evaluate_models_does_not_write_production_artifacts(tmp_path, monkeypat
     assert "evaluation_manifest.json" in written
 
 
+@pytest.mark.slow
 def test_audit_models_unpacks_yield_dataset_6tuple(tmp_path, monkeypatch):
     """
     Regression test for ml/audit_models.py's yield dataset unpacking.

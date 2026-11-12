@@ -736,6 +736,12 @@ section {
   color: var(--ink-faint);
 }
 
+.ask__hint {
+  font-size: .78rem;
+  color: var(--ink-soft);
+  min-height: 1.2em;
+}
+
 /* A ruled line to write on, not a boxed web form. */
 .ask__field select,
 .ask__field input {

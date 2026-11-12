@@ -1,313 +1,148 @@
 (() => {
   'use strict';
-  const $ = (sel, root) => (root || document).querySelector(sel);
-  const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
-
-  /* ---------- shared plumbing (mirrors dashboard.js:150-217) ---------- */
-  class HttpError extends Error {
-    constructor(status, message) {
-      super(message);
-      this.name = 'HttpError';
-      this.status = status;
-    }
+  const $ = s => document.querySelector(s);
+  const U = window.MMSeasonUI;
+  const DRAFT = 'mm_season_draft_v1';
+  let step = 1, shortlist = [], comparison = null, evidence = null, chosen = '', input = null, busy = false;
+  let expectedPlot = window.FarmState.getActiveId();
+  let run = 0;
+  const status = (s, error = false) => { $('#plannerStatus').textContent = U.t(s); $('#plannerStatus').className = error ? 'season-error' : 'season-note'; };
+  function show(n) {
+    step = n;
+    document.querySelectorAll('[data-step]').forEach(el => { el.hidden = Number(el.dataset.step) !== n; });
+    $('#stepLabel').textContent = `${n} / 5`;
+    $(`[data-step="${n}"] h2`).focus();
+    U.translate();
   }
-
-  function tryParseJSON(s) { try { return JSON.parse(s); } catch { return null; } }
-
-  let offlineBannerShown = false;
-  function flashOfflineBanner() {
-    if (offlineBannerShown) return;
-    offlineBannerShown = true;
-    const el = document.createElement('div');
-    el.className = 'offline-banner';
-    el.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l22 22"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/><path d="M10.71 5.05A16 16 0 0 1 22.58 9"/><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
-      <span><strong>Running in offline mode.</strong> Backend unreachable — using on-device simulator.</span>`;
-    document.body.appendChild(el);
-    setTimeout(() => el.classList.add('offline-banner--hide'), 8000);
-    setTimeout(() => el.remove(), 8600);
+  function draft() {
+    try { localStorage.setItem(DRAFT, JSON.stringify({plot_id:expectedPlot, input, shortlist, comparison, chosen, evidence})); }
+    catch (_) { status('Draft could not be saved. Keep this page open.', true); }
   }
-
-  async function api(url, opts = {}) {
+  function lock(value) {
+    busy = value;
+    document.querySelectorAll('#planner button').forEach(b => { b.disabled = value; });
+    if (!value) invalidateButtons();
+  }
+  function signature() {
+    return JSON.stringify({...input, crop_ids:[...document.querySelectorAll('[name=shortCrop]:checked')].map(e=>e.value),
+      budget_per_acre:+$('#scenarioBudget').value, irrigation_level:+$('#water').value, rainfall_factor:+$('#rain').value});
+  }
+  function validComparison() { return comparison && JSON.stringify(comparison.inputs) === signature(); }
+  function invalidateButtons() {
+    $('#reviewNext').disabled = $('#saveComparison').disabled = !validComparison();
+  }
+  function renderShortlist() {
+    $('#shortlist').innerHTML = U.lossBanner(shortlist) + shortlist.map(r => `<label class="season-choice"><input type="checkbox" name="shortCrop" value="${U.esc(r.crop_id)}" checked> <strong>${U.esc(r.crop_name)}</strong><p>${U.text(r.expected_profit < 0 ? 'Expected loss' : 'Expected profit')}: ${U.money(Math.abs(r.expected_profit))}</p><p>${U.esc(r.reasons?.[0] || r.reason || '')}</p></label>`).join('');
+    U.translate();
+  }
+  function renderComparison() {
+    $('#comparison').innerHTML = U.comparison(comparison, chosen) + U.evidence(comparison, evidence);
+    $('#comparison').querySelectorAll('[name=chosenCrop]').forEach(el => el.addEventListener('change', () => { chosen = el.value; draft(); }));
+    invalidateButtons(); U.translate();
+  }
+  async function compare() {
+    if (busy || !$('#scenarioForm').reportValidity()) return;
+    const body = JSON.parse(signature());
+    if (!body.crop_ids.length) { status('Select at least one crop.', true); return; }
+    const seq = ++run;
+    lock(true); status('Comparing your crop options…');
     try {
-      const res = await fetch(url, { headers: { 'Content-Type': 'application/json' }, ...opts });
-      if (!res.ok) {
-        let msg;
-        try {
-          const errData = await res.json();
-          const d = errData && errData.detail;
-          if (typeof d === 'string') msg = d;
-          else if (Array.isArray(d)) msg = d.map(e => (e && (e.msg || e.message)) || JSON.stringify(e)).join('; ');
-          else if (d && typeof d === 'object') msg = JSON.stringify(d);
-          else msg = res.statusText;
-        } catch { msg = res.statusText; }
-        throw new HttpError(res.status, `${res.status} · ${msg}`);
-      }
-      return await res.json();
-    } catch (err) {
-      if (err instanceof HttpError) throw err;
-      const offline = window.AgriSimOffline;
-      const body = opts.body ? tryParseJSON(opts.body) : null;
-      if (offline) {
-        if (url === '/api/crop' && body) { flashOfflineBanner(); return offline.recommend(body); }
-        if (url.includes('/api/simulate') && body) { flashOfflineBanner(); return offline.simulate(body); }
-      }
-      throw err;
-    }
+      const response = await U.request('/api/season/compare', body);
+      if (seq !== run) return;
+      comparison = response.data;
+      // Preserve the request property order for exact draft/cache matching.
+      comparison.inputs = body;
+      if (!comparison.crops.some(c => c.crop_id === chosen)) chosen = comparison.crops[0].crop_id;
+      evidence = (await U.request('/api/season/evidence').catch(() => ({data:null}))).data;
+      if (seq !== run) return;
+      if (evidence?.model_version !== comparison.model_version) evidence = null;
+      renderComparison(); draft();
+      status(response.cached ? 'Offline: showing a saved estimate. Check its original data date.' : 'Comparison updated. Select the crop you want to plan.');
+    } catch (error) { if (seq === run) status(error.message, true); }
+    finally { if (seq === run) lock(false); }
   }
-
-  /* ---------- formatting helpers ---------- */
-  const INR = n => '₹' + Math.round(Number(n) || 0).toLocaleString('en-IN');
-  const FIX = (n, d = 1) => (Number(n) || 0).toFixed(d);
-  const PCT = n => FIX(n, 1) + '%';
-
-  /* ---------- wizard state + step navigation ---------- */
-  const state = {
-    region_id: null, region_name: null,
-    season: null, area_acres: null, budget_per_acre: null,
-    irrigation_level: 0.5,
-    recommendation: null
-  };
-  // Steps 4-5 (tweak-and-resimulate, commit) are planned but not built yet
-  // -- see docs/superpowers/plans/2026-08-31-guided-decision-flow.md. Until
-  // they are, the answer is the last step rather than a way into a blank page.
-  const TOTAL_STEPS = 3;
-  let currentStep = 1;
-  const regionsById = {};
-
-  const noMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  function showStep(n) {
-    const back = n < currentStep;
-    currentStep = n;
-    const swap = () => {
-      $$('.decide-step').forEach(sec => {
-        sec.classList.toggle('is-active', Number(sec.dataset.step) === n);
-      });
-      $$('.decide-progress__dot').forEach(dot => {
-        const i = Number(dot.dataset.dot);
-        dot.classList.toggle('is-active', i === n);
-        dot.classList.toggle('is-done', i < n);
-      });
-    };
-    // Where the browser can, the outgoing step slides away and the next one
-    // slides in (decide.html styles the direction off data-step-dir). The
-    // jump back to the top happens inside the swap, hidden by the transition,
-    // rather than as a second scroll animation running underneath it.
-    if (document.startViewTransition && !noMotion) {
-      document.documentElement.dataset.stepDir = back ? 'back' : 'forward';
-      document.startViewTransition(() => {
-        swap();
-        window.mmScroll.to(0, { instant: true });
-      });
-    } else {
-      swap();
-      window.mmScroll.to(0);
-    }
-    document.dispatchEvent(new CustomEvent('decide:step-shown', { detail: { step: n } }));
-  }
-  const goNext = () => { if (currentStep < TOTAL_STEPS) showStep(currentStep + 1); };
-  const goBack = () => { if (currentStep > 1) showStep(currentStep - 1); };
-
-  const regionLabel = region_id => (regionsById[region_id] ? regionsById[region_id].name : region_id);
-
-  /* ---------- Step 1: location ---------- */
-  async function populateRegions() {
-    const select = $('#decideRegionSelect');
+  // The budget follows the typical input cost for the region and season until
+  // the farmer types their own (N-7: a flat ₹15,000 underfunded rice and cotton).
+  let budgetTyped = false;
+  async function typicalBudget() {
     try {
-      const regions = await api('/api/regions');
-      regions.forEach(r => { regionsById[r.id] = r; });
-      select.innerHTML = '<option value="">Select a region…</option>' +
-        regions.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
-    } catch {
-      select.innerHTML = '<option value="">Could not load regions</option>';
+      const typical = await window.MM.defaultBudget($('#region').value, $('#season').value);
+      if (!budgetTyped) $('#budget').value = typical;
+      $('#budgetHint').innerHTML = `${U.text('Typical cost here')}: ${U.esc(U.money(typical))}/acre`;
+    } catch (_) {
+      if (!$('#budget').value) $('#budget').value = 20000;
+      $('#budgetHint').textContent = '';
     }
   }
-
-  function selectRegion(region_id) {
-    $('#decideRegionSelect').value = region_id;
-    state.region_id = region_id;
-    state.region_name = regionLabel(region_id);
-    $('#decideStep1Next').disabled = !region_id;
+  $('#budget').addEventListener('input', () => { budgetTyped = true; });
+  ['#region', '#season'].forEach(sel => $(sel).addEventListener('change', typicalBudget));
+  async function init() {
+    const p = window.MM.profile.get();
+    const plot = window.FarmState.load();
+    let regions;
+    try { regions = (await U.request('/api/regions')).data; }
+    catch (_) { regions = window.FarmState.REGION_CENTROIDS.map(r => ({id:r.region_id,name:r.displayName})); }
+    $('#region').innerHTML = regions.map(r => `<option value="${U.esc(r.id)}">${U.esc(r.name)}</option>`).join('');
+    // One default region shared with the landing page (profile, else located, else Sehore).
+    const wanted = plot?.region_id || await window.MM.locateDefaultRegion();
+    $('#region').value = regions.some(r => r.id === wanted) ? wanted : regions[0].id;
+    $('#season').value = p.season || 'kharif'; $('#area').value = plot?.acres || p.area_acres || 3;
+    budgetTyped = Number(p.budget_per_acre) > 0;
+    if (budgetTyped) $('#budget').value = p.budget_per_acre;
+    await typicalBudget();
+    if (plot) {
+      $('#region').disabled = true;
+      $('#area').readOnly = !!plot.geojson;
+      $('#plotNote').textContent = U.t('Planning for your active plot. Switch plots in My season to plan another farm.');
+    }
+    let saved;
+    try { saved = JSON.parse(localStorage.getItem(DRAFT) || 'null'); } catch (_) {}
+    if (saved?.plot_id === expectedPlot && saved.comparison?.crops?.length && saved.input && (!plot || (saved.input.region_id === plot.region_id && Math.abs(saved.input.area_acres-plot.acres)<.01))) {
+      input = saved.input; shortlist = saved.shortlist; comparison = saved.comparison; chosen = saved.chosen; evidence = saved.evidence;
+      $('#region').value=input.region_id; $('#season').value=input.season; $('#area').value=input.area_acres; $('#budget').value=input.budget_per_acre;
+      renderShortlist();
+      document.querySelectorAll('[name=shortCrop]').forEach(el=>el.checked=comparison.inputs.crop_ids.includes(el.value));
+      $('#scenarioBudget').value=comparison.inputs.budget_per_acre; $('#water').value=comparison.inputs.irrigation_level; $('#rain').value=comparison.inputs.rainfall_factor;
+      renderComparison(); show(3); status('Restored your comparison. Review assumptions before saving.');
+    } else show(1);
+    U.translate();
   }
-
-  function setLocateStatus(html, kind) {
-    const el = $('#decideLocateStatus');
-    el.innerHTML = html;
-    el.className = 'decide-status' + (kind ? ` decide-status--${kind}` : '');
-  }
-
-  function wireStep1() {
-    populateRegions();
-
-    $('#decideRegionSelect').addEventListener('change', e => {
-      selectRegion(e.target.value);
-      if (e.target.value) setLocateStatus('', '');
-    });
-
-    const locateBtn = $('#decideLocate');
-    locateBtn.addEventListener('click', () => {
-      if (!navigator.geolocation) {
-        setLocateStatus('This device cannot share its location. Search for your region instead.', 'error');
-        return;
-      }
-      locateBtn.disabled = true;
-      setLocateStatus('Finding your location…', 'busy');
-
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          locateBtn.disabled = false;
-          const { latitude: lat, longitude: lon } = pos.coords;
-          const match = window.MM_REGION_GEO_UTIL.nearestRegion(lat, lon);
-
-          if (!match || match.distanceKm > 150) {
-            if (!match) {
-              setLocateStatus('Location unavailable. Search for your region instead.', 'error');
-              return;
-            }
-            const label = regionLabel(match.region_id);
-            setLocateStatus(
-              `Closest match: <strong>${label}</strong> (${Math.round(match.distanceKm)} km away — is this right?) <button type="button" class="decide-inline-btn" id="decideAcceptMatch">Use this</button> or pick below.`,
-              'warn'
-            );
-            $('#decideAcceptMatch')?.addEventListener('click', () => {
-              selectRegion(match.region_id);
-              setLocateStatus(`Using ${label}.`, 'ok');
-            }, { once: true });
-            return;
-          }
-
-          selectRegion(match.region_id);
-          setLocateStatus(`Using ${regionLabel(match.region_id)}.`, 'ok');
-        },
-        (err) => {
-          locateBtn.disabled = false;
-          const msg = err.code === err.PERMISSION_DENIED
-            ? 'Location permission denied. Allow it in your browser, or search for your region.'
-            : err.code === err.TIMEOUT
-            ? 'Could not get a GPS fix in time. Try again outdoors, or search for your region.'
-            : 'Location unavailable. Search for your region instead.';
-          setLocateStatus(msg, 'error');
-        },
-        { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
-      );
-    });
-
-    $('#decideStep1Next').addEventListener('click', goNext);
-  }
-
-  /* ---------- Step 2: season, budget, area ---------- */
-  function wireStep2() {
-    const form = $('#decideStep2Form');
-
-    document.addEventListener('decide:step-shown', (e) => {
-      if (e.detail.step !== 2) return;
-      const profile = (window.MM && window.MM.profile && window.MM.profile.get()) || {};
-      if (profile.season) form.season.value = profile.season;
-      if (profile.area_acres) form.area_acres.value = profile.area_acres;
-      if (profile.budget_per_acre) form.budget_per_acre.value = profile.budget_per_acre;
-    });
-
-    $('[data-step2-back]').addEventListener('click', goBack);
-
-    $('#decideStep2Next').addEventListener('click', () => {
-      if (!form.reportValidity()) return;
-      state.season = form.season.value;
-      state.area_acres = parseFloat(form.area_acres.value);
-      state.budget_per_acre = parseFloat(form.budget_per_acre.value);
-      if (window.MM && window.MM.profile) {
-        window.MM.profile.set({
-          region_id: state.region_id,
-          season: state.season,
-          area_acres: state.area_acres,
-          budget_per_acre: state.budget_per_acre
-        });
-      }
-      // New inputs need a new answer -- step 3 only fetches when none is held.
-      state.recommendation = null;
-      goNext();
-    });
-  }
-
-  /* ---------- Step 3: recommendation answer ---------- */
-  function renderAnswer(top, runnerUps) {
-    const out = $('#decideAnswerOut');
-    const reasonsList = (top.reasons && top.reasons.length)
-      ? `<div class="alert alert--green" style="margin-top:16px;border:1px solid color-mix(in srgb, var(--brand) 35%, transparent);background:var(--brand-soft);">
-          <div class="alert__body" style="color:var(--brand-deep);"><strong>Why this crop:</strong>
-            <ul style="margin:8px 0 0 16px;padding:0;">
-              ${top.reasons.map(r => `<li style="margin-bottom:4px;font-size:.88rem;list-style-type:disc;">${r}</li>`).join('')}
-            </ul>
-          </div>
-        </div>` : '';
-
-    out.innerHTML = `
-      <div class="kpi-grid">
-        <div class="kpi kpi--good"><div class="kpi__lbl">Top pick</div>
-          <div class="kpi__val" style="font-size:1.3rem;">${top.crop_name}</div>
-          <div class="kpi__sub">Smart score ${FIX(top.smart_score, 1)} / 100</div></div>
-        <div class="kpi"><div class="kpi__lbl">Predicted yield</div>
-          <div class="kpi__val">${Math.round(top.predicted_yield_kg_per_acre)} <span style="font-size:.5em;color:var(--ink-faint)">kg/ac</span></div></div>
-        <div class="kpi kpi--good"><div class="kpi__lbl">Profit (${state.area_acres} ac)</div>
-          <div class="kpi__val">${INR(top.expected_profit)}</div>
-          <div class="kpi__sub">ROI ${PCT(top.roi_percent)}</div></div>
-        <div class="kpi"><div class="kpi__lbl">Risk</div>
-          <div class="kpi__val">${Math.round(top.risk_score)}/100</div></div>
-      </div>
-      ${reasonsList}
-      <h4 style="font-size:.85rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin:16px 0 12px;">Full ranking</h4>
-      <div class="decide-runnerups">
-        ${[top, ...runnerUps].map((r, i) => `
-          <div class="list-row">
-            <div class="list-row__bullet">${i + 1}</div>
-            <div class="list-row__name">${r.crop_name}
-              <small>Yield ${Math.round(r.predicted_yield_kg_per_acre)} kg/ac · Risk ${Math.round(r.risk_score)}/100 · Score ${FIX(r.smart_score, 1)}</small>
-              ${r.reasons && r.reasons[0] ? `<div style="font-size:.76rem;color:var(--brand-deep);margin-top:4px;">• ${r.reasons[0]}</div>` : ''}
-            </div>
-            <div class="list-row__val">${INR(r.expected_profit)}<small>ROI ${PCT(r.roi_percent)}</small></div>
-          </div>`).join('')}
-      </div>`;
-
-    $('#decideStep3Next').disabled = false;
-  }
-
-  async function runRecommendation() {
-    const out = $('#decideAnswerOut');
-    out.innerHTML = '<div class="loading"><div class="spinner"></div><span>Ranking crops for your farm…</span></div>';
+  $('#farmForm').addEventListener('submit', async e => {
+    e.preventDefault(); if(busy) return;
+    input = {region_id:$('#region').value,season:$('#season').value,area_acres:+$('#area').value,budget_per_acre:+$('#budget').value};
+    expectedPlot = window.FarmState.getActiveId(); comparison = null;
+    lock(true); status('Finding crops for your farm…');
+    const seq=++run;
     try {
-      const body = {
-        region_id: state.region_id, season: state.season,
-        area_acres: state.area_acres, budget_per_acre: state.budget_per_acre
-      };
-      const recs = await api('/api/crop', { method: 'POST', body: JSON.stringify(body) });
-      if (!Array.isArray(recs) || !recs.length) {
-        out.innerHTML = '<div class="alert"><div class="alert__body"><strong>No recommendations returned.</strong></div></div>';
-        return;
-      }
-      state.recommendation = { top: recs[0], runnerUps: recs.slice(1, 3) };
-      renderAnswer(state.recommendation.top, state.recommendation.runnerUps);
-    } catch (err) {
-      out.innerHTML = `<div class="alert alert--red"><div class="alert__body"><strong>Could not get a recommendation.</strong><p>${err && err.message ? err.message : 'Please try again.'}</p></div></div>`;
-    }
-  }
-
-  function wireStep3() {
-    document.addEventListener('decide:step-shown', (e) => {
-      if (e.detail.step === 3 && !state.recommendation) runRecommendation();
-    });
-    $('[data-step3-back]').addEventListener('click', goBack);
-    $('#decideStep3Next').addEventListener('click', () => {
-      if (!state.recommendation) return;
-      goNext();
-    });
-  }
-
-  /* ---------- boot ---------- */
-  document.addEventListener('DOMContentLoaded', () => {
-    wireStep1();
-    wireStep2();
-    wireStep3();
+      const response = await U.request('/api/crop', input);
+      if(seq!==run)return;
+      shortlist=response.data.slice(0,3);
+      if(!shortlist.length)throw new Error(U.t('No crops found for these inputs. Adjust your farm details.'));
+      renderShortlist(); $('#scenarioBudget').value=input.budget_per_acre; show(2); draft();
+      status(response.cached ? 'Offline: showing a saved estimate. Check its original data date.' : '');
+    } catch(error) {status(error.message,true);} finally {lock(false);}
   });
-
-  // Exposed for later tasks (2-5) to extend without redefining shared plumbing.
-  window.MMDecide = { api, HttpError, state, showStep, goNext, goBack, regionLabel, $, $$ };
+  $('#compareNext').addEventListener('click', () => {if(!document.querySelector('[name=shortCrop]:checked'))return status('Select at least one crop.',true); show(3);compare();});
+  $('#scenarioForm').addEventListener('submit',e=>{e.preventDefault();compare();});
+  $('#scenarioForm').addEventListener('input',()=>{invalidateButtons();status('Inputs changed. Update the comparison before continuing.');});
+  document.querySelectorAll('[data-back]').forEach(b=>b.addEventListener('click',()=>show(+b.dataset.back)));
+  $('#saveComparison').addEventListener('click',()=>{try{if(!validComparison())return;window.MMSeason.archive(comparison);status('Comparison saved. Find it in My season.');}catch(_){status('Could not save on this device. Free storage and try again.',true);}});
+  $('#reviewNext').addEventListener('click',()=>{
+    if(!validComparison())return;
+    const crop=comparison.crops.find(c=>c.crop_id===chosen);
+    $('#planReview').innerHTML=`<h3>${U.esc(crop.crop_name)}</h3><p><span data-no-translate>${U.esc(U.regionName(input.region_id))}</span> · ${U.text({kharif:'Kharif',rabi:'Rabi',zaid:'Zaid'}[input.season] || input.season)} · ${U.esc(input.area_acres)} ${U.text('acres')}</p><div class="season-stats"><div>${U.text('Expected profit')}<strong>${U.money(crop.selected.expected_profit)}</strong></div><div>${U.text('Planned cost')}<strong>${U.money(crop.planned_cost)}</strong></div><div>${U.text('Dry scenario profit')}<strong>${U.money(crop.dry.expected_profit)}</strong></div></div>${U.evidence(comparison,evidence)}`;
+    show(4);status('');
+  });
+  $('#commitPlan').addEventListener('click',()=>{
+    if(busy || !validComparison())return;
+    lock(true);
+    try {
+      window.MMSeason.save(comparison,chosen,$('#sowingDate').value,expectedPlot);
+      try{localStorage.removeItem(DRAFT);}catch(_){}
+      show(5);status('Saved on this device. Back up your data to keep a copy.');
+    }catch(error){status(error.message,true);}finally{lock(false);}
+  });
+  $('#readPlan').addEventListener('click',()=>window.MMSeasonVoice?.read($('#planReview').innerText));
+  window.addEventListener('storage',e=>{if(e.key===window.FarmState.PLOTS_KEY && window.FarmState.getActiveId()!==expectedPlot){++run;comparison=null;lock(false);show(1);status('Your active plot changed. Reload this page before continuing.',true);$('#farmForm').querySelector('button[type=submit]').disabled=true;}});
+  init();
 })();

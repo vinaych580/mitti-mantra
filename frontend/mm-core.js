@@ -53,7 +53,9 @@
     region_id: "",
     season: "kharif",
     area_acres: 4,
-    budget_per_acre: 15000,
+    // 0 = not chosen yet: pages ask /api/budget-default for the typical
+    // cost of the region and season instead of a flat figure.
+    budget_per_acre: 0,
     crop_id: "",
   };
   /**
@@ -124,6 +126,8 @@
         const k = el.name;
         if (k in p && p[k] !== "" && p[k] !== undefined && p[k] !== null) {
           if (el.dataset.mmUserDirty === "1") return;
+          // A budget of 0 means "not chosen": the field keeps its typical default.
+          if (k === "budget_per_acre" && !(Number(p[k]) > 0)) return;
           // A <select> silently goes blank when handed a value it has no
           // <option> for -- which happens whenever the profile holds a region
           // the dropdown hasn't loaded (or can't represent). Leaving the
@@ -532,6 +536,7 @@
       const p = profile.get();
       bar.querySelectorAll("[data-mm]").forEach((el) => {
         const k = el.dataset.mm;
+        if (k === "budget_per_acre" && !(Number(p[k]) > 0)) return;
         if (p[k] !== undefined && p[k] !== "") el.value = p[k];
       });
       // With a boundary drawn, the area is a measurement, not a setting: show it
@@ -765,7 +770,45 @@
   // ------------------------------------------------------------------
   // Public API
   // ------------------------------------------------------------------
-  window.MM = { fmt, profile, units, a11y, share, toast, escapeHtml, memoGet, deviceId };
+  // ------------------------------------------------------------------
+  // One default region for every page (landing, planner, dashboard): the
+  // farm profile or active plot, else the nearest district when location
+  // permission was already granted, else Sehore. Landing used to default to
+  // MP · Sehore while the planner opened on Telangana · Medak.
+  // ------------------------------------------------------------------
+  const FALLBACK_REGION_ID = "mp_sehore";
+  function defaultRegion() {
+    return profile.get().region_id || FALLBACK_REGION_ID;
+  }
+  /** Resolves to the profile region, or a located one without prompting. */
+  async function locateDefaultRegion() {
+    const known = profile.get().region_id;
+    if (known) return known;
+    try {
+      const fs = window.FarmState;
+      if (!navigator.geolocation || !navigator.permissions || !fs || !fs.getNearestRegionId) return FALLBACK_REGION_ID;
+      const state = await navigator.permissions.query({ name: "geolocation" });
+      if (state.state !== "granted") return FALLBACK_REGION_ID;
+      const pos = await new Promise((ok, fail) =>
+        navigator.geolocation.getCurrentPosition(ok, fail, { maximumAge: 3600000, timeout: 4000 }));
+      return fs.getNearestRegionId([pos.coords.longitude, pos.coords.latitude]) || FALLBACK_REGION_ID;
+    } catch (_) {
+      return FALLBACK_REGION_ID;
+    }
+  }
+
+  // Typical input budget per acre for a region/season (/api/budget-default).
+  // The old flat ₹15,000 was below the cost of rice and cotton (defect N-7).
+  async function defaultBudget(regionId, season, cropId) {
+    const qs = new URLSearchParams({ region_id: regionId, season: season || "kharif" });
+    if (cropId) qs.set("crop_id", cropId);
+    const res = await fetch("/api/budget-default?" + qs, { signal: AbortSignal.timeout(8000) });
+    if (!res.ok) throw new Error("budget-default " + res.status);
+    return (await res.json()).budget_per_acre;
+  }
+
+  window.MM = { fmt, profile, units, a11y, share, toast, escapeHtml, memoGet, deviceId,
+    defaultRegion, locateDefaultRegion, defaultBudget, FALLBACK_REGION_ID };
 
   // ------------------------------------------------------------------
   // Boot

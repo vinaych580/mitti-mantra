@@ -406,9 +406,13 @@ def _draw_labeled_scenario(ctx: dict, cell: dict, rng: np.random.RandomState):
             (float(cp["mandi_price_min_inr_per_kg"]) + float(cp["mandi_price_max_inr_per_kg"])) / 2.0,
         )
         # roi_percent is scale-invariant in area_acres, so 1.0 is exact.
+        # cap_spend=False: Phase 0 changed live profit (budget above a crop's
+        # need is unspent, not cost) but does not change model training data;
+        # the classifier these labels train is retired in Phase 2.
         profit = profit_estimator(
             crop_id=cid, predicted_yield_kg_per_acre=yield_est,
             area_acres=1.0, budget_per_acre=budget, mandi_price_per_kg=price,
+            cap_spend=False,
         )
         # Called exactly as _score_single_crop calls it -- no irrigation_level
         # argument -- because labels must reflect what production computes.

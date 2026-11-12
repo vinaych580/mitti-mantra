@@ -58,7 +58,7 @@ def compute_farm_score(
     lon: Optional[float] = None,
 ) -> dict[str, Any]:
     """Blend recommendation, risk, optional field-health and pest signals into one score."""
-    recs = recommend_crops(region_id, season, budget_per_acre, area_acres, top_k=8)
+    recs = recommend_crops(region_id, season, budget_per_acre, area_acres, top_k=8, include_losses=True)
     if not recs:
         raise ValueError(
             f"No crop recommendations available for region '{region_id}' in season '{season}'"

@@ -27,6 +27,7 @@
 
   // What a farmer would call each thing, in the order they care about it.
   const GROUPS = [
+    { label: 'Season comparisons and task progress', test: k => /^mm_(saved_comparisons|season_tasks|season_draft)/.test(k) },
     { label: 'Farm, plots and crop choice', test: k => /^(mittimantra_plots|mittimantra_selectedFarm|agrisim_farm|mm_farm_profile|mm_region_id)/.test(k) },
     { label: 'Money: expenses and harvest sales', test: k => /^mm_(expenses|harvests)/.test(k) },
     { label: 'Crop screenings', test: k => k === 'mittimantra_disease_logs' },
@@ -47,7 +48,7 @@
     try {
       for (let i = 0; i < localStorage.length; i++) {
         const k = localStorage.key(i);
-        if (k && PREFIX.test(k) && (includeAll || !NOT_BACKED_UP.has(k))) keys.push(k);
+        if (k && PREFIX.test(k) && (includeAll || !NOT_BACKED_UP.has(k) && !k.startsWith('mm_season_cache:'))) keys.push(k);
       }
     } catch (_) { }
     return keys.sort();
@@ -148,7 +149,7 @@
     if (!obj || obj.app !== APP || typeof obj.data !== 'object' || !obj.data) return null;
     const data = {};
     Object.entries(obj.data).forEach(([k, v]) => {
-      if (PREFIX.test(k) && !NOT_BACKED_UP.has(k) && typeof v === 'string') data[k] = v;
+      if (PREFIX.test(k) && !NOT_BACKED_UP.has(k) && !k.startsWith('mm_season_cache:') && typeof v === 'string') data[k] = v;
     });
     return Object.keys(data).length ? { exportedAt: obj.exportedAt, data } : null;
   }

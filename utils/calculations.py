@@ -63,7 +63,20 @@ def calculate_soil_factor(soil: dict[str, Any], crop: CropParameter) -> float:
 
 
 def calculate_climate_factor(weather: dict[str, float], crop: CropParameter) -> float:
-    rainfall = weather.get("rainfall_mm", crop.water_requirement_mm)
+    """Rain and temperature fit of a crop, 0.05 (severe mismatch) to 1.25.
+
+    A caller that already knows the water the crop receives -- an irrigated
+    season, where rain is not the source -- passes `water_supply_mm` and it
+    is scored in place of the season's rainfall.
+
+    This is a suitability score (does the crop belong in this climate), not
+    a yield response to a change in rain; for that see
+    `water_response_factor`.
+    """
+    if "water_supply_mm" in weather:
+        rainfall = float(weather["water_supply_mm"])
+    else:
+        rainfall = weather.get("rainfall_mm", crop.water_requirement_mm)
     temp = weather.get("avg_temp_c", (crop.temp_min_c + crop.temp_max_c) / 2.0)
 
     optimal_rainfall = crop.water_requirement_mm
@@ -145,6 +158,50 @@ def effective_rainfall_mm(seasonal_rainfall_mm: float, months: int = 4) -> float
     p = total / months
     per_month = p * (125.0 - 0.2 * p) / 125.0 if p <= 250.0 else 125.0 + 0.1 * p
     return per_month * months
+
+
+#: Seasonal yield response factors (Ky) from FAO Irrigation and Drainage
+#: Paper 33 (Doorenbos & Kassam, 1979), Table 1, total growing period:
+#: relative yield loss = Ky x relative evapotranspiration deficit. Crops the
+#: table does not list use DEFAULT_KY.
+CROP_YIELD_RESPONSE_KY = {
+    "maize": 1.25, "cotton": 0.85, "groundnut": 0.70, "soybean": 0.85,
+    "wheat": 1.05, "sugarcane": 1.20, "sunflower": 0.95, "jowar": 0.90,
+    "potato": 1.10, "onion": 1.10, "tomato": 1.05, "banana": 1.20,
+    "watermelon": 1.10, "chilli": 1.10, "pulses": 1.15,
+}
+DEFAULT_KY = 1.0
+
+
+def seasonal_water_supply_mm(
+    crop: CropParameter, seasonal_rainfall_mm: float, irrigation_level: float,
+) -> float:
+    """Water reaching the crop: effective rain plus irrigation of the shortfall.
+
+    `irrigation_level` (0-1) is the share of the remaining shortfall that
+    irrigation can cover, the meaning the planner's control already has.
+    """
+    need = max(crop.water_requirement_mm, 1.0)
+    rain = effective_rainfall_mm(seasonal_rainfall_mm)
+    shortfall = max(need - rain, 0.0)
+    return rain + clamp(irrigation_level, 0.0, 1.0) * shortfall
+
+
+def water_response_factor(
+    crop: CropParameter, seasonal_rainfall_mm: float, irrigation_level: float,
+) -> float:
+    """Relative yield (0-1) from water supply, by FAO-33: 1 - Ky(1 - supply/need).
+
+    Only a deficit lowers yield; rain beyond the need is runoff here
+    (waterlogging is the flood term of the risk score, not this). So less
+    rain never raises yield and more irrigation never lowers it -- the
+    behaviour the season planner's controls lacked (defects N-1, N-2).
+    """
+    need = max(crop.water_requirement_mm, 1.0)
+    supply = seasonal_water_supply_mm(crop, seasonal_rainfall_mm, irrigation_level)
+    ky = CROP_YIELD_RESPONSE_KY.get(crop.crop_id, DEFAULT_KY)
+    deficit = clamp(1.0 - supply / need, 0.0, 1.0)
+    return clamp(1.0 - ky * deficit, 0.0, 1.0)
 
 
 def calculate_risk_score_and_subscores(

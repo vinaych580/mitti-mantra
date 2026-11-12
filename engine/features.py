@@ -223,14 +223,46 @@ def msp_vs_market(region_id: str, crop_id: str) -> dict[str, Any]:
 # 3. Best Time to Sell Advisor
 # ===========================================================================
 
-def best_time_to_sell(region_id: str, crop_id: str) -> dict[str, Any]:
-    """Analyze seasonal price patterns and recommend hold vs sell."""
+class NotFoundError(ValueError):
+    """An id in the request names nothing we have data for (maps to HTTP 404)."""
+
+
+#: A price series whose newest row is older than this is stale (defect N-9).
+PRICE_STALE_AFTER_DAYS = 90
+
+
+def _price_rows(region_id: str, crop_id: str) -> list[dict[str, Any]]:
+    """Sorted price history for one region/crop; unknown ids raise NotFoundError."""
     rows = _load_csv("mandi_prices.csv")
-    prices = [
-        {"date": r["date"], "price": float(r["price_inr_per_kg"])}
-        for r in rows
-        if r["region_id"] == region_id and r["crop_id"] == crop_id
-    ]
+    if crop_id not in _load_crop_params():
+        raise NotFoundError(f"crop_id: unknown crop '{crop_id}'")
+    if not any(r["region_id"] == region_id for r in rows):
+        raise NotFoundError(f"region_id: no mandi prices for region '{region_id}'")
+    return sorted(
+        [{"date": r["date"], "price": float(r["price_inr_per_kg"])}
+         for r in rows if r["region_id"] == region_id and r["crop_id"] == crop_id],
+        key=lambda x: x["date"],
+    )
+
+
+def price_freshness(last_date: str, today: datetime | None = None) -> dict[str, Any]:
+    """`data_through`, its age in days and whether that is stale."""
+    today = today or datetime.now()
+    try:
+        age = (today - datetime.strptime(last_date[:10], "%Y-%m-%d")).days
+    except ValueError:
+        return {"data_through": last_date, "data_age_days": None, "stale": True}
+    return {"data_through": last_date, "data_age_days": age, "stale": age > PRICE_STALE_AFTER_DAYS}
+
+
+def best_time_to_sell(region_id: str, crop_id: str) -> dict[str, Any]:
+    """Analyze seasonal price patterns and recommend hold vs sell.
+
+    The "current price" is the newest row in the dataset. When that row is
+    stale the response says so (`stale`, `data_through`) instead of passing a
+    year-old price off as today's.
+    """
+    prices = _price_rows(region_id, crop_id)
     if len(prices) < 6:
         raise ValueError(f"Insufficient price history for {crop_id} in {region_id}")
 
@@ -295,6 +327,7 @@ def best_time_to_sell(region_id: str, crop_id: str) -> dict[str, Any]:
         "action": action,
         "advice": advice,
         "monthly_avg_prices": monthly_avg,
+        **price_freshness(prices[-1]["date"]),
     }
 
 
@@ -321,24 +354,67 @@ CROP_WATER_STAGES = {
 }
 
 
+#: Sowing-window start by season, for crops without a hand-written calendar.
+_SEASON_SOWING_START = {"kharif": (6, 15), "rabi": (11, 1), "zaid": (2, 15)}
+
+
+def _sowing_window_starts(crop_id: str, crop_season: str) -> list[tuple[int, int]]:
+    """(month, day) each season's sowing window opens for this crop."""
+    starts = []
+    for cal in CROP_CALENDAR.get(crop_id, {}).values():
+        window = str(cal.get("sowing_transplant", ""))
+        try:
+            opened = datetime.strptime(window.split("-")[0].strip(), "%b %d")
+            starts.append((opened.month, opened.day))
+        except ValueError:
+            continue
+    if not starts:
+        lowered = (crop_season or "").lower()
+        starts = [md for season, md in _SEASON_SOWING_START.items() if season in lowered]
+    return starts or [_SEASON_SOWING_START["kharif"]]
+
+
+def default_sowing_date(crop_id: str, today: datetime | None = None) -> str:
+    """The crop's next calendar sowing date: this year's if not yet past, else next year's.
+
+    Replaces a literal 2025-06-15 that the irrigation schedule used for every
+    crop and every year (defect N-17).
+    """
+    crop_params = _load_crop_params()
+    crop_season = crop_params[crop_id].season if crop_id in crop_params else ""
+    today = (today or datetime.now()).replace(hour=0, minute=0, second=0, microsecond=0)
+    candidates = []
+    for month, day in _sowing_window_starts(crop_id, crop_season):
+        this_year = datetime(today.year, month, day)
+        candidates.append(this_year if this_year >= today else datetime(today.year + 1, month, day))
+    return min(candidates).strftime("%Y-%m-%d")
+
+
 def irrigation_schedule(
     crop_id: str,
-    sowing_date: str,
+    sowing_date: str | None,
     rainfall_mm: float,
     irrigation_level: float = 0.5,
 ) -> dict[str, Any]:
-    """Generate a week-by-week irrigation plan based on crop water needs and expected rainfall."""
+    """Generate a week-by-week irrigation plan based on crop water needs and expected rainfall.
+
+    A missing sowing date defaults to the crop's next calendar sowing date; an
+    invalid one raises instead of being silently replaced (N-17).
+    """
     crop_params = _load_crop_params()
     if crop_id not in crop_params:
-        raise ValueError(f"Unknown crop_id: {crop_id}")
+        raise ValueError(f"crop_id: unknown crop '{crop_id}'")
     crop = crop_params[crop_id]
     duration = CROP_DURATION_DAYS.get(crop_id, 120)
     stages = CROP_WATER_STAGES.get(crop_id, [(0.0, 1.0, 1.0, "Full Season")])
 
+    sowing_date_defaulted = not sowing_date
+    if sowing_date_defaulted:
+        sowing_date = default_sowing_date(crop_id)
     try:
         sow_dt = datetime.strptime(sowing_date, "%Y-%m-%d")
-    except ValueError:
-        sow_dt = datetime(2025, 6, 15)
+    except ValueError as exc:
+        raise ValueError("sowing_date must be a real date in YYYY-MM-DD format") from exc
 
     total_water_need = crop.water_requirement_mm
     weekly_rainfall = rainfall_mm / (duration / 7)
@@ -385,6 +461,7 @@ def irrigation_schedule(
         "crop_id": crop_id,
         "crop_name": crop.crop_name,
         "sowing_date": sowing_date,
+        "sowing_date_defaulted": sowing_date_defaulted,
         "harvest_date": (sow_dt + timedelta(days=duration)).strftime("%Y-%m-%d"),
         "duration_days": duration,
         "total_water_requirement_mm": total_water_need,
@@ -793,13 +870,17 @@ def soil_health_projection(
 # ===========================================================================
 
 def price_forecast(region_id: str, crop_id: str, months_ahead: int = 6) -> dict[str, Any]:
-    """Forecast prices using ML model (GradientBoosting) with seasonal heuristic fallback."""
-    rows = _load_csv("mandi_prices.csv")
-    prices = sorted(
-        [{"date": r["date"], "price": float(r["price_inr_per_kg"])}
-         for r in rows if r["region_id"] == region_id and r["crop_id"] == crop_id],
-        key=lambda x: x["date"],
-    )
+    """Forecast monthly prices for the `months_ahead` months starting this month.
+
+    Steps run on from the last month in the data, so a series that ends in
+    the past is extrapolated across the gap; months already past are dropped
+    from the answer. A stale series (newest row older than
+    PRICE_STALE_AFTER_DAYS) is flagged and every month's confidence capped at
+    "low" (defect N-9).
+    """
+    if not 1 <= int(months_ahead) <= 24:
+        raise ValueError("months_ahead must be between 1 and 24")
+    prices = _price_rows(region_id, crop_id)
     if len(prices) < 12:
         raise ValueError("Need at least 12 months of data for forecasting")
 
@@ -841,8 +922,12 @@ def price_forecast(region_id: str, crop_id: str, months_ahead: int = 6) -> dict[
     using_ml = False
     forecasts = []
     rolling_prices = list(price_vals)  # mutable copy for iterative ML prediction
+    freshness = price_freshness(last_date)
+    now = datetime.now()
+    # Months from the last data month to this month, which are skipped.
+    gap = max(0, (now.year - last_dt.year) * 12 + (now.month - last_dt.month) - 1)
 
-    for i in range(1, months_ahead + 1):
+    for i in range(1, gap + months_ahead + 1):
         target_month = (last_dt.month - 1 + i) % 12 + 1
         target_year = last_dt.year + (last_dt.month - 1 + i) // 12
         month = target_month
@@ -863,12 +948,18 @@ def price_forecast(region_id: str, crop_id: str, months_ahead: int = 6) -> dict[
             trend_value = intercept + slope * (len(recent) - 1 + i)
             forecast_price = max(trend_value * seasonal_factor, 0.5)
 
+        if i <= gap:
+            continue  # a month already past: computed only to carry the series on
+        if freshness["stale"]:
+            confidence = "low"
+        else:
+            confidence = "high" if (used_ml_this_step and i <= 2) else ("medium" if i <= 3 else "low")
         forecasts.append({
             "month": f"{target_year}-{target_month:02d}",
             "month_num": month,
             "forecast_price": round(forecast_price, 2),
             "seasonal_factor": round(seasonal_factor, 3),
-            "confidence": "high" if (used_ml_this_step and i <= 2) else ("medium" if i <= 3 else "low"),
+            "confidence": confidence,
         })
 
 
@@ -876,6 +967,7 @@ def price_forecast(region_id: str, crop_id: str, months_ahead: int = 6) -> dict[
         "region_id": region_id,
         "crop_id": crop_id,
         "current_price": price_vals[-1],
+        **freshness,
         "trend_slope_per_month": round(slope, 3),
         "trend_direction": "rising" if slope > 0.2 else ("falling" if slope < -0.2 else "stable"),
         "forecasts": forecasts,

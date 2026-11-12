@@ -21,7 +21,7 @@ import csv
 import json
 import os
 import time
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -60,7 +60,9 @@ def _age_days(iso_date: Optional[str]) -> Optional[float]:
         return None
     try:
         parsed = datetime.fromisoformat(iso_date)
-        return max(0.0, (datetime.now() - parsed).total_seconds() / 86400.0)
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=timezone.utc)
+        return max(0.0, (datetime.now(timezone.utc) - parsed).total_seconds() / 86400.0)
     except (TypeError, ValueError):
         pass
     # Bare year, e.g. an MSP row of "2024" — treat as 1 July of that year, the
@@ -276,7 +278,7 @@ def describe_sources() -> Dict[str, Any]:
     worst = max(sources, key=lambda s: rank.get(s["staleness"], 0))
 
     return {
-        "generated_at": datetime.now().isoformat(timespec="seconds"),
+        "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "overall": worst["staleness"],
         "any_live": any(s["mode"] == "live" for s in sources),
         "sources": sources,

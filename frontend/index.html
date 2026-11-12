@@ -25,6 +25,7 @@
 
       <ul class="nav__links">
         <li><a href="index.html" aria-current="page">Home</a></li>
+        <li><a href="season.html" data-i18n>My season</a></li>
         <li><a href="dashboard.html">Dashboard</a></li>
         <li><a href="farm-boundary.html">Draw farm</a></li>
         <li><a href="marketplace.html">Marketplace</a></li>
@@ -52,7 +53,8 @@
     </button>
     <ul>
       <li><a href="index.html" aria-current="page">Home</a></li>
-      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="season.html" data-i18n>My season</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
       <li><a href="decide.html">What should I sow?</a></li>
       <li><a href="farm-boundary.html">Draw farm</a></li>
       <li><a href="marketplace.html">Marketplace</a></li>
@@ -151,7 +153,8 @@
           </label>
           <label class="ask__field">
             <span>Budget / acre (₹)</span>
-            <input name="budget_per_acre" id="askBudget" type="number" inputmode="numeric" min="1000" step="500" value="15000" required>
+            <input name="budget_per_acre" id="askBudget" type="number" inputmode="numeric" min="1000" max="10000000" step="500" value="22000" required aria-describedby="askBudgetHint">
+            <small class="ask__hint" id="askBudgetHint" aria-live="polite"></small>
           </label>
           <button class="btn btn-primary ask__go" type="submit">
             Rank my crops
@@ -692,7 +695,8 @@
         <div class="footer__col">
           <h4>Product</h4>
           <ul>
-            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="season.html" data-i18n>My season</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
             <li><a href="decide.html">What should I sow?</a></li>
             <li><a href="farm-boundary.html">Draw farm</a></li>
             <li><a href="marketplace.html">Marketplace</a></li>

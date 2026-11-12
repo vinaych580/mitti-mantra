@@ -50,6 +50,7 @@
     tool('ml', 'ML status', 'model accuracy machine learning'),
     page('index.html', 'Home', 'landing start'),
     page('dashboard.html', 'Dashboard', 'tools'),
+    page('season.html', 'My season', 'saved plan harvest tasks spending'),
     page('decide.html', 'What should I sow?', 'guided decide step by step help me choose'),
     page('farm-boundary.html', 'Draw farm', 'map boundary plot area measure naksha'),
     page('marketplace.html', 'Marketplace', 'buy sell produce bazaar market'),

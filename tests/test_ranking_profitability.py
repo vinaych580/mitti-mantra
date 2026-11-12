@@ -11,11 +11,12 @@ def test_rank_puts_every_profitable_crop_first():
         {"crop_id": "c", "expected_profit": 0, "smart_score": 80},
         {"crop_id": "d", "expected_profit": 100, "smart_score": 60},
     ]
-    assert [r["crop_id"] for r in P.rank_recommendations(recs)] == ["d", "b", "a", "c"]
+    # Losers follow in order of smallest loss (Phase 0, defect N-4).
+    assert [r["crop_id"] for r in P.rank_recommendations(recs)] == ["d", "b", "c", "a"]
 
 
 def test_live_ranking_has_no_loss_above_profit():
-    recs = P.recommend_crops("telangana_medak", "kharif", 20000, 3, top_k=50)
+    recs = P.recommend_crops("telangana_medak", "kharif", 20000, 3, top_k=50, include_losses=True)
     seen_loss = False
     for r in recs:
         if r["expected_profit"] <= 0:
@@ -75,7 +76,7 @@ def test_underfunding_never_improves_roi(crop_id):
 
 @pytest.mark.parametrize("region_id,budget", UNDERFUNDED_CASES)
 def test_live_ranking_puts_low_coverage_crops_below_funded_profitable_ones(region_id, budget):
-    recs = P.recommend_crops(region_id, "kharif", budget, 4, top_k=50)
+    recs = P.recommend_crops(region_id, "kharif", budget, 4, top_k=50, include_losses=True)
     for i, r in enumerate(recs):
         if _coverage(r["crop_id"], budget) >= LOW_COVERAGE:
             continue
@@ -97,7 +98,7 @@ def test_live_ranking_top_pick_is_not_low_coverage(region_id, budget):
 def test_reason_reports_budget_coverage_not_yield_multiplier():
     # The note used to print the yield multiplier (coverage**2): "covers only
     # 5%" for a budget that covers 22%.
-    recs = P.recommend_crops("telangana_medak", "kharif", 15000, 4, top_k=50)
+    recs = P.recommend_crops("telangana_medak", "kharif", 15000, 4, top_k=50, include_losses=True)
     turmeric = next(r for r in recs if r["crop_id"] == "turmeric")
     assert turmeric["budget_adequate"] is False
     assert "22%" in turmeric["reason"]
@@ -141,7 +142,7 @@ def test_yield_history_is_on_the_same_basis_as_crop_parameters():
 
 
 def test_live_fully_funded_turmeric_roi_is_plausible():
-    recs = P.recommend_crops("telangana_medak", "kharif", 70000, 4, top_k=50)
+    recs = P.recommend_crops("telangana_medak", "kharif", 70000, 4, top_k=50, include_losses=True)
     turmeric = next(r for r in recs if r["crop_id"] == "turmeric")
     assert turmeric["budget_adequate"] is True
     assert turmeric["roi_percent"] < 300.0, turmeric

@@ -24,6 +24,13 @@ from __future__ import annotations
 import pytest
 
 
+def pytest_configure(config):
+    # Tests that build training datasets or run the evaluation pipeline take
+    # one to six minutes each. CI runs `-m "not slow"` on every push and the
+    # whole suite on pull requests (.github/workflows/ci.yml).
+    config.addinivalue_line("markers", "slow: builds datasets or trains models; minutes, not seconds")
+
+
 @pytest.fixture(autouse=True)
 def _isolated_db_global(tmp_path, monkeypatch):
     from utils import db

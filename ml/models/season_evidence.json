@@ -1,0 +1,363 @@
+{
+  "generated_at": "2026-10-07T10:39:29.389144+00:00",
+  "model_version": "0263331746c64c0a",
+  "holdout_sha256": "9685ea88e58b91c30887559f61a3a8d34b8ba29d47748722b55bb473d56ecc8e",
+  "status": "repository_holdout",
+  "calibration_samples": 107,
+  "interval_radius_kg_per_acre": 1553.8702169312237,
+  "target_coverage": 0.9,
+  "overall": {
+    "samples": 108,
+    "mae_kg_per_acre": 438.01,
+    "coverage": 0.9167,
+    "small_sample": false
+  },
+  "by_crop": {
+    "arhar": {
+      "samples": 1,
+      "mae_kg_per_acre": 1.74,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "bajra": {
+      "samples": 3,
+      "mae_kg_per_acre": 30.52,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "banana": {
+      "samples": 1,
+      "mae_kg_per_acre": 4424.12,
+      "coverage": 0.0,
+      "small_sample": true
+    },
+    "barley": {
+      "samples": 2,
+      "mae_kg_per_acre": 49.8,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "cashew": {
+      "samples": 1,
+      "mae_kg_per_acre": 153.44,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "coconut": {
+      "samples": 3,
+      "mae_kg_per_acre": 209.15,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "coffee": {
+      "samples": 1,
+      "mae_kg_per_acre": 157.95,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "cotton": {
+      "samples": 7,
+      "mae_kg_per_acre": 78.53,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "ginger": {
+      "samples": 2,
+      "mae_kg_per_acre": 1157.76,
+      "coverage": 0.5,
+      "small_sample": true
+    },
+    "groundnut": {
+      "samples": 7,
+      "mae_kg_per_acre": 67.06,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "jowar": {
+      "samples": 7,
+      "mae_kg_per_acre": 105.93,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "jute": {
+      "samples": 1,
+      "mae_kg_per_acre": 86.32,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "maize": {
+      "samples": 6,
+      "mae_kg_per_acre": 188.44,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "moong": {
+      "samples": 1,
+      "mae_kg_per_acre": 17.67,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "mustard": {
+      "samples": 10,
+      "mae_kg_per_acre": 85.03,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "onion": {
+      "samples": 3,
+      "mae_kg_per_acre": 532.5,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "paddy_basmati": {
+      "samples": 1,
+      "mae_kg_per_acre": 183.5,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "potato": {
+      "samples": 7,
+      "mae_kg_per_acre": 1000.48,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "pulses": {
+      "samples": 4,
+      "mae_kg_per_acre": 41.52,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "ragi": {
+      "samples": 1,
+      "mae_kg_per_acre": 80.98,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "rice": {
+      "samples": 11,
+      "mae_kg_per_acre": 160.38,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "soybean": {
+      "samples": 8,
+      "mae_kg_per_acre": 87.54,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "sugarcane": {
+      "samples": 7,
+      "mae_kg_per_acre": 2771.69,
+      "coverage": 0.1429,
+      "small_sample": true
+    },
+    "tea": {
+      "samples": 2,
+      "mae_kg_per_acre": 100.34,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "tomato": {
+      "samples": 2,
+      "mae_kg_per_acre": 1381.46,
+      "coverage": 0.5,
+      "small_sample": true
+    },
+    "turmeric": {
+      "samples": 1,
+      "mae_kg_per_acre": 1.1,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "wheat": {
+      "samples": 8,
+      "mae_kg_per_acre": 215.75,
+      "coverage": 1.0,
+      "small_sample": true
+    }
+  },
+  "by_region": {
+    "ap_guntur": {
+      "samples": 2,
+      "mae_kg_per_acre": 206.59,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "assam_nagaon": {
+      "samples": 4,
+      "mae_kg_per_acre": 424.45,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "bihar_patna": {
+      "samples": 3,
+      "mae_kg_per_acre": 309.15,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "chhattisgarh_raipur": {
+      "samples": 4,
+      "mae_kg_per_acre": 89.54,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "goa_north": {
+      "samples": 2,
+      "mae_kg_per_acre": 143.21,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "guj_anand": {
+      "samples": 4,
+      "mae_kg_per_acre": 529.45,
+      "coverage": 0.75,
+      "small_sample": true
+    },
+    "guj_rajkot": {
+      "samples": 7,
+      "mae_kg_per_acre": 56.69,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "haryana_karnal": {
+      "samples": 4,
+      "mae_kg_per_acre": 155.27,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "hp_shimla": {
+      "samples": 1,
+      "mae_kg_per_acre": 252.38,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "jharkhand_ranchi": {
+      "samples": 1,
+      "mae_kg_per_acre": 145.96,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "jk_pulwama": {
+      "samples": 2,
+      "mae_kg_per_acre": 71.81,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "kar_belagavi": {
+      "samples": 2,
+      "mae_kg_per_acre": 60.93,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "kar_mysuru": {
+      "samples": 8,
+      "mae_kg_per_acre": 266.4,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "kerala_palakkad": {
+      "samples": 5,
+      "mae_kg_per_acre": 1341.88,
+      "coverage": 0.6,
+      "small_sample": true
+    },
+    "mh_nashik": {
+      "samples": 2,
+      "mae_kg_per_acre": 763.65,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "mh_pune": {
+      "samples": 3,
+      "mae_kg_per_acre": 2010.29,
+      "coverage": 0.6667,
+      "small_sample": true
+    },
+    "mh_yavatmal": {
+      "samples": 2,
+      "mae_kg_per_acre": 32.17,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "mp_indore": {
+      "samples": 4,
+      "mae_kg_per_acre": 107.79,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "mp_sehore": {
+      "samples": 5,
+      "mae_kg_per_acre": 253.68,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "odisha_cuttack": {
+      "samples": 4,
+      "mae_kg_per_acre": 787.8,
+      "coverage": 0.75,
+      "small_sample": true
+    },
+    "punjab_ludhiana": {
+      "samples": 6,
+      "mae_kg_per_acre": 505.98,
+      "coverage": 0.8333,
+      "small_sample": true
+    },
+    "rajasthan_jaipur": {
+      "samples": 3,
+      "mae_kg_per_acre": 66.78,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "telangana_medak": {
+      "samples": 4,
+      "mae_kg_per_acre": 575.55,
+      "coverage": 0.75,
+      "small_sample": true
+    },
+    "tn_coimbatore": {
+      "samples": 4,
+      "mae_kg_per_acre": 904.76,
+      "coverage": 0.75,
+      "small_sample": true
+    },
+    "tn_thanjavur": {
+      "samples": 6,
+      "mae_kg_per_acre": 125.64,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "tripura_west": {
+      "samples": 2,
+      "mae_kg_per_acre": 112.78,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "uk_udhamsinghnagar": {
+      "samples": 1,
+      "mae_kg_per_acre": 91.5,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "up_lucknow": {
+      "samples": 6,
+      "mae_kg_per_acre": 344.74,
+      "coverage": 1.0,
+      "small_sample": true
+    },
+    "up_varanasi": {
+      "samples": 3,
+      "mae_kg_per_acre": 1559.12,
+      "coverage": 0.6667,
+      "small_sample": true
+    },
+    "wb_bardhaman": {
+      "samples": 4,
+      "mae_kg_per_acre": 383.73,
+      "coverage": 1.0,
+      "small_sample": true
+    }
+  },
+  "field_evaluation": null,
+  "limitations": "Repository holdout, not independent field validation. Pooled residual intervals are experimental; coverage can differ by crop and region. They do not validate budget-adjusted profit or weather counterfactuals."
+}

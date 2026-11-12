@@ -326,63 +326,94 @@ def train_recommendation_model() -> dict[str, Any]:
 # Post-training smoke validation
 # ===================================================================
 
+#: (name, region_id, season, crops of which at least one must rank top three).
+#: These are what a local agronomist would call the obvious answer; a pipeline
+#: that misses them is wrong, however finite its scores are (defect N-6).
 _VALIDATION_CASES = [
-    ("Punjab (Rabi - Wheat belt)", "punjab_ludhiana", "rabi"),
-    ("Maharashtra (Kharif - Cotton zone)", "mh_nashik", "kharif"),
-    ("Tamil Nadu (Kharif - Rice bowl)", "tn_thanjavur", "kharif"),
-    ("UP (Rabi - Wheat/Mustard)", "up_lucknow", "rabi"),
-    ("Gujarat (Kharif - Groundnut)", "guj_anand", "kharif"),
+    ("Punjab (Rabi - Wheat belt)", "punjab_ludhiana", "rabi", ("wheat",)),
+    ("Punjab (Kharif - Rice belt)", "punjab_ludhiana", "kharif", ("rice",)),
+    ("Tamil Nadu (Kharif - Rice bowl)", "tn_thanjavur", "kharif", ("rice",)),
+    ("UP (Rabi - Wheat/Mustard)", "up_lucknow", "rabi", ("wheat",)),
+    ("Gujarat (Kharif - Groundnut)", "guj_anand", "kharif", ("cotton", "groundnut")),
 ]
 
+#: Kept in the report so nobody reads a FAIL here as a regression: the yield
+#: data behind these rankings is mostly generated (defect N-5) and the yield
+#: model is rebuilt in Phase 2.
+_VALIDATION_NOTE = (
+    "Each case requires an expected crop in the top three and no top-three crop "
+    "with negative profit, at the typical input budget for that region and season. "
+    "Failures are expected until the Phase 2 yield model ships."
+)
 
-def write_validation_report() -> dict[str, Any]:
-    """Run recommend_crops end to end against the freshly saved models.
 
-    A smoke test, not an accuracy measure: it checks the served pipeline
-    returns a sane top pick with the new artifacts loaded. It's rewritten on
-    every training run -- the old validation_report.json was produced once by
-    hand and then silently described models that no longer existed.
+def evaluate_validation_cases() -> dict[str, Any]:
+    """Run recommend_crops end to end and check each case's answer.
+
+    Budget is the region's typical input cost for the season
+    (`typical_budget_per_acre`), not a flat Rs 15,000/acre that is below the
+    cost of most major crops (defect N-7).
     """
     from ml import predict
 
-    predict.invalidate_caches()
     cases = []
-    for name, region_id, season in _VALIDATION_CASES:
+    for name, region_id, season, expected in _VALIDATION_CASES:
         started = time.perf_counter()
+        budget = None
         try:
-            recs = predict.recommend_crops(region_id, season, 15000, 1.0, top_k=3)
+            budget = predict.typical_budget_per_acre(region_id, season)
+            recs = predict.recommend_crops(region_id, season, budget, 1.0, top_k=3)
             error = None
         except Exception as e:  # reported, not raised: one bad region shouldn't hide the rest
             recs, error = [], str(e)
         latency_ms = round((time.perf_counter() - started) * 1000)
+        top_ids = [r["crop_id"] for r in recs]
+        failures = []
+        if error:
+            failures.append(f"error: {error}")
+        if not any(c in top_ids for c in expected):
+            failures.append(f"none of {', '.join(expected)} in top three ({', '.join(top_ids) or 'empty'})")
+        losing = [r["crop_id"] for r in recs if r["expected_profit"] < 0]
+        if losing:
+            failures.append(f"negative profit in top three: {', '.join(losing)}")
+        if recs and not all(np.isfinite(r["smart_score"]) for r in recs):
+            failures.append("non-finite score")
         top = recs[0] if recs else None
-        ok = bool(
-            top
-            and np.isfinite(top["smart_score"])
-            and top["predicted_yield_kg_per_acre"] > 0
-        )
         cases.append({
             "test": name,
             "region_id": region_id,
             "season": season,
-            "status": "PASS" if ok else "FAIL",
+            "budget_per_acre": budget,
+            "expected_any_of": list(expected),
+            "status": "FAIL" if failures else "PASS",
+            "failures": failures,
+            "top_three": [
+                {"crop_id": r["crop_id"], "expected_profit": r["expected_profit"],
+                 "yield_kg_ac": r["predicted_yield_kg_per_acre"], "source": r.get("prediction_source")}
+                for r in recs
+            ],
             "top_crop": top["crop_name"] if top else None,
-            "top_score": top["smart_score"] if top else None,
-            "top_yield_kg_ac": top["predicted_yield_kg_per_acre"] if top else None,
-            "top_profit_inr": top["expected_profit"] if top else None,
             "latency_ms": latency_ms,
             "ml_used": bool(top and top.get("prediction_source") == "ml_model"),
-            **({"error": error} if error else {}),
         })
 
     passed = sum(c["status"] == "PASS" for c in cases)
-    report = {
+    return {
         "test_cases": cases,
         "all_pass": passed == len(cases),
         "passed": passed,
         "total": len(cases),
+        "note": _VALIDATION_NOTE,
         "generated_at": time.time(),
     }
+
+
+def write_validation_report() -> dict[str, Any]:
+    """Evaluate the validation cases against the freshly saved models and save them."""
+    from ml import predict
+
+    predict.invalidate_caches()
+    report = evaluate_validation_cases()
     with open(MODEL_DIR / "validation_report.json", "w") as f:
         json.dump(report, f, indent=2)
     return report

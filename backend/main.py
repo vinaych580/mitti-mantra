@@ -6,7 +6,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from pydantic import BaseModel, Field, field_validator
 from typing import Dict, Any, List, Optional
 from statistics import mean
-from datetime import datetime
+from datetime import datetime, timezone
 import sys
 import os
 import logging
@@ -61,6 +61,8 @@ from backend.routers.data import router as data_router
 logger = logging.getLogger("FastAPIIntegration")
 
 app = FastAPI(title="AgriSim - Farm Intelligence Platform")
+from backend.season_routes import router as season_router
+app.include_router(season_router)
 app.include_router(data_router, prefix="/api")
 
 
@@ -254,6 +256,23 @@ def get_location_insights(region_id: str, season: str = "kharif"):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+@app.get("/api/budget-default")
+def get_budget_default(region_id: str, season: str, crop_id: Optional[str] = None):
+    """Default per-acre input budget: the crop's typical cost, else the median for the season (N-7)."""
+    from ml.predict import typical_budget_per_acre
+    try:
+        budget = typical_budget_per_acre(region_id, season, crop_id)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    return {
+        "region_id": region_id,
+        "season": season.strip().lower(),
+        "crop_id": crop_id,
+        "budget_per_acre": round(budget),
+        "basis": "crop_typical_cost" if crop_id else "median_in_season",
+        "source": "dataset/crop_parameters.csv avg_input_cost_inr_per_acre",
+    }
+
 @app.post("/api/recommend")
 def get_recommendations(req: RecommendationRequest):
     try:
@@ -391,7 +410,7 @@ def get_crop_comparison(region_id: str, season: str, budget_per_acre: float = 15
     if budget_per_acre <= 0 or area_acres <= 0:
         raise HTTPException(status_code=400, detail="budget_per_acre and area_acres must be greater than 0")
     try:
-        return recommend_crops(region_id, season, budget_per_acre, area_acres, top_k=50)
+        return recommend_crops(region_id, season, budget_per_acre, area_acres, top_k=50, include_losses=True)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -683,7 +702,7 @@ def optimal_crop_mix(req: CropMixRequest):
     """Split the land across up to 3 profitable crops (see engine/crop_mix.py)."""
     budget_per_acre = req.total_budget / req.total_area_acres
     try:
-        all_crops = recommend_crops(req.region_id, req.season, budget_per_acre, req.total_area_acres, top_k=50)
+        all_crops = recommend_crops(req.region_id, req.season, budget_per_acre, req.total_area_acres, top_k=50, include_losses=True)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -739,14 +758,22 @@ def get_msp_comparison(region_id: str, crop_id: str):
 @app.get("/api/sell-advisor/{region_id}/{crop_id}")
 def get_sell_advice(region_id: str, crop_id: str):
     """Get best time to sell recommendation."""
+    from engine.features import NotFoundError
     try:
         return best_time_to_sell(region_id, crop_id)
+    except NotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/api/irrigation-schedule/{crop_id}")
-def get_irrigation_schedule(crop_id: str, sowing_date: str = "2025-06-15", rainfall_mm: float = 800, irrigation_level: float = 0.5):
+def get_irrigation_schedule(crop_id: str, sowing_date: Optional[str] = None, rainfall_mm: float = 800, irrigation_level: float = 0.5):
     """Get week-by-week irrigation schedule."""
+    from backend.models import parse_sowing_date
+    try:
+        sowing_date = parse_sowing_date(sowing_date)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
     try:
         return irrigation_schedule(crop_id, sowing_date, rainfall_mm, irrigation_level)
     except Exception as e:
@@ -798,8 +825,11 @@ def project_soil_health(req: SoilProjectionRequest):
 @app.get("/api/price-forecast/{region_id}/{crop_id}")
 def get_price_forecast(region_id: str, crop_id: str, months_ahead: int = 6):
     """Forecast mandi prices for next N months."""
+    from engine.features import NotFoundError
     try:
         return price_forecast(region_id, crop_id, months_ahead)
+    except NotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -1630,6 +1660,13 @@ def get_crop_recommendations_api(q: CropRecQuery = Depends()):
         wkey = (region_id, season.lower())
         weather = weather_data.get(wkey, {})
         soil = soil_data.get(region_id, {})
+        from engine.season_planning import model_version
+        from utils.provenance import describe_sources
+        planning_evidence = {
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "model_version": model_version(),
+            "sources": describe_sources()["sources"],
+        }
         
         for rec in res:
             cid = rec["crop_id"]
@@ -1642,6 +1679,7 @@ def get_crop_recommendations_api(q: CropRecQuery = Depends()):
             }
             reasons = explain_crop_recommendation(cid, rec["crop_name"], soil, weather, budget_per_acre, cp_dict)
             rec["reasons"] = reasons
+            rec["planning_evidence"] = planning_evidence
             
         set_cached_response(cache_key, res)
         return res
@@ -1763,6 +1801,11 @@ def get_irrigation_api(q: IrrigationQuery = Depends()):
     # 0.0-1.0, rainfall_mm non-negative) instead of a hand-rolled check -- see
     # AUDIT_REPORT.md M-2.
     crop_id, sowing_date, rainfall_mm, irrigation_level = q.crop_id, q.sowing_date, q.rainfall_mm, q.irrigation_level
+    from backend.models import parse_sowing_date
+    try:
+        sowing_date = parse_sowing_date(sowing_date)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
     logger.info(f"Irrigation schedule query: crop={crop_id}, rain={rainfall_mm}")
     try:
         schedule = irrigation_schedule(crop_id, sowing_date, rainfall_mm, irrigation_level)
@@ -1884,7 +1927,7 @@ def get_forecast(
         raise HTTPException(status_code=503, detail="Live forecast is unavailable right now.")
     return {
         "source": "Open-Meteo",
-        "fetched_at": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+        "fetched_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "lat": lat,
         "lon": lon,
         "rules": forecast_engine.RULES,

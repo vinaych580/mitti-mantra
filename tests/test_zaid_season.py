@@ -41,7 +41,7 @@ def test_zaid_crops_recommendable_via_heuristic_path():
     # and weather.csv rows for the region/season, both present after Task 2.
     recs = recommend_crops(
         region_id="telangana_medak", season="zaid",
-        budget_per_acre=25000, area_acres=2.0, top_k=50,
+        budget_per_acre=25000, area_acres=2.0, top_k=50, include_losses=True,
     )
     recommended_ids = {r["crop_id"] for r in recs}
     assert recommended_ids & set(ZAID_CROPS), (

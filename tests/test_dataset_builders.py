@@ -5,6 +5,8 @@ code used by ml/train_models.py and ml/evaluate_models.py.
 """
 from __future__ import annotations
 
+import pytest
+
 from collections import Counter
 
 import csv
@@ -43,6 +45,7 @@ def test_yield_time_split_holds_out_the_latest_harvest_year():
     assert not np.any(train & test)
 
 
+@pytest.mark.slow
 def test_build_recommendation_dataset_staples_are_recommendable():
     X, y, source, crop_le, region_le, season_le = _build_recommendation_dataset()
     # Only "natural" wins count: the top-up pass pads rare crops to a
@@ -68,6 +71,7 @@ def test_build_recommendation_dataset_staples_are_recommendable():
         )
 
 
+@pytest.mark.slow
 def test_build_recommendation_dataset_excludes_true_perennials():
     X, y, source, crop_le, region_le, season_le = _build_recommendation_dataset()
     labeled_crops = {crop_le.classes_[i] for i in set(y.tolist())}
@@ -78,6 +82,7 @@ def test_build_recommendation_dataset_excludes_true_perennials():
         assert perennial not in labeled_crops, f"{perennial} is perennial and must not be a seasonal label"
 
 
+@pytest.mark.slow
 def test_build_recommendation_dataset_tags_row_source():
     X, y, source, *_ = _build_recommendation_dataset()
     assert len(source) == len(X) == len(y)

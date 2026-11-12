@@ -1,0 +1,68 @@
+/* Season planner (decide.html) and My season (season.html).
+   Header, buttons, .field and .form-row come from style.css; this file keeps
+   only what is specific to these two pages. */
+.season-wrap { max-width: 1040px; margin: auto; padding: 112px 24px 96px; }
+.season-intro { margin-bottom: 32px; }
+.season-intro h1 { font-family: var(--font-display, 'Fraunces', serif); font-size: clamp(2rem, 5vw, 3rem); line-height: 1.12; margin: 12px 0; }
+.season-intro p, .season-note { color: var(--ink-soft); line-height: 1.6; }
+.season-step-label { color: var(--brand-deep); font-weight: 600; margin-bottom: 12px; font-variant-numeric: tabular-nums; }
+.season-panel { background: var(--surface, var(--bg-soft)); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 24px; margin: 20px 0; }
+.season-panel h2, .season-panel h3 { margin: 0 0 16px; }
+.season-panel h2 { font-size: var(--fs-xl); line-height: 1.2; }
+.season-form .form-row { margin-bottom: 4px; }
+.season-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 20px 0; align-items: center; }
+.season-hint { display: block; margin-top: 6px; font-size: var(--fs-2xs); color: var(--ink-soft); min-height: 1.2em; }
+.season-error { color: var(--danger); }
+.season-banner { border: 1px solid color-mix(in srgb, var(--danger) 35%, transparent); color: var(--danger); background: var(--danger-soft); padding: 12px 16px; border-radius: var(--r-sm); margin: 0 0 16px; line-height: 1.5; }
+
+/* Shortlist cards: a whole card is the checkbox target. */
+.season-shortlist { display: grid; gap: 12px; }
+.season-choice { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; align-items: start; padding: 16px; border: 1.5px solid var(--border-strong); border-radius: var(--r-md); cursor: pointer; background: var(--bg, #fff); }
+.season-choice input { margin-top: 4px; width: 20px; height: 20px; accent-color: var(--brand); }
+.season-choice p { grid-column: 2; margin: 0; color: var(--ink-soft); }
+.season-choice:has(input:checked) { border-color: var(--brand); box-shadow: 0 0 0 1px var(--brand); }
+
+.season-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
+.season-stats strong { display: block; font-size: var(--fs-2xl); font-variant-numeric: tabular-nums; margin-top: 6px; }
+.season-table-wrap { overflow-x: auto; margin: 20px 0; }
+.season-table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+.season-table th, .season-table td { padding: 14px 12px; text-align: left; border-bottom: 1px solid color-mix(in srgb, var(--ink) 15%, transparent); vertical-align: top; }
+.season-table th { color: var(--ink-soft); font-weight: 500; }
+.season-table caption { text-align: left; margin-bottom: 12px; }
+.season-table small { display: block; color: var(--ink-soft); margin-top: 4px; }
+.season-list { display: grid; gap: 16px; padding-left: 20px; }
+.season-list li { list-style: disc; line-height: 1.6; }
+.season-voice { padding: 16px; border-radius: var(--r-md); background: var(--bg-soft); margin: 16px 0; }
+
+/* Inline field + microphone. */
+.season-inline-field { display: flex; align-items: center; gap: 8px; }
+.season-inline-field input, .season-inline-field select { flex: 1; min-width: 0; }
+.voice-btn {
+  flex: 0 0 auto; display: inline-grid; place-items: center;
+  width: 44px; height: 44px; border-radius: 999px; cursor: pointer;
+  border: 1px solid color-mix(in srgb, var(--brand) 45%, transparent);
+  background: var(--bg, #fff); color: var(--brand-deep, var(--brand));
+  transition: background .2s, color .2s, box-shadow .2s;
+}
+.voice-btn:hover { background: color-mix(in srgb, var(--brand) 10%, transparent); }
+.voice-btn[aria-pressed="true"] {
+  background: var(--brand); color: #fff; border-color: var(--brand);
+  animation: voicePulse 1.4s ease-in-out infinite;
+}
+@keyframes voicePulse { 50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--brand) 25%, transparent); } }
+@media (prefers-reduced-motion: reduce) { .voice-btn[aria-pressed="true"] { animation: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 35%, transparent); } }
+
+.season-wrap :focus-visible { outline: 3px solid var(--brand); outline-offset: 3px; }
+.season-wrap [hidden] { display: none !important; }
+.season-wrap details summary { cursor: pointer; min-height: 44px; padding: 10px 0; }
+.season-wrap .btn { min-height: 44px; }
+
+@media (max-width: 640px) {
+  .season-wrap { padding: 92px 16px 96px; }
+  .season-stats { grid-template-columns: 1fr; gap: 12px; }
+  .season-form .form-row, .season-wrap > .form-row { grid-template-columns: 1fr; }
+  .season-panel { padding: 18px; }
+  .season-actions .btn { flex: 1 1 auto; }
+  .season-table th, .season-table td { padding: 12px 8px; }
+}
+@media print { .season-wrap { padding: 0; } .season-actions, .voice-btn, .nav, .mobile-panel, .i18n-switcher { display: none; } }

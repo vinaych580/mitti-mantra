@@ -1480,7 +1480,13 @@
 
       const region_id = profile.region_id, season = profile.season;
       const area_acres = parseFloat(profile.area_acres) || 4;
-      const budget_per_acre = parseFloat(profile.budget_per_acre) || 15000;
+      // No budget chosen yet: the typical input cost for this region and
+      // season, not a flat ₹15,000 that underfunds rice and cotton (N-7).
+      let budget_per_acre = parseFloat(profile.budget_per_acre) || 0;
+      if (!(budget_per_acre > 0)) {
+        budget_per_acre = await window.MM.defaultBudget(region_id, season).catch(() => 15000);
+        if (seq !== renderSeq) return;
+      }
       const committed = committedCropId();
 
       showLoading(out, 'Reading your farm…');
@@ -1741,6 +1747,7 @@
         area_acres: parseFloat(f.area_acres),
         budget_per_acre: parseFloat(f.budget_per_acre)
       };
+      let recommendationPlotId = window.FarmState?.getActiveId() || null;
       const recs = await api('/api/crop', { method: 'POST', body: JSON.stringify(body) });
       if (!Array.isArray(recs) || !recs.length) { out.innerHTML = '<div class="alert"><div class="alert__body"><strong>No recommendations returned.</strong></div></div>'; return; }
       const top = recs[0];
@@ -1908,6 +1915,9 @@
           btn.textContent = 'Recording…';
           retranslate();
           try {
+            if ((window.FarmState?.getActiveId() || null) !== recommendationPlotId) {
+              throw new Error('Your active plot changed. Run the recommendation again.');
+            }
             await api('/api/commit-crop', {
               method: 'POST',
               body: JSON.stringify({
@@ -1918,20 +1928,9 @@
                 device_id: window.MM.deviceId(),
               }),
             });
-            if (typeof window.FarmState !== 'undefined' && window.FarmState.setActiveCrop) {
-              // G-1 fix: pass along the region/season/area this recommendation
-              // already ran with, so setActiveCrop can create a plot from it
-              // when the farmer has no active one (the top farm bar's own
-              // region/season/area/budget fields don't create a FarmState
-              // plot — only "Draw your farm" does). Without this, the
-              // commitment silently went nowhere for anyone using the
-              // zero-sign-up flow the landing page advertises, even though
-              // the UI below unconditionally claims it worked.
-              window.FarmState.setActiveCrop(cropId, cropName, {
-                region_id: btn.dataset.regionId,
-                season: btn.dataset.season,
-                acres: parseFloat(btn.dataset.area) || undefined,
-              });
+            if (window.MMSeason) {
+              window.MMSeason.saveRecommendation(recs.find(r => r.crop_id === cropId), body, recommendationPlotId);
+              recommendationPlotId = window.FarmState.getActiveId();
             }
             syncCommittedButtons(cropId);
           } catch (err) {
@@ -2971,9 +2970,11 @@
   // before June belongs to the season that started the previous year.
   function ledgerScope() {
     const profile = (window.MM && window.MM.profile && window.MM.profile.get()) || {};
-    const season = (profile.season || 'kharif').toLowerCase();
+    const requested = new URLSearchParams(location.search).get('ledger_season');
+    const historical = /^(kharif|rabi|zaid)-20\d{2}$/.test(requested || '') ? requested.split('-') : null;
+    const season = historical ? historical[0] : (profile.season || 'kharif').toLowerCase();
     const now = new Date();
-    const year = (season === 'rabi' && now.getMonth() < 5) ? now.getFullYear() - 1 : now.getFullYear();
+    const year = historical ? Number(historical[1]) : (season === 'rabi' && now.getMonth() < 5) ? now.getFullYear() - 1 : now.getFullYear();
     const plotId = (window.FarmState && window.FarmState.getActiveId && window.FarmState.getActiveId()) || 'default';
     return { plot_id: plotId, season_key: `${season}-${year}`, season, year };
   }
@@ -3124,22 +3125,11 @@
       tile.querySelector('.kpi__val').innerHTML = val;
       tile.querySelector('.kpi__sub').innerHTML = sub;
     };
-    const crop = window.FarmState && window.FarmState.getActiveCrop && window.FarmState.getActiveCrop();
-    const profile = (window.MM && window.MM.profile && window.MM.profile.get()) || {};
-    const region = (savedFarm && savedFarm.region_id) || profile.region_id;
-    if (!crop || !crop.crop_id) { setTile('—', 'Choose a crop on My Farm to compare with a plan'); return; }
-    if (!region || !budget.areaAcres || !budget.perAcre) { setTile('—', 'Set area and budget in the “My farm” bar'); return; }
-    try {
-      const qs = new URLSearchParams({ budget_per_acre: budget.perAcre, area_acres: budget.areaAcres });
-      const recs = await api(`/api/crop-comparison/${encodeURIComponent(region)}/${encodeURIComponent(sc.season)}?${qs}`);
-      const rec = Array.isArray(recs) ? recs.find(r => r.crop_id === crop.crop_id) : null;
-      if (!rec) { setTile('—', `No plan figure for <span data-no-translate>${cropLabel(crop.crop_id)}</span> this season`); return; }
-      const planned = rec.expected_profit;
-      const gap = actual == null ? '' : ` · ${actual >= planned ? 'ahead by' : 'behind by'} ${INR(Math.abs(actual - planned))}`;
-      setTile(INR(planned), `<span data-no-translate>${cropLabel(crop.crop_id)}</span>${gap}`);
-    } catch (_) {
-      setTile('—', 'Plan unavailable offline');
-    }
+    const plan = window.MMSeason?.latest(window.FarmState?.load(), sc.season_key);
+    if (!plan) { setTile('—', 'No original estimate saved. Create a season plan to start tracking.'); return; }
+    const planned = plan.prediction.expected_profit;
+    const gap = actual == null ? '' : ` · ${INR(actual - planned)} compared with the saved estimate`;
+    setTile(INR(planned), `${escHtml(plan.crop_name)} · v${plan.version}${gap}`);
   }
 
   $('[data-form="expense"]')?.addEventListener('submit', e => {

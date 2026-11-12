@@ -20,6 +20,13 @@ The golden fixtures were generated from the pre-refactor code, and last
 regenerated (2026-10-06) when flood/drought risk moved to effective rainfall,
 the classifier stopped voting in smart_score, and rows gained `grown_locally`.
 Yields, profits and ROI were unchanged by that regeneration.
+
+Regenerated again on 2026-11-11 (Phase 0), deliberately: rows gained
+planned_cost / unspent_budget / price_per_kg / water_requirement_mm; spend
+is capped at 1.15x a crop's typical input cost, which changes profit and
+ROI (never yield) where the budget exceeds that; and losing crops follow in
+order of smallest loss. Yields are identical to the previous fixtures.
+These tests pass include_losses=True so the full scored list stays pinned.
 """
 from __future__ import annotations
 
@@ -110,7 +117,7 @@ def test_batch_yield_returns_empty_without_models(no_models):
 def test_recommend_crops_unchanged_on_ml_path(case, models_loaded):
     actual = P.recommend_crops(
         case["region_id"], case["season"],
-        case["budget_per_acre"], case["area_acres"], top_k=50,
+        case["budget_per_acre"], case["area_acres"], top_k=50, include_losses=True,
     )
     assert actual == case["expected"]
 
@@ -119,6 +126,6 @@ def test_recommend_crops_unchanged_on_ml_path(case, models_loaded):
 def test_recommend_crops_unchanged_on_heuristic_path(case, no_models):
     actual = P.recommend_crops(
         case["region_id"], case["season"],
-        case["budget_per_acre"], case["area_acres"], top_k=50,
+        case["budget_per_acre"], case["area_acres"], top_k=50, include_losses=True,
     )
     assert actual == case["expected"]

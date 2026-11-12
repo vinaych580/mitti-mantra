@@ -30,8 +30,8 @@
   const srcEl = document.getElementById('askSrc');
   const ctaEl = document.getElementById('askCta');
 
-  // Sehore, MP -- the district the feature previews further down use, so the
-  // first answer a visitor sees matches the rest of the page.
+  // Fallback only: MM.defaultRegion() is the one default every page shares
+  // (profile, else Sehore -- the district the feature previews further down use).
   const DEFAULT_REGION = 'mp_sehore';
   const SAVED_KEY = 'mm_ask_saved_v1';
 
@@ -92,7 +92,7 @@
   // A returning visitor sees their own farm, not the demo district.
   function applyProfile() {
     const p = window.MM && window.MM.profile ? window.MM.profile.get() : null;
-    const want = (p && p.region_id) || DEFAULT_REGION;
+    const want = (window.MM && window.MM.defaultRegion) ? window.MM.defaultRegion() : ((p && p.region_id) || DEFAULT_REGION);
     if (Array.from(regionSel.options).some((o) => o.value === want)) regionSel.value = want;
     if (p) {
       if (p.season) seasonSel.value = p.season;
@@ -211,7 +211,8 @@
   }
 
   form.addEventListener('submit', (e) => { e.preventDefault(); run(); });
-  [regionSel, seasonSel].forEach((el) => el.addEventListener('change', run));
+  // A new region or season re-reads its typical budget before ranking.
+  [regionSel, seasonSel].forEach((el) => el.addEventListener('change', () => { applyTypicalBudget().then(run); }));
 
   /* ---------- Model figures in the stats section ---------- */
   async function fillModelStats() {
@@ -235,9 +236,30 @@
     } catch (_) { /* keep the printed fallback */ }
   }
 
+  // Budget follows the typical input cost for the chosen region and season
+  // until the visitor types their own (defect N-7: a flat ₹15,000 sat below
+  // the cost of rice and cotton, so the default ranking underfunded both).
+  const hintEl = document.getElementById('askBudgetHint');
+  let budgetTyped = false;
+  budgetInp.addEventListener('input', () => { budgetTyped = true; });
+  async function applyTypicalBudget() {
+    if (!window.MM || !window.MM.defaultBudget || !regionSel.value) return;
+    try {
+      const typical = await window.MM.defaultBudget(regionSel.value, seasonSel.value);
+      if (!budgetTyped) budgetInp.value = typical;
+      if (hintEl) {
+        hintEl.innerHTML = `<span>Typical cost here</span>: ${esc(inr(typical))}/acre`;
+        retranslate();
+      }
+    } catch (_) { /* offline: keep the field as it is */ }
+  }
+
   (async () => {
     await loadRegions();
     applyProfile();
+    const p = window.MM && window.MM.profile ? window.MM.profile.get() : null;
+    if (p && Number(p.budget_per_acre) > 0) budgetTyped = true;
+    await applyTypicalBudget();
     run();
     fillModelStats();
   })();
