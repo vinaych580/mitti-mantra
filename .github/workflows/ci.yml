@@ -49,11 +49,13 @@ jobs:
           python-version: "3.12"
           cache: pip
           cache-dependency-path: requirements.txt
-      # The test suite needs only the production dependencies plus the test
-      # client: torch/torchvision in requirements-dev.txt are for offline
-      # disease-model training and are never imported by tests.
+      # The test suite needs the production dependencies, the test client, and
+      # pandas (dev-only, but tests/test_ml_pipeline_isolation.py imports
+      # ml/evaluate_models.py, which needs it at import time). torch/torchvision
+      # in requirements-dev.txt are for offline disease-model training and are
+      # never imported by tests.
       - name: Install
-        run: pip install -r requirements.txt pytest httpx
+        run: pip install -r requirements.txt pytest httpx "pandas>=2.0.0"
       - name: Fast tests
         if: github.event_name == 'push'
         run: pytest -q tests -m "not slow" -p no:cacheprovider
