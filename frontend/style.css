@@ -3723,7 +3723,7 @@ body.mm-menu-open .qw-panel {
 
 @media (max-width: 640px) {
   .chart-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr); /* same reason: a 1fr track grew to the canvas and widened a 375px page */
   }
 }
 
