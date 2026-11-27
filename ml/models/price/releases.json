@@ -1,0 +1,18 @@
+[
+  {
+    "version": "78385d86ffba",
+    "released_at": "2026-11-27T07:22:00+00:00",
+    "serves": "model",
+    "gate_passed": true,
+    "problems": [],
+    "override": null
+  },
+  {
+    "version": "78385d86ffba",
+    "released_at": "2026-11-27T07:29:44+00:00",
+    "serves": "model",
+    "gate_passed": true,
+    "problems": [],
+    "override": null
+  }
+]

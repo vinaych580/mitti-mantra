@@ -68,6 +68,9 @@ def _git_head() -> str:
 def version_of(manifest_text: str, config: dict) -> str:
     h = hashlib.sha256()
     h.update(_git_head().encode())
+    # The model code itself, so uncommitted changes can never reuse a version.
+    for name in ("train.py", "yield_anomaly.py", "price_model.py"):
+        h.update((ROOT / "ml" / name).read_bytes())
     h.update(hashlib.sha256(manifest_text.encode()).digest())
     h.update(json.dumps(config, sort_keys=True).encode())
     return h.hexdigest()[:12]
@@ -358,12 +361,190 @@ def train_yield(out_root: Path = RUNS / "yield") -> Path:
     return out
 
 
+PRICE_CONFIG = {
+    "hgb": {"loss": "absolute_error", "max_iter": 300, "learning_rate": 0.08, "max_leaf_nodes": 63,
+            "min_samples_leaf": 100, "l2_regularization": 1.0, "random_state": 7},
+    "backtest_weeks": 156,
+    "refit_every_weeks": 13,
+    "max_train_rows": 250_000,
+    "min_history_weeks": 13,
+    "min_cell_rows": 100,
+    "gate": 0.05,
+    "coverage_check_weeks": 52,
+}
+
+
+def _price_grid(curated: Path):
+    """Weekly [series, week] matrices from the curated store."""
+    import pandas as pd
+    from ml import price_model as pm
+
+    p = pd.read_parquet(curated / "price_district_weekly.parquet",
+                        columns=["district_id", "crop_id", "week", "price_inr_kg", "arrivals_t"])
+    p = p[(p["price_inr_kg"] > 0) & p["district_id"].notna()].copy()
+    p["week"] = pd.to_datetime(p["week"]).dt.to_period("W-SUN").dt.start_time
+    weeks = pd.date_range(p["week"].min(), p["week"].max(), freq="7D")
+    p["w"] = ((p["week"] - weeks[0]).dt.days // 7).astype(int)
+    keys = p[["district_id", "crop_id"]].drop_duplicates().sort_values(["crop_id", "district_id"]).reset_index(drop=True)
+    keys["s"] = np.arange(len(keys))
+    p = p.merge(keys, on=["district_id", "crop_id"])
+    S, W = len(keys), len(weeks)
+    P = np.full((S, W), np.nan)
+    A = np.full((S, W), np.nan)
+    P[p["s"], p["w"]] = p["price_inr_kg"]
+    A[p["s"], p["w"]] = p["arrivals_t"]
+    L = np.log(P)
+    keys["state"] = keys["district_id"].str.split("-").str[0]
+    SL = np.full((S, W), np.nan)
+    for _, g in keys.groupby(["state", "crop_id"]):
+        idx = g["s"].to_numpy()
+        with np.errstate(all="ignore"), pm._quiet():
+            SL[idx] = np.nanmean(L[idx], axis=0)
+    msp = pd.read_parquet(curated / "msp.parquet", columns=["crop_id", "year", "msp_inr_per_kg"])
+    msp = msp.groupby(["crop_id", "year"])["msp_inr_per_kg"].mean()
+    years = weeks.year.to_numpy()
+    M = np.full((S, W), np.nan)
+    for i, crop in enumerate(keys["crop_id"]):
+        if crop in msp.index.get_level_values(0):
+            m = msp.loc[crop]
+            M[i] = [m.get(y, m.get(y - 1, np.nan)) for y in years]
+    crops = sorted(keys["crop_id"].unique())
+    codes = keys["crop_id"].map({c: k for k, c in enumerate(crops)}).to_numpy()
+    return {"L": L, "A": A, "SL": SL, "M": np.log(M), "weeks": weeks.to_numpy().astype("datetime64[D]"),
+            "keys": keys, "crops": crops, "codes": codes}
+
+
+def _ape(pred_gap, act_gap):
+    return np.abs(np.exp(pred_gap - act_gap) - 1.0)
+
+
+def train_price(out_root: Path = RUNS / "price") -> Path:
+    import joblib
+    import pandas as pd
+    from sklearn.ensemble import HistGradientBoostingRegressor
+    from ml import price_model as pm
+
+    cfg = PRICE_CONFIG
+    t0 = time.time()
+    curated = ya.CURATED
+    manifest = (curated / "manifest.json").read_text(encoding="utf-8")
+    version = version_of(manifest, cfg)
+    g = _price_grid(curated)
+    L, W = g["L"], g["L"].shape[1]
+    print(f"price: {L.shape[0]:,} series x {W} weeks ({time.time() - t0:.0f}s)", flush=True)
+    rng = np.random.default_rng(7)
+    cat = [pm.FEATURE_NAMES.index(c) for c in pm.CATEGORICAL]
+
+    def model():
+        return HistGradientBoostingRegressor(categorical_features=cat, **cfg["hgb"])
+
+    bt_start = W - cfg["backtest_weeks"]
+    metrics: dict[str, Any] = {"model": "price", "version": version, "series": int(L.shape[0]),
+                               "weeks": [str(g["weeks"][0]), str(g["weeks"][-1])],
+                               "crops": g["crops"], "horizons": {}, "cells": {}}
+    cells: dict[Any, Any] = {}
+    final_models = {}
+    crop_of = np.array(g["crops"])[g["codes"]]
+    for h in pm.HORIZONS:
+        f = pm.features_for(L, g["A"], g["SL"], g["M"], g["weeks"], g["codes"], h)
+        act = np.full_like(L, np.nan)
+        act[:, :W - h] = L[:, h:] - L[:, :W - h]
+        hist = np.cumsum(~np.isnan(L), axis=1)
+        ok = ~np.isnan(act) & ~np.isnan(L) & (hist >= cfg["min_history_weeks"])
+        s_idx, t_idx = np.nonzero(ok)
+        X = pm.stack(f, (s_idx, t_idx))
+        y = act[s_idx, t_idx]
+        base = {k: np.nan_to_num(v[s_idx, t_idx], nan=0.0) for k, v in pm.baselines_for(L, f).items()}
+        pred = np.full(len(y), np.nan)
+        for b in range(bt_start, W - h, cfg["refit_every_weeks"]):
+            train = np.flatnonzero(t_idx + h < b)
+            test = np.flatnonzero((t_idx >= b) & (t_idx < b + cfg["refit_every_weeks"]))
+            if len(test) == 0 or len(train) < 1000:
+                continue
+            if len(train) > cfg["max_train_rows"]:
+                train = rng.choice(train, cfg["max_train_rows"], replace=False)
+            pred[test] = model().fit(X[train], y[train]).predict(X[test])
+        bt = ~np.isnan(pred)
+        crops_bt = crop_of[s_idx[bt]]
+        t_bt = t_idx[bt]
+        ape = {"model": _ape(pred[bt], y[bt]), **{k: _ape(base[k][bt], y[bt]) for k in pm.BASELINES}}
+        resid = {"model": y[bt] - pred[bt], **{k: y[bt] - base[k][bt] for k in pm.BASELINES}}
+        late = t_bt >= W - h - cfg["coverage_check_weeks"]
+        hm = {k: round(float(v.mean()), 4) for k, v in ape.items()}
+        hm["rows"] = int(bt.sum())
+        print(f"  h={h:>2}: MAPE model {hm['model']:.3f}  last {hm['last']:.3f}  "
+              f"seasonal {hm['seasonal']:.3f}  mean {hm['mean']:.3f}  ({hm['rows']:,} rows)", flush=True)
+        served_cover = []
+        for crop in g["crops"]:
+            m = crops_bt == crop
+            n = int(m.sum())
+            if n == 0:
+                continue
+            mape = {k: float(v[m].mean()) for k, v in ape.items()}
+            best_base = min(pm.BASELINES, key=lambda k: mape[k])
+            use_model = n >= cfg["min_cell_rows"] and mape["model"] <= (1 - cfg["gate"]) * mape[best_base]
+            method = "model" if use_model else best_base
+
+            def errs(meth, mask):
+                r = resid[meth][mask]
+                return float(np.quantile(r, 0.1)), float(np.quantile(r, 0.9))
+
+            lo, hi = errs(method, m)
+            cells[(crop, h)] = {"method": method, "err_lo": lo, "err_hi": hi, "rows": n,
+                                "mape": round(mape[method], 4), "baseline_mape": round(mape[best_base], 4)}
+            llo, lhi = errs("last", m)
+            cells[(crop, h, "last")] = {"method": "last", "err_lo": llo, "err_hi": lhi, "rows": n,
+                                        "mape": round(mape["last"], 4), "baseline_mape": round(mape["last"], 4)}
+            # coverage: widths from the earlier backtest years, checked on the last year
+            early, chk = m & ~late, m & late
+            if early.sum() >= 50 and chk.sum() >= 20:
+                elo, ehi = errs(method, early)
+                r = resid[method][chk]
+                served_cover.append((int(chk.sum()), float(((r >= elo) & (r <= ehi)).mean())))
+            metrics["cells"][f"{crop}|{h}"] = {
+                "rows": n, "served": method, "model_mape": round(mape["model"], 4),
+                **{f"{k}_mape": round(mape[k], 4) for k in pm.BASELINES}}
+        if served_cover:
+            w = np.array([c[0] for c in served_cover])
+            hm["coverage_80_last_year"] = round(float(np.average([c[1] for c in served_cover], weights=w)), 3)
+        hm["cells_model"] = sum(1 for (c, hh, *r), v in cells.items() if hh == h and not r and v["method"] == "model")
+        hm["cells_total"] = sum(1 for (c, hh, *r) in cells if hh == h and not r)
+        metrics["horizons"][str(h)] = hm
+        train = np.arange(len(y))
+        if len(train) > cfg["max_train_rows"]:
+            train = rng.choice(train, cfg["max_train_rows"], replace=False)
+        final_models[h] = model().fit(X[train], y[train])
+
+    artifact = {"version": version, "crops": g["crops"], "models": final_models, "cells": cells,
+                "feature_names": pm.FEATURE_NAMES}
+    metrics.update({"config": cfg, "trained_seconds": round(time.time() - t0, 1),
+                    "data_manifest_sha256": hashlib.sha256(manifest.encode()).hexdigest(),
+                    "code_commit": _git_head(),
+                    "gate": {"passed": any(v["method"] == "model" for k, v in cells.items() if len(k) == 2),
+                             "rule": f"per crop x horizon: model MAPE <= {1 - cfg['gate']:.2f} x best baseline"},
+                    "behaviour_passed": True})
+    out = out_root / version
+    out.mkdir(parents=True, exist_ok=True)
+    joblib.dump(artifact, out / "model.joblib", compress=3)
+    metrics["artifact_bytes"] = (out / "model.joblib").stat().st_size
+    (out / "metrics.json").write_text(json.dumps(metrics, indent=2), encoding="utf-8")
+    from ml.model_card import price_card
+    (out / "model_card.md").write_text(price_card(metrics), encoding="utf-8")
+    served = sum(v["cells_model"] for v in metrics["horizons"].values())
+    total = sum(v["cells_total"] for v in metrics["horizons"].values())
+    print(f"price: wrote {out} ({metrics['artifact_bytes'] / 1e6:.1f} MB, model serves {served}/{total} "
+          f"crop-horizon cells, {metrics['trained_seconds']:.0f}s)", flush=True)
+    return out
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--model", required=True, choices=["yield"])
+    ap.add_argument("--model", required=True, choices=["yield", "price"])
     args = ap.parse_args(argv)
     if args.model == "yield":
         train_yield()
+    else:
+        train_price()
     return 0
 
 

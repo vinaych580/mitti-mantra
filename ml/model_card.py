@@ -55,6 +55,75 @@ def _behaviour_table(b: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def price_card(m: dict[str, Any]) -> str:
+    hz = m["horizons"]
+    rows = ["| Horizon | Backtest rows | Model | Last value | Same weeks last year | Historical mean | Cells served by model | 80% range coverage (last year) |",
+            "|---|---:|---:|---:|---:|---:|---:|---:|"]
+    for h, r in hz.items():
+        rows.append(f"| {h} wk | {r['rows']:,} | {_pct(r['model'])} | {_pct(r['last'])} | {_pct(r['seasonal'])} | "
+                    f"{_pct(r['mean'])} | {r['cells_model']}/{r['cells_total']} | "
+                    f"{_pct(r['coverage_80_last_year']) if 'coverage_80_last_year' in r else ''} |")
+    by_crop: dict[str, dict[str, str]] = {}
+    for key, c in m["cells"].items():
+        crop, h = key.split("|")
+        by_crop.setdefault(crop, {})[h] = ("**model**" if c["served"] == "model" else c["served"])
+    hs = list(hz)
+    crop_rows = ["| Crop | " + " | ".join(f"{h} wk" for h in hs) + " |", "|---|" + "---|" * len(hs)]
+    for crop in sorted(by_crop):
+        crop_rows.append(f"| {crop} | " + " | ".join(by_crop[crop].get(h, "") for h in hs) + " |")
+    return f"""# Model card: weekly district price forecast
+
+**Version** `{m['version']}` · **Data** Agmarknet weekly district prices {m['weeks'][0]} to {m['weeks'][1]},
+{m['series']:,} district-crop series, {len(m['crops'])} crops · **Code** `{m['code_commit'][:10]}`
+
+## Purpose
+
+Forecast a district's mandi price for a crop 1, 4, 8, 12 and 26 weeks ahead, with an 80%
+range, for the sell advisor and for pricing a harvest in recommendations.
+
+## How it works
+
+- Target: the change in log price over the horizon. One gradient-boosted model per
+  horizon (scikit-learn `HistGradientBoostingRegressor`, absolute-error loss), across
+  crops.
+- Features: price changes over the last 1–8 and 52 weeks, what the same weeks did last
+  year, distance from the 4- and 13-week means and the 13-week
+  volatility, the two-year mean, week of year, arrivals against their 52-week norm, price against MSP, the
+  district's price against its state's mean, and weeks reported in the last year.
+- Baselines: no change; the same weeks' change last year; return to the two-year mean
+  (the app's previous forecast used the historical mean).
+- **Per crop × horizon gate:** the model serves a cell only if its backtest MAPE is at
+  least {m['config']['gate']:.0%} below the best baseline's, on ≥ {m['config']['min_cell_rows']} backtest rows. Elsewhere the best
+  baseline serves and the app says "typical for this time of year".
+- Ranges: the 10th and 90th percentiles of the served method's own backtest errors for
+  that crop and horizon. (The spec asked for quantile models; backtest errors give the
+  same 80% interval and are calibrated by construction.)
+
+## Backtest
+
+Rolling origin over the last {m['config']['backtest_weeks']} weeks, refitting every {m['config']['refit_every_weeks']} weeks on data whose
+outcome was known before the refit. Mean absolute percentage error:
+
+{chr(10).join(rows)}
+
+## What serves, per crop and horizon
+
+{chr(10).join(crop_rows)}
+
+## Known limits
+
+- Prices are policy-driven (export bans, stock limits, MSP procurement); no model sees
+  those coming. Expect baselines to serve for onion and tomato beyond a few weeks.
+- The mirror's weekly series ends in May 2026; until the live feed (`DATAGOV_API_KEY`)
+  runs, every forecast starts from that week and says so.
+- District prices aggregate a few mandis; a farmer's own mandi can differ.
+
+## Must not be used for
+
+Trading or hedging decisions, or any promise of a sale price.
+"""
+
+
 def yield_card(m: dict[str, Any]) -> str:
     gate = m["gate"]
     cal = m["calibration"]

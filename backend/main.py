@@ -932,27 +932,31 @@ def usage_summary(days: int = 30, x_admin_key: Optional[str] = Header(default=No
 # ---------------------------------------------------------------------------
 
 @app.post("/api/ml/train")
-def train_models(x_admin_key: Optional[str] = Header(default=None)):
-    """Train models only when an administrator explicitly enables the job."""
-    if os.getenv("ENABLE_MODEL_TRAINING", "false").lower() != "true":
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Model training is disabled. Enable it only for an admin-controlled job.",
-        )
-    expected_key = os.getenv("ADMIN_API_KEY")
-    if not expected_key:
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Model-training administration is not configured.",
-        )
-    if not x_admin_key or not secrets.compare_digest(x_admin_key, expected_key):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid admin key.")
-    try:
-        from ml.train_models import train_all as ml_train_all
-        report = ml_train_all()
-        return {"status": "success", "report": report}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+def train_models():
+    """Removed in Phase 2 (spec 2.5): training cannot finish inside a 30 s serverless
+    call and must never run in a request. Models are trained offline and released."""
+    raise HTTPException(
+        status_code=status.HTTP_410_GONE,
+        detail="Training runs offline: python -m ml.train --model yield|price, "
+               "then python -m ml.release <model> <version>.",
+    )
+
+def _phase2_model_status() -> dict:
+    """Released Phase 2 artifacts: version, what serves, and the gate outcome."""
+    import json as _json
+    out = {}
+    root = os.path.join(os.path.dirname(os.path.dirname(__file__)), "ml", "models")
+    for name in ("yield", "price"):
+        path = os.path.join(root, name, "metrics.json")
+        if not os.path.exists(path):
+            out[name] = None
+            continue
+        with open(path, encoding="utf-8") as f:
+            m = _json.load(f)
+        out[name] = {"version": m.get("version"), "serves": m.get("serves", "per cell"),
+                     "gate": m.get("gate"), "model_card": f"ml/models/{name}/model_card.md"}
+    return out
+
 
 @app.get("/api/ml/status")
 def model_status():
@@ -1003,6 +1007,7 @@ def model_status():
         "training_report": manifest,
         "audit_metrics": audit,
         "validation_report": validation,
+        "phase2": _phase2_model_status(),
         "data_sources": {
             "sensor_uploads_available": bool(sensor_regions),
             "regions_with_sensor_data": len(sensor_regions),
