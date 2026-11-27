@@ -1,8 +1,11 @@
 /* Manufacturer image hosts (tractorjunction, mahindratractor, deere.co.in, ...)
    are hotlinked, have no CORS/hotlink guarantee, and there was no error path:
    a blocked or moved image left a broken-image icon in the middle of a card.
-   Swap in a drawn placeholder instead. Inline `onerror` fires once and then
-   clears itself so a failing placeholder can't loop. */
+   Swap in a drawn placeholder instead: images carry data-img-fallback="tractor"
+   and the error listener below swaps the source once, so a failing placeholder
+   can't loop. (It was an inline onerror, which an enforced
+   Content-Security-Policy blocks.) Image errors don't bubble, so the listener
+   captures. map-tractors.js renders the same attribute on this page. */
 window.MM_TRACTOR_FALLBACK = window.MM_TRACTOR_FALLBACK || (function () {
   var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 110">' +
     '<rect width="160" height="110" fill="#f4ede0"/>' +
@@ -13,6 +16,17 @@ window.MM_TRACTOR_FALLBACK = window.MM_TRACTOR_FALLBACK || (function () {
     'font-size="11" fill="#8a8376">Photo unavailable</text></svg>';
   return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
 })();
+if (!window.MM_TRACTOR_FALLBACK_BOUND) {
+  window.MM_TRACTOR_FALLBACK_BOUND = true;
+  document.addEventListener('error', function (e) {
+    var img = e.target;
+    if (!img || img.tagName !== 'IMG' || img.getAttribute('data-img-fallback') !== 'tractor') return;
+    if (img.getAttribute('data-img-fallback-done')) return;
+    img.setAttribute('data-img-fallback-done', '1');
+    img.src = window.MM_TRACTOR_FALLBACK;
+    img.classList.add('is-fallback');
+  }, true);
+}
 
 /* =========================================================================
    Book a Tractor — page renderer
@@ -347,7 +361,7 @@ window.MM_TRACTOR_FALLBACK = window.MM_TRACTOR_FALLBACK || (function () {
     const phoneDigits = (b.operatorPhone || '').replace(/\D/g, '');
     return `
       <article class="tractor-booking-row" data-booking-id="${esc(b.bookingId)}">
-        ${b.tractorImage ? `<img src="${esc(b.tractorImage)}" alt="${esc(b.tractorName || '')}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src=window.MM_TRACTOR_FALLBACK;this.classList.add('is-fallback');">` : `<div class="tractor-booking-row__noimg">🚜</div>`}
+        ${b.tractorImage ? `<img src="${esc(b.tractorImage)}" alt="${esc(b.tractorName || '')}" loading="lazy" referrerpolicy="no-referrer" data-img-fallback="tractor">` : `<div class="tractor-booking-row__noimg">🚜</div>`}
         <div class="tractor-booking-row__body">
           <div class="tractor-booking-row__head">
             <div>
@@ -443,7 +457,7 @@ window.MM_TRACTOR_FALLBACK = window.MM_TRACTOR_FALLBACK || (function () {
       return `
       <article class="tractor-card">
         <div class="tractor-card__media">
-          <img src="${esc(t.image)}" alt="${esc(t.name)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src=window.MM_TRACTOR_FALLBACK;this.classList.add('is-fallback');">
+          <img src="${esc(t.image)}" alt="${esc(t.name)}" loading="lazy" referrerpolicy="no-referrer" data-img-fallback="tractor">
           <span class="tractor-card__avail ${availClass(t.availability)}">${esc(t.availability)}</span>
         </div>
         <div class="tractor-card__body">

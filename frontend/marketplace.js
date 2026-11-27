@@ -24,6 +24,17 @@
    ========================================================================= */
 
 (function () {
+  // A listing photo that fails to load is hidden and the category icon after
+  // it shown instead (images carry data-img-fallback="icon"). This was an
+  // inline onerror, which an enforced Content-Security-Policy blocks. Image
+  // errors don't bubble, so the listener captures.
+  document.addEventListener('error', (e) => {
+    const img = e.target;
+    if (!img || img.tagName !== 'IMG' || img.getAttribute('data-img-fallback') !== 'icon') return;
+    img.style.display = 'none';
+    if (img.nextElementSibling) img.nextElementSibling.style.display = 'flex';
+  }, true);
+
   'use strict';
 
   const DATA = window.MARKETPLACE_DATA || { source: 'DEMO_DATA', listings: [], demand: [], pools: [] };
@@ -594,7 +605,7 @@
     <article class="mkt-card" data-id="${esc(l.id)}" style="animation-delay:${delay}ms">
       <div class="mkt-card__media mkt-card__media--${esc(l.category)}">
         ${img
-          ? `<img src="${esc(img)}" alt="${esc(l.name)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+          ? `<img src="${esc(img)}" alt="${esc(l.name)}" loading="lazy" data-img-fallback="icon">
              <span class="mkt-card__ico" style="display:none;">${catIcon(l.category)}</span>`
           : `<span class="mkt-card__ico">${catIcon(l.category)}</span>`}
         <span class="mkt-card__avail mkt-card__avail--${avail.cls}">${avail.text}</span>
@@ -1191,7 +1202,7 @@
       <div class="mkt-detail">
         <div class="mkt-detail__media mkt-card__media--${esc(l.category)}">
           ${gallery[0]
-            ? `<img id="mktDetailMainImg" src="${esc(gallery[0])}" alt="${esc(l.name)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            ? `<img id="mktDetailMainImg" src="${esc(gallery[0])}" alt="${esc(l.name)}" loading="lazy" data-img-fallback="icon">
                <span class="mkt-card__ico" style="font-size:64px;display:none;">${catIcon(l.category)}</span>`
             : `<span class="mkt-card__ico" style="font-size:64px;">${catIcon(l.category)}</span>`}
           <span class="mkt-card__avail mkt-card__avail--${avail.cls}">${avail.text}</span>
@@ -2482,6 +2493,12 @@
         if (search) search.value = heroSearch.value;
         switchView('browse');
       });
+      const heroSearchBtn = document.getElementById('mktHeroSearchBtn');
+      if (heroSearchBtn) {
+        heroSearchBtn.addEventListener('click', () => {
+          heroSearch.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        });
+      }
     }
 
     document.addEventListener('click', (e) => {

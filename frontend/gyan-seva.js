@@ -17,6 +17,12 @@
   // Constants
   const CONSULTANTS = window.CONSULTANTS_DATA || [];
 
+  // The form is driven by its buttons; it is never submitted. (This was an
+  // inline onsubmit handler returning false, which an enforced Content-Security-Policy
+  // blocks.)
+  const gsForm = document.getElementById('gyanSevaForm');
+  if (gsForm) gsForm.addEventListener('submit', (e) => e.preventDefault());
+
   /* ---------- Modal accessibility (dialog focus trap + Escape-to-close) ----------
      Shared by the expert-profile modal and the compare-experts modal: moves
      focus into the modal on open, traps Tab inside it, closes on Escape, and
