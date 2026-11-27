@@ -299,6 +299,11 @@
     // For script-built text that never sits in the DOM as English first
     // (chat greetings, map tooltips): the catalog entry, or the source.
     t: (text) => lookup(text, currentLang),
+    // The English a translated text node or attribute started as, so a copy
+    // of translated DOM (mm-results.js keeps a tool's last result) can be
+    // stored in the source language and re-translated when shown.
+    sourceText: (node) => nodeOriginals.get(node),
+    sourceAttr: (el, attr) => (attrOriginals.get(el) || {})[attr],
     ready: () => loadCatalog(currentLang)
   };
 })();

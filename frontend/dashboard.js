@@ -433,6 +433,9 @@
 
   function showError(el, err) {
     if (isLikelyOffline(err)) {
+      // Phase 4.7: say what the tool needs and show its last saved result
+      // with the date (mm-results.js), instead of only "reconnect".
+      if (window.MMResults && el.matches && el.matches('.output[data-out]')) { window.MMResults.showOffline(el); return; }
       el.innerHTML = `<div class="alert alert--red"><svg class="alert__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l22 22"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/><path d="M10.71 5.05A16 16 0 0 1 22.58 9"/><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
         <div class="alert__body"><strong>You're offline</strong><p>Reconnect to use this tool.</p></div></div>`;
       return;
@@ -2609,6 +2612,24 @@
   // Shown whenever the newest price on record is older than the freshness
   // limit: the forecast starts from that week, and a farmer must not read
   // "1 week ahead" as next week.
+  // A one-shot reference district set by priceUnavailable's button: read and
+  // cleared on the next run, so the farmer's own district is used after it.
+  function takeRef(form, f) {
+    const id = form.dataset.refDistrict;
+    if (!id) return null;
+    const ref = { id, name: form.dataset.refName || id, km: form.dataset.refKm };
+    delete form.dataset.refDistrict; delete form.dataset.refName; delete form.dataset.refKm;
+    form.dataset.refShown = '1';
+    f.region_id = id;
+    return ref;
+  }
+  function refNotice(ref) {
+    if (!ref) return '';
+    return `<div class="alert alert--gold mm-ref-notice" role="status">${INFO_ICO}
+      <div class="alert__body"><strong>${text('Reference only: not your district')}</strong>
+        <p>${text('These prices are from')} ${NUM(escHtml(ref.name))}${ref.km ? ` (${NUM(escHtml(ref.km))} ${text('km away')})` : ''}. ${text('Your own mandi may pay differently.')}</p></div></div>`;
+  }
+
   function staleNotice(fresh) {
     if (!fresh || !fresh.stale) return '';
     const age = fresh.data_age_days;
@@ -2625,11 +2646,33 @@
     if (!(err instanceof HttpError && (err.status === 404 || err.status === 503))) return false;
     const f = formToObj(form);
     const missing = err.status === 404;
+    // A reference run that also came back empty does not offer another.
+    const wasRef = !!form.dataset.refShown;
+    delete form.dataset.refShown;
     out.innerHTML = `<div class="alert alert--gold">${INFO_ICO}<div class="alert__body">
       <strong>${missing ? text('No recent mandi prices for this crop here') : text('Price forecasts are not available right now')}</strong>
       <p>${missing ? `${NUM(escHtml(cropLabel(f.crop_id)))} · ${text('Pick a crop this district trades:')}` : text('Please try again later.')}</p>
-      ${missing ? '<div class="mm-crop-chips" data-price-crops></div>' : ''}</div></div>`;
+      ${missing ? '<div class="mm-crop-chips" data-price-crops></div>' : ''}
+      ${missing && !wasRef ? '<div class="mm-ref" data-price-ref hidden></div>' : ''}</div></div>`;
     if (!missing) return true;
+    // Phase 4.7, partial coverage: the nearest district that does price this
+    // crop, offered as a reference and labelled as someone else's mandi.
+    const refBox = $('[data-price-ref]', out);
+    if (refBox && window.MMResults) {
+      window.MMResults.nearestWithPrices(f.region_id, f.crop_id).then(near => {
+        if (!near || !refBox.isConnected) return;
+        const name = `${near.district.district_name}, ${near.district.state_name}`;
+        refBox.innerHTML = `<p>${text('Nearest district with prices for this crop:')} <strong>${NUM(escHtml(name))}</strong> · ${NUM(near.km)} ${text('km away')}</p>
+          <button type="button" class="btn btn-ghost btn--sm" data-ref-run>${text('Show it as a reference')}</button>`;
+        refBox.hidden = false;
+        $('[data-ref-run]', refBox).addEventListener('click', () => {
+          form.dataset.refDistrict = near.district.district_id;
+          form.dataset.refName = name;
+          form.dataset.refKm = String(near.km);
+          form.requestSubmit();
+        });
+      }).catch(() => {});
+    }
     const box = $('[data-price-crops]', out);
     api(`/api/v1/districts/${encodeURIComponent(f.region_id)}/price-forecast/crops`).then(r => {
       if (!box || !box.isConnected) return;
@@ -2653,6 +2696,8 @@
     const out = $('[data-out="forecast"]');
     showLoading(out, 'Forecasting mandi prices…');
     const f = formToObj(e.target);
+    const ref = takeRef(e.target, f);
+    if (!ref) delete e.target.dataset.refShown;
     try {
       const q = `crop_id=${encodeURIComponent(f.crop_id)}`;
       const base = `/api/v1/districts/${encodeURIComponent(f.region_id)}`;
@@ -2669,6 +2714,7 @@
       const tiles = [4, 12, 26].map(pick).filter(Boolean);
 
       out.innerHTML = `
+        ${refNotice(ref)}
         ${staleNotice(fc.freshness)}
         <div class="kpi-grid">
           <div class="kpi"><div class="kpi__lbl">${text('Latest price')}</div>
@@ -2830,6 +2876,8 @@
     const out = $('[data-out="sell"]');
     showLoading(out);
     const f = formToObj(e.target);
+    const ref = takeRef(e.target, f);
+    if (!ref) delete e.target.dataset.refShown;
     try {
       const qs = new URLSearchParams({
         crop_id: f.crop_id,
@@ -2855,6 +2903,7 @@
       const safest = holds.slice().sort((a, b) => b.low_net_inr - a.low_net_inr)[0];
 
       out.innerHTML = `
+        ${refNotice(ref)}
         ${staleNotice(r.freshness)}
         <div class="kpi-grid">
           <div class="kpi ${hold ? 'kpi--warn' : 'kpi--good'}"><div class="kpi__lbl">${text('Advice')}</div>
