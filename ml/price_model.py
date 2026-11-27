@@ -26,6 +26,7 @@ from typing import Any
 
 import numpy as np
 
+from engine.storability import max_storage_weeks
 from ml._artifact import LazyArtifact
 
 logger = logging.getLogger(__name__)
@@ -251,13 +252,17 @@ def series_from_store(district_id: str, crop_id: str, weeks: int = SERIES_WEEKS)
 
 
 def sell_advice(fc: dict[str, Any], quantity_kg: float, storage_inr_kg_month: float,
-                interest_pct_year: float) -> dict[str, Any]:
+                interest_pct_year: float, crop_id: str | None = None) -> dict[str, Any]:
     """Hold only when the median expected gain beats storage and interest, with the
-    downside (the low end of the range) shown beside it."""
+    downside (the low end of the range) shown beside it. Holds longer than the crop
+    keeps (MAX_STORAGE_WEEKS) are left out."""
     p0 = fc["latest_price_inr_kg"]
+    keeps = max_storage_weeks(crop_id) if crop_id else None
     options = [{"action": "sell_now", "weeks": 0, "price_inr_kg": p0, "net_inr": round(p0 * quantity_kg, 2),
                 "low_net_inr": round(p0 * quantity_kg, 2), "high_net_inr": round(p0 * quantity_kg, 2)}]
     for h in fc["horizons"]:
+        if keeps is not None and h["horizon_weeks"] > keeps:
+            continue
         months = h["horizon_weeks"] * 7 / 30.4
         carry = storage_inr_kg_month * months + p0 * interest_pct_year / 100 * months / 12
         net = lambda price: round((price - carry) * quantity_kg, 2)  # noqa: E731
@@ -267,13 +272,21 @@ def sell_advice(fc: dict[str, Any], quantity_kg: float, storage_inr_kg_month: fl
                         "high_net_inr": net(h["high_inr_kg"]), "method": h["method"], "label": h["label"]})
     best = max(options, key=lambda o: o["net_inr"])
     hold = best["action"] != "sell_now"
+    limited = keeps is not None and any(h["horizon_weeks"] > keeps for h in fc["horizons"])
+    if hold:
+        reason = (f"Median expected net after storage and interest is higher by "
+                  f"Rs {best['net_inr'] - options[0]['net_inr']:,.0f}; the low end of the range would be "
+                  f"Rs {best['low_net_inr'] - options[0]['net_inr']:,.0f} against selling now.")
+    elif keeps == 0:
+        reason = "This crop must be sold within days of harvest; holding it is not an option."
+    else:
+        reason = "No horizon's median price beats today's after storage and interest."
     return {
         "recommendation": best["action"] if hold else "sell_now",
-        "reason": (f"Median expected net after storage and interest is higher by "
-                   f"Rs {best['net_inr'] - options[0]['net_inr']:,.0f}; the low end of the range would be "
-                   f"Rs {best['low_net_inr'] - options[0]['net_inr']:,.0f} against selling now."
-                   if hold else "No horizon's median price beats today's after storage and interest."),
+        "reason": reason,
         "options": options, "origin_week": fc["origin_week"], "model_version": fc["model_version"],
+        # Set when holds were left out because the crop does not keep that long.
+        "max_storage_weeks": keeps, "storage_limited": limited,
     }
 
 
