@@ -373,3 +373,28 @@ def test_apmc_uses_each_feeds_own_commodity_spelling():
     assert new["Wheat"] == "wheat"  # unchanged names carry over
     both = apmc._commodities()
     assert both["Paddy(Common)"] == both["Paddy(Dhan)(Common)"] == "rice"
+
+
+def test_refresh_builds_when_live_prices_cannot_be_fetched(monkeypatch, caplog, capsys):
+    """data.gov.in refuses GitHub's runners; the rest of the refresh must still land."""
+    from pipelines import run
+
+    def unreachable():
+        raise RuntimeError("GET https://api.data.gov.in/resource/x?api-key=SECRET123&format=json "
+                           "failed after 6 tries: No route to host")
+
+    built = []
+    monkeypatch.setattr(agmarknet_live, "download", unreachable)
+    monkeypatch.setattr(run, "download", lambda: None)
+    monkeypatch.setattr(apmc, "download", lambda **kw: None)
+    monkeypatch.setattr(nasa_power, "download", lambda **kw: None)
+    monkeypatch.setattr(run, "build", lambda allow_shrink=False: built.append(allow_shrink) or 0)
+    monkeypatch.setenv("GITHUB_ACTIONS", "true")
+
+    with caplog.at_level("WARNING"):
+        assert run.main(["refresh"]) == 0
+    assert built == [False]
+    out = capsys.readouterr().out
+    assert "::warning title=Live mandi prices skipped::" in out
+    assert "live snapshot skipped" in caplog.text
+    assert "SECRET123" not in out + caplog.text
