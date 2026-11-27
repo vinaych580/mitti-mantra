@@ -813,4 +813,8 @@ Object.assign(window.MM_I18N_CATALOG.te, {
   "Must be sold within days of harvest; holding is not an option.": "కోత తర్వాత కొన్ని రోజుల్లోనే అమ్మాలి; నిల్వ ఉంచడం సాధ్యం కాదు.",
   "Keeps without cold storage:": "కోల్డ్ స్టోరేజ్ లేకుండా నిల్వ ఉండే కాలం:",
   "Longer holds are not shown: the price forecast says nothing about produce that has spoiled.": "ఇంతకంటే ఎక్కువ కాలం నిల్వ ఎంపికలు చూపబడలేదు: పాడైపోయిన పంటకు ధర అంచనా ఉండదు.",
+  "Smallest loss": "అతి తక్కువ నష్టం",
+  "Typical farm in this district": "ఈ జిల్లాలో సాధారణ పొలం",
+  "Good farm": "మంచి పొలం",
+  "well-managed field": "బాగా నిర్వహించిన పొలం",
 });

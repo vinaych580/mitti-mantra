@@ -1647,7 +1647,29 @@ def _score_single_crop(
             "last_year": yield_detail.get("last_year"),
             "range": "80%: " + yield_detail.get("range_basis", ""),
         }
+        # Owner decision (2026-11-27): show a good farm's figure beside the district
+        # average. "Good farm" is the crop's reference yield for a well-managed field
+        # (crop_parameters base_yield), on the same budget and price. Shown only where
+        # it is meaningfully above the district's record (Medak turmeric already beats
+        # it, so it gets none).
+        good = float(crop.base_yield_kg_per_acre)
+        if predicted_yield > 0 and good > predicted_yield * GOOD_FARM_MIN_GAIN:
+            gp = profit_estimator(
+                crop_id=crop_id, predicted_yield_kg_per_acre=good,
+                area_acres=area_acres, budget_per_acre=budget_per_acre, mandi_price_per_kg=price,
+            )
+            rec_entry["good_farm"] = {
+                "yield_kg_per_acre": gp["achievable_yield_kg_per_acre"],
+                "expected_profit": gp["expected_profit"],
+                "roi_percent": gp["roi_percent"],
+                "basis": "reference yield for a well-managed field (crop_parameters base_yield)",
+            }
     return rec_entry
+
+
+#: A good-farm figure is shown only when the reference yield beats the district's
+#: record by at least this factor.
+GOOD_FARM_MIN_GAIN = 1.1
 
 
 def rank_recommendations(recs: list[dict[str, Any]]) -> list[dict[str, Any]]:
