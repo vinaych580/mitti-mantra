@@ -63,7 +63,7 @@
       <form id="farmForm" class="season-form">
         <div class="form-row">
           <div class="field"><label for="region" data-i18n>Region</label>
-            <div class="season-inline-field"><select id="region" name="region_id" required></select><button type="button" class="voice-btn" data-voice="region" aria-label="Speak region" aria-pressed="false" title="Speak region"><svg class="voice-btn__icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8"/></svg></button></div></div>
+            <div class="season-inline-field"><select id="region" name="region_id" required data-district-picker></select><button type="button" class="voice-btn" data-voice="region" aria-label="Speak region" aria-pressed="false" title="Speak region"><svg class="voice-btn__icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8"/></svg></button></div></div>
           <div class="field"><label for="season" data-i18n>Season</label>
             <select id="season" name="season"><option value="kharif">Kharif</option><option value="rabi">Rabi</option><option value="zaid">Zaid</option></select></div>
         </div>
@@ -125,6 +125,7 @@
   </main>
 
   <script defer src="farm-state.js"></script>
+  <script defer src="mm-setup.js"></script>
   <script defer src="mm-core.js"></script>
   <script defer src="season-plan.js"></script>
   <script defer src="season-ui.js"></script>

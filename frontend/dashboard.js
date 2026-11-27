@@ -1506,13 +1506,15 @@
         </div>
         <form data-form="home-setup" style="margin-top:16px;">
           <div class="form-row">
-            <div class="field"><label>Region</label><select name="region_id" data-regions required></select></div>
+            <div class="field"><label>Region</label><select name="region_id" data-regions required data-district-picker></select></div>
             <div class="field"><label>Crop</label><select name="crop_id" data-crops><option value="">Help me choose</option></select></div>
             <div class="field"><label>Area (acres)</label><input name="area_acres" type="number" step="any" min="0.1" max="10000" value="4" required></div>
           </div>
           <button class="btn btn-primary" type="submit">See my farm</button>
         </form>`;
       populateSetupSelects(out);
+      // Phase 4.3: the same district picker as the farm bar and the planner.
+      if (window.MMSetup) window.MMSetup.scan(out);
       $('[data-form="home-setup"]', out)?.addEventListener('submit', e => {
         e.preventDefault();
         const f = formToObj(e.target);

@@ -531,6 +531,16 @@
       }).join("");
     }
 
+    // Phase 4.3: one district picker (state, type-ahead district, use my
+    // location, coverage) on top of this select, and the typical-cost line
+    // under the budget, the same as the planner and the landing page.
+    const picker = window.MMSetup ? window.MMSetup.enhance(regSel, { compact: true }) : null;
+    const seasonSel = bar.querySelector('[data-mm="season"]');
+    const typical = window.MMSetup
+      ? window.MMSetup.typicalCost(bar.querySelector('[data-mm="budget_per_acre"]'), () => regSel.value, () => seasonSel.value)
+      : null;
+    if (typical) { regSel.addEventListener("change", typical); seasonSel.addEventListener("change", typical); }
+
     // Load current profile into bar
     function fillBar() {
       const p = profile.get();
@@ -589,6 +599,8 @@
       bar.dataset.mode = mode;
       if (mode === "edit") {
         fillBar();
+        if (picker) picker.refresh();
+        if (typical) typical();
         const first = bar.querySelector(".mm-farm-bar__fields select, .mm-farm-bar__fields input:not([readonly])");
         if (first) first.focus();
         return;
