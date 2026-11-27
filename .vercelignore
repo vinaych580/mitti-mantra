@@ -72,8 +72,11 @@ node_modules
 package.json
 package-lock.json
 
-# Phase 1 pipeline: build-time only; the app reads dataset/serving.sqlite
-data/
+# Phase 1 pipeline: build-time only; the app reads dataset/serving.sqlite.
+# Anchored with a leading slash: Vercel matches these patterns case-insensitively,
+# and an unanchored "data/" also dropped frontend/Data/ (tractors, consultants and
+# marketplace listings: 404 on production from the Phase 1 merge to this fix).
+/data/
 pipelines/*
 !pipelines/manifest.json
 
