@@ -277,6 +277,7 @@
     'Accessibility': 'அணுகல்தன்மை',
     'Large text': 'பெரிய எழுத்து',
     'High contrast': 'உயர் மாறுபாடு',
+    'Reduce motion': 'அசைவைக் குறை',
     'Privacy': 'தனியுரிமை',
     'Count my tool usage': 'என் கருவி பயன்பாட்டை எண்ணவும்',
     'Share anonymous counts': 'அநாமதேய எண்ணிக்கைகளைப் பகிரவும்',

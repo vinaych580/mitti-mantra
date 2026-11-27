@@ -97,6 +97,10 @@
 
   const panel = document.createElement("div");
   panel.className = "mm-chat-panel";
+  panel.id = "mmChatPanel";
+  panel.setAttribute("role", "dialog");
+  panel.setAttribute("aria-label", "Mitti Mantra assistant");
+  fab.setAttribute("aria-controls", "mmChatPanel");
   panel.innerHTML = `
     <div class="mm-chat-head">
       <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor"
@@ -129,14 +133,18 @@
   const input = panel.querySelector("#mm-chat-input");
   const closeBtn = panel.querySelector(".mm-chat-close");
 
+  // Tab wraps inside the open chat (F-11). Not modal: the page stays usable
+  // behind it, so a click outside is not pulled back. Esc closes.
+  let releaseChat = null;
   function closeChat() {
     if (!panel.classList.contains("open")) return;
     panel.classList.remove("open");
     fab.setAttribute("aria-expanded", "false");
+    if (releaseChat) { releaseChat({ restore: false }); releaseChat = null; }
     fab.focus();
   }
   closeBtn.addEventListener("click", closeChat);
-  panel.addEventListener("keydown", (e) => { if (e.key === "Escape") closeChat(); });
+  panel.addEventListener("keydown", (e) => { if (!window.mmFocus && e.key === "Escape") closeChat(); });
 
   // --------------- drag + position persistence ---------------
   // The position is kept as distances from the right and bottom edges, not
@@ -272,7 +280,13 @@
     if (open) {
       positionPanel(current.x, current.y);
       if (body.childElementCount === 0) greet();
-      setTimeout(() => input.focus(), 150);
+      setTimeout(() => {
+        if (!panel.classList.contains("open")) return;
+        if (window.mmFocus) releaseChat = window.mmFocus.trap(panel, { onEscape: closeChat, initial: input, returnTo: fab, modal: false });
+        else input.focus();
+      }, 150);
+    } else if (releaseChat) {
+      releaseChat({ restore: false }); releaseChat = null;
     }
   }
 
