@@ -90,7 +90,9 @@ def test_less_rain_lowers_yield(region, season, crop):
     full = _selected_yield(**base, rainfall_factor=1.0)[crop]
     half = _selected_yield(**base, rainfall_factor=0.5)[crop]
     assert half['selected']['achievable_yield_kg_per_acre'] < full['selected']['achievable_yield_kg_per_acre']
-    assert half['selected']['prediction_source'] in ('heuristic', 'ml_model_heuristic_response')
+    assert half['selected']['prediction_source'] in (
+        'heuristic', 'ml_model_heuristic_response',
+        'district_record_heuristic_response', 'yield_model_heuristic_response')
     assert half['profit_change'] < 0
     # Reference row is the same estimate in both requests.
     assert half['baseline'] == full['baseline']

@@ -104,7 +104,8 @@ def test_score_single_crop_and_recommendation_dataset_derive_identical_values(mo
         region_id="mp_sehore", season="rabi",
         budget_per_acre=budget_per_acre, area_acres=1.0,
         region_crop_price={}, ml_conf_map={}, region_saturation={},
-        ml_yield=predicted_yield,
+        # measured=None: no district record, so the pinned yield is the one scored.
+        ml_yield=predicted_yield, measured=None,
     )
 
     # ml/dataset_builders.py's inner scoring block, reproduced call-for-call

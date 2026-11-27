@@ -36,6 +36,15 @@ grows (the climate guard's "no recorded harvest" cap applies to different
 crops) and calibrates the heuristic against real district yields, about
 half of base_yield. Prices are real mandi prices. The yield model itself is
 still the one trained on seed data; Phase 2 retrains it on the measured store.
+
+Regenerated again on 2026-11-27 (Phase 2), deliberately. A crop the district
+has on record now takes its measured yield (ml/models/yield: the 5-year mean,
+since the yield model did not clear its gate), with yield_range_kg_per_acre,
+profit_range and yield_basis; the legacy forest is no longer consulted, so the
+"ML" and "heuristic" fixtures are identical. ml_confidence is gone; rows gain
+adoption_share and grown_in_state. Risk is measured revenue variability where
+the district has a record. The ranking is checked against agronomy in
+tests/test_agronomic_acceptance.py rather than against these fixtures.
 """
 from __future__ import annotations
 

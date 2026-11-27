@@ -1,0 +1,980 @@
+{
+  "model": "yield",
+  "version": "13898ae6d977",
+  "rows": 177714,
+  "years": [
+    2002,
+    2022
+  ],
+  "districts": 666,
+  "crops": 27,
+  "splits": {
+    "time": {
+      "train_rows": 126461,
+      "test_rows": 51253,
+      "mae": {
+        "model": 0.2178,
+        "baseline_mean5": 0.2265,
+        "baseline_trend": 0.2395,
+        "baseline_random_forest": 0.2175
+      },
+      "kg_mae": {
+        "model": 450.4,
+        "baseline_mean5": 470.9,
+        "baseline_trend": 512.1
+      },
+      "per_crop": {
+        "maize": {
+          "rows": 4835,
+          "model_mae": 0.202,
+          "mean5_mae": 0.2175
+        },
+        "rice": {
+          "rows": 4175,
+          "model_mae": 0.1459,
+          "mean5_mae": 0.1584
+        },
+        "moong": {
+          "rows": 3575,
+          "model_mae": 0.2488,
+          "mean5_mae": 0.2566
+        },
+        "urad": {
+          "rows": 3469,
+          "model_mae": 0.2245,
+          "mean5_mae": 0.2294
+        },
+        "groundnut": {
+          "rows": 2933,
+          "model_mae": 0.1956,
+          "mean5_mae": 0.2095
+        },
+        "mustard": {
+          "rows": 2444,
+          "model_mae": 0.197,
+          "mean5_mae": 0.2046
+        },
+        "wheat": {
+          "rows": 2442,
+          "model_mae": 0.1402,
+          "mean5_mae": 0.1413
+        },
+        "onion": {
+          "rows": 2418,
+          "model_mae": 0.2021,
+          "mean5_mae": 0.2024
+        },
+        "arhar": {
+          "rows": 2408,
+          "model_mae": 0.2384,
+          "mean5_mae": 0.2434
+        },
+        "pulses": {
+          "rows": 2296,
+          "model_mae": 0.1963,
+          "mean5_mae": 0.2115
+        },
+        "potato": {
+          "rows": 2283,
+          "model_mae": 0.2236,
+          "mean5_mae": 0.2332
+        },
+        "sugarcane": {
+          "rows": 2264,
+          "model_mae": 0.3155,
+          "mean5_mae": 0.3284
+        },
+        "jowar": {
+          "rows": 2035,
+          "model_mae": 0.2652,
+          "mean5_mae": 0.2732
+        },
+        "bajra": {
+          "rows": 1793,
+          "model_mae": 0.2091,
+          "mean5_mae": 0.2155
+        },
+        "chilli": {
+          "rows": 1473,
+          "model_mae": 0.2406,
+          "mean5_mae": 0.2452
+        },
+        "cotton": {
+          "rows": 1473,
+          "model_mae": 0.4054,
+          "mean5_mae": 0.3777
+        },
+        "sunflower": {
+          "rows": 1192,
+          "model_mae": 0.2651,
+          "mean5_mae": 0.2705
+        },
+        "ragi": {
+          "rows": 1187,
+          "model_mae": 0.1744,
+          "mean5_mae": 0.179
+        },
+        "barley": {
+          "rows": 1165,
+          "model_mae": 0.1605,
+          "mean5_mae": 0.1779
+        },
+        "soybean": {
+          "rows": 1145,
+          "model_mae": 0.2657,
+          "mean5_mae": 0.2695
+        },
+        "turmeric": {
+          "rows": 1077,
+          "model_mae": 0.1758,
+          "mean5_mae": 0.2086
+        },
+        "ginger": {
+          "rows": 975,
+          "model_mae": 0.2211,
+          "mean5_mae": 0.2569
+        },
+        "banana": {
+          "rows": 898,
+          "model_mae": 0.1805,
+          "mean5_mae": 0.1845
+        },
+        "tobacco": {
+          "rows": 547,
+          "model_mae": 0.2033,
+          "mean5_mae": 0.1962
+        },
+        "jute": {
+          "rows": 376,
+          "model_mae": 0.2558,
+          "mean5_mae": 0.2619
+        },
+        "cashew": {
+          "rows": 371,
+          "model_mae": 0.3113,
+          "mean5_mae": 0.3418
+        },
+        "mango": {
+          "rows": 4,
+          "model_mae": 0.1844,
+          "mean5_mae": 0.1842
+        }
+      },
+      "improvement_vs_mean5": 0.0384
+    },
+    "space": {
+      "train_rows": 144235,
+      "test_rows": 33479,
+      "mae": {
+        "model": 0.2201,
+        "baseline_mean5": 0.2461,
+        "baseline_trend": 0.2656
+      },
+      "kg_mae": {
+        "model": 415.9,
+        "baseline_mean5": 469.3,
+        "baseline_trend": 516.7
+      },
+      "per_crop": {
+        "maize": {
+          "rows": 3108,
+          "model_mae": 0.2257,
+          "mean5_mae": 0.257
+        },
+        "rice": {
+          "rows": 3005,
+          "model_mae": 0.1744,
+          "mean5_mae": 0.1926
+        },
+        "urad": {
+          "rows": 2061,
+          "model_mae": 0.2271,
+          "mean5_mae": 0.243
+        },
+        "moong": {
+          "rows": 2031,
+          "model_mae": 0.2451,
+          "mean5_mae": 0.2649
+        },
+        "wheat": {
+          "rows": 1929,
+          "model_mae": 0.1425,
+          "mean5_mae": 0.1741
+        },
+        "mustard": {
+          "rows": 1877,
+          "model_mae": 0.2203,
+          "mean5_mae": 0.2346
+        },
+        "groundnut": {
+          "rows": 1820,
+          "model_mae": 0.196,
+          "mean5_mae": 0.22
+        },
+        "sugarcane": {
+          "rows": 1668,
+          "model_mae": 0.2231,
+          "mean5_mae": 0.2549
+        },
+        "pulses": {
+          "rows": 1608,
+          "model_mae": 0.1987,
+          "mean5_mae": 0.2324
+        },
+        "arhar": {
+          "rows": 1539,
+          "model_mae": 0.2504,
+          "mean5_mae": 0.2697
+        },
+        "potato": {
+          "rows": 1494,
+          "model_mae": 0.236,
+          "mean5_mae": 0.2593
+        },
+        "onion": {
+          "rows": 1299,
+          "model_mae": 0.2117,
+          "mean5_mae": 0.2433
+        },
+        "jowar": {
+          "rows": 1189,
+          "model_mae": 0.2738,
+          "mean5_mae": 0.3035
+        },
+        "bajra": {
+          "rows": 1044,
+          "model_mae": 0.2276,
+          "mean5_mae": 0.2457
+        },
+        "chilli": {
+          "rows": 1039,
+          "model_mae": 0.29,
+          "mean5_mae": 0.326
+        },
+        "barley": {
+          "rows": 982,
+          "model_mae": 0.1653,
+          "mean5_mae": 0.187
+        },
+        "cotton": {
+          "rows": 918,
+          "model_mae": 0.3455,
+          "mean5_mae": 0.3835
+        },
+        "turmeric": {
+          "rows": 783,
+          "model_mae": 0.1922,
+          "mean5_mae": 0.2258
+        },
+        "soybean": {
+          "rows": 769,
+          "model_mae": 0.2591,
+          "mean5_mae": 0.2906
+        },
+        "ragi": {
+          "rows": 741,
+          "model_mae": 0.1997,
+          "mean5_mae": 0.2119
+        },
+        "sunflower": {
+          "rows": 646,
+          "model_mae": 0.2199,
+          "mean5_mae": 0.2391
+        },
+        "ginger": {
+          "rows": 593,
+          "model_mae": 0.2448,
+          "mean5_mae": 0.3129
+        },
+        "banana": {
+          "rows": 564,
+          "model_mae": 0.213,
+          "mean5_mae": 0.2372
+        },
+        "jute": {
+          "rows": 295,
+          "model_mae": 0.2015,
+          "mean5_mae": 0.2282
+        },
+        "tobacco": {
+          "rows": 243,
+          "model_mae": 0.1703,
+          "mean5_mae": 0.1882
+        },
+        "cashew": {
+          "rows": 234,
+          "model_mae": 0.3278,
+          "mean5_mae": 0.396
+        }
+      },
+      "improvement_vs_mean5": 0.1056
+    },
+    "time_and_space": {
+      "train_rows": 102872,
+      "test_rows": 9890,
+      "mae": {
+        "model": 0.2221,
+        "baseline_mean5": 0.2296,
+        "baseline_trend": 0.246
+      },
+      "kg_mae": {
+        "model": 467.8,
+        "baseline_mean5": 481.5,
+        "baseline_trend": 536.7
+      },
+      "per_crop": {
+        "maize": {
+          "rows": 933,
+          "model_mae": 0.2122,
+          "mean5_mae": 0.227
+        },
+        "rice": {
+          "rows": 812,
+          "model_mae": 0.1559,
+          "mean5_mae": 0.1692
+        },
+        "moong": {
+          "rows": 674,
+          "model_mae": 0.2278,
+          "mean5_mae": 0.2368
+        },
+        "urad": {
+          "rows": 666,
+          "model_mae": 0.2178,
+          "mean5_mae": 0.2167
+        },
+        "groundnut": {
+          "rows": 574,
+          "model_mae": 0.1852,
+          "mean5_mae": 0.1998
+        },
+        "mustard": {
+          "rows": 535,
+          "model_mae": 0.1962,
+          "mean5_mae": 0.2017
+        },
+        "wheat": {
+          "rows": 498,
+          "model_mae": 0.1431,
+          "mean5_mae": 0.1513
+        },
+        "potato": {
+          "rows": 485,
+          "model_mae": 0.2585,
+          "mean5_mae": 0.2652
+        },
+        "pulses": {
+          "rows": 458,
+          "model_mae": 0.1994,
+          "mean5_mae": 0.2157
+        },
+        "arhar": {
+          "rows": 456,
+          "model_mae": 0.2313,
+          "mean5_mae": 0.2433
+        },
+        "sugarcane": {
+          "rows": 456,
+          "model_mae": 0.3182,
+          "mean5_mae": 0.3314
+        },
+        "onion": {
+          "rows": 424,
+          "model_mae": 0.2388,
+          "mean5_mae": 0.2314
+        },
+        "jowar": {
+          "rows": 340,
+          "model_mae": 0.2917,
+          "mean5_mae": 0.2925
+        },
+        "bajra": {
+          "rows": 318,
+          "model_mae": 0.236,
+          "mean5_mae": 0.2382
+        },
+        "chilli": {
+          "rows": 283,
+          "model_mae": 0.26,
+          "mean5_mae": 0.2428
+        },
+        "cotton": {
+          "rows": 274,
+          "model_mae": 0.3879,
+          "mean5_mae": 0.3517
+        },
+        "barley": {
+          "rows": 255,
+          "model_mae": 0.1542,
+          "mean5_mae": 0.1599
+        },
+        "soybean": {
+          "rows": 229,
+          "model_mae": 0.2698,
+          "mean5_mae": 0.262
+        },
+        "turmeric": {
+          "rows": 227,
+          "model_mae": 0.2123,
+          "mean5_mae": 0.2417
+        },
+        "ragi": {
+          "rows": 222,
+          "model_mae": 0.176,
+          "mean5_mae": 0.1762
+        },
+        "ginger": {
+          "rows": 209,
+          "model_mae": 0.2148,
+          "mean5_mae": 0.259
+        },
+        "sunflower": {
+          "rows": 188,
+          "model_mae": 0.2442,
+          "mean5_mae": 0.2479
+        },
+        "banana": {
+          "rows": 162,
+          "model_mae": 0.2057,
+          "mean5_mae": 0.2257
+        },
+        "cashew": {
+          "rows": 79,
+          "model_mae": 0.3212,
+          "mean5_mae": 0.3368
+        },
+        "jute": {
+          "rows": 74,
+          "model_mae": 0.2515,
+          "mean5_mae": 0.2926
+        },
+        "tobacco": {
+          "rows": 59,
+          "model_mae": 0.1962,
+          "mean5_mae": 0.1893
+        }
+      },
+      "improvement_vs_mean5": 0.0327
+    }
+  },
+  "gate": {
+    "splits": {
+      "time": false,
+      "space": true
+    },
+    "crops_worse": {
+      "time": [
+        "cotton",
+        "tobacco"
+      ],
+      "space": []
+    },
+    "passed": false
+  },
+  "calibration": {
+    "calibration_years": [
+      2018,
+      2020
+    ],
+    "checked_years": [
+      2021,
+      2022
+    ],
+    "in_season": {
+      "widths": {
+        "_all": {
+          "lo": 0.037018930027053434,
+          "hi": 0.052173707697432445
+        },
+        "cash": {
+          "lo": 0.1288514417831963,
+          "hi": 0.03823065919420055,
+          "rows": 2778
+        },
+        "cereals": {
+          "lo": 0.019954360931473403,
+          "hi": 0.05415110033968995,
+          "rows": 10436
+        },
+        "horticulture": {
+          "lo": 0.02711611492607393,
+          "hi": 0.05254219612561703,
+          "rows": 5889
+        },
+        "oilseeds": {
+          "lo": 0.03695254488311246,
+          "hi": 0.060151763553301,
+          "rows": 4538
+        },
+        "pulses": {
+          "lo": 0.06922387802385031,
+          "hi": 0.047863611271064865,
+          "rows": 6890
+        }
+      },
+      "borrowed_from_all": {},
+      "coverage": {
+        "overall": 0.831,
+        "per_crop": {
+          "maize": {
+            "rows": 2020,
+            "coverage": 0.845
+          },
+          "rice": {
+            "rows": 1705,
+            "coverage": 0.781
+          },
+          "moong": {
+            "rows": 1476,
+            "coverage": 0.847
+          },
+          "urad": {
+            "rows": 1464,
+            "coverage": 0.876
+          },
+          "groundnut": {
+            "rows": 1230,
+            "coverage": 0.866
+          },
+          "wheat": {
+            "rows": 993,
+            "coverage": 0.852
+          },
+          "arhar": {
+            "rows": 989,
+            "coverage": 0.831
+          },
+          "mustard": {
+            "rows": 966,
+            "coverage": 0.877
+          },
+          "onion": {
+            "rows": 958,
+            "coverage": 0.811
+          },
+          "pulses": {
+            "rows": 929,
+            "coverage": 0.897
+          },
+          "potato": {
+            "rows": 907,
+            "coverage": 0.756
+          },
+          "sugarcane": {
+            "rows": 890,
+            "coverage": 0.747
+          },
+          "jowar": {
+            "rows": 826,
+            "coverage": 0.781
+          },
+          "bajra": {
+            "rows": 722,
+            "coverage": 0.835
+          },
+          "cotton": {
+            "rows": 613,
+            "coverage": 0.791
+          },
+          "chilli": {
+            "rows": 523,
+            "coverage": 0.843
+          },
+          "sunflower": {
+            "rows": 497,
+            "coverage": 0.805
+          },
+          "ragi": {
+            "rows": 486,
+            "coverage": 0.866
+          },
+          "soybean": {
+            "rows": 483,
+            "coverage": 0.857
+          },
+          "barley": {
+            "rows": 444,
+            "coverage": 0.845
+          },
+          "turmeric": {
+            "rows": 413,
+            "coverage": 0.828
+          },
+          "ginger": {
+            "rows": 342,
+            "coverage": 0.868
+          },
+          "banana": {
+            "rows": 339,
+            "coverage": 0.835
+          },
+          "tobacco": {
+            "rows": 227,
+            "coverage": 0.868
+          },
+          "jute": {
+            "rows": 152,
+            "coverage": 0.763
+          },
+          "cashew": {
+            "rows": 128,
+            "coverage": 0.758
+          }
+        }
+      }
+    },
+    "at_sowing": {
+      "widths": {
+        "_all": {
+          "lo": 0.37648957241077013,
+          "hi": 0.3119667963175639
+        },
+        "cash": {
+          "lo": 0.5067363652862599,
+          "hi": 0.30337332234268616,
+          "rows": 2778
+        },
+        "cereals": {
+          "lo": 0.3191074823226011,
+          "hi": 0.2759626400217342,
+          "rows": 10436
+        },
+        "horticulture": {
+          "lo": 0.29483755136668516,
+          "hi": 0.3254902895015289,
+          "rows": 5889
+        },
+        "oilseeds": {
+          "lo": 0.3998271634146705,
+          "hi": 0.3454181757628151,
+          "rows": 4538
+        },
+        "pulses": {
+          "lo": 0.45006529216574004,
+          "hi": 0.3311234132070023,
+          "rows": 6890
+        }
+      },
+      "borrowed_from_all": {},
+      "coverage": {
+        "overall": 0.839,
+        "per_crop": {
+          "maize": {
+            "rows": 2020,
+            "coverage": 0.834
+          },
+          "rice": {
+            "rows": 1705,
+            "coverage": 0.863
+          },
+          "moong": {
+            "rows": 1476,
+            "coverage": 0.847
+          },
+          "urad": {
+            "rows": 1464,
+            "coverage": 0.887
+          },
+          "groundnut": {
+            "rows": 1230,
+            "coverage": 0.885
+          },
+          "wheat": {
+            "rows": 993,
+            "coverage": 0.93
+          },
+          "arhar": {
+            "rows": 989,
+            "coverage": 0.845
+          },
+          "mustard": {
+            "rows": 966,
+            "coverage": 0.889
+          },
+          "onion": {
+            "rows": 958,
+            "coverage": 0.803
+          },
+          "pulses": {
+            "rows": 929,
+            "coverage": 0.909
+          },
+          "potato": {
+            "rows": 907,
+            "coverage": 0.76
+          },
+          "sugarcane": {
+            "rows": 890,
+            "coverage": 0.796
+          },
+          "jowar": {
+            "rows": 826,
+            "coverage": 0.717
+          },
+          "bajra": {
+            "rows": 722,
+            "coverage": 0.841
+          },
+          "cotton": {
+            "rows": 613,
+            "coverage": 0.688
+          },
+          "chilli": {
+            "rows": 523,
+            "coverage": 0.73
+          },
+          "sunflower": {
+            "rows": 497,
+            "coverage": 0.815
+          },
+          "ragi": {
+            "rows": 486,
+            "coverage": 0.831
+          },
+          "soybean": {
+            "rows": 483,
+            "coverage": 0.851
+          },
+          "barley": {
+            "rows": 444,
+            "coverage": 0.883
+          },
+          "turmeric": {
+            "rows": 413,
+            "coverage": 0.826
+          },
+          "ginger": {
+            "rows": 342,
+            "coverage": 0.886
+          },
+          "banana": {
+            "rows": 339,
+            "coverage": 0.847
+          },
+          "tobacco": {
+            "rows": 227,
+            "coverage": 0.885
+          },
+          "jute": {
+            "rows": 152,
+            "coverage": 0.836
+          },
+          "cashew": {
+            "rows": 128,
+            "coverage": 0.672
+          }
+        }
+      },
+      "mae": 0.2005
+    },
+    "baseline_mean5": {
+      "widths": {
+        "_all": {
+          "lo": 0.33397452763454627,
+          "hi": 0.3876637891409116
+        },
+        "cash": {
+          "lo": 0.6340301144660466,
+          "hi": 0.3108869889498346,
+          "rows": 2778
+        },
+        "cereals": {
+          "lo": 0.24763699613604517,
+          "hi": 0.3645495875022857,
+          "rows": 10436
+        },
+        "horticulture": {
+          "lo": 0.3063182452529685,
+          "hi": 0.3743160389545778,
+          "rows": 5889
+        },
+        "oilseeds": {
+          "lo": 0.3578138369692869,
+          "hi": 0.42391389297125265,
+          "rows": 4538
+        },
+        "pulses": {
+          "lo": 0.3845646531522312,
+          "hi": 0.43806743447266244,
+          "rows": 6890
+        }
+      },
+      "borrowed_from_all": {},
+      "coverage": {
+        "overall": 0.844,
+        "per_crop": {
+          "maize": {
+            "rows": 2020,
+            "coverage": 0.827
+          },
+          "rice": {
+            "rows": 1705,
+            "coverage": 0.869
+          },
+          "moong": {
+            "rows": 1476,
+            "coverage": 0.856
+          },
+          "urad": {
+            "rows": 1464,
+            "coverage": 0.897
+          },
+          "groundnut": {
+            "rows": 1230,
+            "coverage": 0.876
+          },
+          "wheat": {
+            "rows": 993,
+            "coverage": 0.922
+          },
+          "arhar": {
+            "rows": 989,
+            "coverage": 0.86
+          },
+          "mustard": {
+            "rows": 966,
+            "coverage": 0.9
+          },
+          "onion": {
+            "rows": 958,
+            "coverage": 0.837
+          },
+          "pulses": {
+            "rows": 929,
+            "coverage": 0.925
+          },
+          "potato": {
+            "rows": 907,
+            "coverage": 0.779
+          },
+          "sugarcane": {
+            "rows": 890,
+            "coverage": 0.778
+          },
+          "jowar": {
+            "rows": 826,
+            "coverage": 0.709
+          },
+          "bajra": {
+            "rows": 722,
+            "coverage": 0.837
+          },
+          "cotton": {
+            "rows": 613,
+            "coverage": 0.729
+          },
+          "chilli": {
+            "rows": 523,
+            "coverage": 0.753
+          },
+          "sunflower": {
+            "rows": 497,
+            "coverage": 0.819
+          },
+          "ragi": {
+            "rows": 486,
+            "coverage": 0.829
+          },
+          "soybean": {
+            "rows": 483,
+            "coverage": 0.855
+          },
+          "barley": {
+            "rows": 444,
+            "coverage": 0.881
+          },
+          "turmeric": {
+            "rows": 413,
+            "coverage": 0.85
+          },
+          "ginger": {
+            "rows": 342,
+            "coverage": 0.836
+          },
+          "banana": {
+            "rows": 339,
+            "coverage": 0.858
+          },
+          "tobacco": {
+            "rows": 227,
+            "coverage": 0.907
+          },
+          "jute": {
+            "rows": 152,
+            "coverage": 0.822
+          },
+          "cashew": {
+            "rows": 128,
+            "coverage": 0.664
+          }
+        }
+      },
+      "mae": 0.2037
+    }
+  },
+  "serves": "baseline",
+  "behaviour": {
+    "rice": {
+      "districts": 967,
+      "median_drop_rainfed": 0.0667,
+      "median_drop_irrigated": 0.0244,
+      "share_never_rises": 1.0,
+      "passed": true
+    },
+    "cotton": {
+      "districts": 356,
+      "median_drop_rainfed": 0.1115,
+      "median_drop_irrigated": 0.0675,
+      "share_never_rises": 1.0,
+      "passed": true
+    },
+    "maize": {
+      "districts": 1171,
+      "median_drop_rainfed": 0.0455,
+      "median_drop_irrigated": 0.0288,
+      "share_never_rises": 1.0,
+      "passed": true
+    },
+    "wheat": {
+      "districts": 541,
+      "median_drop_rainfed": 0.0224,
+      "median_drop_irrigated": 0.0075,
+      "share_never_rises": 1.0,
+      "passed": true
+    }
+  },
+  "behaviour_passed": true,
+  "lookup": {
+    "target_year": 2023,
+    "entries": 13122
+  },
+  "config": {
+    "hgb": {
+      "max_iter": 600,
+      "learning_rate": 0.05,
+      "max_leaf_nodes": 63,
+      "min_samples_leaf": 40,
+      "l2_regularization": 1.0,
+      "early_stopping": true,
+      "validation_fraction": 0.1,
+      "n_iter_no_change": 40,
+      "random_state": 7
+    },
+    "point_loss": "squared_error",
+    "point_clip": 0.5,
+    "space_holdout": 0.2,
+    "test_first_year": 2018,
+    "calibration_years": [
+      2018,
+      2020
+    ],
+    "coverage_target": 0.8,
+    "gate_improvement": 0.1,
+    "min_crop_test_rows": 200,
+    "min_calibration_rows": 100
+  },
+  "trained_seconds": 228.3,
+  "data_manifest_sha256": "01c436b9e45264c6aa43ccd57b71491c012afe905827fa753c493cd5dea287fb",
+  "code_commit": "319dd5b5e512d85058f166f2b7c555c3b7cdde9b",
+  "artifact_bytes": 7681766
+}

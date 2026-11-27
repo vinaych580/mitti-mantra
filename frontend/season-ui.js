@@ -96,7 +96,7 @@
   // Region ids are keys, not names: show the district as the region picker does.
   const regionName = id => (window.FarmState?.REGION_CENTROIDS || []).find(r => r.region_id === id)?.displayName || id;
   const PRICE_SOURCES = {'dataset/mandi_prices.csv':'Mandi price dataset', 'crop parameter price midpoint':'Middle of the crop reference price range', 'Recommendation reference price':'Recommendation reference price'};
-  const SOURCE_LABELS = {ml_model:'Model estimate', ml_model_heuristic_response:'Model level, heuristic weather response', heuristic:'Heuristic estimate'};
+  const SOURCE_LABELS = {ml_model:'Model estimate', ml_model_heuristic_response:'Model level, heuristic weather response', yield_model:'Yield model', yield_model_heuristic_response:'Yield model level, heuristic weather response', district_record:'District record', district_record_heuristic_response:'District record level, heuristic weather response', heuristic:'Heuristic estimate'};
   function comparison(c, selectedId, selectable = true) {
     return `<p class="season-note">${text('Ranked by expected profit within your shortlist. The original shortlist uses a broader suitability score.')}</p>
       <div class="season-table-wrap"><table class="season-table"><caption>${text('All money values cover your whole plot')}</caption><thead><tr><th>${text('Crop')}</th><th>${text('Expected profit')}</th><th>${text('Dry scenario profit')}</th><th>${text('Planned cost')}</th><th>${text('Water need (mm)')}</th></tr></thead>

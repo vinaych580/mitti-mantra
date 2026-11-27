@@ -92,8 +92,12 @@ async def _warm_ml_models() -> None:
     )
 
     def _warm() -> None:
-        _load_yield_models()
-        _load_recommend_models()
+        # Phase 2: the released yield artifact replaces the legacy yield forest and
+        # the recommendation classifier; those load only when no artifact ships.
+        from ml import yield_anomaly
+        if yield_anomaly.load() is None:
+            _load_yield_models()
+            _load_recommend_models()
         _load_price_models()
 
     threading.Thread(target=_warm, name="ml-warmup", daemon=True).start()
@@ -1706,7 +1710,7 @@ def get_yield_prediction_api(q: YieldPredQuery = Depends()):
         return cached
         
     try:
-        from ml.predict import _predict_yield_with_source, _load_weather_by_region, _load_soil_by_region
+        from ml.predict import predict_yield_detail, _load_weather_by_region, _load_soil_by_region
         weather_data = _load_weather_by_region()
         soil_data = _load_soil_by_region()
         
@@ -1733,17 +1737,21 @@ def get_yield_prediction_api(q: YieldPredQuery = Depends()):
         # per-crop scorer already uses (see ml/predict.py's `used_ml_for_yield`
         # in `_score_single_crop`), so this endpoint's "algorithm" claim
         # reflects what actually happened for this specific call.
-        yld, used_ml_for_yield = _predict_yield_with_source(
+        yld, source, measured = predict_yield_detail(
             crop_id, region_id, season, weather, soil, irrigation_level
         )
+        used_ml_for_yield = source == "ml_model"
 
-        # 95% confidence interval: ±1.96 * RMSE, RMSE read live from the
-        # yield model's audit report so the band tracks whatever model is
-        # actually loaded rather than a number from a past training run.
-        rmse = _yield_model_rmse()
-        margin = round(1.96 * rmse, 2)
-        lower_bound = max(0.0, yld - margin)
-        upper_bound = yld + margin
+        if measured is not None:
+            # Phase 2: the district's own record, with a range calibrated per crop
+            # group to hold 80% of seasons (ml/models/yield/model_card.md).
+            lower_bound, upper_bound, level = float(measured["low"]), float(measured["high"]), 0.8
+        else:
+            # Legacy: ±1.96 * RMSE, RMSE read live from the yield model's audit report.
+            # One radius for every crop (AUDIT B-18); only used without a Phase 2 record.
+            rmse = _yield_model_rmse()
+            margin = round(1.96 * rmse, 2)
+            lower_bound, upper_bound, level = max(0.0, yld - margin), yld + margin, 0.95
         
         from engine.intelligence_layer import explain_yield_prediction
         explanation = explain_yield_prediction(crop_id, yld, round(lower_bound, 2), round(upper_bound, 2), soil, weather)
@@ -1752,14 +1760,19 @@ def get_yield_prediction_api(q: YieldPredQuery = Depends()):
             "predicted_yield_kg_per_acre": round(yld, 2),
             "confidence_interval": {
                 "lower_bound": round(lower_bound, 2),
-                "upper_bound": round(upper_bound, 2)
+                "upper_bound": round(upper_bound, 2),
+                "level": level,
             },
-            # Honest per-call label instead of a hardcoded claim -- mirrors the
-            # prediction_source convention already used by /api/crop,
-            # /api/disease/predict, rotation, and optimal-mix (AUDIT_REPORT.md
+            # Honest per-call label instead of a hardcoded claim (AUDIT_REPORT.md
             # H-11 / B-15).
-            "algorithm": "RandomForestRegressor (Tuned)" if used_ml_for_yield else "Heuristic Formula (agronomic calculation)",
-            "prediction_source": "ml_model" if used_ml_for_yield else "heuristic",
+            "algorithm": {
+                "yield_model": "Gradient-boosted departure from the district trend",
+                "district_record": "District 5-year mean yield (measured)",
+                "ml_model": "RandomForestRegressor (Tuned)",
+            }.get(source, "Heuristic Formula (agronomic calculation)"),
+            "prediction_source": source,
+            **({"model_version": measured.get("model_version"),
+                "district_id": measured.get("district_id")} if measured else {}),
             "intelligence_report": explanation
         }
         set_cached_response(cache_key, res)
