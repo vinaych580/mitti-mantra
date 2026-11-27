@@ -1,0 +1,10 @@
+[
+  {
+    "version": "13898ae6d977",
+    "released_at": "2026-11-27T07:00:59+00:00",
+    "serves": "baseline",
+    "gate_passed": false,
+    "problems": [],
+    "override": null
+  }
+]

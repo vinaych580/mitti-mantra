@@ -1722,7 +1722,7 @@
           <div class="kpi kpi--info"><div class="kpi__lbl">Best-fit crop</div>
             <div class="kpi__val" style="font-size:1.1rem;">${cropLabel(r.recommended_crop)}</div></div>
           <div class="kpi"><div class="kpi__lbl">Source</div>
-            <div class="kpi__val" style="font-size:.95rem;">${r.prediction_source === 'ml_model' ? 'ML model' : 'Heuristic'}</div></div>
+            <div class="kpi__val" style="font-size:.95rem;">${({ml_model:'ML model', yield_model:'Yield model', district_record:'District record'})[r.prediction_source] || 'Heuristic'}</div></div>
         </div>
         <div style="margin-top:1rem;">${pillarBars}</div>
         ${r.top_alternatives && r.top_alternatives.length ? `
@@ -1978,7 +1978,7 @@
       makeChart($('[data-chart="rec-radar"]'), {
         type: 'radar',
         data: {
-          labels: ['Smart score', 'ROI %', 'Yield', 'Low risk', 'ML conf'],
+          labels: ['Smart score', 'ROI %', 'Yield', 'Low risk', 'Grown here'],
           datasets: top3.map((r, i) => ({
             label: CROP_LABELS[r.crop_id]?.split(' ·')[0] || r.crop_id,
             data: [
@@ -1986,7 +1986,8 @@
               (r.roi_percent / maxROI) * 100,
               (r.predicted_yield_kg_per_acre / maxYield) * 100,
               100 - r.risk_score,
-              (r.ml_confidence || 0) * 100
+              // adoption prior: full at 5% of the district's area (ml/district_evidence.py)
+              Math.min(100, Math.sqrt((r.adoption_share || 0) / 0.05) * 100)
             ],
             backgroundColor: colors[i] + '30',
             borderColor: colors[i],

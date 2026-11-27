@@ -155,6 +155,45 @@ def get_district(district_id: str):
     return d
 
 
+def _price_forecast(district_id: str, crop_id: str):
+    from ml import price_model
+
+    store = _require_store()
+    d = store.district(district_id)
+    if d is None:
+        raise HTTPException(status_code=404, detail=f"Unknown district: {district_id}")
+    model = price_model.load()
+    if model is None:
+        raise HTTPException(status_code=503, detail="Price model not shipped on this deployment")
+    series = price_model.series_from_store(d["district_id"], crop_id)
+    fc = model.forecast(series) if series is not None else None
+    if fc is None:
+        raise HTTPException(status_code=404, detail=f"No recent {crop_id} prices for {d['district_name']}")
+    from engine.features import price_freshness
+    return d, {**fc, "district": d, "freshness": price_freshness(fc["origin_week"])}
+
+
+@router.get("/v1/districts/{district_id}/price-forecast")
+def get_district_price_forecast(district_id: str, crop_id: str):
+    """Weekly price 1-26 weeks ahead with 80% ranges (Phase 2, spec 2.2). Each horizon
+    says whether the model or a baseline produced it; see ml/models/price/model_card.md."""
+    return _price_forecast(district_id, crop_id)[1]
+
+
+@router.get("/v1/districts/{district_id}/sell-advice")
+def get_district_sell_advice(district_id: str, crop_id: str, quantity_kg: float = 1000.0,
+                             storage_inr_kg_month: float = 0.5, interest_pct_year: float = 12.0):
+    """Sell now or hold, on the forecast's median and its downside (spec 2.2)."""
+    if quantity_kg <= 0 or storage_inr_kg_month < 0 or interest_pct_year < 0:
+        raise HTTPException(status_code=422, detail="quantity must be positive; costs non-negative")
+    from ml import price_model
+    d, fc = _price_forecast(district_id, crop_id)
+    return {**price_model.sell_advice(fc, quantity_kg, storage_inr_kg_month, interest_pct_year),
+            "district": d, "crop_id": crop_id, "freshness": fc["freshness"],
+            "assumptions": {"quantity_kg": quantity_kg, "storage_inr_kg_month": storage_inr_kg_month,
+                            "interest_pct_year": interest_pct_year}}
+
+
 @router.get("/v1/districts/{district_id}/yields")
 def get_district_yields(district_id: str, crop_id: Optional[str] = None):
     store = _require_store()

@@ -665,6 +665,43 @@ def _ml_predict_yield_batch(
         return {}
 
 
+def measured_yields(region_id: str, season: str, crop_ids: list[str]) -> dict[str, dict[str, Any]]:
+    """District-measured yield for each crop, from the released Phase 2 artifact.
+
+    {crop_id: {"yield_kg_per_acre", "low", "high", "source", "model_version", ...}}
+    for every crop with a record in the district (ml/yield_anomaly.py). The source is
+    "yield_model" when the model cleared its gate, else "district_5yr_mean"; its model
+    card (ml/models/yield/model_card.md) says which and why. Crops never recorded in
+    the district are absent, and their callers use the rule-based yield. Empty when no
+    artifact is shipped.
+    """
+    from ml import yield_anomaly
+
+    model = yield_anomaly.load()
+    if model is None:
+        return {}
+    district_id = model.region_to_district.get(region_id, region_id)
+    out = {}
+    for crop_id in crop_ids:
+        try:
+            hit = model.predict(district_id, crop_id, season)
+        except Exception as exc:  # one bad entry must not drop the rest
+            logger.debug("measured yield failed for %s/%s: %s", crop_id, district_id, exc)
+            hit = None
+        if hit is not None and hit["yield_kg_per_acre"] > 0:
+            out[crop_id] = {**hit, "district_id": district_id}
+    return out
+
+
+# prediction_source for each way a yield can be produced.
+SOURCE_MODEL = "yield_model"
+SOURCE_RECORD = "district_record"
+
+
+def _source_label(measured: dict[str, Any]) -> str:
+    return SOURCE_MODEL if measured.get("source") == "yield_model" else SOURCE_RECORD
+
+
 def _predict_yield_with_source(
     crop_id: str,
     region_id: str,
@@ -696,6 +733,38 @@ def _predict_yield_with_source(
     crop. Passing None means "the model had no answer for this crop", which is
     what `_ml_predict_yield` returns in the same situation, so the fallback
     below behaves identically either way. Leaving it unset predicts as before.
+
+    See `predict_yield_detail` for which source produced the number.
+    """
+    y, source, _ = predict_yield_detail(
+        crop_id, region_id, season, weather, soil, irrigation_level, seed_variety,
+        sowing_date, ml_pred=ml_pred, force_heuristic=force_heuristic,
+    )
+    return y, source != "heuristic"
+
+
+def predict_yield_detail(
+    crop_id: str,
+    region_id: str,
+    season: str,
+    weather: dict[str, float],
+    soil: dict[str, float],
+    irrigation_level: float = 0.5,
+    seed_variety: str | None = None,
+    sowing_date: str | None = None,
+    ml_pred: float | None | _Unset = _UNSET,
+    force_heuristic: bool = False,
+    measured: dict[str, Any] | None | _Unset = _UNSET,
+) -> tuple[float, str, dict[str, Any] | None]:
+    """(yield_kg_per_acre, prediction_source, measured_detail_or_None).
+
+    In order: the district's measured yield from the Phase 2 artifact
+    (`measured_yields`: "yield_model" or "district_record", with an 80% range), then
+    the legacy model ("ml_model") when no artifact ships, then the rule-based formula
+    ("heuristic"). Weather scenarios (`force_heuristic`) and irrigated seasons always
+    take the formula, which is the only path that responds to rain and irrigation.
+    `measured` lets a caller hand in an answer from a batched `measured_yields` call;
+    None means the district has no record of this crop.
     """
     crop_params = _load_crop_parameters()
     # FIX (1.3): Raise clear ValueError instead of unhandled KeyError
@@ -703,7 +772,7 @@ def _predict_yield_with_source(
         raise ValueError(f"Unsupported crop_id: {crop_id}")
     crop = crop_params[crop_id]
     if not _season_match(season, crop.season):
-        return 0.0, False
+        return 0.0, "heuristic", None
 
     irrigated_season = season.lower() in IRRIGATED_SEASONS
     if irrigated_season:
@@ -711,14 +780,22 @@ def _predict_yield_with_source(
         weather = {**weather, "water_supply_mm": crop.water_requirement_mm}
     if force_heuristic:
         ml_pred = None
+        measured = None
 
-    # Try ML model first
+    # The district's own record (Phase 2) comes first.
+    if isinstance(measured, _Unset):
+        measured = measured_yields(region_id, season, [crop_id]).get(crop_id)
+    if measured is not None:
+        return round(float(measured["yield_kg_per_acre"]), 2), _source_label(measured), measured
+
+    # The legacy model, only while no Phase 2 artifact ships.
     if isinstance(ml_pred, _Unset):
-        ml_pred = _ml_predict_yield(
+        from ml import yield_anomaly
+        ml_pred = None if yield_anomaly.load() is not None else _ml_predict_yield(
             crop_id, region_id, season, crop_params, soil, weather, irrigation_level,
         )
     if ml_pred is not None and ml_pred > 0:
-        return round(ml_pred, 2), True
+        return round(ml_pred, 2), "ml_model", None
 
     # Fallback: heuristic formula
     history_rows = _load_yield_history()
@@ -736,9 +813,17 @@ def _predict_yield_with_source(
     if historical is not None:
         historical_baseline = crop.base_yield_kg_per_acre
         adjustment = historical / historical_baseline if historical_baseline else 1.0
-        return round(calc_yield * adjustment, 2), False
+        calc_yield = round(calc_yield * adjustment, 2)
 
-    return calc_yield, False
+    # The climate guard used to run only inside the legacy forest's path. With the
+    # Phase 2 artifact that path is skipped, so the rule-based answer for a crop with
+    # no recorded harvest here takes the same cap (scenarios excepted: the season
+    # planner asks how a crop already chosen responds to rain).
+    if not force_heuristic:
+        calc_yield = round(_apply_climate_guard(
+            calc_yield, crop_id, region_id, season, crop, weather, _yield_history_combos(),
+        ), 2)
+    return calc_yield, "heuristic", None
 
 
 def predict_yield_kg_per_acre(
@@ -1357,13 +1442,14 @@ def _score_single_crop(
     ml_conf_map: dict[str, float],
     region_saturation: dict[str, dict[str, Any]],
     ml_yield: float | None | _Unset = _UNSET,
+    measured: dict[str, Any] | None | _Unset = _UNSET,
 ) -> dict[str, Any]:
     """Score a single crop candidate for the recommendation engine.
 
     Returns a dict containing yield, profit, risk, smart_score, and metadata.
 
-    `ml_yield` is this crop's share of a batched prediction, when the caller
-    made one; see `_predict_yield_with_source`.
+    `ml_yield` and `measured` are this crop's share of batched predictions, when the
+    caller made them; see `predict_yield_detail`.
     """
     # FIX (H-11): `prediction_source` used to reflect whether the ML model
     # *object* was loaded at all, not whether ML was actually used for this
@@ -1372,10 +1458,28 @@ def _score_single_crop(
     # single call below reports which path it actually took; it used to be
     # followed by a second, identical `_ml_predict_yield` probe whose only
     # purpose was answering that question.
-    predicted_yield, used_ml_for_yield = _predict_yield_with_source(
-        crop_id, region_id, season, weather, soil, ml_pred=ml_yield,
+    predicted_yield, yield_source, yield_detail = predict_yield_detail(
+        crop_id, region_id, season, weather, soil, ml_pred=ml_yield, measured=measured,
     )
     risk = smart_risk_score(crop_id, weather, soil, budget_per_acre)
+    # Phase 2: where the district has a record, risk is how much this crop's revenue
+    # has actually moved between seasons there (yield and price), not the hand-set
+    # drought/heat/flood terms. The budget share of risk is unchanged.
+    from ml import district_evidence as _de
+    district_id = (yield_detail or {}).get("district_id") or _de.district_for_region(region_id)
+    variability = _de.revenue_variability(district_id, crop_id, season) if district_id else None
+    shares = _de.adoption_shares(district_id, season) if district_id else {}
+    evidence_id = _de.evidence_crop(crop_id, district_id) if district_id else crop_id
+    adoption_share = (shares.get(evidence_id, 0.0) if evidence_id else 0.0) if shares else None
+    in_state = _de.state_has_record(district_id, crop_id, season) if shares else None
+    floor = _de.unrecorded_risk(district_id, season) if (shares and variability is None) else None
+    measured_risk = (variability["risk_score"] if variability is not None
+                     else max(floor, risk["risk_score"] / 0.85 - 0.15 / 0.85 * risk["budget_risk"])
+                     if floor is not None else None)
+    if measured_risk is not None:
+        total = 0.85 * measured_risk + 0.15 * risk["budget_risk"]
+        risk = {**risk, "risk_score": round(total, 2),
+                "confidence_score": round(clamp(100.0 - total, 0.0, 100.0), 2)}
     price = region_crop_price.get(
         crop_id, (crop.mandi_price_min_inr_per_kg + crop.mandi_price_max_inr_per_kg) / 2.0
     )
@@ -1412,7 +1516,14 @@ def _score_single_crop(
     # score stopped favouring it, and bajra (Rs 16,536 profit) over pulses
     # (Rs 118,986) in Pune. Using the label's own term here makes the live
     # ranking exactly the definition the classifier is trained to learn.
-    ml_term = roi_normalized
+    #
+    # Phase 2 retires the classifier. Where the district has a record, this term is
+    # the crop's adoption there instead (district_evidence.adoption_term): a mild
+    # prior, worth at most 15 points, so a crop nobody grows nearby needs stronger
+    # economics to rank. Without a record it stays the ROI term. Familiarity never
+    # rewards a loss: a money-losing crop keeps the ROI term (which floors at 0).
+    ml_term = (_de.adoption_term(adoption_share)
+               if adoption_share is not None and profit["roi_percent"] > 0 else roi_normalized)
 
     sat = region_saturation.get(crop_id)
     saturation_ratio = sat["ratio"] if sat is not None else None
@@ -1429,7 +1540,10 @@ def _score_single_crop(
 
     smart_score = compute_smart_score(
         roi_normalized=roi_normalized,
-        confidence_score=risk["confidence_score"],
+        # Confidence in a crop that loses money is confidence in the loss: it earns no
+        # points. (With measured risk, Phase 2, the term spans ~60 points between
+        # crops, enough to lift a steady loss-maker above a volatile profit.)
+        confidence_score=risk["confidence_score"] if profit["roi_percent"] > 0 else 0.0,
         budget_fit=budget_fit,
         soil_health=soil_health,
         ml_term=ml_term,
@@ -1455,6 +1569,10 @@ def _score_single_crop(
     if profit["roi_percent"] < 0:
         loss_normalized = max(profit["roi_percent"] / 3.0, -100.0)  # symmetric with roi_normalized's own +100 ceiling
         smart_score = clamp(smart_score + 0.35 * loss_normalized, 0.0, 100.0)
+    # Phase 2: a crop no district in the state has on record is a stronger warning
+    # than one this district lacks; it needs clearly better economics to rank.
+    if in_state is False:
+        smart_score = clamp(smart_score - _de.NOT_IN_STATE_PENALTY, 0.0, 100.0)
 
     budget_adequate = profit["budget_coverage"] >= 1.0
     coverage_pct = round(profit["budget_coverage"] * 100)
@@ -1489,7 +1607,7 @@ def _score_single_crop(
         "smart_score": round(smart_score, 2),
         "saturation_ratio": saturation_ratio,
         "saturation_label": saturation_label,
-        "prediction_source": "ml_model" if used_ml_for_yield else "heuristic",
+        "prediction_source": yield_source,
         "crop_cycle": "perennial" if _is_perennial(crop.season) else "seasonal",
         "budget_adequate": budget_adequate,
         "budget_coverage": profit["budget_coverage"],
@@ -1497,6 +1615,38 @@ def _score_single_crop(
     }
     if crop_id in ml_conf_map:
         rec_entry["ml_confidence"] = ml_conf_map[crop_id]
+    if adoption_share is not None:
+        rec_entry["adoption_share"] = round(adoption_share, 4)
+        rec_entry["grown_in_state"] = bool(in_state)
+    if variability is not None:
+        rec_entry["risk_basis"] = {"source": "district_record", **variability}
+    elif floor is not None:
+        rec_entry["risk_basis"] = {"source": "no_record_here",
+                                   "note": "not grown here on record; as risky as the riskiest crop that is",
+                                   "risk_score": round(measured_risk, 2)}
+    if yield_detail is not None:
+        # The same budget, price and cost at the low and high ends of the yield range.
+        ends = [
+            profit_estimator(
+                crop_id=crop_id, predicted_yield_kg_per_acre=float(yield_detail[k]),
+                area_acres=area_acres, budget_per_acre=budget_per_acre, mandi_price_per_kg=price,
+            )["expected_profit"]
+            for k in ("low", "high")
+        ]
+        rec_entry["yield_range_kg_per_acre"] = [
+            round(profit["achievable_yield_kg_per_acre"] * yield_detail[k] / predicted_yield, 1)
+            if predicted_yield else 0.0
+            for k in ("low", "high")
+        ]
+        rec_entry["profit_range"] = [round(min(ends), 2), round(max(ends), 2)]
+        rec_entry["yield_basis"] = {
+            "source": yield_detail.get("source"),
+            "model_version": yield_detail.get("model_version"),
+            "district_id": yield_detail.get("district_id"),
+            "years_on_record": yield_detail.get("years_on_record"),
+            "last_year": yield_detail.get("last_year"),
+            "range": "80%: " + yield_detail.get("range_basis", ""),
+        }
     return rec_entry
 
 
@@ -1539,8 +1689,13 @@ def apply_loss_guard(ranked: list[dict[str, Any]], season: str) -> list[dict[str
     """
     profitable = [r for r in ranked if r["expected_profit"] > 0]
     if profitable:
-        return profitable
+        # Phase 2, same principle: a crop no district in the state has on record (no
+        # seed dealers, buyers or neighbours who know it) is left off the shortlist
+        # whenever a profitable crop the state does grow exists.
+        proven = [r for r in profitable if r.get("grown_in_state", True)]
+        return proven or profitable
     reason = _all_lose_reason(ranked, season)
+    ranked = [r for r in ranked if r.get("grown_in_state", True)] or ranked
     for r in ranked:
         r["all_options_lose"] = True
         r["loss_reason"] = reason
@@ -1581,11 +1736,10 @@ def recommend_crops(
     for row in region_rows:
         region_crop_price[row["crop_id"]] = float(row["price_inr_per_kg"])
 
-    # Get ML confidence scores if available
-    ml_conf = _ml_recommend_crop(region_id, season, soil, weather, budget_per_acre, 0.5)
+    # Phase 2 retired the recommendation classifier's ml_confidence: it only ever
+    # learned to agree with this ranking (see _score_single_crop). adoption_share and
+    # profit_range replace it on each result.
     ml_conf_map: dict[str, float] = {}
-    if ml_conf:
-        ml_conf_map = {item["crop_id"]: item["ml_confidence"] for item in ml_conf}
 
     # "Which crop for this kharif?" is a question about a crop that will be
     # sown and harvested inside that season. Perennials match every season (a
@@ -1616,10 +1770,17 @@ def recommend_crops(
     # the difference between ~190 ms and ~8 ms of model time per request.
     # Crops the model has no answer for are simply absent from the map, and
     # `_score_single_crop` falls back to the heuristic for those.
-    batched_yields = _ml_predict_yield_batch(
-        [crop_id for crop_id, _ in candidates],
-        region_id, season, crop_params, soil, weather, 0.5,
-    )
+    # Phase 2: the district's measured yields, one lookup for every candidate. Only
+    # while no Phase 2 artifact ships does the legacy forest get asked.
+    from ml import yield_anomaly as _ya
+    candidate_ids = [crop_id for crop_id, _ in candidates]
+    measured_map = measured_yields(region_id, season, candidate_ids)
+    if _ya.load() is not None:
+        batched_yields: dict[str, float] = {}
+    else:
+        batched_yields = _ml_predict_yield_batch(
+            candidate_ids, region_id, season, crop_params, soil, weather, 0.5,
+        )
 
     # Crops with recorded harvests in this district (yield_history.csv). A
     # top pick nobody nearby grows -- jute in Guntur -- can be the formula's
@@ -1638,6 +1799,7 @@ def recommend_crops(
             budget_per_acre, area_acres,
             region_crop_price, ml_conf_map, region_saturation,
             ml_yield=batched_yields.get(crop_id),
+            measured=measured_map.get(crop_id),
         )
         rec_entry["grown_locally"] = crop_id in grown_here
         recommendations.append(rec_entry)

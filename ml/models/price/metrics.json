@@ -1,0 +1,1445 @@
+{
+  "model": "price",
+  "version": "78385d86ffba",
+  "series": 8187,
+  "weeks": [
+    "2020-12-28",
+    "2026-05-25"
+  ],
+  "crops": [
+    "arhar",
+    "bajra",
+    "banana",
+    "barley",
+    "cashew",
+    "chilli",
+    "coffee",
+    "cotton",
+    "cucumber",
+    "ginger",
+    "groundnut",
+    "jowar",
+    "jute",
+    "maize",
+    "mango",
+    "moong",
+    "muskmelon",
+    "mustard",
+    "onion",
+    "paddy_basmati",
+    "potato",
+    "pulses",
+    "ragi",
+    "rice",
+    "soybean",
+    "sugarcane",
+    "sunflower",
+    "tobacco",
+    "tomato",
+    "turmeric",
+    "urad",
+    "watermelon",
+    "wheat"
+  ],
+  "horizons": {
+    "1": {
+      "model": 0.0708,
+      "last": 0.073,
+      "seasonal": 0.1024,
+      "mean": 0.2352,
+      "rows": 491769,
+      "coverage_80_last_year": 0.794,
+      "cells_model": 11,
+      "cells_total": 33
+    },
+    "4": {
+      "model": 0.1376,
+      "last": 0.1482,
+      "seasonal": 0.193,
+      "mean": 0.2431,
+      "rows": 464602,
+      "coverage_80_last_year": 0.805,
+      "cells_model": 8,
+      "cells_total": 33
+    },
+    "8": {
+      "model": 0.185,
+      "last": 0.2215,
+      "seasonal": 0.2763,
+      "mean": 0.2517,
+      "rows": 435064,
+      "coverage_80_last_year": 0.8,
+      "cells_model": 7,
+      "cells_total": 33
+    },
+    "12": {
+      "model": 0.2146,
+      "last": 0.2666,
+      "seasonal": 0.3169,
+      "mean": 0.2577,
+      "rows": 411089,
+      "coverage_80_last_year": 0.783,
+      "cells_model": 7,
+      "cells_total": 33
+    },
+    "26": {
+      "model": 0.2849,
+      "last": 0.3575,
+      "seasonal": 0.4058,
+      "mean": 0.2686,
+      "rows": 354437,
+      "coverage_80_last_year": 0.652,
+      "cells_model": 5,
+      "cells_total": 33
+    }
+  },
+  "cells": {
+    "arhar|1": {
+      "rows": 12454,
+      "served": "last",
+      "model_mape": 0.0543,
+      "last_mape": 0.0558,
+      "seasonal_mape": 0.0832,
+      "mean_mape": 0.2143
+    },
+    "bajra|1": {
+      "rows": 12419,
+      "served": "model",
+      "model_mape": 0.0359,
+      "last_mape": 0.0381,
+      "seasonal_mape": 0.0532,
+      "mean_mape": 0.0902
+    },
+    "banana|1": {
+      "rows": 26280,
+      "served": "last",
+      "model_mape": 0.0577,
+      "last_mape": 0.0583,
+      "seasonal_mape": 0.0833,
+      "mean_mape": 0.1482
+    },
+    "barley|1": {
+      "rows": 7286,
+      "served": "last",
+      "model_mape": 0.0259,
+      "last_mape": 0.027,
+      "seasonal_mape": 0.0373,
+      "mean_mape": 0.0937
+    },
+    "cashew|1": {
+      "rows": 449,
+      "served": "last",
+      "model_mape": 0.0436,
+      "last_mape": 0.0425,
+      "seasonal_mape": 0.0523,
+      "mean_mape": 0.1504
+    },
+    "chilli|1": {
+      "rows": 2510,
+      "served": "last",
+      "model_mape": 0.1023,
+      "last_mape": 0.105,
+      "seasonal_mape": 0.1571,
+      "mean_mape": 0.2695
+    },
+    "coffee|1": {
+      "rows": 218,
+      "served": "last",
+      "model_mape": 0.0431,
+      "last_mape": 0.0414,
+      "seasonal_mape": 0.0689,
+      "mean_mape": 0.2206
+    },
+    "cotton|1": {
+      "rows": 8031,
+      "served": "last",
+      "model_mape": 0.0273,
+      "last_mape": 0.0278,
+      "seasonal_mape": 0.0395,
+      "mean_mape": 0.0902
+    },
+    "cucumber|1": {
+      "rows": 34698,
+      "served": "last",
+      "model_mape": 0.1212,
+      "last_mape": 0.1263,
+      "seasonal_mape": 0.178,
+      "mean_mape": 0.2504
+    },
+    "ginger|1": {
+      "rows": 27369,
+      "served": "last",
+      "model_mape": 0.0843,
+      "last_mape": 0.0825,
+      "seasonal_mape": 0.1228,
+      "mean_mape": 0.4407
+    },
+    "groundnut|1": {
+      "rows": 11060,
+      "served": "last",
+      "model_mape": 0.0538,
+      "last_mape": 0.0548,
+      "seasonal_mape": 0.0728,
+      "mean_mape": 0.1288
+    },
+    "jowar|1": {
+      "rows": 8993,
+      "served": "model",
+      "model_mape": 0.0757,
+      "last_mape": 0.0803,
+      "seasonal_mape": 0.1112,
+      "mean_mape": 0.1704
+    },
+    "jute|1": {
+      "rows": 885,
+      "served": "last",
+      "model_mape": 0.017,
+      "last_mape": 0.0156,
+      "seasonal_mape": 0.022,
+      "mean_mape": 0.1607
+    },
+    "maize|1": {
+      "rows": 21575,
+      "served": "last",
+      "model_mape": 0.039,
+      "last_mape": 0.0404,
+      "seasonal_mape": 0.0555,
+      "mean_mape": 0.1002
+    },
+    "mango|1": {
+      "rows": 8752,
+      "served": "model",
+      "model_mape": 0.138,
+      "last_mape": 0.147,
+      "seasonal_mape": 0.1822,
+      "mean_mape": 0.3365
+    },
+    "moong|1": {
+      "rows": 12177,
+      "served": "model",
+      "model_mape": 0.0533,
+      "last_mape": 0.0564,
+      "seasonal_mape": 0.0722,
+      "mean_mape": 0.115
+    },
+    "muskmelon|1": {
+      "rows": 4975,
+      "served": "model",
+      "model_mape": 0.1237,
+      "last_mape": 0.1346,
+      "seasonal_mape": 0.1688,
+      "mean_mape": 0.2735
+    },
+    "mustard|1": {
+      "rows": 21220,
+      "served": "model",
+      "model_mape": 0.0247,
+      "last_mape": 0.0264,
+      "seasonal_mape": 0.0369,
+      "mean_mape": 0.1019
+    },
+    "onion|1": {
+      "rows": 48618,
+      "served": "last",
+      "model_mape": 0.0872,
+      "last_mape": 0.0869,
+      "seasonal_mape": 0.1232,
+      "mean_mape": 0.3764
+    },
+    "paddy_basmati|1": {
+      "rows": 3214,
+      "served": "last",
+      "model_mape": 0.0435,
+      "last_mape": 0.0434,
+      "seasonal_mape": 0.0595,
+      "mean_mape": 0.1357
+    },
+    "potato|1": {
+      "rows": 48161,
+      "served": "last",
+      "model_mape": 0.0636,
+      "last_mape": 0.0654,
+      "seasonal_mape": 0.0925,
+      "mean_mape": 0.3075
+    },
+    "pulses|1": {
+      "rows": 25207,
+      "served": "model",
+      "model_mape": 0.0302,
+      "last_mape": 0.0322,
+      "seasonal_mape": 0.046,
+      "mean_mape": 0.1117
+    },
+    "ragi|1": {
+      "rows": 1976,
+      "served": "model",
+      "model_mape": 0.0554,
+      "last_mape": 0.0606,
+      "seasonal_mape": 0.0861,
+      "mean_mape": 0.1471
+    },
+    "rice|1": {
+      "rows": 22710,
+      "served": "last",
+      "model_mape": 0.0395,
+      "last_mape": 0.0415,
+      "seasonal_mape": 0.0585,
+      "mean_mape": 0.1015
+    },
+    "soybean|1": {
+      "rows": 13681,
+      "served": "last",
+      "model_mape": 0.0275,
+      "last_mape": 0.0284,
+      "seasonal_mape": 0.0388,
+      "mean_mape": 0.1266
+    },
+    "sugarcane|1": {
+      "rows": 66,
+      "served": "last",
+      "model_mape": 0.0476,
+      "last_mape": 0.0435,
+      "seasonal_mape": 0.053,
+      "mean_mape": 0.0926
+    },
+    "sunflower|1": {
+      "rows": 1438,
+      "served": "model",
+      "model_mape": 0.0522,
+      "last_mape": 0.0561,
+      "seasonal_mape": 0.0745,
+      "mean_mape": 0.1533
+    },
+    "tobacco|1": {
+      "rows": 82,
+      "served": "last",
+      "model_mape": 0.0582,
+      "last_mape": 0.0675,
+      "seasonal_mape": 0.0981,
+      "mean_mape": 0.0926
+    },
+    "tomato|1": {
+      "rows": 47274,
+      "served": "last",
+      "model_mape": 0.1599,
+      "last_mape": 0.1641,
+      "seasonal_mape": 0.2329,
+      "mean_mape": 0.4973
+    },
+    "turmeric|1": {
+      "rows": 2188,
+      "served": "last",
+      "model_mape": 0.0693,
+      "last_mape": 0.0715,
+      "seasonal_mape": 0.0961,
+      "mean_mape": 0.2187
+    },
+    "urad|1": {
+      "rows": 12185,
+      "served": "model",
+      "model_mape": 0.0555,
+      "last_mape": 0.0601,
+      "seasonal_mape": 0.0799,
+      "mean_mape": 0.1363
+    },
+    "watermelon|1": {
+      "rows": 9793,
+      "served": "model",
+      "model_mape": 0.1133,
+      "last_mape": 0.1221,
+      "seasonal_mape": 0.1589,
+      "mean_mape": 0.3035
+    },
+    "wheat|1": {
+      "rows": 33825,
+      "served": "last",
+      "model_mape": 0.0207,
+      "last_mape": 0.0216,
+      "seasonal_mape": 0.0321,
+      "mean_mape": 0.0694
+    },
+    "arhar|4": {
+      "rows": 11650,
+      "served": "last",
+      "model_mape": 0.0925,
+      "last_mape": 0.0834,
+      "seasonal_mape": 0.1192,
+      "mean_mape": 0.2242
+    },
+    "bajra|4": {
+      "rows": 11742,
+      "served": "last",
+      "model_mape": 0.0567,
+      "last_mape": 0.0563,
+      "seasonal_mape": 0.0746,
+      "mean_mape": 0.0927
+    },
+    "banana|4": {
+      "rows": 25133,
+      "served": "last",
+      "model_mape": 0.0962,
+      "last_mape": 0.0966,
+      "seasonal_mape": 0.1368,
+      "mean_mape": 0.1531
+    },
+    "barley|4": {
+      "rows": 6852,
+      "served": "last",
+      "model_mape": 0.0439,
+      "last_mape": 0.0429,
+      "seasonal_mape": 0.0569,
+      "mean_mape": 0.0944
+    },
+    "cashew|4": {
+      "rows": 383,
+      "served": "last",
+      "model_mape": 0.0734,
+      "last_mape": 0.0637,
+      "seasonal_mape": 0.0842,
+      "mean_mape": 0.1565
+    },
+    "chilli|4": {
+      "rows": 2301,
+      "served": "last",
+      "model_mape": 0.1643,
+      "last_mape": 0.1518,
+      "seasonal_mape": 0.2593,
+      "mean_mape": 0.2832
+    },
+    "coffee|4": {
+      "rows": 208,
+      "served": "last",
+      "model_mape": 0.0715,
+      "last_mape": 0.0607,
+      "seasonal_mape": 0.102,
+      "mean_mape": 0.225
+    },
+    "cotton|4": {
+      "rows": 7266,
+      "served": "last",
+      "model_mape": 0.0487,
+      "last_mape": 0.0466,
+      "seasonal_mape": 0.0635,
+      "mean_mape": 0.0926
+    },
+    "cucumber|4": {
+      "rows": 33076,
+      "served": "model",
+      "model_mape": 0.2039,
+      "last_mape": 0.2391,
+      "seasonal_mape": 0.3152,
+      "mean_mape": 0.255
+    },
+    "ginger|4": {
+      "rows": 26148,
+      "served": "last",
+      "model_mape": 0.1707,
+      "last_mape": 0.1481,
+      "seasonal_mape": 0.2103,
+      "mean_mape": 0.4605
+    },
+    "groundnut|4": {
+      "rows": 10184,
+      "served": "last",
+      "model_mape": 0.0872,
+      "last_mape": 0.0855,
+      "seasonal_mape": 0.1061,
+      "mean_mape": 0.1345
+    },
+    "jowar|4": {
+      "rows": 8483,
+      "served": "last",
+      "model_mape": 0.1101,
+      "last_mape": 0.1114,
+      "seasonal_mape": 0.1501,
+      "mean_mape": 0.1741
+    },
+    "jute|4": {
+      "rows": 831,
+      "served": "last",
+      "model_mape": 0.0448,
+      "last_mape": 0.0382,
+      "seasonal_mape": 0.0473,
+      "mean_mape": 0.1711
+    },
+    "maize|4": {
+      "rows": 20454,
+      "served": "last",
+      "model_mape": 0.0621,
+      "last_mape": 0.0613,
+      "seasonal_mape": 0.0786,
+      "mean_mape": 0.1031
+    },
+    "mango|4": {
+      "rows": 6920,
+      "served": "model",
+      "model_mape": 0.2615,
+      "last_mape": 0.35,
+      "seasonal_mape": 0.3369,
+      "mean_mape": 0.3524
+    },
+    "moong|4": {
+      "rows": 11177,
+      "served": "last",
+      "model_mape": 0.0764,
+      "last_mape": 0.0797,
+      "seasonal_mape": 0.0985,
+      "mean_mape": 0.1183
+    },
+    "muskmelon|4": {
+      "rows": 3868,
+      "served": "model",
+      "model_mape": 0.1975,
+      "last_mape": 0.2892,
+      "seasonal_mape": 0.2825,
+      "mean_mape": 0.2833
+    },
+    "mustard|4": {
+      "rows": 20155,
+      "served": "last",
+      "model_mape": 0.0429,
+      "last_mape": 0.0441,
+      "seasonal_mape": 0.0602,
+      "mean_mape": 0.1047
+    },
+    "onion|4": {
+      "rows": 46926,
+      "served": "last",
+      "model_mape": 0.1876,
+      "last_mape": 0.1952,
+      "seasonal_mape": 0.2461,
+      "mean_mape": 0.3875
+    },
+    "paddy_basmati|4": {
+      "rows": 2746,
+      "served": "last",
+      "model_mape": 0.0842,
+      "last_mape": 0.0821,
+      "seasonal_mape": 0.0952,
+      "mean_mape": 0.1386
+    },
+    "potato|4": {
+      "rows": 46460,
+      "served": "last",
+      "model_mape": 0.1334,
+      "last_mape": 0.139,
+      "seasonal_mape": 0.1709,
+      "mean_mape": 0.3167
+    },
+    "pulses|4": {
+      "rows": 24178,
+      "served": "last",
+      "model_mape": 0.0507,
+      "last_mape": 0.0522,
+      "seasonal_mape": 0.0693,
+      "mean_mape": 0.1161
+    },
+    "ragi|4": {
+      "rows": 1852,
+      "served": "model",
+      "model_mape": 0.0736,
+      "last_mape": 0.0785,
+      "seasonal_mape": 0.1091,
+      "mean_mape": 0.1535
+    },
+    "rice|4": {
+      "rows": 21228,
+      "served": "last",
+      "model_mape": 0.0583,
+      "last_mape": 0.0613,
+      "seasonal_mape": 0.0808,
+      "mean_mape": 0.1054
+    },
+    "soybean|4": {
+      "rows": 13227,
+      "served": "last",
+      "model_mape": 0.0501,
+      "last_mape": 0.0519,
+      "seasonal_mape": 0.0637,
+      "mean_mape": 0.1325
+    },
+    "sugarcane|4": {
+      "rows": 73,
+      "served": "last",
+      "model_mape": 0.071,
+      "last_mape": 0.0565,
+      "seasonal_mape": 0.0758,
+      "mean_mape": 0.1
+    },
+    "sunflower|4": {
+      "rows": 1267,
+      "served": "model",
+      "model_mape": 0.0766,
+      "last_mape": 0.0814,
+      "seasonal_mape": 0.1065,
+      "mean_mape": 0.1563
+    },
+    "tobacco|4": {
+      "rows": 59,
+      "served": "last",
+      "model_mape": 0.0836,
+      "last_mape": 0.1001,
+      "seasonal_mape": 0.1317,
+      "mean_mape": 0.101
+    },
+    "tomato|4": {
+      "rows": 45451,
+      "served": "model",
+      "model_mape": 0.3878,
+      "last_mape": 0.4353,
+      "seasonal_mape": 0.5966,
+      "mean_mape": 0.5101
+    },
+    "turmeric|4": {
+      "rows": 2035,
+      "served": "last",
+      "model_mape": 0.1055,
+      "last_mape": 0.1049,
+      "seasonal_mape": 0.1461,
+      "mean_mape": 0.2295
+    },
+    "urad|4": {
+      "rows": 11452,
+      "served": "last",
+      "model_mape": 0.0769,
+      "last_mape": 0.0796,
+      "seasonal_mape": 0.1017,
+      "mean_mape": 0.1399
+    },
+    "watermelon|4": {
+      "rows": 8285,
+      "served": "model",
+      "model_mape": 0.1917,
+      "last_mape": 0.2559,
+      "seasonal_mape": 0.271,
+      "mean_mape": 0.3133
+    },
+    "wheat|4": {
+      "rows": 32532,
+      "served": "model",
+      "model_mape": 0.0348,
+      "last_mape": 0.0369,
+      "seasonal_mape": 0.0508,
+      "mean_mape": 0.0727
+    },
+    "arhar|8": {
+      "rows": 10762,
+      "served": "last",
+      "model_mape": 0.1424,
+      "last_mape": 0.1083,
+      "seasonal_mape": 0.1481,
+      "mean_mape": 0.2345
+    },
+    "bajra|8": {
+      "rows": 11018,
+      "served": "last",
+      "model_mape": 0.0755,
+      "last_mape": 0.0743,
+      "seasonal_mape": 0.0914,
+      "mean_mape": 0.0954
+    },
+    "banana|8": {
+      "rows": 23921,
+      "served": "last",
+      "model_mape": 0.1248,
+      "last_mape": 0.1256,
+      "seasonal_mape": 0.1743,
+      "mean_mape": 0.1581
+    },
+    "barley|8": {
+      "rows": 6335,
+      "served": "last",
+      "model_mape": 0.0651,
+      "last_mape": 0.0547,
+      "seasonal_mape": 0.0743,
+      "mean_mape": 0.0938
+    },
+    "cashew|8": {
+      "rows": 299,
+      "served": "last",
+      "model_mape": 0.0984,
+      "last_mape": 0.0829,
+      "seasonal_mape": 0.1204,
+      "mean_mape": 0.159
+    },
+    "chilli|8": {
+      "rows": 2119,
+      "served": "last",
+      "model_mape": 0.2277,
+      "last_mape": 0.1938,
+      "seasonal_mape": 0.2612,
+      "mean_mape": 0.3078
+    },
+    "coffee|8": {
+      "rows": 200,
+      "served": "last",
+      "model_mape": 0.1248,
+      "last_mape": 0.0923,
+      "seasonal_mape": 0.1626,
+      "mean_mape": 0.2312
+    },
+    "cotton|8": {
+      "rows": 6414,
+      "served": "last",
+      "model_mape": 0.0614,
+      "last_mape": 0.0602,
+      "seasonal_mape": 0.0775,
+      "mean_mape": 0.0965
+    },
+    "cucumber|8": {
+      "rows": 31313,
+      "served": "model",
+      "model_mape": 0.2404,
+      "last_mape": 0.3216,
+      "seasonal_mape": 0.4026,
+      "mean_mape": 0.2568
+    },
+    "ginger|8": {
+      "rows": 24848,
+      "served": "last",
+      "model_mape": 0.2519,
+      "last_mape": 0.2095,
+      "seasonal_mape": 0.2934,
+      "mean_mape": 0.4845
+    },
+    "groundnut|8": {
+      "rows": 9212,
+      "served": "last",
+      "model_mape": 0.1174,
+      "last_mape": 0.1078,
+      "seasonal_mape": 0.1301,
+      "mean_mape": 0.1405
+    },
+    "jowar|8": {
+      "rows": 7907,
+      "served": "last",
+      "model_mape": 0.1412,
+      "last_mape": 0.1357,
+      "seasonal_mape": 0.1778,
+      "mean_mape": 0.1754
+    },
+    "jute|8": {
+      "rows": 781,
+      "served": "last",
+      "model_mape": 0.0795,
+      "last_mape": 0.0632,
+      "seasonal_mape": 0.0705,
+      "mean_mape": 0.1828
+    },
+    "maize|8": {
+      "rows": 19279,
+      "served": "last",
+      "model_mape": 0.0861,
+      "last_mape": 0.08,
+      "seasonal_mape": 0.0978,
+      "mean_mape": 0.1074
+    },
+    "mango|8": {
+      "rows": 4815,
+      "served": "model",
+      "model_mape": 0.3112,
+      "last_mape": 0.5553,
+      "seasonal_mape": 0.4455,
+      "mean_mape": 0.3771
+    },
+    "moong|8": {
+      "rows": 10162,
+      "served": "last",
+      "model_mape": 0.0941,
+      "last_mape": 0.0955,
+      "seasonal_mape": 0.1148,
+      "mean_mape": 0.1229
+    },
+    "muskmelon|8": {
+      "rows": 2772,
+      "served": "model",
+      "model_mape": 0.2382,
+      "last_mape": 0.4474,
+      "seasonal_mape": 0.3806,
+      "mean_mape": 0.3052
+    },
+    "mustard|8": {
+      "rows": 19013,
+      "served": "last",
+      "model_mape": 0.0589,
+      "last_mape": 0.0575,
+      "seasonal_mape": 0.0745,
+      "mean_mape": 0.1088
+    },
+    "onion|8": {
+      "rows": 45042,
+      "served": "model",
+      "model_mape": 0.2586,
+      "last_mape": 0.3112,
+      "seasonal_mape": 0.3634,
+      "mean_mape": 0.4042
+    },
+    "paddy_basmati|8": {
+      "rows": 2219,
+      "served": "last",
+      "model_mape": 0.1307,
+      "last_mape": 0.1189,
+      "seasonal_mape": 0.1255,
+      "mean_mape": 0.1432
+    },
+    "potato|8": {
+      "rows": 44588,
+      "served": "model",
+      "model_mape": 0.2079,
+      "last_mape": 0.2196,
+      "seasonal_mape": 0.2477,
+      "mean_mape": 0.3273
+    },
+    "pulses|8": {
+      "rows": 22941,
+      "served": "last",
+      "model_mape": 0.0694,
+      "last_mape": 0.0693,
+      "seasonal_mape": 0.0889,
+      "mean_mape": 0.122
+    },
+    "ragi|8": {
+      "rows": 1695,
+      "served": "last",
+      "model_mape": 0.0863,
+      "last_mape": 0.0879,
+      "seasonal_mape": 0.1261,
+      "mean_mape": 0.1621
+    },
+    "rice|8": {
+      "rows": 19598,
+      "served": "model",
+      "model_mape": 0.074,
+      "last_mape": 0.0793,
+      "seasonal_mape": 0.1001,
+      "mean_mape": 0.1107
+    },
+    "soybean|8": {
+      "rows": 12723,
+      "served": "last",
+      "model_mape": 0.0666,
+      "last_mape": 0.0654,
+      "seasonal_mape": 0.0809,
+      "mean_mape": 0.1403
+    },
+    "sugarcane|8": {
+      "rows": 49,
+      "served": "last",
+      "model_mape": 0.0773,
+      "last_mape": 0.0673,
+      "seasonal_mape": 0.0782,
+      "mean_mape": 0.1093
+    },
+    "sunflower|8": {
+      "rows": 1103,
+      "served": "last",
+      "model_mape": 0.0972,
+      "last_mape": 0.0981,
+      "seasonal_mape": 0.1142,
+      "mean_mape": 0.1637
+    },
+    "tobacco|8": {
+      "rows": 44,
+      "served": "mean",
+      "model_mape": 0.1285,
+      "last_mape": 0.1254,
+      "seasonal_mape": 0.1639,
+      "mean_mape": 0.125
+    },
+    "tomato|8": {
+      "rows": 43564,
+      "served": "mean",
+      "model_mape": 0.5063,
+      "last_mape": 0.7209,
+      "seasonal_mape": 0.9733,
+      "mean_mape": 0.512
+    },
+    "turmeric|8": {
+      "rows": 1847,
+      "served": "last",
+      "model_mape": 0.1461,
+      "last_mape": 0.1365,
+      "seasonal_mape": 0.2004,
+      "mean_mape": 0.2405
+    },
+    "urad|8": {
+      "rows": 10599,
+      "served": "last",
+      "model_mape": 0.0976,
+      "last_mape": 0.0937,
+      "seasonal_mape": 0.1176,
+      "mean_mape": 0.1431
+    },
+    "watermelon|8": {
+      "rows": 6862,
+      "served": "model",
+      "model_mape": 0.2327,
+      "last_mape": 0.3962,
+      "seasonal_mape": 0.3612,
+      "mean_mape": 0.3292
+    },
+    "wheat|8": {
+      "rows": 31020,
+      "served": "last",
+      "model_mape": 0.0492,
+      "last_mape": 0.0515,
+      "seasonal_mape": 0.0667,
+      "mean_mape": 0.0764
+    },
+    "arhar|12": {
+      "rows": 10014,
+      "served": "last",
+      "model_mape": 0.1858,
+      "last_mape": 0.1331,
+      "seasonal_mape": 0.1751,
+      "mean_mape": 0.2443
+    },
+    "bajra|12": {
+      "rows": 10390,
+      "served": "last",
+      "model_mape": 0.088,
+      "last_mape": 0.0877,
+      "seasonal_mape": 0.1021,
+      "mean_mape": 0.0979
+    },
+    "banana|12": {
+      "rows": 22846,
+      "served": "last",
+      "model_mape": 0.1459,
+      "last_mape": 0.1463,
+      "seasonal_mape": 0.2057,
+      "mean_mape": 0.1636
+    },
+    "barley|12": {
+      "rows": 5905,
+      "served": "last",
+      "model_mape": 0.0794,
+      "last_mape": 0.06,
+      "seasonal_mape": 0.0879,
+      "mean_mape": 0.0917
+    },
+    "cashew|12": {
+      "rows": 237,
+      "served": "last",
+      "model_mape": 0.1214,
+      "last_mape": 0.0998,
+      "seasonal_mape": 0.1431,
+      "mean_mape": 0.1671
+    },
+    "chilli|12": {
+      "rows": 1984,
+      "served": "last",
+      "model_mape": 0.2651,
+      "last_mape": 0.2007,
+      "seasonal_mape": 0.2846,
+      "mean_mape": 0.3209
+    },
+    "coffee|12": {
+      "rows": 189,
+      "served": "last",
+      "model_mape": 0.1575,
+      "last_mape": 0.1252,
+      "seasonal_mape": 0.2098,
+      "mean_mape": 0.2412
+    },
+    "cotton|12": {
+      "rows": 5672,
+      "served": "last",
+      "model_mape": 0.0735,
+      "last_mape": 0.0674,
+      "seasonal_mape": 0.0868,
+      "mean_mape": 0.1018
+    },
+    "cucumber|12": {
+      "rows": 29741,
+      "served": "model",
+      "model_mape": 0.2424,
+      "last_mape": 0.3547,
+      "seasonal_mape": 0.4204,
+      "mean_mape": 0.2567
+    },
+    "ginger|12": {
+      "rows": 23704,
+      "served": "last",
+      "model_mape": 0.339,
+      "last_mape": 0.2656,
+      "seasonal_mape": 0.3751,
+      "mean_mape": 0.5038
+    },
+    "groundnut|12": {
+      "rows": 8553,
+      "served": "last",
+      "model_mape": 0.1346,
+      "last_mape": 0.1204,
+      "seasonal_mape": 0.1422,
+      "mean_mape": 0.1445
+    },
+    "jowar|12": {
+      "rows": 7498,
+      "served": "last",
+      "model_mape": 0.1673,
+      "last_mape": 0.1533,
+      "seasonal_mape": 0.2061,
+      "mean_mape": 0.1766
+    },
+    "jute|12": {
+      "rows": 727,
+      "served": "last",
+      "model_mape": 0.1082,
+      "last_mape": 0.0881,
+      "seasonal_mape": 0.0906,
+      "mean_mape": 0.1945
+    },
+    "maize|12": {
+      "rows": 18316,
+      "served": "last",
+      "model_mape": 0.106,
+      "last_mape": 0.0915,
+      "seasonal_mape": 0.1108,
+      "mean_mape": 0.1107
+    },
+    "mango|12": {
+      "rows": 3340,
+      "served": "model",
+      "model_mape": 0.3369,
+      "last_mape": 0.7179,
+      "seasonal_mape": 0.5368,
+      "mean_mape": 0.4095
+    },
+    "moong|12": {
+      "rows": 9374,
+      "served": "last",
+      "model_mape": 0.1107,
+      "last_mape": 0.1078,
+      "seasonal_mape": 0.1271,
+      "mean_mape": 0.1274
+    },
+    "muskmelon|12": {
+      "rows": 1973,
+      "served": "model",
+      "model_mape": 0.2824,
+      "last_mape": 0.5082,
+      "seasonal_mape": 0.4462,
+      "mean_mape": 0.3193
+    },
+    "mustard|12": {
+      "rows": 18085,
+      "served": "last",
+      "model_mape": 0.0659,
+      "last_mape": 0.0669,
+      "seasonal_mape": 0.081,
+      "mean_mape": 0.1132
+    },
+    "onion|12": {
+      "rows": 43359,
+      "served": "model",
+      "model_mape": 0.2971,
+      "last_mape": 0.3903,
+      "seasonal_mape": 0.4303,
+      "mean_mape": 0.4168
+    },
+    "paddy_basmati|12": {
+      "rows": 1762,
+      "served": "last",
+      "model_mape": 0.1678,
+      "last_mape": 0.1334,
+      "seasonal_mape": 0.1477,
+      "mean_mape": 0.1542
+    },
+    "potato|12": {
+      "rows": 42876,
+      "served": "model",
+      "model_mape": 0.2539,
+      "last_mape": 0.2884,
+      "seasonal_mape": 0.3187,
+      "mean_mape": 0.3352
+    },
+    "pulses|12": {
+      "rows": 21914,
+      "served": "last",
+      "model_mape": 0.0828,
+      "last_mape": 0.0826,
+      "seasonal_mape": 0.1038,
+      "mean_mape": 0.1266
+    },
+    "ragi|12": {
+      "rows": 1558,
+      "served": "last",
+      "model_mape": 0.0916,
+      "last_mape": 0.0917,
+      "seasonal_mape": 0.1325,
+      "mean_mape": 0.1681
+    },
+    "rice|12": {
+      "rows": 18453,
+      "served": "model",
+      "model_mape": 0.0834,
+      "last_mape": 0.0908,
+      "seasonal_mape": 0.1118,
+      "mean_mape": 0.1146
+    },
+    "soybean|12": {
+      "rows": 12254,
+      "served": "last",
+      "model_mape": 0.07,
+      "last_mape": 0.0718,
+      "seasonal_mape": 0.0904,
+      "mean_mape": 0.1478
+    },
+    "sugarcane|12": {
+      "rows": 28,
+      "served": "last",
+      "model_mape": 0.0782,
+      "last_mape": 0.0781,
+      "seasonal_mape": 0.0866,
+      "mean_mape": 0.0881
+    },
+    "sunflower|12": {
+      "rows": 971,
+      "served": "last",
+      "model_mape": 0.1067,
+      "last_mape": 0.1052,
+      "seasonal_mape": 0.1294,
+      "mean_mape": 0.1687
+    },
+    "tobacco|12": {
+      "rows": 28,
+      "served": "mean",
+      "model_mape": 0.1015,
+      "last_mape": 0.1074,
+      "seasonal_mape": 0.1769,
+      "mean_mape": 0.096
+    },
+    "tomato|12": {
+      "rows": 41974,
+      "served": "mean",
+      "model_mape": 0.567,
+      "last_mape": 0.8639,
+      "seasonal_mape": 1.0625,
+      "mean_mape": 0.5062
+    },
+    "turmeric|12": {
+      "rows": 1722,
+      "served": "last",
+      "model_mape": 0.1651,
+      "last_mape": 0.1488,
+      "seasonal_mape": 0.2321,
+      "mean_mape": 0.2407
+    },
+    "urad|12": {
+      "rows": 9883,
+      "served": "last",
+      "model_mape": 0.1113,
+      "last_mape": 0.1054,
+      "seasonal_mape": 0.1308,
+      "mean_mape": 0.146
+    },
+    "watermelon|12": {
+      "rows": 5834,
+      "served": "model",
+      "model_mape": 0.2624,
+      "last_mape": 0.4914,
+      "seasonal_mape": 0.4315,
+      "mean_mape": 0.3426
+    },
+    "wheat|12": {
+      "rows": 29925,
+      "served": "last",
+      "model_mape": 0.0611,
+      "last_mape": 0.0626,
+      "seasonal_mape": 0.0787,
+      "mean_mape": 0.0796
+    },
+    "arhar|26": {
+      "rows": 8436,
+      "served": "last",
+      "model_mape": 0.2858,
+      "last_mape": 0.1919,
+      "seasonal_mape": 0.2767,
+      "mean_mape": 0.2588
+    },
+    "bajra|26": {
+      "rows": 8879,
+      "served": "mean",
+      "model_mape": 0.1249,
+      "last_mape": 0.1137,
+      "seasonal_mape": 0.1319,
+      "mean_mape": 0.1076
+    },
+    "banana|26": {
+      "rows": 19719,
+      "served": "mean",
+      "model_mape": 0.188,
+      "last_mape": 0.1905,
+      "seasonal_mape": 0.28,
+      "mean_mape": 0.1762
+    },
+    "barley|26": {
+      "rows": 5141,
+      "served": "last",
+      "model_mape": 0.1263,
+      "last_mape": 0.081,
+      "seasonal_mape": 0.1403,
+      "mean_mape": 0.0828
+    },
+    "cashew|26": {
+      "rows": 154,
+      "served": "last",
+      "model_mape": 0.1943,
+      "last_mape": 0.1487,
+      "seasonal_mape": 0.2032,
+      "mean_mape": 0.193
+    },
+    "chilli|26": {
+      "rows": 1633,
+      "served": "last",
+      "model_mape": 0.4526,
+      "last_mape": 0.283,
+      "seasonal_mape": 0.386,
+      "mean_mape": 0.35
+    },
+    "coffee|26": {
+      "rows": 165,
+      "served": "last",
+      "model_mape": 0.2389,
+      "last_mape": 0.1657,
+      "seasonal_mape": 0.2696,
+      "mean_mape": 0.2697
+    },
+    "cotton|26": {
+      "rows": 4085,
+      "served": "last",
+      "model_mape": 0.095,
+      "last_mape": 0.0757,
+      "seasonal_mape": 0.1065,
+      "mean_mape": 0.109
+    },
+    "cucumber|26": {
+      "rows": 25927,
+      "served": "model",
+      "model_mape": 0.2517,
+      "last_mape": 0.3971,
+      "seasonal_mape": 0.4297,
+      "mean_mape": 0.267
+    },
+    "ginger|26": {
+      "rows": 20603,
+      "served": "last",
+      "model_mape": 0.8091,
+      "last_mape": 0.4424,
+      "seasonal_mape": 0.6972,
+      "mean_mape": 0.5395
+    },
+    "groundnut|26": {
+      "rows": 7138,
+      "served": "last",
+      "model_mape": 0.1842,
+      "last_mape": 0.1523,
+      "seasonal_mape": 0.1859,
+      "mean_mape": 0.1559
+    },
+    "jowar|26": {
+      "rows": 6462,
+      "served": "mean",
+      "model_mape": 0.2649,
+      "last_mape": 0.1852,
+      "seasonal_mape": 0.2912,
+      "mean_mape": 0.1721
+    },
+    "jute|26": {
+      "rows": 605,
+      "served": "seasonal",
+      "model_mape": 0.1781,
+      "last_mape": 0.1597,
+      "seasonal_mape": 0.1584,
+      "mean_mape": 0.2244
+    },
+    "maize|26": {
+      "rows": 15975,
+      "served": "last",
+      "model_mape": 0.1385,
+      "last_mape": 0.1165,
+      "seasonal_mape": 0.1504,
+      "mean_mape": 0.1233
+    },
+    "mango|26": {
+      "rows": 1495,
+      "served": "mean",
+      "model_mape": 0.4143,
+      "last_mape": 0.6423,
+      "seasonal_mape": 0.6081,
+      "mean_mape": 0.3921
+    },
+    "moong|26": {
+      "rows": 7495,
+      "served": "last",
+      "model_mape": 0.1399,
+      "last_mape": 0.126,
+      "seasonal_mape": 0.1574,
+      "mean_mape": 0.1282
+    },
+    "muskmelon|26": {
+      "rows": 1157,
+      "served": "model",
+      "model_mape": 0.2906,
+      "last_mape": 0.5203,
+      "seasonal_mape": 0.4814,
+      "mean_mape": 0.3162
+    },
+    "mustard|26": {
+      "rows": 15995,
+      "served": "last",
+      "model_mape": 0.0842,
+      "last_mape": 0.0855,
+      "seasonal_mape": 0.099,
+      "mean_mape": 0.1231
+    },
+    "onion|26": {
+      "rows": 38539,
+      "served": "mean",
+      "model_mape": 0.5029,
+      "last_mape": 0.5595,
+      "seasonal_mape": 0.6669,
+      "mean_mape": 0.4386
+    },
+    "paddy_basmati|26": {
+      "rows": 949,
+      "served": "last",
+      "model_mape": 0.2403,
+      "last_mape": 0.163,
+      "seasonal_mape": 0.1731,
+      "mean_mape": 0.1958
+    },
+    "potato|26": {
+      "rows": 37844,
+      "served": "mean",
+      "model_mape": 0.389,
+      "last_mape": 0.4631,
+      "seasonal_mape": 0.583,
+      "mean_mape": 0.3597
+    },
+    "pulses|26": {
+      "rows": 19273,
+      "served": "last",
+      "model_mape": 0.133,
+      "last_mape": 0.1148,
+      "seasonal_mape": 0.1501,
+      "mean_mape": 0.1359
+    },
+    "ragi|26": {
+      "rows": 1269,
+      "served": "last",
+      "model_mape": 0.1313,
+      "last_mape": 0.1038,
+      "seasonal_mape": 0.1538,
+      "mean_mape": 0.1909
+    },
+    "rice|26": {
+      "rows": 15824,
+      "served": "model",
+      "model_mape": 0.1009,
+      "last_mape": 0.1064,
+      "seasonal_mape": 0.1334,
+      "mean_mape": 0.1242
+    },
+    "soybean|26": {
+      "rows": 10903,
+      "served": "last",
+      "model_mape": 0.0892,
+      "last_mape": 0.0907,
+      "seasonal_mape": 0.1048,
+      "mean_mape": 0.17
+    },
+    "sugarcane|26": {
+      "rows": 35,
+      "served": "last",
+      "model_mape": 0.0712,
+      "last_mape": 0.0479,
+      "seasonal_mape": 0.0539,
+      "mean_mape": 0.1072
+    },
+    "sunflower|26": {
+      "rows": 748,
+      "served": "last",
+      "model_mape": 0.1384,
+      "last_mape": 0.1353,
+      "seasonal_mape": 0.1591,
+      "mean_mape": 0.1833
+    },
+    "tobacco|26": {
+      "rows": 2,
+      "served": "last",
+      "model_mape": 0.1868,
+      "last_mape": 0.175,
+      "seasonal_mape": 0.175,
+      "mean_mape": 0.206
+    },
+    "tomato|26": {
+      "rows": 37081,
+      "served": "model",
+      "model_mape": 0.4053,
+      "last_mape": 1.1058,
+      "seasonal_mape": 0.9805,
+      "mean_mape": 0.4802
+    },
+    "turmeric|26": {
+      "rows": 1407,
+      "served": "last",
+      "model_mape": 0.2263,
+      "last_mape": 0.1853,
+      "seasonal_mape": 0.3214,
+      "mean_mape": 0.2599
+    },
+    "urad|26": {
+      "rows": 7985,
+      "served": "last",
+      "model_mape": 0.1573,
+      "last_mape": 0.1298,
+      "seasonal_mape": 0.1719,
+      "mean_mape": 0.1516
+    },
+    "watermelon|26": {
+      "rows": 4608,
+      "served": "model",
+      "model_mape": 0.2753,
+      "last_mape": 0.5709,
+      "seasonal_mape": 0.456,
+      "mean_mape": 0.3381
+    },
+    "wheat|26": {
+      "rows": 26906,
+      "served": "last",
+      "model_mape": 0.0897,
+      "last_mape": 0.084,
+      "seasonal_mape": 0.1047,
+      "mean_mape": 0.0884
+    }
+  },
+  "config": {
+    "hgb": {
+      "loss": "absolute_error",
+      "max_iter": 300,
+      "learning_rate": 0.08,
+      "max_leaf_nodes": 63,
+      "min_samples_leaf": 100,
+      "l2_regularization": 1.0,
+      "random_state": 7
+    },
+    "backtest_weeks": 156,
+    "refit_every_weeks": 13,
+    "max_train_rows": 250000,
+    "min_history_weeks": 13,
+    "min_cell_rows": 100,
+    "gate": 0.05,
+    "coverage_check_weeks": 52
+  },
+  "trained_seconds": 426.1,
+  "data_manifest_sha256": "01c436b9e45264c6aa43ccd57b71491c012afe905827fa753c493cd5dea287fb",
+  "code_commit": "604339c6a356850bbb2f749d8a4e4fd9c7af909e",
+  "gate": {
+    "passed": true,
+    "rule": "per crop x horizon: model MAPE <= 0.95 x best baseline"
+  },
+  "behaviour_passed": true,
+  "artifact_bytes": 5111633
+}

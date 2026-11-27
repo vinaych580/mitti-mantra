@@ -1,0 +1,1210 @@
+{
+ "source": "DES APY district area (serving store), last 5 years on record",
+ "built_by": "scripts/ml/build_agronomic_acceptance.py",
+ "cases": [
+  {
+   "region_id": "ap_guntur",
+   "district": "Guntur",
+   "season": "kharif",
+   "must_include_any": [
+    "rice",
+    "cotton"
+   ],
+   "top_shares": {
+    "rice": 0.451,
+    "cotton": 0.318
+   },
+   "must_not_include": [
+    "jute",
+    "paddy_basmati"
+   ]
+  },
+  {
+   "region_id": "ap_guntur",
+   "district": "Guntur",
+   "season": "rabi",
+   "must_include_any": [
+    "maize",
+    "jowar"
+   ],
+   "top_shares": {
+    "maize": 0.471,
+    "jowar": 0.339
+   },
+   "must_not_include": [
+    "barley"
+   ]
+  },
+  {
+   "region_id": "assam_nagaon",
+   "district": "Nagaon",
+   "season": "kharif",
+   "must_include_any": [
+    "rice",
+    "jute"
+   ],
+   "top_shares": {
+    "rice": 0.909,
+    "jute": 0.075
+   },
+   "must_not_include": [
+    "bajra",
+    "groundnut",
+    "jowar",
+    "moong",
+    "paddy_basmati",
+    "pulses",
+    "ragi",
+    "soybean",
+    "sunflower",
+    "tomato",
+    "urad"
+   ]
+  },
+  {
+   "region_id": "assam_nagaon",
+   "district": "Nagaon",
+   "season": "rabi",
+   "must_include_any": [
+    "mustard",
+    "maize"
+   ],
+   "top_shares": {
+    "mustard": 0.904,
+    "maize": 0.047
+   },
+   "must_not_include": [
+    "barley",
+    "jowar",
+    "sunflower",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "bihar_patna",
+   "district": "Patna",
+   "season": "kharif",
+   "must_include_any": [
+    "rice",
+    "maize"
+   ],
+   "top_shares": {
+    "rice": 0.916,
+    "maize": 0.068
+   },
+   "must_not_include": [
+    "banana",
+    "chilli",
+    "cotton",
+    "paddy_basmati",
+    "pulses",
+    "sunflower",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "bihar_patna",
+   "district": "Patna",
+   "season": "rabi",
+   "must_include_any": [
+    "wheat",
+    "pulses"
+   ],
+   "top_shares": {
+    "wheat": 0.812,
+    "pulses": 0.08
+   },
+   "must_not_include": [
+    "banana",
+    "jowar",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "chhattisgarh_raipur",
+   "district": "Raipur",
+   "season": "kharif",
+   "must_include_any": [
+    "rice",
+    "maize"
+   ],
+   "top_shares": {
+    "rice": 0.995,
+    "maize": 0.002
+   },
+   "must_not_include": [
+    "jute",
+    "paddy_basmati",
+    "pulses",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "chhattisgarh_raipur",
+   "district": "Raipur",
+   "season": "rabi",
+   "must_include_any": [
+    "wheat",
+    "mustard"
+   ],
+   "top_shares": {
+    "wheat": 0.498,
+    "mustard": 0.316
+   },
+   "must_not_include": [
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "goa_north",
+   "district": "North Goa",
+   "season": "kharif",
+   "must_include_any": [
+    "rice",
+    "groundnut"
+   ],
+   "top_shares": {
+    "rice": 0.995,
+    "groundnut": 0.005
+   },
+   "must_not_include": [
+    "arhar",
+    "bajra",
+    "chilli",
+    "cotton",
+    "ginger",
+    "jowar",
+    "jute",
+    "maize",
+    "moong",
+    "paddy_basmati",
+    "pulses",
+    "soybean",
+    "sunflower",
+    "tobacco",
+    "tomato",
+    "turmeric",
+    "urad"
+   ]
+  },
+  {
+   "region_id": "guj_anand",
+   "district": "Anand",
+   "season": "kharif",
+   "must_include_any": [
+    "rice",
+    "tobacco"
+   ],
+   "top_shares": {
+    "rice": 0.853,
+    "tobacco": 0.073
+   },
+   "must_not_include": [
+    "ginger",
+    "jute",
+    "paddy_basmati",
+    "pulses",
+    "sunflower",
+    "tomato",
+    "turmeric"
+   ]
+  },
+  {
+   "region_id": "guj_anand",
+   "district": "Anand",
+   "season": "rabi",
+   "must_include_any": [
+    "wheat",
+    "pulses"
+   ],
+   "top_shares": {
+    "wheat": 0.88,
+    "pulses": 0.101
+   },
+   "must_not_include": [
+    "barley",
+    "sunflower",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "guj_rajkot",
+   "district": "Rajkot",
+   "season": "kharif",
+   "must_include_any": [
+    "groundnut",
+    "cotton"
+   ],
+   "top_shares": {
+    "groundnut": 0.51,
+    "cotton": 0.467
+   },
+   "must_not_include": [
+    "ginger",
+    "jute",
+    "paddy_basmati",
+    "pulses",
+    "sunflower",
+    "tomato",
+    "turmeric"
+   ]
+  },
+  {
+   "region_id": "guj_rajkot",
+   "district": "Rajkot",
+   "season": "rabi",
+   "must_include_any": [
+    "wheat",
+    "pulses"
+   ],
+   "top_shares": {
+    "wheat": 0.521,
+    "pulses": 0.432
+   },
+   "must_not_include": [
+    "barley",
+    "sunflower",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "haryana_karnal",
+   "district": "Karnal",
+   "season": "kharif",
+   "must_include_any": [
+    "rice",
+    "maize"
+   ],
+   "top_shares": {
+    "rice": 0.997,
+    "maize": 0.001
+   },
+   "must_not_include": [
+    "banana",
+    "jute",
+    "pulses",
+    "ragi",
+    "tobacco",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "haryana_karnal",
+   "district": "Karnal",
+   "season": "rabi",
+   "must_include_any": [
+    "wheat",
+    "mustard"
+   ],
+   "top_shares": {
+    "wheat": 0.981,
+    "mustard": 0.018
+   },
+   "must_not_include": [
+    "banana",
+    "jowar",
+    "maize",
+    "sunflower",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "hp_shimla",
+   "district": "Shimla",
+   "season": "kharif",
+   "must_include_any": [
+    "maize",
+    "urad"
+   ],
+   "top_shares": {
+    "maize": 0.794,
+    "urad": 0.092
+   },
+   "must_not_include": [
+    "banana",
+    "jute",
+    "pulses",
+    "sunflower",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "hp_shimla",
+   "district": "Shimla",
+   "season": "rabi",
+   "must_include_any": [
+    "wheat",
+    "barley"
+   ],
+   "top_shares": {
+    "wheat": 0.658,
+    "barley": 0.239
+   },
+   "must_not_include": [
+    "banana",
+    "jowar",
+    "maize",
+    "sunflower",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "jharkhand_ranchi",
+   "district": "Ranchi",
+   "season": "kharif",
+   "must_include_any": [
+    "rice",
+    "arhar"
+   ],
+   "top_shares": {
+    "rice": 0.787,
+    "arhar": 0.067
+   },
+   "must_not_include": [
+    "banana",
+    "chilli",
+    "cotton",
+    "ginger",
+    "jute",
+    "paddy_basmati",
+    "pulses",
+    "tobacco",
+    "tomato",
+    "turmeric"
+   ]
+  },
+  {
+   "region_id": "jharkhand_ranchi",
+   "district": "Ranchi",
+   "season": "rabi",
+   "must_include_any": [
+    "mustard",
+    "wheat"
+   ],
+   "top_shares": {
+    "mustard": 0.396,
+    "wheat": 0.315
+   },
+   "must_not_include": [
+    "banana",
+    "barley",
+    "jowar",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "jk_pulwama",
+   "district": "Pulwama",
+   "season": "kharif",
+   "must_include_any": [
+    "rice",
+    "maize"
+   ],
+   "top_shares": {
+    "rice": 0.848,
+    "maize": 0.143
+   },
+   "must_not_include": [
+    "arhar",
+    "banana",
+    "groundnut",
+    "jute",
+    "soybean",
+    "sunflower",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "jk_pulwama",
+   "district": "Pulwama",
+   "season": "rabi",
+   "must_include_any": [
+    "mustard",
+    "wheat"
+   ],
+   "top_shares": {
+    "mustard": 0.949,
+    "wheat": 0.031
+   },
+   "must_not_include": [
+    "banana",
+    "jowar",
+    "maize",
+    "sunflower",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "kar_belagavi",
+   "district": "Belagavi",
+   "season": "kharif",
+   "must_include_any": [
+    "maize",
+    "soybean"
+   ],
+   "top_shares": {
+    "maize": 0.306,
+    "soybean": 0.198
+   },
+   "must_not_include": [
+    "banana",
+    "jute",
+    "paddy_basmati",
+    "pulses",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "kar_belagavi",
+   "district": "Belagavi",
+   "season": "rabi",
+   "must_include_any": [
+    "jowar",
+    "pulses"
+   ],
+   "top_shares": {
+    "jowar": 0.363,
+    "pulses": 0.322
+   },
+   "must_not_include": [
+    "banana",
+    "barley",
+    "mustard",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "kar_mysuru",
+   "district": "Mysuru",
+   "season": "kharif",
+   "must_include_any": [
+    "rice",
+    "ragi"
+   ],
+   "top_shares": {
+    "rice": 0.354,
+    "ragi": 0.212
+   },
+   "must_not_include": [
+    "banana",
+    "jute",
+    "paddy_basmati",
+    "pulses",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "kar_mysuru",
+   "district": "Mysuru",
+   "season": "rabi",
+   "must_include_any": [
+    "maize",
+    "pulses"
+   ],
+   "top_shares": {
+    "maize": 0.819,
+    "pulses": 0.094
+   },
+   "must_not_include": [
+    "banana",
+    "barley",
+    "mustard",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "kerala_palakkad",
+   "district": "Palakkad",
+   "season": "kharif",
+   "must_include_any": [
+    "rice",
+    "jowar"
+   ],
+   "top_shares": {
+    "rice": 1.0,
+    "jowar": 0.0
+   },
+   "must_not_include": [
+    "chilli",
+    "jute",
+    "moong",
+    "paddy_basmati",
+    "tomato",
+    "urad"
+   ]
+  },
+  {
+   "region_id": "kerala_palakkad",
+   "district": "Palakkad",
+   "season": "rabi",
+   "must_include_any": [
+    "jowar"
+   ],
+   "top_shares": {
+    "jowar": 1.0
+   },
+   "must_not_include": [
+    "barley",
+    "onion",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "mh_nashik",
+   "district": "Nashik",
+   "season": "kharif",
+   "must_include_any": [
+    "maize",
+    "bajra"
+   ],
+   "top_shares": {
+    "maize": 0.337,
+    "bajra": 0.157
+   },
+   "must_not_include": [
+    "banana",
+    "chilli",
+    "ginger",
+    "jute",
+    "paddy_basmati",
+    "pulses",
+    "tomato",
+    "turmeric"
+   ]
+  },
+  {
+   "region_id": "mh_nashik",
+   "district": "Nashik",
+   "season": "rabi",
+   "must_include_any": [
+    "wheat",
+    "pulses"
+   ],
+   "top_shares": {
+    "wheat": 0.545,
+    "pulses": 0.398
+   },
+   "must_not_include": [
+    "banana",
+    "barley",
+    "onion",
+    "potato",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "mh_pune",
+   "district": "Pune",
+   "season": "kharif",
+   "must_include_any": [
+    "rice",
+    "bajra"
+   ],
+   "top_shares": {
+    "rice": 0.313,
+    "bajra": 0.196
+   },
+   "must_not_include": [
+    "banana",
+    "chilli",
+    "ginger",
+    "jute",
+    "paddy_basmati",
+    "pulses",
+    "tomato",
+    "turmeric"
+   ]
+  },
+  {
+   "region_id": "mh_pune",
+   "district": "Pune",
+   "season": "rabi",
+   "must_include_any": [
+    "jowar",
+    "pulses"
+   ],
+   "top_shares": {
+    "jowar": 0.519,
+    "pulses": 0.26
+   },
+   "must_not_include": [
+    "banana",
+    "barley",
+    "onion",
+    "potato",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "mh_yavatmal",
+   "district": "Yavatmal",
+   "season": "kharif",
+   "must_include_any": [
+    "cotton",
+    "soybean"
+   ],
+   "top_shares": {
+    "cotton": 0.514,
+    "soybean": 0.31
+   },
+   "must_not_include": [
+    "banana",
+    "chilli",
+    "ginger",
+    "jute",
+    "paddy_basmati",
+    "pulses",
+    "tomato",
+    "turmeric"
+   ]
+  },
+  {
+   "region_id": "mh_yavatmal",
+   "district": "Yavatmal",
+   "season": "rabi",
+   "must_include_any": [
+    "pulses",
+    "wheat"
+   ],
+   "top_shares": {
+    "pulses": 0.708,
+    "wheat": 0.274
+   },
+   "must_not_include": [
+    "banana",
+    "barley",
+    "onion",
+    "potato",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "mp_indore",
+   "district": "Indore",
+   "season": "kharif",
+   "must_include_any": [
+    "soybean",
+    "maize"
+   ],
+   "top_shares": {
+    "soybean": 0.988,
+    "maize": 0.01
+   },
+   "must_not_include": [
+    "paddy_basmati",
+    "pulses",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "mp_indore",
+   "district": "Indore",
+   "season": "rabi",
+   "must_include_any": [
+    "wheat",
+    "pulses"
+   ],
+   "top_shares": {
+    "wheat": 0.883,
+    "pulses": 0.116
+   },
+   "must_not_include": [
+    "maize",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "mp_sehore",
+   "district": "Sehore",
+   "season": "kharif",
+   "must_include_any": [
+    "soybean",
+    "rice"
+   ],
+   "top_shares": {
+    "soybean": 0.82,
+    "rice": 0.104
+   },
+   "must_not_include": [
+    "paddy_basmati",
+    "pulses",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "mp_sehore",
+   "district": "Sehore",
+   "season": "rabi",
+   "must_include_any": [
+    "wheat",
+    "pulses"
+   ],
+   "top_shares": {
+    "wheat": 0.84,
+    "pulses": 0.159
+   },
+   "must_not_include": [
+    "maize",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "odisha_cuttack",
+   "district": "Cuttack",
+   "season": "kharif",
+   "must_include_any": [
+    "rice",
+    "urad"
+   ],
+   "top_shares": {
+    "rice": 0.944,
+    "urad": 0.039
+   },
+   "must_not_include": [
+    "banana",
+    "paddy_basmati",
+    "pulses",
+    "soybean",
+    "tobacco",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "odisha_cuttack",
+   "district": "Cuttack",
+   "season": "rabi",
+   "must_include_any": [
+    "onion",
+    "pulses"
+   ],
+   "top_shares": {
+    "onion": 0.642,
+    "pulses": 0.222
+   },
+   "must_not_include": [
+    "banana",
+    "barley",
+    "jowar",
+    "maize",
+    "mustard",
+    "potato",
+    "sugarcane",
+    "tomato",
+    "wheat"
+   ]
+  },
+  {
+   "region_id": "punjab_ludhiana",
+   "district": "Ludhiana",
+   "season": "kharif",
+   "must_include_any": [
+    "rice",
+    "maize"
+   ],
+   "top_shares": {
+    "rice": 0.994,
+    "maize": 0.004
+   },
+   "must_not_include": [
+    "banana",
+    "chilli",
+    "ginger",
+    "jowar",
+    "jute",
+    "pulses",
+    "ragi",
+    "soybean",
+    "sunflower",
+    "tobacco",
+    "tomato",
+    "turmeric"
+   ]
+  },
+  {
+   "region_id": "punjab_ludhiana",
+   "district": "Ludhiana",
+   "season": "rabi",
+   "must_include_any": [
+    "wheat",
+    "mustard"
+   ],
+   "top_shares": {
+    "wheat": 0.988,
+    "mustard": 0.007
+   },
+   "must_not_include": [
+    "banana",
+    "jowar",
+    "maize",
+    "onion",
+    "potato",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "rajasthan_jaipur",
+   "district": "Jaipur",
+   "season": "kharif",
+   "must_include_any": [
+    "bajra",
+    "moong"
+   ],
+   "top_shares": {
+    "bajra": 0.611,
+    "moong": 0.237
+   },
+   "must_not_include": [
+    "jute",
+    "paddy_basmati",
+    "pulses",
+    "ragi",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "rajasthan_jaipur",
+   "district": "Jaipur",
+   "season": "rabi",
+   "must_include_any": [
+    "wheat",
+    "mustard"
+   ],
+   "top_shares": {
+    "wheat": 0.325,
+    "mustard": 0.308
+   },
+   "must_not_include": [
+    "jowar",
+    "maize",
+    "sunflower",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "telangana_medak",
+   "district": "Medak",
+   "season": "kharif",
+   "must_include_any": [
+    "rice",
+    "cotton"
+   ],
+   "top_shares": {
+    "rice": 0.677,
+    "cotton": 0.209
+   },
+   "must_not_include": [
+    "jute",
+    "paddy_basmati",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "telangana_medak",
+   "district": "Medak",
+   "season": "rabi",
+   "must_include_any": [
+    "maize",
+    "jowar"
+   ],
+   "top_shares": {
+    "maize": 0.411,
+    "jowar": 0.313
+   },
+   "must_not_include": [
+    "barley",
+    "sugarcane",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "tn_coimbatore",
+   "district": "Coimbatore",
+   "season": "kharif",
+   "must_include_any": [
+    "jowar",
+    "groundnut"
+   ],
+   "top_shares": {
+    "jowar": 0.706,
+    "groundnut": 0.147
+   },
+   "must_not_include": [
+    "jute",
+    "paddy_basmati",
+    "soybean",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "tn_coimbatore",
+   "district": "Coimbatore",
+   "season": "rabi",
+   "must_include_any": [
+    "jowar",
+    "maize"
+   ],
+   "top_shares": {
+    "jowar": 0.725,
+    "maize": 0.168
+   },
+   "must_not_include": [
+    "barley",
+    "tomato",
+    "wheat"
+   ]
+  },
+  {
+   "region_id": "tn_thanjavur",
+   "district": "Thanjavur",
+   "season": "kharif",
+   "must_include_any": [
+    "rice",
+    "urad"
+   ],
+   "top_shares": {
+    "rice": 0.968,
+    "urad": 0.022
+   },
+   "must_not_include": [
+    "jute",
+    "paddy_basmati",
+    "soybean",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "tn_thanjavur",
+   "district": "Thanjavur",
+   "season": "rabi",
+   "must_include_any": [
+    "maize",
+    "onion"
+   ],
+   "top_shares": {
+    "maize": 0.92,
+    "onion": 0.043
+   },
+   "must_not_include": [
+    "barley",
+    "tomato",
+    "wheat"
+   ]
+  },
+  {
+   "region_id": "tripura_west",
+   "district": "West Tripura",
+   "season": "kharif",
+   "must_include_any": [
+    "rice",
+    "maize"
+   ],
+   "top_shares": {
+    "rice": 0.855,
+    "maize": 0.084
+   },
+   "must_not_include": [
+    "bajra",
+    "banana",
+    "chilli",
+    "ginger",
+    "paddy_basmati",
+    "pulses",
+    "ragi",
+    "sunflower",
+    "tobacco",
+    "tomato",
+    "turmeric"
+   ]
+  },
+  {
+   "region_id": "tripura_west",
+   "district": "West Tripura",
+   "season": "rabi",
+   "must_include_any": [
+    "mustard",
+    "maize"
+   ],
+   "top_shares": {
+    "mustard": 0.546,
+    "maize": 0.432
+   },
+   "must_not_include": [
+    "banana",
+    "barley",
+    "onion",
+    "potato",
+    "sunflower",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "uk_udhamsinghnagar",
+   "district": "Udham Singh Nagar",
+   "season": "kharif",
+   "must_include_any": [
+    "rice",
+    "urad"
+   ],
+   "top_shares": {
+    "rice": 0.994,
+    "urad": 0.004
+   },
+   "must_not_include": [
+    "banana",
+    "chilli",
+    "cotton",
+    "jute",
+    "pulses",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "uk_udhamsinghnagar",
+   "district": "Udham Singh Nagar",
+   "season": "rabi",
+   "must_include_any": [
+    "wheat",
+    "mustard"
+   ],
+   "top_shares": {
+    "wheat": 0.948,
+    "mustard": 0.048
+   },
+   "must_not_include": [
+    "banana",
+    "jowar",
+    "maize",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "up_lucknow",
+   "district": "Lucknow",
+   "season": "kharif",
+   "must_include_any": [
+    "rice",
+    "urad"
+   ],
+   "top_shares": {
+    "rice": 0.831,
+    "urad": 0.08
+   },
+   "must_not_include": [
+    "banana",
+    "jute",
+    "pulses",
+    "ragi",
+    "sunflower",
+    "tobacco",
+    "tomato",
+    "turmeric"
+   ]
+  },
+  {
+   "region_id": "up_lucknow",
+   "district": "Lucknow",
+   "season": "rabi",
+   "must_include_any": [
+    "wheat",
+    "potato"
+   ],
+   "top_shares": {
+    "wheat": 0.878,
+    "potato": 0.054
+   },
+   "must_not_include": [
+    "banana",
+    "jowar",
+    "sugarcane",
+    "sunflower",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "up_varanasi",
+   "district": "Varanasi",
+   "season": "kharif",
+   "must_include_any": [
+    "rice",
+    "bajra"
+   ],
+   "top_shares": {
+    "rice": 0.692,
+    "bajra": 0.082
+   },
+   "must_not_include": [
+    "banana",
+    "jute",
+    "pulses",
+    "ragi",
+    "sunflower",
+    "tobacco",
+    "tomato",
+    "turmeric"
+   ]
+  },
+  {
+   "region_id": "up_varanasi",
+   "district": "Varanasi",
+   "season": "rabi",
+   "must_include_any": [
+    "wheat",
+    "potato"
+   ],
+   "top_shares": {
+    "wheat": 0.914,
+    "potato": 0.043
+   },
+   "must_not_include": [
+    "banana",
+    "jowar",
+    "sugarcane",
+    "sunflower",
+    "tomato"
+   ]
+  },
+  {
+   "region_id": "wb_bardhaman",
+   "district": "Purba Bardhaman",
+   "season": "kharif",
+   "must_include_any": [
+    "rice",
+    "jute"
+   ],
+   "top_shares": {
+    "rice": 0.97,
+    "jute": 0.029
+   },
+   "must_not_include": [
+    "arhar",
+    "banana",
+    "chilli",
+    "ginger",
+    "paddy_basmati",
+    "pulses",
+    "tomato",
+    "turmeric"
+   ]
+  },
+  {
+   "region_id": "wb_bardhaman",
+   "district": "Purba Bardhaman",
+   "season": "rabi",
+   "must_include_any": [
+    "potato",
+    "mustard"
+   ],
+   "top_shares": {
+    "potato": 0.648,
+    "mustard": 0.313
+   },
+   "must_not_include": [
+    "banana",
+    "jowar",
+    "onion",
+    "sunflower",
+    "tomato"
+   ]
+  }
+ ]
+}

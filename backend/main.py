@@ -92,8 +92,12 @@ async def _warm_ml_models() -> None:
     )
 
     def _warm() -> None:
-        _load_yield_models()
-        _load_recommend_models()
+        # Phase 2: the released yield artifact replaces the legacy yield forest and
+        # the recommendation classifier; those load only when no artifact ships.
+        from ml import yield_anomaly
+        if yield_anomaly.load() is None:
+            _load_yield_models()
+            _load_recommend_models()
         _load_price_models()
 
     threading.Thread(target=_warm, name="ml-warmup", daemon=True).start()
@@ -928,27 +932,31 @@ def usage_summary(days: int = 30, x_admin_key: Optional[str] = Header(default=No
 # ---------------------------------------------------------------------------
 
 @app.post("/api/ml/train")
-def train_models(x_admin_key: Optional[str] = Header(default=None)):
-    """Train models only when an administrator explicitly enables the job."""
-    if os.getenv("ENABLE_MODEL_TRAINING", "false").lower() != "true":
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Model training is disabled. Enable it only for an admin-controlled job.",
-        )
-    expected_key = os.getenv("ADMIN_API_KEY")
-    if not expected_key:
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Model-training administration is not configured.",
-        )
-    if not x_admin_key or not secrets.compare_digest(x_admin_key, expected_key):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid admin key.")
-    try:
-        from ml.train_models import train_all as ml_train_all
-        report = ml_train_all()
-        return {"status": "success", "report": report}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+def train_models():
+    """Removed in Phase 2 (spec 2.5): training cannot finish inside a 30 s serverless
+    call and must never run in a request. Models are trained offline and released."""
+    raise HTTPException(
+        status_code=status.HTTP_410_GONE,
+        detail="Training runs offline: python -m ml.train --model yield|price, "
+               "then python -m ml.release <model> <version>.",
+    )
+
+def _phase2_model_status() -> dict:
+    """Released Phase 2 artifacts: version, what serves, and the gate outcome."""
+    import json as _json
+    out = {}
+    root = os.path.join(os.path.dirname(os.path.dirname(__file__)), "ml", "models")
+    for name in ("yield", "price"):
+        path = os.path.join(root, name, "metrics.json")
+        if not os.path.exists(path):
+            out[name] = None
+            continue
+        with open(path, encoding="utf-8") as f:
+            m = _json.load(f)
+        out[name] = {"version": m.get("version"), "serves": m.get("serves", "per cell"),
+                     "gate": m.get("gate"), "model_card": f"ml/models/{name}/model_card.md"}
+    return out
+
 
 @app.get("/api/ml/status")
 def model_status():
@@ -999,6 +1007,7 @@ def model_status():
         "training_report": manifest,
         "audit_metrics": audit,
         "validation_report": validation,
+        "phase2": _phase2_model_status(),
         "data_sources": {
             "sensor_uploads_available": bool(sensor_regions),
             "regions_with_sensor_data": len(sensor_regions),
@@ -1706,7 +1715,7 @@ def get_yield_prediction_api(q: YieldPredQuery = Depends()):
         return cached
         
     try:
-        from ml.predict import _predict_yield_with_source, _load_weather_by_region, _load_soil_by_region
+        from ml.predict import predict_yield_detail, _load_weather_by_region, _load_soil_by_region
         weather_data = _load_weather_by_region()
         soil_data = _load_soil_by_region()
         
@@ -1733,17 +1742,21 @@ def get_yield_prediction_api(q: YieldPredQuery = Depends()):
         # per-crop scorer already uses (see ml/predict.py's `used_ml_for_yield`
         # in `_score_single_crop`), so this endpoint's "algorithm" claim
         # reflects what actually happened for this specific call.
-        yld, used_ml_for_yield = _predict_yield_with_source(
+        yld, source, measured = predict_yield_detail(
             crop_id, region_id, season, weather, soil, irrigation_level
         )
+        used_ml_for_yield = source == "ml_model"
 
-        # 95% confidence interval: ±1.96 * RMSE, RMSE read live from the
-        # yield model's audit report so the band tracks whatever model is
-        # actually loaded rather than a number from a past training run.
-        rmse = _yield_model_rmse()
-        margin = round(1.96 * rmse, 2)
-        lower_bound = max(0.0, yld - margin)
-        upper_bound = yld + margin
+        if measured is not None:
+            # Phase 2: the district's own record, with a range calibrated per crop
+            # group to hold 80% of seasons (ml/models/yield/model_card.md).
+            lower_bound, upper_bound, level = float(measured["low"]), float(measured["high"]), 0.8
+        else:
+            # Legacy: ±1.96 * RMSE, RMSE read live from the yield model's audit report.
+            # One radius for every crop (AUDIT B-18); only used without a Phase 2 record.
+            rmse = _yield_model_rmse()
+            margin = round(1.96 * rmse, 2)
+            lower_bound, upper_bound, level = max(0.0, yld - margin), yld + margin, 0.95
         
         from engine.intelligence_layer import explain_yield_prediction
         explanation = explain_yield_prediction(crop_id, yld, round(lower_bound, 2), round(upper_bound, 2), soil, weather)
@@ -1752,14 +1765,19 @@ def get_yield_prediction_api(q: YieldPredQuery = Depends()):
             "predicted_yield_kg_per_acre": round(yld, 2),
             "confidence_interval": {
                 "lower_bound": round(lower_bound, 2),
-                "upper_bound": round(upper_bound, 2)
+                "upper_bound": round(upper_bound, 2),
+                "level": level,
             },
-            # Honest per-call label instead of a hardcoded claim -- mirrors the
-            # prediction_source convention already used by /api/crop,
-            # /api/disease/predict, rotation, and optimal-mix (AUDIT_REPORT.md
+            # Honest per-call label instead of a hardcoded claim (AUDIT_REPORT.md
             # H-11 / B-15).
-            "algorithm": "RandomForestRegressor (Tuned)" if used_ml_for_yield else "Heuristic Formula (agronomic calculation)",
-            "prediction_source": "ml_model" if used_ml_for_yield else "heuristic",
+            "algorithm": {
+                "yield_model": "Gradient-boosted departure from the district trend",
+                "district_record": "District 5-year mean yield (measured)",
+                "ml_model": "RandomForestRegressor (Tuned)",
+            }.get(source, "Heuristic Formula (agronomic calculation)"),
+            "prediction_source": source,
+            **({"model_version": measured.get("model_version"),
+                "district_id": measured.get("district_id")} if measured else {}),
             "intelligence_report": explanation
         }
         set_cached_response(cache_key, res)

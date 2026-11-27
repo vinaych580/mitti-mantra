@@ -7,9 +7,11 @@ from backend.main import app
 client = TestClient(app)
 
 
-def test_model_training_is_disabled_by_default():
+def test_model_training_never_runs_in_a_request():
+    """Phase 2 removed in-request training; the route says where training lives."""
     response = client.post("/api/ml/train")
-    assert response.status_code == 403
+    assert response.status_code == 410
+    assert "python -m ml.train" in response.json()["detail"]
 
 
 def test_expense_storage_is_not_publicly_available():

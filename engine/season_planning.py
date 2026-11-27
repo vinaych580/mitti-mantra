@@ -35,7 +35,8 @@ def compare_plan(req):
         # scenario keeps the reference estimate's level and scales it by the
         # FAO-33 water response of the rule-based simulator. Reference,
         # selected and dry rows therefore share one basis.
-        ref_yield, used_ml = p._predict_yield_with_source(
+        # The reference level is the district's record where one exists (Phase 2).
+        ref_yield, ref_source, _ = p.predict_yield_detail(
             crop_id, req.region_id, req.season, weather, soil, .5)
         ref_response = water_response_factor(crop, weather['rainfall_mm'], .5)
 
@@ -43,11 +44,11 @@ def compare_plan(req):
             rainfall = weather['rainfall_mm'] * rain
             at_reference = abs(rain - 1) < 1e-9 and abs(irrigation - .5) < 1e-9
             if at_reference:
-                y, source = ref_yield, 'ml_model' if used_ml else 'heuristic'
+                y, source = ref_yield, ref_source
             else:
                 response = water_response_factor(crop, rainfall, irrigation)
                 y = ref_yield * response / ref_response if ref_response > 0 else 0.0
-                source = 'ml_model_heuristic_response' if used_ml else 'heuristic'
+                source = 'heuristic' if ref_source == 'heuristic' else f'{ref_source}_heuristic_response'
             profit = p.profit_estimator(crop_id, round(y, 2), req.area_acres, req.budget_per_acre, price)
             return {**profit, 'prediction_source': source,
                     'rainfall_mm': rainfall, 'irrigation_level': irrigation}
