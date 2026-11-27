@@ -64,6 +64,8 @@ app = FastAPI(title="AgriSim - Farm Intelligence Platform")
 from backend.season_routes import router as season_router
 app.include_router(season_router)
 app.include_router(data_router, prefix="/api")
+from backend.routers.system import router as system_router
+app.include_router(system_router, prefix="/api")
 
 
 @app.on_event("startup")
@@ -162,6 +164,11 @@ class StaticCacheHeaders(BaseHTTPMiddleware):
 
 app.add_middleware(StaticCacheHeaders)
 
+# Phase 3.4: security headers on every response (backend/security.py). Added last,
+# so it is the outermost layer and also covers responses other middleware builds.
+from backend.security import SecurityHeaders
+app.add_middleware(SecurityHeaders)
+
 from backend.models import (
     SimulationRequest,
     RecommendationRequest,
@@ -236,9 +243,23 @@ async def health_check():
     return {"status": "ok", "service": "AgriSim Engine"}
 
 
+def _require_admin_key(x_admin_key: Optional[str]) -> None:
+    """401 unless the request carries ADMIN_API_KEY; 503 when none is configured."""
+    expected_key = os.getenv("ADMIN_API_KEY")
+    if not expected_key:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="This endpoint requires ADMIN_API_KEY to be configured.",
+        )
+    if not x_admin_key or not secrets.compare_digest(x_admin_key, expected_key):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid admin key.")
+
+
 @app.get("/api/_cache/stats")
-async def cache_stats():
-    """Diagnostic: current CSV cache state (rows per file + indexes)."""
+async def cache_stats(x_admin_key: Optional[str] = Header(default=None)):
+    """Diagnostic: current CSV cache state (rows per file + indexes). Admin-gated
+    (Phase 3.4): it describes server internals, not anything a visitor needs."""
+    _require_admin_key(x_admin_key)
     from utils.csv_cache import stats as _stats
     return _stats()
 
@@ -915,14 +936,7 @@ def usage_summary(days: int = 30, x_admin_key: Optional[str] = Header(default=No
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Usage collection is disabled on this server.",
         )
-    expected_key = os.getenv("ADMIN_API_KEY")
-    if not expected_key:
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Usage reporting requires ADMIN_API_KEY to be configured.",
-        )
-    if not x_admin_key or not secrets.compare_digest(x_admin_key, expected_key):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid admin key.")
+    _require_admin_key(x_admin_key)
     return summary(days)
 
 
