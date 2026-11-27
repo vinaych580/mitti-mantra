@@ -2705,6 +2705,14 @@
             <div class="kpi__sub">${text('If prices fall:')} ${NUM(INR(safest.low_net_inr))} (${vsNow(safest.low_net_inr)})</div></div>` : ''}
         </div>
 
+        ${r.storage_limited ? `
+        <div class="alert alert--gold">${INFO_ICO}
+          <div class="alert__body"><strong>${r.max_storage_weeks === 0
+            ? text('Must be sold within days of harvest; holding is not an option.')
+            : `${text('Keeps without cold storage:')} ${weeksLbl(r.max_storage_weeks)}`}</strong>
+            <p>${text('Longer holds are not shown: the price forecast says nothing about produce that has spoiled.')}</p></div>
+        </div>` : ''}
+
         <div class="alert ${hold ? 'alert--gold' : 'alert--green'}">${INFO_ICO}
           <div class="alert__body"><strong>${hold ? `${text('Holding')} ${weeksLbl(best.weeks)} ${text('looks better on the middle estimate')}` : text('Selling now looks best')}</strong>
             <p>${hold

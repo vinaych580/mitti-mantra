@@ -839,4 +839,7 @@ Object.assign(window.MM_I18N_CATALOG.hi, {
   "Typical farm in this district": "इस ज़िले का सामान्य खेत",
   "Good farm": "अच्छा खेत",
   "well-managed field": "अच्छी देखरेख वाला खेत",
+  "Must be sold within days of harvest; holding is not an option.": "कटाई के कुछ ही दिनों में बेचना होता है; रोककर रखना संभव नहीं।",
+  "Keeps without cold storage:": "कोल्ड स्टोरेज के बिना टिकता है:",
+  "Longer holds are not shown: the price forecast says nothing about produce that has spoiled.": "इससे लंबे समय तक रोकने के विकल्प नहीं दिखाए गए: खराब हो चुकी उपज के दाम का अनुमान नहीं होता।",
 });

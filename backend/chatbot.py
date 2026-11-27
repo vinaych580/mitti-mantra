@@ -41,7 +41,7 @@ from engine.chatbot_i18n import (
     find_season as find_season_native,
     normalize_region_text,
 )
-from ml.predict import recommend_crops, rotation_planner
+from ml.predict import recommend_crops, rotation_planner, typical_budget_per_acre
 from utils.calculations import region_display_name
 from utils.csv_cache import load as _csv_load
 
@@ -315,6 +315,11 @@ def _find_tagged_numbers(text: str) -> Dict[str, float]:
                     dist, precedes = kstart - end, 1
                 else:
                     dist, precedes = 0, 0
+                # "acres" is a unit: it follows its number ("3 acres 20000 budget"),
+                # so for area the keyword *after* the number wins a tie. Labels such
+                # as "budget" and "profit" keep preferring the keyword before.
+                if role == "area" and dist:
+                    precedes = 1 - precedes
                 if dist <= _WINDOW and (best_for_role is None or (dist, precedes) < best_for_role):
                     best_for_role = (dist, precedes)
             if best_for_role is not None:
@@ -564,7 +569,10 @@ def _intent_recommend(region: Optional[str], season: Optional[str], text: str, l
     budget = tagged.get("budget")
     area = tagged.get("area")
     if budget is None:
-        budget = leftover.pop(0) if leftover else 15000.0
+        # Unstated budget: what crops typically cost here this season, as the
+        # dashboard and season planner default to (N-7). The old flat Rs 15,000 sat
+        # below rice and cotton, so the chat ranked them underfunded.
+        budget = leftover.pop(0) if leftover else _default_budget(region, season)
     if area is None:
         area = leftover.pop(0) if leftover else 3.0
     if not _sane_budget(budget) or not _sane_area(area):
@@ -627,6 +635,13 @@ def _kv_list(d: Dict[str, Any], keys: Optional[List[str]] = None) -> str:
     return "\n".join(lines)
 
 
+def _cannot_wait_for_peak(res: Dict[str, Any]) -> bool:
+    """True when the seasonal peak is further away than the crop keeps."""
+    keeps = res.get("max_storage_weeks")
+    months = res.get("months_to_peak")
+    return keeps is not None and months is not None and months > 0 and months * 4.35 > keeps
+
+
 def _intent_sell_advice(crop: Dict[str, str], region: Optional[str], lang: str) -> Reply:
     if not region:
         if lang == "en":
@@ -637,11 +652,18 @@ def _intent_sell_advice(crop: Dict[str, str], region: Optional[str], lang: str) 
     except Exception as e:
         return (f"Couldn't compute sell advice: {e}" if lang == "en" else T(lang, "sell_error", err=e)), []
     rtxt = region_display_name(region)
+    # A peak months away means nothing for a crop that keeps a week or two: show the
+    # advice and today's price, not a "best month" the farmer cannot wait for.
+    if isinstance(res, dict) and _cannot_wait_for_peak(res):
+        res = {k: v for k, v in res.items()
+               if k not in ("best_month", "best_month_avg_price", "potential_gain_pct")}
     if lang == "en":
         lines = [f"### Sell advice — {crop['crop_name']} @ {rtxt}\n"]
         if isinstance(res, dict):
             if "advice" in res:
                 lines.append(f"**Advice:** {res['advice']}\n")
+            if res.get("max_storage_weeks") is not None and "best_month" not in res:
+                lines.append(f"- **Keeps without cold storage:** about {res['max_storage_weeks']} week(s)")
             if "best_month" in res:
                 lines.append(f"- **Best month to sell:** Month {res['best_month']}")
             if "best_month_avg_price" in res:
@@ -1013,7 +1035,7 @@ def _intent_rotation(region: Optional[str], lang: str) -> Reply:
         return (("Which region should I plan a rotation for?" if lang == "en"
                  else T(lang, "recommend_need_region")), ["List regions"])
     try:
-        plan = rotation_planner(region, 15000, 3)
+        plan = rotation_planner(region, _default_budget(region, "kharif"), 3)
     except Exception as e:
         return ((f"Couldn't plan a rotation: {e}" if lang == "en"
                  else T(lang, "generic_error", err=e)), [])
@@ -1071,12 +1093,21 @@ def _unknown_slash_reply(token: str, lang: str) -> Reply:
     return T(lang, "fallback"), ["/help", "/crops", "/regions"]
 
 
+def _default_budget(region: Optional[str], season: str) -> float:
+    """The region's typical per-acre input cost for the season; Rs 15,000 only
+    when the region is unknown (the intent then reports the bad region itself)."""
+    try:
+        return round(typical_budget_per_acre(region, season)) if region else 15000.0
+    except ValueError:
+        return 15000.0
+
+
 def _build_actions(intent: str, crop: Optional[Dict[str, str]], region: Optional[str],
                    season: Optional[str], nums: List[float]) -> List[Dict[str, str]]:
     """Build deep-link buttons into the dashboard for the given intent."""
     acts: List[Dict[str, str]] = []
     if intent == "recommend":
-        budget = nums[0] if nums else 15000
+        budget = nums[0] if nums else _default_budget(region, season if season in _VALID_SEASONS else "kharif")
         area = nums[1] if len(nums) > 1 else 3
         acts.append(_action(
             "Open in dashboard →",

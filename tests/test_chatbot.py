@@ -7,6 +7,8 @@ from __future__ import annotations
 import csv
 from pathlib import Path
 
+import pytest
+
 from backend.chatbot import answer
 from engine.chatbot_i18n import (
     STATE_SYNONYMS,
@@ -213,3 +215,23 @@ def test_chatbot_hindi_suggestion_for_crop_still_routes_to_recommend_c14():
     the generic fallback or some other intent)."""
     res = answer("मेरी फसल के लिए सुझाव दीजिए")
     assert res["reply"] == T("hi", "recommend_need_region")
+
+
+@pytest.mark.parametrize("text", [
+    "3 acres 20000 budget", "20000 budget 3 acres", "budget 20000 for 3 acres",
+    "15000 budget and 3 acres", "3 acres and 15000 budget",
+])
+def test_acres_bind_to_the_number_before_them(text):
+    from backend.chatbot import _find_tagged_numbers
+    tags = _find_tagged_numbers(text)
+    assert tags["area"] == 3.0
+    assert tags["budget"] in (15000.0, 20000.0)
+
+
+def test_unstated_budget_is_the_regions_typical_cost():
+    """N-7: the chat used a flat Rs 15,000/acre, below rice and cotton's cost."""
+    import ml.predict as P
+    from backend.chatbot import answer
+    reply = answer("what should I grow in medak this kharif", {})["reply"]
+    typical = round(P.typical_budget_per_acre("telangana_medak", "kharif"))
+    assert f"₹{typical:,}/acre" in reply

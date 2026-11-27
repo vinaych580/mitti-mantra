@@ -1,0 +1,54 @@
+name: Production check
+
+# Phase 3.6: every day, call the live site's health endpoint, its pages and data
+# files, and the eight ranking cases from the 2026-11-11 defect register
+# (scripts/ci/prod_check.py). On failure, open an issue labelled prod-check, or
+# comment on the one already open, so a broken production is noticed within a day.
+
+on:
+  schedule:
+    - cron: "0 3 * * *"   # daily 08:30 IST, after the 08:00 data refresh
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: prod-check
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check production
+        id: check
+        run: |
+          set -o pipefail
+          python scripts/ci/prod_check.py https://mitti-mantra-drab.vercel.app | tee report.txt
+      - name: Report the failure as an issue
+        if: failure() && steps.check.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          {
+            echo "The daily production check failed on $(date -u +%Y-%m-%d). Run: $RUN_URL"
+            echo
+            echo '```'
+            grep -E '^(FAIL|ok|  )|checks passed' report.txt
+            echo '```'
+          } > body.md
+          gh label create prod-check --color B60205 --description "Daily production check failed" 2>/dev/null || true
+          open=$(gh issue list --label prod-check --state open --json number --jq '.[0].number')
+          if [ -n "$open" ]; then
+            gh issue comment "$open" --body-file body.md
+          else
+            gh issue create --title "Production check failed" --label prod-check --body-file body.md
+          fi
