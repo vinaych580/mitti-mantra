@@ -2029,15 +2029,18 @@
           <div class="kpi"><div class="kpi__lbl">Predicted yield</div>
             <div class="kpi__val">${Math.round(top.predicted_yield_kg_per_acre)} <span style="font-size:.5em;color:var(--ink-faint)">kg/ac</span></div>
             ${recYieldRange(top) ? `<div class="kpi__sub">${text('8 seasons in 10:')} ${NUM(recYieldRange(top))}</div>` : ''}</div>
-          <div class="kpi kpi--good"><div class="kpi__lbl">Profit (${area} ac)</div>
-            <div class="kpi__val">${TT(top.expected_profit, INR(top.expected_profit))}</div>
-            <div class="kpi__sub">ROI ${PCT(top.roi_percent)}${top.good_farm ? ` · ${text('Typical farm in this district')}` : ''}</div>
-            ${recProfitRange(top) ? `<div class="kpi__sub">${text('8 seasons in 10:')} ${NUM(recProfitRange(top))}</div>` : ''}</div>
           ${top.good_farm ? `
           <div class="kpi kpi--info"><div class="kpi__lbl">${text('Good farm')} (${NUM(area)} ac)</div>
             <div class="kpi__val">${TT(top.good_farm.expected_profit, INR(top.good_farm.expected_profit))}</div>
             <div class="kpi__sub">${NUM(Math.round(top.good_farm.yield_kg_per_acre))} kg/ac · ${text('well-managed field')}</div></div>` : ''}
         </div>
+        ${window.MMEstimate ? window.MMEstimate.html(window.MMEstimate.fromRecommendation(top, {
+          area,
+          label: `${text('Profit')} · ${NUM(area)} ${text('acres')}${top.good_farm ? ` · ${text('Typical farm in this district')}` : ''}`,
+          cardHref: 'dashboard.html?tool=ml', cardTool: 'ml',
+        })) : `<div class="kpi kpi--good"><div class="kpi__lbl">Profit (${area} ac)</div>
+            <div class="kpi__val">${TT(top.expected_profit, INR(top.expected_profit))}</div>
+            ${recProfitRange(top) ? `<div class="kpi__sub">${text('8 seasons in 10:')} ${NUM(recProfitRange(top))}</div>` : ''}</div>`}
         ${recBasisLine(top, true)}
 
         <div id="mm-planting-status">${alreadyCommitted ? plantingStatusHtml(alreadyCommitted.crop_id) : ''}</div>

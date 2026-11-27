@@ -538,6 +538,18 @@
 
   // Home page answer: a top crop with no harvest record in the district.
   "Not grown in this district before": "ಈ ಜಿಲ್ಲೆಯಲ್ಲಿ ಹಿಂದೆ ಬೆಳೆದಿಲ್ಲ",
+    'Confidence:': 'ವಿಶ್ವಾಸ:',
+    'Strong': 'ಬಲವಾದ',
+    'Fair': 'ಸಾಧಾರಣ',
+    'Weak': 'ದುರ್ಬಲ',
+    'Why this range': 'ಈ ವ್ಯಾಪ್ತಿ ಏಕೆ',
+    'Source:': 'ಮೂಲ:',
+    'data to': 'ದತ್ತಾಂಶ ತನಕ',
+    'model': 'ಮಾದರಿ',
+    'How this is worked out': 'ಇದನ್ನು ಹೇಗೆ ಲೆಕ್ಕಿಸಲಾಗುತ್ತದೆ',
+    'Most likely': 'ಹೆಚ್ಚು ಸಾಧ್ಯತೆ',
+    'Yield:': 'ಇಳುವರಿ:',
+    'years old.': 'ವರ್ಷ ಹಳೆಯದು.',
 };
 
 // Season planning workflow (Phase 0: brought level with hi and te).

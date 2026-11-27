@@ -3713,7 +3713,9 @@ body.mm-menu-open .qw-panel {
 
 @media (max-width: 640px) {
   .chart-grid {
-    grid-template-columns: 1fr;
+    /* minmax(0, 1fr) here too: one bare 1fr column kept the canvas's
+       intrinsic width and widened the page to 397px at 375. */
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -8153,6 +8155,120 @@ html[data-theme="dark"] .mm-palette__item.is-active .mm-palette__ico { color: #9
 .kpi__sub [data-no-translate],
 .list-row__val [data-no-translate] {
   white-space: nowrap;
+}
+
+/* ---- <mm-estimate> (Phase 4.4) ----
+   A predicted number as a range, a confidence word, why, and its source.
+   The word's colour sits on a dot; the word itself stays ink (Legibility
+   Over Palette). One accent per estimate, by its word. */
+mm-estimate {
+  display: block;
+}
+
+.mm-est {
+  --f-accent: var(--brand);
+  margin: 16px 0 4px;
+  padding: 18px 20px;
+  border-radius: var(--r-md);
+  background: var(--bg-soft);
+  border-left: 3px solid var(--f-accent);
+}
+
+.mm-est--fair {
+  --f-accent: var(--accent);
+}
+
+.mm-est--weak {
+  --f-accent: var(--clay);
+}
+
+.mm-est__top {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 6px 14px;
+}
+
+.mm-est__label {
+  font-size: var(--fs-3xs);
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.mm-est__word {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-2xs);
+  color: var(--ink);
+}
+
+.mm-est__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--f-accent);
+}
+
+.mm-est__range {
+  margin: 6px 0 0;
+  font-size: clamp(1.35rem, 2.4vw, 1.7rem);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.mm-est__mid {
+  margin: 2px 0 0;
+  font-size: var(--fs-xs);
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.mm-est__note,
+.mm-est__stale,
+.mm-est__src {
+  margin: 8px 0 0;
+  font-size: var(--fs-2xs);
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.mm-est__stale {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.mm-est__why {
+  margin-top: 10px;
+}
+
+.mm-est__why summary {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.mm-est__why ul {
+  margin: 4px 0 0;
+  padding-left: 18px;
+  font-size: var(--fs-2xs);
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+.mm-est__src a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--brand);
+  text-underline-offset: 3px;
 }
 
 .mm-crop-chips {
