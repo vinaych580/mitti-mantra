@@ -128,3 +128,19 @@ def test_route_prefix_reconstruction():
     assert f({"route": R("/api/health"), "path": "/api/health"}) == "/api/health"
     assert f({"route": R("/"), "path": "/"}) == "/"
     assert f({"path": "/x"}) is None
+
+
+def test_vercel_function_globs_fit_vercels_schema():
+    """Vercel rejects the whole deployment (before building) when a function's
+    includeFiles/excludeFiles glob is longer than 256 characters."""
+    cfg = json.loads((observability.ROOT / "vercel.json").read_text(encoding="utf-8"))
+    for name, fn in cfg["functions"].items():
+        for key in ("includeFiles", "excludeFiles"):
+            assert len(fn.get(key, "")) <= 256, f"{name}.{key} is {len(fn[key])} characters"
+
+
+def test_the_data_manifest_ships_with_the_function():
+    # Not in includeFiles (no room): .vercelignore un-ignores it and the preview
+    # bundle carries it (checked on the phase3-observability preview, 2026-11-27).
+    ignore = (observability.ROOT / ".vercelignore").read_text(encoding="utf-8").splitlines()
+    assert "!pipelines/manifest.json" in ignore
