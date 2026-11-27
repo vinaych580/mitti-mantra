@@ -40,6 +40,8 @@
     'When and where do I sell?': 'ಯಾವಾಗ, ಎಲ್ಲಿ ಮಾರಬೇಕು?',
     'Can I afford it?': 'ಖರ್ಚು ಭರಿಸಬಹುದೇ?',
     'Got it': 'ಸರಿ',
+    'More': 'ಇನ್ನಷ್ಟು',
+    'Dashboard sections': 'ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ವಿಭಾಗಗಳು',
 
     'Smart recommend': 'ಸ್ಮಾರ್ಟ್ ಶಿಫಾರಸು',
     'Yield & profit': 'ಇಳುವರಿ & ಲಾಭ',

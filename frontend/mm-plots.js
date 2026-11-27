@@ -88,6 +88,8 @@
     var select = wrap.querySelector('[data-mm-plot]');
 
     // Nothing saved yet — keep the "+" affordance but drop the empty dropdown.
+    // The class lets the one-line phone farm bar leave this variant out.
+    wrap.classList.toggle('mm-plotpick--empty', !plots.length);
     if (!plots.length) {
       select.style.display = 'none';
       wrap.querySelector('small').textContent = 'Plot';

@@ -42,6 +42,8 @@
     'Tools have moved.': 'టూల్స్ స్థానం మారింది.',
     'They are now grouped by the season: Plan, Grow, Sell and Money.': 'ఇప్పుడు అవి సీజన్ క్రమంలో ఉన్నాయి: ప్రణాళిక, పెంచడం, అమ్మకం, డబ్బు.',
     'Got it': 'సరే',
+    'More': 'మరిన్ని',
+    'Dashboard sections': 'డాష్‌బోర్డ్ విభాగాలు',
 
     'Smart recommend': 'స్మార్ట్ సిఫారసు',
     'Yield & profit': 'దిగుబడి & లాభం',

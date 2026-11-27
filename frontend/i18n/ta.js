@@ -40,6 +40,8 @@
     'When and where do I sell?': 'எப்போது, எங்கே விற்க வேண்டும்?',
     'Can I afford it?': 'செலவைச் சமாளிக்க முடியுமா?',
     'Got it': 'சரி',
+    'More': 'மேலும்',
+    'Dashboard sections': 'டாஷ்போர்டு பிரிவுகள்',
 
     'Smart recommend': 'ஸ்மார்ட் பரிந்துரை',
     'Yield & profit': 'விளைச்சல் & லாபம்',
