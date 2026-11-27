@@ -5,7 +5,7 @@
   "installCommand": "",
   "functions": {
     "api/index.py": {
-      "includeFiles": "{dataset/*.csv,dataset/serving.sqlite,backend/**/*.py,backend/*.json,engine/**/*.py,utils/**/*.py,ml/**/*.py,ml/models/*.joblib,ml/models/*.json,ml/models/*.onnx,ml/models/*/current.joblib,ml/models/*/metrics.json,data_ingestion/**/*.py,pipelines/manifest.json}",
+      "includeFiles": "{dataset/*.csv,dataset/serving.sqlite,backend/**/*.py,backend/*.json,engine/**/*.py,utils/**/*.py,ml/**/*.py,ml/models/*.joblib,ml/models/*.json,ml/models/*.onnx,ml/models/*/current.joblib,ml/models/*/metrics.json,data_ingestion/**/*.py}",
       "excludeFiles": "{.venv/**,venv/**,.vercel/**,public/**,node_modules/**,dataset/plantvillage/**}",
       "maxDuration": 30,
       "memory": 1024
