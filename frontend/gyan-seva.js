@@ -1835,7 +1835,7 @@
           <div class="gs-scan-result">
             <div class="gs-scan-result__row"><span class="gs-scan-result__label">Screening result</span><span class="gs-scan-result__val">${esc(r.disease)}</span></div>
             <div class="gs-scan-result__row"><span class="gs-scan-result__label">Heuristic confidence</span><span class="gs-scan-result__val">${Math.round((r.confidence || 0) * 100)}%</span></div>
-            <div class="gs-scan-result__row"><span class="gs-scan-result__label">Severity</span><span class="gs-scan-result__val">${esc(r.severity || '—')}</span></div>
+            <div class="gs-scan-result__row"><span class="gs-scan-result__label">Severity</span><span class="gs-scan-result__val">${esc(r.severity ? r.severity.charAt(0).toUpperCase() + r.severity.slice(1) : '—')}</span></div>
             <div class="gs-scan-result__row"><span class="gs-scan-result__label">Crop matched</span><span class="gs-scan-result__val">${esc(r.crop_matched || '—')}</span></div>
             <p class="gs-scan-disclaimer">${esc(r.disclaimer || 'This is not a diagnosis. Confirm symptoms with a qualified agronomist before treatment.')}</p>
             ${!isHealthy ? `<button type="button" class="btn-gs-primary" id="gsScanFindExpertBtn" style="width:100%;margin-top:12px;">🔍 Find an Expert for This</button>` : ''}

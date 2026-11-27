@@ -5146,14 +5146,14 @@
         // headline and the plan below can't disagree. The canvas estimate is
         // only a fallback for responses that don't carry it (demo mode).
         if (typeof r.lesion_area_pct === 'number') lesionPct = r.lesion_area_pct;
-        if (['early', 'moderate', 'severe'].includes(r.severity)) severity = r.severity;
+        if (['healthy', 'early', 'moderate', 'severe'].includes(r.severity)) severity = r.severity;
         const severitySource = typeof r.lesion_area_pct === 'number' ? 'Measured on your photo' : 'Estimated on-device';
 
         // 3. Queue Analytics Log
         queueOfflineLog(matchedCrop, diseaseName, confidence, severity, regionId, lesionPct);
 
         // 4. Render Results UI
-        const sevClass = severity === 'early' ? 'good' : severity === 'moderate' ? 'warn' : 'red';
+        const sevClass = (severity === 'early' || severity === 'healthy') ? 'good' : severity === 'moderate' ? 'warn' : 'red';
         const sevLabel = severity.charAt(0).toUpperCase() + severity.slice(1);
         const formattedConf = PCT(confidence * 100);
 
