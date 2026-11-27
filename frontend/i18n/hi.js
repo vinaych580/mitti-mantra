@@ -46,6 +46,8 @@
     'Tools have moved.': 'टूल की जगह बदल गई है।',
     'They are now grouped by the season: Plan, Grow, Sell and Money.': 'अब ये मौसम के क्रम में हैं: योजना, उगाएं, बेचें और पैसा।',
     'Got it': 'ठीक है',
+    'More': 'और',
+    'Dashboard sections': 'डैशबोर्ड के हिस्से',
 
     // Sidebar tool names
     'Smart recommend': 'स्मार्ट सिफ़ारिश',
