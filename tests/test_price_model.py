@@ -38,6 +38,46 @@ def test_sell_advice_shows_the_downside():
     assert "low end of the range" in adv["reason"]
 
 
+def test_sell_advice_never_holds_longer_than_the_crop_keeps():
+    # Prices rise all the way to 26 weeks: before the cap this said "hold tomato 26 weeks".
+    tomato = pm.sell_advice(_fc(), 1000, 0.1, 0, crop_id="tomato")
+    assert [o["weeks"] for o in tomato["options"]] == [0, 1]
+    assert tomato["recommendation"] in ("sell_now", "hold_1_weeks")
+    assert tomato["storage_limited"] is True and tomato["max_storage_weeks"] == 1
+    onion = pm.sell_advice(_fc(), 1000, 0.1, 0, crop_id="onion")
+    assert max(o["weeks"] for o in onion["options"]) == 12
+
+
+def test_sugarcane_is_sell_now_only():
+    cane = pm.sell_advice(_fc(), 1000, 0.1, 0, crop_id="sugarcane")
+    assert [o["action"] for o in cane["options"]] == ["sell_now"]
+    assert cane["recommendation"] == "sell_now"
+    assert "within days of harvest" in cane["reason"]
+
+
+def test_grains_keep_every_horizon():
+    rice = pm.sell_advice(_fc(), 1000, 0.1, 0, crop_id="rice")
+    assert [o["weeks"] for o in rice["options"]] == [0, *pm.HORIZONS]
+    assert rice["storage_limited"] is False and rice["max_storage_weeks"] is None
+
+
+def test_seasonal_sell_advisor_does_not_hold_perishables(monkeypatch):
+    from engine import features
+
+    # Peak price four months away, 40% above today: grain is told to hold, tomato to sell.
+    rows = [{"date": f"2025-{m:02d}-01", "price": 10.0} for m in range(1, 13)]
+    from datetime import datetime as real_dt
+    peak = (real_dt.now().month + 3) % 12 + 1
+    rows[peak - 1]["price"] = 14.0
+    rows.append({"date": "2025-12-15", "price": 10.0})
+    monkeypatch.setattr(features, "_price_rows", lambda region, crop: [dict(r) for r in rows])
+    tomato = features.best_time_to_sell("x", "tomato")
+    assert tomato["action"] == "sell" and "keeps only" in tomato["advice"]
+    assert tomato["max_storage_weeks"] == 1
+    wheat = features.best_time_to_sell("x", "wheat")
+    assert wheat["max_storage_weeks"] is None
+
+
 def test_window_means_ignore_gaps():
     M = np.array([[1.0, np.nan, 3.0, 5.0]])
     assert np.allclose(pm._rolling_mean(M, 2), [[1.0, 1.0, 3.0, 4.0]])
