@@ -2207,6 +2207,29 @@
   /* ==========================================================
      TOOL 2: Simulate (auto-fetches soil & weather)
      ========================================================== */
+  // The simulator's price field started at a flat ₹22/kg whatever the crop
+  // or district, while every other tool reads the district's latest mandi
+  // price. Fill it from the same source until the visitor types their own.
+  (function simulatePriceFromMandi() {
+    const form = $('[data-form="simulate"]');
+    if (!form || !form.mandi_price_per_kg) return;
+    let typed = false;
+    form.mandi_price_per_kg.addEventListener('input', () => { typed = true; });
+    let seq = 0;
+    const refresh = async () => {
+      const crop = form.crop_id && form.crop_id.value, region = form.region_id && form.region_id.value;
+      if (typed || !crop || !region) return;
+      const mine = ++seq;
+      try {
+        const m = await api(`/api/market?region_id=${encodeURIComponent(region)}&crop_id=${encodeURIComponent(crop)}`);
+        const p = Number(m && m.current_mandi_price_inr_per_kg);
+        if (mine === seq && !typed && p > 0) form.mandi_price_per_kg.value = Math.round(p * 100) / 100;
+      } catch (_) { /* offline: keep what is there */ }
+    };
+    form.addEventListener('change', (e) => { if (e.target.name === 'crop_id' || e.target.name === 'region_id') refresh(); });
+    setTimeout(refresh, 1200); // after regions, crops and the saved profile have filled the form
+  })();
+
   $('[data-form="simulate"]')?.addEventListener('submit', async e => {
     e.preventDefault();
     const out = $('[data-out="simulate"]');
@@ -2237,7 +2260,7 @@
         area_acres: parseFloat(f.area_acres),
         mandi_price_per_kg: parseFloat(f.mandi_price_per_kg),
         irrigation_level: parseFloat(f.irrigation_level),
-        seed_variety: 'standard', sowing_date: '2024-06-15',
+        seed_variety: 'standard',
         soil, weather,
         input_plan: {
           seed_cost_per_acre: +f.seed_cost_per_acre,
@@ -2288,6 +2311,8 @@
             <div class="kpi__val">${Math.round(water.water_per_kg_yield_liters || 0)} <span style="font-size:.5em">L</span></div>
             <div class="kpi__sub">${Math.round(water.irrigation_coverage_percent || 0)}% covered</div></div>
         </div>
+
+        <p class="tool-note">What-if result for a well-managed field at the costs and price you entered. Smart recommend and Compare crops use this district's recorded yields instead, so their numbers are usually lower.</p>
 
         <div class="chart-box" data-benchmark-card style="margin-top:14px;">
           <div class="chart-box__title">Regional benchmark</div>
@@ -2995,6 +3020,30 @@
   /* ==========================================================
      TOOL 9: Irrigation — weekly_schedule[], priority field
      ========================================================== */
+  // The sowing date shipped as 15 Jun 2025, so the schedule planned a
+  // season already over. Default to this season's usual start instead
+  // (the current one while sowing is under way, else the next), unless the
+  // visitor has picked a date.
+  (function defaultSowingDate() {
+    const input = $('[data-form="irrigation"] [name="sowing_date"]');
+    if (!input) return;
+    const START = { kharif: [5, 15], rabi: [10, 1], zaid: [2, 1] }; // [month index, day]
+    let touched = false;
+    input.addEventListener('input', () => { touched = true; });
+    const apply = () => {
+      if (touched) return;
+      const season = (window.MM?.profile?.get?.() || {}).season || 'kharif';
+      const [m, d] = START[season] || START.kharif;
+      const today = new Date();
+      let start = new Date(today.getFullYear(), m, d);
+      if (today - start > 60 * 864e5) start = new Date(today.getFullYear() + 1, m, d);
+      const pad = n => String(n).padStart(2, '0');
+      input.value = `${start.getFullYear()}-${pad(start.getMonth() + 1)}-${pad(start.getDate())}`;
+    };
+    apply();
+    document.addEventListener('mm:profile-changed', apply);
+  })();
+
   $('[data-form="irrigation"]')?.addEventListener('submit', async e => {
     e.preventDefault();
     const out = $('[data-out="irrigation"]');
@@ -3662,32 +3711,37 @@
       out.innerHTML = '<div class="alert alert--gold"><div class="alert__body"><strong>Pick at least 2 crops</strong><p>Tick two to six crops in the list above.</p></div></div>';
       return;
     }
-    showLoading(out, `Simulating ${selected.length} crops in parallel…`);
+    showLoading(out, `Comparing ${selected.length} crops…`);
     try {
       const f = formToObj(form);
-      const override = (window.__agrisimWeatherOverride && window.__agrisimWeatherOverride()) || null;
-      const farmSoil = (window.__agrisimFarmSoil && window.__agrisimFarmSoil()) || null;
-      const [soilRaw, weatherRaw] = await Promise.all([
-        farmSoil ? Promise.resolve(farmSoil) : api(`/api/soil/${f.region_id}`).catch(() => ({})),
-        override ? Promise.resolve(override) : api(`/api/weather/${f.region_id}?season=${f.season}`).catch(() => ({}))
-      ]);
-      const coerce = o => Object.fromEntries(Object.entries(o || {}).map(([k, v]) =>
-        [k, (typeof v === 'string' && v.trim() !== '' && !isNaN(Number(v))) ? Number(v) : v]));
-
-      const body = {
-        crop_ids: selected,
-        area_acres: parseFloat(f.area_acres),
-        region_id: f.region_id,
-        budget_per_acre: parseFloat(f.budget_per_acre),
-        irrigation_level: parseFloat(f.irrigation_level),
-        seed_variety: 'standard', sowing_date: '2024-06-15',
-        soil: coerce(soilRaw),
-        weather: coerce(weatherRaw)
-      };
-      const data = await api('/api/batch-simulate', { method: 'POST', body: JSON.stringify(body) });
-      const results = data.results || [];
-      if (!results.length) {
-        out.innerHTML = '<div class="alert alert--red"><div class="alert__body"><strong>No results</strong><p>' + (data.errors?.[0]?.error || 'Batch simulation returned nothing.') + '</p></div></div>';
+      // Same engine and inputs as Smart recommend (district yield record
+      // where one exists, the district's latest mandi price, the budget
+      // scaling), so a crop shows one profit everywhere on the dashboard.
+      // This used to run the rule-based simulator at full-potential yield,
+      // which put rice at 2,861 kg/ac and ₹3.9 lakh here while Smart
+      // recommend said 1,755 kg/ac and ₹2.0 lakh for the same farm.
+      const qs = new URLSearchParams({ budget_per_acre: parseFloat(f.budget_per_acre), area_acres: parseFloat(f.area_acres) });
+      const all = await api(`/api/crop-comparison/${encodeURIComponent(f.region_id)}/${encodeURIComponent(f.season)}?${qs}`);
+      const byId = new Map((Array.isArray(all) ? all : []).map(r => [r.crop_id, r]));
+      const results = selected.filter(id => byId.has(id)).map(id => {
+        const r = byId.get(id);
+        return {
+          crop_id: id,
+          profit: r.expected_profit,
+          roi_percent: r.roi_percent,
+          risk_score: r.risk_score,
+          yield_kg_per_acre: r.predicted_yield_kg_per_acre,
+          revenue: r.expected_profit + (r.planned_cost || 0),
+          source: r.prediction_source,
+        };
+      }).sort((a, b) => b.profit - a.profit);
+      const offSeason = selected.filter(id => !byId.has(id));
+      const data = { results, total_simulated: results.length,
+        errors: offSeason.map(id => ({ crop_id: id, error: `${cropLabel(id)} is not a ${f.season} crop here` })) };
+      if (results.length < 2) {
+        out.innerHTML = '<div class="alert alert--gold"><div class="alert__body"><strong>Not enough crops for this season</strong><p>'
+          + (offSeason.length ? escHtml(offSeason.map(cropLabel).join(', ')) + ' cannot be grown in ' + escHtml(f.season) + ' here. ' : '')
+          + 'Pick at least two crops that grow in this season.</p></div></div>';
         return;
       }
 
@@ -3699,9 +3753,9 @@
             <div class="kpi__sub">Profit ${INR(best.profit)}</div></div>
           <div class="kpi"><div class="kpi__lbl">Best ROI</div>
             <div class="kpi__val">${PCT(Math.max(...results.map(r => r.roi_percent)))}</div></div>
-          <div class="kpi kpi--info"><div class="kpi__lbl">Crops simulated</div>
+          <div class="kpi kpi--info"><div class="kpi__lbl">Crops compared</div>
             <div class="kpi__val">${data.total_simulated}</div>
-            <div class="kpi__sub">${data.errors?.length ? data.errors.length + ' errors' : 'all succeeded'}</div></div>
+            <div class="kpi__sub">${data.errors?.length ? escHtml(data.errors.map(x => cropLabel(x.crop_id)).join(', ')) + ': not this season' : 'same numbers as Smart recommend'}</div></div>
           <div class="kpi kpi--warn"><div class="kpi__lbl">Profit spread</div>
             <div class="kpi__val">${INR(best.profit - results[results.length - 1].profit)}</div>
             <div class="kpi__sub">winner − loser</div></div>

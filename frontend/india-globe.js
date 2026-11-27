@@ -594,6 +594,9 @@
   let targetRotY = -(INDIA_LON * Math.PI / 180);
   let targetRotX = (INDIA_LAT * Math.PI / 180) * 0.6;
   let rotY = targetRotY, rotX = targetRotX;
+  const INDIA_ROT_Y = targetRotY, INDIA_ROT_X = targetRotX;
+  const TAU = Math.PI * 2, SWAY = 0.38; // about +/- 22 degrees
+  let swayT = 0;
 
   /* ---------- Particles ---------- */
   const particleCount = 80;
@@ -767,7 +770,16 @@
 
   function tick() {
     const dt = clock.getDelta();
-    if (autoRotate) targetRotY += dt * 0.1;
+    // Idle motion is a slow sway centred on India rather than a full spin:
+    // India is the only shaded, clickable land, and a full turn kept it off
+    // screen two-thirds of the time. After a drag, the idle sway eases back
+    // to India the short way round (any whole turns from dragging dropped).
+    if (autoRotate) {
+      swayT += dt;
+      const centre = INDIA_ROT_Y + Math.round((rotY - INDIA_ROT_Y) / TAU) * TAU;
+      targetRotY = centre + SWAY * Math.sin(swayT * 0.35);
+      targetRotX += (INDIA_ROT_X - targetRotX) * 0.02;
+    }
     rotY += (targetRotY - rotY) * 0.08;
     rotX += (targetRotX - rotX) * 0.08;
     zoom += (targetZoom - zoom) * 0.08;

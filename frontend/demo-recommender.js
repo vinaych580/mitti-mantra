@@ -116,11 +116,18 @@
     // best answer on paper; say so, since there will be no neighbours, seed
     // dealers or buyers who know it.
     const local = r.grown_locally === false ? ' · <span class="answer__new">Not grown in this district before</span>' : '';
-    if (r.budget_adequate !== false) return '<span>Fits your budget</span>' + local;
+    // The ranking leans on what the district already grows (a crop with
+    // neighbours, seed and buyers is a safer bet than a bigger number on
+    // paper). Without saying so, a widely grown crop with a thin margin
+    // looked mis-ranked above a richer one.
+    const share = Number(r.adoption_share);
+    const grown = share >= 0.25
+      ? ` · <span>Most grown here</span>: <b>${Math.round(share * 100)}%</b> <span>of the district's area</span>` : '';
+    if (r.budget_adequate !== false) return '<span>Fits your budget</span>' + grown + local;
     const m = /(\d+)%/.exec(r.reason || '');
     return (m
       ? `<span>Usual cost covered</span>: <b>${m[1]}%</b> · <span>yield scaled to match</span>`
-      : '<span>Budget below this crop&rsquo;s usual cost</span>') + local;
+      : '<span>Budget below this crop&rsquo;s usual cost</span>') + grown + local;
   }
 
   function render(q, recs, source) {

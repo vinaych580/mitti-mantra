@@ -28,7 +28,14 @@
     const current=S.scope(window.MM.profile.get().season||'kharif');
     const keys=[...new Set([current,...(plot?.seasonPlans||[]).map(p=>p.season_key)])].sort().reverse();
     if(!keys.includes(key))key=current;
-    $('seasonKey').innerHTML=keys.map(k=>`<option value="${U.esc(k)}">${U.esc(k)}</option>`).join('');$('seasonKey').value=key;
+    $('seasonKey').innerHTML=keys.map(k=>`<option value="${U.esc(k)}">${U.esc(seasonLabel(k))}</option>`).join('');$('seasonKey').value=key;
+  }
+  // "kharif-2026" is a storage key; people read "Kharif 2026".
+  function seasonLabel(k){
+    const m=/^([a-z]+)-(\d{4})$/.exec(String(k||''));
+    if(!m)return String(k||'');
+    const name=m[1].charAt(0).toUpperCase()+m[1].slice(1);
+    return `${window.AgriSimI18n?.t?.(name)||name} ${m[2]}`;
   }
   function render(){
     refreshSelectors();
@@ -44,7 +51,7 @@
       const spent=expenses.reduce((n,e)=>n+(+e.amount||0),0);
       const revenue=sales.reduce((n,e)=>n+(+e.qty_kg||0)*(+e.price_per_kg||0),0);
       const net=revenue-spent;
-      $('seasonContent').innerHTML=`<section class="season-panel"><div class="season-grid"><div><p class="season-step-label">${U.text('Your saved crop choice')}</p><h2>${U.esc(plan.crop_name)}</h2><p>${U.esc(key)} · ${plan.inputs.area_acres} acres · ${U.text('Saved')} ${U.date(plan.saved_at)}</p></div><div class="field"><label for="planVersion">${U.text('Plan version')}</label><select id="planVersion">${plans.map(p=>`<option value="${U.esc(p.id)}" ${p.id===plan.id?'selected':''}>${p.version} · ${U.date(p.saved_at)} · ${U.esc(p.crop_name)}</option>`).join('')}</select></div></div>
+      $('seasonContent').innerHTML=`<section class="season-panel"><div class="season-grid"><div><p class="season-step-label">${U.text('Your saved crop choice')}</p><h2>${U.esc(plan.crop_name)}</h2><p>${U.esc(seasonLabel(key))} · ${plan.inputs.area_acres} acres · ${U.text('Saved')} ${U.date(plan.saved_at)}</p></div><div class="field"><label for="planVersion">${U.text('Plan version')}</label><select id="planVersion">${plans.map(p=>`<option value="${U.esc(p.id)}" ${p.id===plan.id?'selected':''}>${p.version} · ${U.date(p.saved_at)} · ${U.esc(p.crop_name)}</option>`).join('')}</select></div></div>
       <div class="season-stats"><div>${U.text('Original expected profit')}<strong>${U.money(plan.prediction.expected_profit)}</strong></div><div>${U.text('Spent so far')}<strong>${U.money(spent)}</strong></div><div>${U.text('Sales minus spend so far')}<strong>${sales.length?U.money(net):'—'}</strong></div></div>
       <p>${U.text('Recorded harvest sales')}: ${sales.length} · ${U.text('Total sales')}: ${U.money(revenue)}</p>
       ${sales.length?`<p>${U.text('Difference from saved estimate')}: ${U.money(net-plan.prediction.expected_profit)}</p><p class="season-note">${U.text('This is an in-progress comparison until all harvest sales and expenses are recorded.')}</p>`:''}
