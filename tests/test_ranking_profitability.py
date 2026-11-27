@@ -180,10 +180,11 @@ def test_measured_yields_never_exceed_the_potential_by_much():
 
 # Phase 2 ranks on each district's measured yield. Medak's DES turmeric record (cured
 # basis, the basis its mandi price is on) averages ~2,300 kg/acre and its last five
-# seasons ~2,900, against an input cost in crop_parameters of Rs 68,000/acre -- below
-# published turmeric cost-of-cultivation figures (owner decision, Phase 2 notes). The
-# yield is right; the cost is not, so live ROI passes 300% while staying under the
-# 400% data-error ceiling below.
+# seasons ~2,900, at a recent mandi price of ~Rs 106/kg. Its input cost of Rs 68,000/acre
+# matches a published survey (Guntur 2017-18, Rs 56,290/acre total cost) brought to the
+# 2021 cost basis the other crops use (checked 2026-11-27, Phase 3 notes). The high ROI
+# is a high-yield district at a high price against 2021-basis costs, so live ROI passes
+# 300% while staying under the 400% data-error ceiling below.
 KNOWN_COST_BASIS_GAPS = {"turmeric"}
 
 
