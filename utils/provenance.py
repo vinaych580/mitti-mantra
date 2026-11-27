@@ -21,7 +21,7 @@ import csv
 import json
 import os
 import time
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -95,7 +95,7 @@ def _max_column(csv_name: str, column: str) -> Optional[str]:
 
 def _season_end_iso(season: str, year: int) -> Optional[str]:
     """Last day of an agricultural season, for staleness purposes. Matches
-    data_ingestion/refresh_weather_seed.py's convention: kharif `year` runs
+    pipelines/sources/nasa_power.py's convention: kharif `year` runs
     Jun-Oct of `year`; rabi `year` runs Nov `year` to Mar `year + 1`."""
     if season == "kharif":
         return date(year, 10, 31).isoformat()
@@ -144,6 +144,28 @@ def _epoch_to_iso(epoch: Optional[float]) -> Optional[str]:
         return None
 
 
+def _synthetic_rows(csv_name: str) -> Optional[int]:
+    """Rows a pipeline marked is_synthetic=true; None when the file predates
+    the column (so the count is unknown, not zero)."""
+    path = _DATASET_DIR / csv_name
+    try:
+        with path.open("r", newline="", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            if "is_synthetic" not in (reader.fieldnames or []):
+                return None
+            return sum(1 for r in reader if (r.get("is_synthetic") or "").strip().lower() == "true")
+    except OSError:
+        return None
+
+
+def _store_meta() -> Dict[str, Dict[str, Any]]:
+    try:
+        from utils import store
+        return store.meta() if store.available() else {}
+    except Exception:  # a damaged store must not take down the freshness badge
+        return {}
+
+
 def _entry(
     source_id: str,
     label: str,
@@ -151,6 +173,7 @@ def _entry(
     as_of: Optional[str],
     upstream: str,
     detail: str = "",
+    synthetic_rows: Optional[int] = None,
 ) -> Dict[str, Any]:
     age = _age_days(as_of)
     return {
@@ -162,6 +185,7 @@ def _entry(
         "staleness": _staleness(source_id, age),
         "upstream": upstream,
         "detail": detail,
+        "synthetic_rows": synthetic_rows,
     }
 
 
@@ -181,22 +205,28 @@ def _mandi_entry() -> Dict[str, Any]:
     resolution = last_resolution()
     key_present = bool(os.getenv("DATAGOV_API_KEY"))
     seed_as_of = _max_column("mandi_prices.csv", "date")
+    week = _store_meta().get("price_district_weekly", {}).get("data_through")
+    if week:
+        # data_through is the Monday of the newest week; its last day is 6 later.
+        try:
+            seed_as_of = (date.fromisoformat(week) + timedelta(days=6)).isoformat()
+        except ValueError:
+            pass
 
     if key_present:
         reason = resolution.get("live_error") or "the live API has not been queried yet"
-        detail = f"Showing seed data — {reason}."
+        live = f"Live daily prices are not in use: {reason}."
     else:
-        detail = (
-            "Showing seed data — DATAGOV_API_KEY is not set, so live Agmarknet "
-            "prices are unavailable."
-        )
+        live = "Live daily prices need DATAGOV_API_KEY, which is not set."
+    detail = ("Weekly Agmarknet mandi prices, arrival-weighted per district. " + live)
     return _entry(
         "mandi_prices",
         "Mandi prices",
         "seed",
         seed_as_of,
-        "dataset/mandi_prices.csv",
+        "Agmarknet APMC arrivals and prices (India Data Portal, ODC-By)",
         detail,
+        _synthetic_rows("mandi_prices.csv"),
     )
 
 
@@ -239,17 +269,19 @@ def describe_sources() -> Dict[str, Any]:
             "Minimum support price",
             "seed",
             _max_column("msp_prices.csv", "year"),
-            "dataset/msp_prices.csv (CACP announcements)",
-            "MSP is announced once per season and changes rarely.",
+            "CACP Minimum Support Prices 1998 onward (India Data Portal); sugarcane FRP from CCEA announcements",
+            "MSP is announced once per season. Basmati has no MSP, so none is shown for it.",
+            _synthetic_rows("msp_prices.csv"),
         ),
         _entry(
             "weather",
             "Weather",
             "seed",
             _weather_as_of(),
-            "dataset/weather.csv (seasonal averages)",
-            "Planning uses seasonal averages from the CSV. The live Open-Meteo "
-            "fetcher currently covers only the three pilot regions.",
+            "NASA POWER daily (MERRA-2), seasonal totals per district",
+            "Planning uses measured seasonal rainfall and temperature for 1997 "
+            "onward. The live Open-Meteo forecast covers only the three pilot regions.",
+            _synthetic_rows("weather.csv"),
         ),
         # soil.csv carries no observation date, and its file mtime only reflects
         # when the repo was checked out — reporting that as an age would be
@@ -268,8 +300,10 @@ def describe_sources() -> Dict[str, Any]:
             "Yield history",
             "seed",
             _max_column("yield_history.csv", "year"),
-            "dataset/yield_history.csv",
-            "District yield records used to calibrate forecasts.",
+            "DES Area, Production and Yield, district level (India Data Portal, ODC-By)",
+            "Official district yields, last ten crop years, used to calibrate forecasts. "
+            "DES publishes with a lag of about a year.",
+            _synthetic_rows("yield_history.csv"),
         ),
         _ml_entry(),
     ]

@@ -137,6 +137,21 @@ def test_compute_region_saturation_no_baseline_omits_crop():
     assert "dragonfruit_unknown" not in result
 
 
+def _typical_area(region_id: str, crop_id: str, season: str) -> float:
+    """The saturation baseline: mean area over the region's 3 most recent
+    yield_history years for this crop and season (same rule as
+    ml.predict._compute_region_saturation), read from the measured data."""
+    import csv
+    from pathlib import Path
+
+    path = Path(__file__).resolve().parents[1] / "dataset" / "yield_history.csv"
+    with path.open(newline="", encoding="utf-8") as f:
+        rows = [r for r in csv.DictReader(f)
+                if (r["region_id"], r["crop_id"], r["season"]) == (region_id, crop_id, season)]
+    recent = sorted(rows, key=lambda r: int(r["year"]))[-3:]
+    return sum(float(r["area_acres"]) for r in recent) / len(recent)
+
+
 def test_compute_region_saturation_ratio_from_real_commitment(monkeypatch, tmp_path):
     from utils import commitment_log, db
     monkeypatch.setattr(db, "DB_PATH", tmp_path / "agrisim.db")
@@ -144,11 +159,9 @@ def test_compute_region_saturation_ratio_from_real_commitment(monkeypatch, tmp_p
     from ml.predict import _compute_region_saturation, _load_crop_parameters
     crop_params = _load_crop_parameters()
 
-    # telangana_medak/rice/kharif historical area_acres: 170887 (2022), 94356
-    # (2023), 111410 (2024) -> average exactly 125551.0.
     commitment_log.upsert(
         region_id="telangana_medak", crop_id="rice", season="kharif",
-        year=2099, area_acres=125551.0, device_id="dev_test",
+        year=2099, area_acres=_typical_area("telangana_medak", "rice", "kharif"), device_id="dev_test",
     )
     result = _compute_region_saturation("telangana_medak", "kharif", ["rice"], crop_params, year=2099)
     assert result["rice"]["ratio"] == pytest.approx(1.0)
@@ -164,7 +177,7 @@ def test_compute_region_saturation_ratio_clamped_at_two(monkeypatch, tmp_path):
 
     commitment_log.upsert(
         region_id="telangana_medak", crop_id="rice", season="kharif",
-        year=2099, area_acres=125551.0 * 5, device_id="dev_test",
+        year=2099, area_acres=_typical_area("telangana_medak", "rice", "kharif") * 5, device_id="dev_test",
     )
     result = _compute_region_saturation("telangana_medak", "kharif", ["rice"], crop_params, year=2099)
     assert result["rice"]["ratio"] == pytest.approx(2.0)

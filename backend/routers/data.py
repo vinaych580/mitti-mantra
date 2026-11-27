@@ -121,3 +121,104 @@ async def get_satellite_data(lat: float, lon: float):
         "ndvi": round(float(ndvi), 2),
         "canopy": canopy
     }
+
+
+# ---- Phase 1 serving store: every district the public sources cover -------
+# Backed by dataset/serving.sqlite (utils/store.py). On a deploy without the
+# store these return 503 so the UI can fall back to the 30 pilot regions.
+
+def _require_store():
+    from utils import store
+    if not store.available():
+        raise HTTPException(status_code=503, detail="District store not built on this deployment")
+    return store
+
+
+@router.get("/v1/districts")
+def list_districts(state: Optional[str] = None):
+    """State, district, point and which datasets cover it (spec 1.8)."""
+    store = _require_store()
+    rows = list(store.districts())
+    if state:
+        s = state.strip().lower()
+        rows = [r for r in rows if (r["state_name"] or "").lower() == s or str(r["state_code"]) == s]
+    return {"count": len(rows), "districts": rows}
+
+
+@router.get("/v1/districts/{district_id}")
+def get_district(district_id: str):
+    """One district by LGD id ("36-513") or legacy region id ("telangana_medak")."""
+    store = _require_store()
+    d = store.district(district_id)
+    if d is None:
+        raise HTTPException(status_code=404, detail=f"Unknown district: {district_id}")
+    return d
+
+
+@router.get("/v1/districts/{district_id}/yields")
+def get_district_yields(district_id: str, crop_id: Optional[str] = None):
+    store = _require_store()
+    d = store.district(district_id)
+    if d is None:
+        raise HTTPException(status_code=404, detail=f"Unknown district: {district_id}")
+    rows = store.yields(d["district_id"], crop_id)
+    return {"district": d, "rows": rows, "sources": store.sources_for(rows)}
+
+
+@router.get("/v1/districts/{district_id}/prices")
+def get_district_prices(district_id: str, crop_id: Optional[str] = None):
+    store = _require_store()
+    d = store.district(district_id)
+    if d is None:
+        raise HTTPException(status_code=404, detail=f"Unknown district: {district_id}")
+    rows = store.prices(d["district_id"], crop_id)
+    return {"district": d, "rows": rows, "sources": store.sources_for(rows)}
+
+
+@router.get("/v1/districts/{district_id}/soil")
+def get_district_soil(district_id: str):
+    """Soil Health Card: share of tested samples in each rating class, per nutrient."""
+    store = _require_store()
+    d = store.district(district_id)
+    if d is None:
+        raise HTTPException(status_code=404, detail=f"Unknown district: {district_id}")
+    rows = store.soil(d["district_id"])
+    return {"district": d, "rows": rows, "sources": store.sources_for(rows)}
+
+
+@router.get("/v1/districts/{district_id}/irrigation")
+def get_district_irrigation(district_id: str, crop_id: Optional[str] = None):
+    """Irrigated share of each crop's sown area, last ten years."""
+    store = _require_store()
+    d = store.district(district_id)
+    if d is None:
+        raise HTTPException(status_code=404, detail=f"Unknown district: {district_id}")
+    rows = store.irrigation(d["district_id"], crop_id)
+    return {"district": d, "rows": rows, "sources": store.sources_for(rows)}
+
+
+@router.get("/v1/districts/{district_id}/costs")
+def get_district_costs(district_id: str, crop_id: Optional[str] = None):
+    """Cost of Cultivation survey estimates for the district's state (Rs/acre).
+    The survey is state-level; no district series exists."""
+    store = _require_store()
+    d = store.district(district_id)
+    if d is None:
+        raise HTTPException(status_code=404, detail=f"Unknown district: {district_id}")
+    rows = store.costs(str(d["state_code"]), crop_id)
+    return {"district": d, "level": "state", "rows": rows, "sources": store.sources_for(rows)}
+
+
+@router.get("/v1/districts/{district_id}/weather")
+def get_district_weather(district_id: str, crop_id: Optional[str] = None, season: Optional[str] = None):
+    """Measured seasonal weather, growth-stage weather for the last three
+    seasons, and monsoon onset dates (NASA POWER daily, per district point)."""
+    store = _require_store()
+    d = store.district(district_id)
+    if d is None:
+        raise HTTPException(status_code=404, detail=f"Unknown district: {district_id}")
+    seasons = store.weather(d["district_id"], season)
+    stages = store.weather_stages(d["district_id"], crop_id)
+    onset = store.monsoon_onset(d["district_id"])
+    return {"district": d, "seasons": seasons, "stages": stages, "monsoon_onset": onset,
+            "sources": store.sources_for(seasons, stages, onset)}

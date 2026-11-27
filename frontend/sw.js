@@ -30,7 +30,10 @@
 // v62: Phase 0 -- season pages on the shared nav, mic buttons with a
 // listening state, capped offline cache, typical-budget defaults, and the
 // kn/ta season strings. Every precached season file changed.
-const VERSION = 'mittimantra-v62';
+// v63: Phase 1 -- region-geo.js points at the pipeline's pilot table; the nav
+// logo no longer collapses at 375px under long (Tamil) button labels, and the
+// your-data file button wraps instead of widening the page.
+const VERSION = 'mittimantra-v63';
 const CORE = [
   './',
   './index.html',

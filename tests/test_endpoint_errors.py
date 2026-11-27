@@ -30,11 +30,13 @@ def test_unknown_region_weather_is_404_not_400():
 
 
 def test_market_without_history_uses_crop_reference_price():
-    # mp_indore has no rice rows in dataset/mandi_prices.csv.
-    data = client.get("/api/market?region_id=mp_indore&crop_id=rice").json()
+    # Tea is sold at auction, not in mandis: Agmarknet has no tea series, so
+    # no region ever has tea rows in dataset/mandi_prices.csv. (This used
+    # mp_indore rice, which the measured Phase 1 data now covers.)
+    data = client.get("/api/market?region_id=mp_indore&crop_id=tea").json()
     assert data["price_source"] == "crop_reference"
-    # crop_parameters.csv: rice mandi band 18-30 INR/kg -> midpoint 24.
-    assert data["current_mandi_price_inr_per_kg"] == 24.0
+    # crop_parameters.csv: tea mandi band 140-260 INR/kg -> midpoint 200.
+    assert data["current_mandi_price_inr_per_kg"] == 200.0
 
 
 def test_market_with_history_reports_mandi_source():

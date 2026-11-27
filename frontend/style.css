@@ -474,6 +474,37 @@ section {
   }
 }
 
+/* The logo is the one nav item that must never give up width. Long button
+   labels (Tamil "Open dashboard" is ~300px on one line) used to squeeze it
+   to 0px at 375px; on narrow screens the label wraps to two lines instead. */
+.nav .logo {
+  flex-shrink: 0;
+}
+
+@media (max-width: 500px) {
+  .nav__wrap {
+    gap: 12px;
+    padding: 0 16px;
+  }
+
+  .nav__cta {
+    min-width: 0;
+    gap: 8px;
+  }
+
+  .nav__cta .btn-primary {
+    min-width: 0;
+    padding: 10px 16px;
+    white-space: normal;
+    line-height: 1.2;
+    text-align: center;
+  }
+
+  .nav__cta .btn-primary svg {
+    flex-shrink: 0;
+  }
+}
+
 /* ---------- Hero ---------- */
 .hero {
   position: relative;
@@ -7458,7 +7489,10 @@ html[data-theme="dark"] .scan-history__callout { background: rgba(200, 138, 58, 
 .data-summary__row b { font-variant-numeric: tabular-nums; font-weight: 600; }
 .data-empty { font-size: var(--fs-xs); color: var(--ink-soft); margin: 0; }
 .data-actions { display: flex; flex-wrap: wrap; gap: 10px; }
-.data-file { position: relative; overflow: hidden; cursor: pointer; }
+/* Long labels (Tamil "choose backup file" is ~360px) wrap instead of
+   widening the page past a 375px screen. */
+.data-file { position: relative; overflow: hidden; cursor: pointer; max-width: 100%; white-space: normal; text-align: center; line-height: 1.25; }
+.data-file > span { white-space: normal; }
 .data-file input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
 .data-file:focus-within { outline: 2px solid var(--brand); outline-offset: 2px; }
 .data-preview {

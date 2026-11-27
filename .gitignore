@@ -70,3 +70,12 @@ package-lock.json
 
 # Node (front-end vendor files are copied into frontend/vendor/)
 node_modules/
+
+# Phase 1 data pipeline: raw downloads, staged and curated tables (never committed)
+data/
+# Built by the pipeline and published as a release asset (pipelines/manifest.json
+# names it); fetched at deploy by scripts/fetch_serving_store.cjs
+dataset/serving.sqlite
+dataset/serving.sqlite.part
+dataset/serving.tmp
+public/

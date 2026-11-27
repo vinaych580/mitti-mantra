@@ -1,0 +1,13 @@
+# Sugarcane Fair and Remunerative Price (FRP), Rs per quintal at 10.25% recovery.
+# Sugarcane has had an FRP instead of an MSP since 2009-10, and the portal's MSP
+# series stops at 2017-18. Values are CCEA announcements (PIB press releases).
+# year = start of the sugar season ("2025-26" -> 2025).
+crop_id,year,season,msp_inr_per_quintal,msp_variety,source_note
+sugarcane,2018,annual,275,FRP,CCEA approval for sugar season 2018-19
+sugarcane,2019,annual,275,FRP,CCEA approval for sugar season 2019-20
+sugarcane,2020,annual,285,FRP,CCEA approval for sugar season 2020-21
+sugarcane,2021,annual,290,FRP,CCEA approval for sugar season 2021-22
+sugarcane,2022,annual,305,FRP,CCEA approval for sugar season 2022-23
+sugarcane,2023,annual,315,FRP,CCEA approval for sugar season 2023-24
+sugarcane,2024,annual,340,FRP,CCEA approval for sugar season 2024-25
+sugarcane,2025,annual,355,FRP,CCEA approval for sugar season 2025-26

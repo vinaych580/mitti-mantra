@@ -1,0 +1,94 @@
+name: Data refresh
+
+# Spec 1.6: Vercel has no long-running worker, so refresh runs here. Daily, the
+# job saves that day's live Agmarknet snapshot (needs the DATAGOV_API_KEY repo
+# secret; without it the step is skipped); on Mondays it also re-pulls this
+# year's bulk mandi prices and month-old weather. It rebuilds the serving store
+# through the validation gates and opens a pull request with the result. A
+# failing gate fails the job and nothing is proposed.
+
+on:
+  schedule:
+    - cron: "30 2 * * *"   # daily 08:00 IST
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: data-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+      - name: Install
+        run: pip install -r requirements.txt "pandas>=2.0.0" "pyarrow>=15"
+      # Raw downloads persist between runs so only new data is fetched.
+      - name: Restore raw downloads
+        uses: actions/cache@v4
+        with:
+          path: data/raw
+          key: data-raw-${{ github.run_id }}
+          restore-keys: data-raw-
+      - name: Refresh and build
+        env:
+          DATAGOV_API_KEY: ${{ secrets.DATAGOV_API_KEY }}
+        run: python -m pipelines.run refresh
+      - name: Upload the serving store to the data-store release
+        # serving.sqlite (~37 MB) is not committed: each build is uploaded as
+        # serving-<checksum>.sqlite, and the manifest in the PR names it, so a
+        # deploy fetches exactly the store its commit describes
+        # (scripts/fetch_serving_store.cjs). The last 30 are kept.
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          asset=$(python -c "import json;print(json.load(open('pipelines/manifest.json'))['serving']['asset'])")
+          gh release view data-store >/dev/null 2>&1 || \
+            gh release create data-store --title "Serving data store" --latest=false \
+              --notes "dataset/serving.sqlite builds, one asset per build, named by checksum. Fetched at deploy by scripts/fetch_serving_store.cjs."
+          if gh release view data-store --json assets --jq '.assets[].name' | grep -qx "$asset"; then
+            echo "$asset already uploaded"
+          else
+            cp dataset/serving.sqlite "$RUNNER_TEMP/$asset"
+            gh release upload data-store "$RUNNER_TEMP/$asset"
+          fi
+          gh release view data-store --json assets \
+            --jq '[.assets[] | select(.name | startswith("serving-"))] | sort_by(.createdAt) | reverse | .[30:] | .[].name' |
+            while read -r old; do gh release delete-asset data-store "$old" --yes; done
+      - name: Propose the refreshed data
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # The manifest's timestamps change on every build; data changed only
+          # if a CSV or the store checksum did.
+          old=$(git show HEAD:pipelines/manifest.json | python -c "import json,sys;print(json.load(sys.stdin).get('serving',{}).get('sha256',''))")
+          new=$(python -c "import json;print(json.load(open('pipelines/manifest.json'))['serving']['sha256'])")
+          if git diff --quiet -- dataset && [ "$old" = "$new" ]; then
+            echo "No data changed."
+            exit 0
+          fi
+          # One standing branch and PR: each run replaces the previous
+          # proposal, so unreviewed days do not pile up as separate PRs.
+          branch="data-refresh/auto"
+          git config user.name "data-refresh bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$branch"
+          git add dataset/yield_history.csv dataset/weather.csv dataset/mandi_prices.csv \
+                  dataset/msp_prices.csv pipelines/manifest.json
+          git commit -m "data: scheduled refresh $(date -u +%Y-%m-%d)"
+          git push --force origin "$branch"
+          if [ -z "$(gh pr list --head "$branch" --state open --json number --jq '.[].number')" ]; then
+            gh pr create --base master --head "$branch" \
+              --title "Data refresh" \
+              --body "Automated run of \`python -m pipelines.run refresh\`, updated in place by each scheduled run. Validation gates passed. Row counts are in pipelines/manifest.json; the store is the release asset it names."
+          fi

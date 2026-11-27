@@ -55,7 +55,7 @@ jobs:
       # in requirements-dev.txt are for offline disease-model training and are
       # never imported by tests.
       - name: Install
-        run: pip install -r requirements.txt pytest httpx "pandas>=2.0.0"
+        run: pip install -r requirements.txt pytest httpx "pandas>=2.0.0" "pyarrow>=15"
       - name: Fast tests
         if: github.event_name == 'push'
         run: pytest -q tests -m "not slow" -p no:cacheprovider

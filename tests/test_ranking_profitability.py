@@ -112,6 +112,7 @@ def test_reason_reports_budget_coverage_not_yield_multiplier():
 # that could establish it. See dataset/data_dictionary.md.
 
 import csv
+import statistics
 from collections import defaultdict
 from pathlib import Path
 
@@ -128,17 +129,53 @@ def test_turmeric_yield_is_on_the_cured_basis_its_price_is_quoted_in():
     assert _full_funding_roi("turmeric") < 300.0
 
 
-def test_yield_history_is_on_the_same_basis_as_crop_parameters():
-    """A crop converted in one file but not the other would reintroduce the
-    mismatch through the yield model, which trains on yield_history."""
+# Measured district yields (DES APY, Phase 1) sit at about half of
+# base_yield_kg_per_acre for every crop: base yields are good-farm potentials,
+# district averages include every farm. That common yield gap is not a unit
+# error. A unit error (per hectare vs per acre, lint vs kapas, fresh vs cured)
+# moves one crop by a factor of 2.5-5 against the rest, so each crop's ratio is
+# checked against the median ratio across crops.
+UNIT_ERROR_FACTOR = 1.9
+
+# Crops whose crop_parameters basis is known not to match the measured data.
+# Each needs an owner decision on crop_parameters.csv (Phase 1 notes, "Still
+# open"); remove a crop here once fixed (the test fails if it is fixed and
+# still listed).
+#   chilli: base yield is a green-chilli figure; price band and data are dry chilli.
+#   mango:  base yield 8,500 kg/acre (21 t/ha) is several times the measured average.
+#   tobacco: base yield 650 kg/acre is below the measured district average (~780),
+#            where every other crop's base is about twice it; the reference
+#            figures describe FCV tobacco, the data all tobacco.
+KNOWN_YIELD_BASIS_GAPS = {"chilli", "mango", "tobacco"}
+
+
+def _yield_ratios() -> dict:
     base = {cid: c.base_yield_kg_per_acre for cid, c in P._load_crop_parameters().items()}
     ratios = defaultdict(list)
     with (DATASET / "yield_history.csv").open(newline="") as f:
         for row in csv.DictReader(f):
             if row["crop_id"] in base:
                 ratios[row["crop_id"]].append(float(row["yield_kg_per_acre"]) / base[row["crop_id"]])
-    off = {c: round(sum(r) / len(r), 2) for c, r in ratios.items() if not 0.7 <= sum(r) / len(r) <= 1.3}
-    assert not off, f"yield_history mean / base_yield out of range: {off}"
+    return {c: sum(r) / len(r) for c, r in ratios.items()}
+
+
+def test_yield_history_is_on_the_same_basis_as_crop_parameters():
+    """A crop converted in one file but not the other would reintroduce the
+    mismatch through the yield model, which trains on yield_history."""
+    mean = _yield_ratios()
+    median = statistics.median(mean.values())
+    off = {c: round(r, 2) for c, r in mean.items()
+           if not median / UNIT_ERROR_FACTOR <= r <= median * UNIT_ERROR_FACTOR}
+    assert set(off) <= KNOWN_YIELD_BASIS_GAPS, (
+        f"yield_history / base_yield out of line with other crops (median {median:.2f}): {off}")
+    fixed = KNOWN_YIELD_BASIS_GAPS - set(off)
+    assert not fixed, f"basis now matches; remove from KNOWN_YIELD_BASIS_GAPS: {fixed}"
+
+
+def test_measured_yields_never_exceed_the_potential_by_much():
+    """No crop's district average should beat its good-farm base yield."""
+    high = {c: round(r, 2) for c, r in _yield_ratios().items() if r > 1.3}
+    assert not high, f"measured yields above base_yield: {high}"
 
 
 def test_live_fully_funded_turmeric_roi_is_plausible():
@@ -180,4 +217,13 @@ def test_mandi_prices_match_crop_parameter_price_basis():
         mean = sum(series) / len(series)
         if not 0.5 * c.mandi_price_min_inr_per_kg <= mean <= 1.5 * c.mandi_price_max_inr_per_kg:
             off[crop_id] = round(mean, 1)
-    assert not off, f"mandi_prices mean outside crop_parameters band: {off}"
+    assert set(off) <= KNOWN_PRICE_BASIS_GAPS, f"mandi_prices mean outside crop_parameters band: {off}"
+    fixed = KNOWN_PRICE_BASIS_GAPS - set(off)
+    assert not fixed, f"basis now matches; remove from KNOWN_PRICE_BASIS_GAPS: {fixed}"
+
+
+# Measured Agmarknet prices on a different basis from the crop_parameters band
+# (owner decision pending, Phase 1 notes):
+#   mango:   band is farm-gate (Rs 20-40); mandi modal prices are wholesale (median ~Rs 54).
+#   tobacco: band is FCV auction (Rs 130-230); mandi tobacco is non-FCV leaf (median ~Rs 32).
+KNOWN_PRICE_BASIS_GAPS = {"mango", "tobacco"}

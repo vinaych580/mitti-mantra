@@ -91,7 +91,7 @@ The cache:
 
 - Keeps `{filename: (mtime_ns, rows)}` — reads once, serves O(1) thereafter.
 - **Automatically invalidates** when `os.stat().st_mtime_ns` changes, so
-  editing a CSV (or running `dataset/_seed_extra.py`) takes effect instantly
+  editing a CSV (or rebuilding them with `python -m pipelines.run build`) takes effect instantly
   without a server restart.
 - Builds **indexes** lazily: `index_by("mandi_prices.csv", "region_id")`
   returns a dict of rows grouped by region. Subsequent calls are O(1).
