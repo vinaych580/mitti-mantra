@@ -7257,13 +7257,15 @@ body {
      on it; both hide while a sheet is open so they never cover a tool. */
   /* The chat launcher places itself in JS (it can be dragged) and keeps
      above the bar there; see dock() in chatbot.js. */
-  body .qw-fab {
+  /* Only where the tab bar exists (the dashboard): on every other page
+     these lifted the language button into the chat button's spot. */
+  body:has(.mm-tabbar) .qw-fab {
     bottom: calc(var(--mm-tabbar-h) + 12px);
   }
-  body .qw-panel {
+  body:has(.mm-tabbar) .qw-panel {
     bottom: calc(var(--mm-tabbar-h) + 66px);
   }
-  body .mm-toast {
+  body:has(.mm-tabbar) .mm-toast {
     bottom: calc(var(--mm-tabbar-h) + 16px);
   }
   body.mm-sheet-open .mm-chat-fab,
