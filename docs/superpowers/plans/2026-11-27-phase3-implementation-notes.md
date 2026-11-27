@@ -48,8 +48,8 @@ All nine pages were loaded on a local server with the policy in place and a fres
 | [#9](https://github.com/vinaych580/mitti-mantra/pull/9) | `phase3-limits` | 3.4 rest: request body limits, bounded request models, `pip-audit` CI job |
 | [#10](https://github.com/vinaych580/mitti-mantra/pull/10) | `phase3-satellite-import` | Fix: the cold-start import deadlock behind `/api/satellite`'s 500 |
 
-#8, #9 and #10 all edit `backend/main.py` (the middleware block, `ChatRequest`, the IMD import), on different
-lines. Re-run CI on each after the one before it lands.
+All five were tested together first (merged locally on one branch: full suite including slow tests, 488
+passed), then merged on the owner's go-ahead in the order #7, #10, #8, #9, #11, checking production after each.
 
 ### #7 Inline code out of the pages
 
@@ -112,6 +112,17 @@ lines. Re-run CI on each after the one before it lands.
 - Fix: `utils/lazy_import.fetcher()` serialises those imports (an eager import at startup would add ~185 ms to every
   cold start; `backend.main` imports in ~610 ms). After: **30 clean runs in 30**. `/api/satellite` imports inside
   its try and is a plain `def`, so its blocking Earth Engine calls leave the event loop.
+
+### Found after merging #7: `frontend/Data/` missing from production since Phase 1 (#12)
+
+Checking production after the first merge showed `Data/tractors.js` 404, and with it `Data/consultants.js`,
+`Data/marketplace-listings.js` and `Data/india-states.geo.json`. Book a Tractor showed no tractors, Gyan Seva no
+consultants, Marketplace no demo listings, and the service worker (which precaches two of them) could not install.
+Cause: Phase 1 added an unanchored `data/` to `.vercelignore` for the root pipeline folder, and Vercel matches
+ignore patterns case-insensitively. Deploys: 200 before Phase 1 (4c78fe3), 404 from the Phase 1 merge (319dd5b)
+on. [#12](https://github.com/vinaych580/mitti-mantra/pull/12) anchors it as `/data/` and adds
+`tests/test_vercelignore.py`, which applies the ignore rules to every tracked frontend file. Checked on its preview:
+all four files 200, API unaffected.
 
 ## Still not done, and why
 
