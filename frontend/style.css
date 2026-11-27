@@ -5540,6 +5540,66 @@ body.page-farm-boundary {
   animation: shimmer 1.4s infinite linear;
 }
 
+/* Phase 4.7 skeleton: the outline of a result (heading, three figures, two
+   lines) in the clay radii. The bars use --ink at low alpha so they read in
+   light, dark and high-contrast themes alike. */
+.loading--skel {
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 14px;
+  padding: 6px 0 18px;
+}
+.loading--skel::after {
+  display: none;
+}
+.skel {
+  display: grid;
+  gap: 12px;
+}
+.skel__head,
+.skel__kpis > div,
+.skel__line {
+  border-radius: var(--r-sm, 8px);
+  background: color-mix(in srgb, var(--ink) 8%, transparent);
+  animation: pulse 1.5s infinite ease-in-out;
+}
+.skel__head {
+  width: 45%;
+  height: 20px;
+}
+.skel__kpis {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.skel__kpis > div {
+  height: 64px;
+  border-radius: var(--r-md, 14px);
+}
+.skel__line {
+  height: 12px;
+}
+.skel__line--short {
+  width: 62%;
+}
+.loading__text {
+  font-size: var(--fs-2xs, .82rem);
+  color: var(--ink-soft);
+}
+.is-busy,
+.is-busy:hover {
+  cursor: progress;
+  opacity: .6;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .skel__head,
+  .skel__kpis > div,
+  .skel__line {
+    animation: none;
+  }
+}
+
 @keyframes shimmer {
   from {
     background-position: 200% 0;
@@ -7325,6 +7385,32 @@ body {
   .mm-farm-bar[data-mode="summary"] .mm-plotpick--empty {
     display: none;
   }
+  /* With a drawn plot the picker shares the row: it shrinks (the plot name
+     ellipsizes in the select) instead of pushing Change past the screen
+     edge, which widened the page to 399 px at 375. "+ another plot" stays
+     on the farm page and in the menu. */
+  .mm-farm-bar[data-mode="summary"] .mm-farm-bar__plot-slot {
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: 34%;
+  }
+  .mm-farm-bar[data-mode="summary"] .mm-plotpick,
+  .mm-farm-bar[data-mode="summary"] .mm-plotpick__row {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .mm-farm-bar[data-mode="summary"] .mm-plotpick select {
+    /* Enough for "Plot · 3.0 ac" to start; the district text shrinks first. */
+    min-width: 6.5em;
+    max-width: 100%;
+    text-overflow: ellipsis;
+  }
+  .mm-farm-bar[data-mode="summary"] .mm-plotpick__add {
+    display: none;
+  }
+  .mm-farm-bar[data-mode="summary"] .mm-farm-bar__plot-slot:not(:empty) ~ .mm-farm-bar__text {
+    flex: 1 1 0;
+  }
 }
 
 html[data-theme="dark"] .mm-tabbar,
@@ -7347,6 +7433,41 @@ html[data-theme="dark"] .mm-tabbar__btn {
   .sidebar.is-sheet-open {
     animation: none;
   }
+}
+
+/* ---- Demo banner (Phase 4.11) ----
+   One short note at the top of each demo page (Marketplace, Book a Tractor,
+   Gyan Seva): what is sample data, that nothing leaves the phone, and what
+   on the page is real. Inline-flex so a centred hero centres it too. */
+.mm-demo-banner {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  max-width: 640px;
+  margin: 0 0 22px;
+  padding: 10px 16px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  background: var(--accent-soft);
+  color: var(--ink);
+  font-size: .9rem;
+  line-height: 1.45;
+  text-align: left;
+}
+.mm-demo-banner__tag {
+  flex: none;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--accent-deep, #8a5a1e);
+  color: #fff;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+html[data-theme="dark"] .mm-demo-banner {
+  background: rgba(200, 138, 58, .16);
+  color: var(--ink);
 }
 
 /* ---- Compare crops: checkbox chips (replaces <select multiple>) ---- */
