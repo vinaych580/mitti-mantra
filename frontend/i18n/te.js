@@ -810,4 +810,8 @@ Object.assign(window.MM_I18N_CATALOG.te, {
   "None on record for this district yet.": "ఈ జిల్లాకు ఇంకా రికార్డు లేదు.",
   "Now": "ఇప్పుడే",
   "Ranked on this district's yield records": "ఈ జిల్లా దిగుబడి రికార్డుల ఆధారంగా ర్యాంక్",
+  "Smallest loss": "అతి తక్కువ నష్టం",
+  "Typical farm in this district": "ఈ జిల్లాలో సాధారణ పొలం",
+  "Good farm": "మంచి పొలం",
+  "well-managed field": "బాగా నిర్వహించిన పొలం",
 });

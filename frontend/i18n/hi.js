@@ -835,4 +835,8 @@ Object.assign(window.MM_I18N_CATALOG.hi, {
   "None on record for this district yet.": "इस ज़िले का अभी कोई रिकॉर्ड नहीं है।",
   "Now": "अभी",
   "Ranked on this district's yield records": "इस ज़िले के उपज रिकॉर्ड के आधार पर क्रम",
+  "Smallest loss": "सबसे कम नुकसान",
+  "Typical farm in this district": "इस ज़िले का सामान्य खेत",
+  "Good farm": "अच्छा खेत",
+  "well-managed field": "अच्छी देखरेख वाला खेत",
 });
