@@ -1579,6 +1579,11 @@ def predict_disease_api(req: DiseasePredictQuery, request: Request):
         confidence = round(float(np.clip(raw_conf, 0.45, 0.97)), 4)
 
         meta = DISEASE_METADATA.get(best_class, DISEASE_METADATA["tomato_healthy"])
+        # Lesion area measures discoloured pixels, which a healthy leaf's veins,
+        # shadows and background also produce: a "Healthy leaf" came back
+        # "severe". The classifier's verdict wins.
+        if best_class.endswith("_healthy"):
+            severity = "healthy"
 
         # -----------------------------------------------------------------
         # 6. GOVERNMENT SCHEME MATCHING

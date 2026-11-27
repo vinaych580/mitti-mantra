@@ -73,7 +73,7 @@ def test_disease_predict_fallback_tomato(monkeypatch):
     # Since the image is pure green, it should predict healthy
     assert data["crop_matched"] == "tomato"
     assert "healthy" in data["disease"].lower()
-    assert data["severity"] == "early"
+    assert data["severity"] == "healthy"  # a healthy verdict is not graded as a lesion stage
     assert len(data["treatment"]) > 0
 
 def test_disease_predict_fallback_maize_lesions(monkeypatch):

@@ -65,3 +65,17 @@ def test_sell_advice_names_the_month():
 
 def test_telugu_water_question_reaches_irrigation():
     assert ask("వరి పంటకు ఎంత నీరు కావాలి")["actions"][0]["label"].startswith("Open irrigation")
+
+
+def test_healthy_leaf_is_not_severe():
+    import base64, glob
+    from fastapi.testclient import TestClient
+    from backend.main import app
+    files = sorted(glob.glob("dataset/plantvillage/potato_healthy/*.jpg"))
+    if not files:
+        import pytest
+        pytest.skip("no sample photos in this checkout")
+    body = {"image_b64": base64.b64encode(open(files[0], "rb").read()).decode(), "crop_id": "potato"}
+    r = TestClient(app).post("/api/disease/predict", json=body).json()
+    if "healthy" in r["disease"].lower():
+        assert r["severity"] == "healthy"
