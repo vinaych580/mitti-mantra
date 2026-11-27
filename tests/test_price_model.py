@@ -135,3 +135,13 @@ def test_forecast_crops_lists_only_what_the_forecast_can_serve():
         assert client.get("/api/v1/districts/haryana_karnal/price-forecast",
                           params={"crop_id": c}).status_code == 200, c
     assert client.get("/api/v1/districts/nowhere_atall/price-forecast/crops").status_code == 404
+
+
+def test_chatbot_drops_the_peak_for_a_crop_that_cannot_wait_for_it():
+    from backend import chatbot
+
+    res = {"advice": "SELL NOW", "best_month": 7, "best_month_avg_price": 32.0, "potential_gain_pct": 150.0,
+           "current_price": 12.0, "months_to_peak": 8, "max_storage_weeks": 1}
+    assert chatbot._cannot_wait_for_peak(res)
+    assert not chatbot._cannot_wait_for_peak({**res, "max_storage_weeks": None})
+    assert not chatbot._cannot_wait_for_peak({**res, "months_to_peak": 0})

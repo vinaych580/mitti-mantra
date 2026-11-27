@@ -627,6 +627,13 @@ def _kv_list(d: Dict[str, Any], keys: Optional[List[str]] = None) -> str:
     return "\n".join(lines)
 
 
+def _cannot_wait_for_peak(res: Dict[str, Any]) -> bool:
+    """True when the seasonal peak is further away than the crop keeps."""
+    keeps = res.get("max_storage_weeks")
+    months = res.get("months_to_peak")
+    return keeps is not None and months is not None and months > 0 and months * 4.35 > keeps
+
+
 def _intent_sell_advice(crop: Dict[str, str], region: Optional[str], lang: str) -> Reply:
     if not region:
         if lang == "en":
@@ -637,11 +644,18 @@ def _intent_sell_advice(crop: Dict[str, str], region: Optional[str], lang: str) 
     except Exception as e:
         return (f"Couldn't compute sell advice: {e}" if lang == "en" else T(lang, "sell_error", err=e)), []
     rtxt = region_display_name(region)
+    # A peak months away means nothing for a crop that keeps a week or two: show the
+    # advice and today's price, not a "best month" the farmer cannot wait for.
+    if isinstance(res, dict) and _cannot_wait_for_peak(res):
+        res = {k: v for k, v in res.items()
+               if k not in ("best_month", "best_month_avg_price", "potential_gain_pct")}
     if lang == "en":
         lines = [f"### Sell advice — {crop['crop_name']} @ {rtxt}\n"]
         if isinstance(res, dict):
             if "advice" in res:
                 lines.append(f"**Advice:** {res['advice']}\n")
+            if res.get("max_storage_weeks") is not None and "best_month" not in res:
+                lines.append(f"- **Keeps without cold storage:** about {res['max_storage_weeks']} week(s)")
             if "best_month" in res:
                 lines.append(f"- **Best month to sell:** Month {res['best_month']}")
             if "best_month_avg_price" in res:
