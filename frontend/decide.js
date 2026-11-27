@@ -32,7 +32,7 @@
     $('#reviewNext').disabled = $('#saveComparison').disabled = !validComparison();
   }
   function renderShortlist() {
-    $('#shortlist').innerHTML = U.lossBanner(shortlist) + shortlist.map(r => `<label class="season-choice"><input type="checkbox" name="shortCrop" value="${U.esc(r.crop_id)}" checked> <strong>${U.esc(r.crop_name)}</strong><p>${U.text(r.expected_profit < 0 ? 'Expected loss' : 'Expected profit')}: ${U.money(Math.abs(r.expected_profit))}</p><p>${U.esc(r.reasons?.[0] || r.reason || '')}</p></label>`).join('');
+    $('#shortlist').innerHTML = U.lossBanner(shortlist) + shortlist.map(r => `<label class="season-choice"><input type="checkbox" name="shortCrop" value="${U.esc(r.crop_id)}" checked> <strong>${U.esc(r.crop_name)}</strong><p>${U.text(r.expected_profit < 0 ? 'Expected loss' : 'Expected profit')}: ${U.money(Math.abs(r.expected_profit))}</p>${r.good_farm ? `<p>${U.text('Good farm')}: ${U.money(r.good_farm.expected_profit)}</p>` : ''}<p>${U.esc(r.reasons?.[0] || r.reason || '')}</p></label>`).join('');
     U.translate();
   }
   function renderComparison() {

@@ -1797,6 +1797,28 @@
       const top = recs[0];
       const area = body.area_acres;
 
+      // Every option loses money (ml/predict.py flags all_options_lose): say so
+      // plainly, as the season planner does, instead of crowning the smallest
+      // loss "Top pick" with a planting button and a sell link.
+      if (top.all_options_lose) {
+        const LOSS_REASONS = {
+          budget_too_low: 'Your budget is below what these crops typically need, so each one is expected to lose money. Raise the budget or choose another season.',
+          season_needs_irrigation: 'Every crop is expected to lose money here this season. Zaid crops need assured irrigation.',
+          no_profitable_crop: 'Every crop is expected to lose money with these inputs. These are not recommendations.'
+        };
+        out.innerHTML = `
+          <div class="alert alert--red" role="alert">${INFO_ICO}
+            <div class="alert__body"><strong>${text(LOSS_REASONS[top.loss_reason] || LOSS_REASONS.no_profitable_crop)}</strong></div>
+          </div>
+          <div class="kpi-grid">
+            <div class="kpi kpi--bad"><div class="kpi__lbl">${text('Smallest loss')}</div>
+              <div class="kpi__val" style="font-size:1.3rem;">${cropLabel(top.crop_id)}</div>
+              <div class="kpi__sub">${TT(top.expected_profit, INR(top.expected_profit))} · ${NUM(area)} ac</div></div>
+          </div>
+          ${top.reason ? `<p class="mm-basis">${escHtml(top.reason)}</p>` : ''}`;
+        return;
+      }
+
       // Committing to an alternative only used to update that row's own
       // button, while the "Ready to sell" CTA below kept pointing at
       // whichever crop the algorithm ranked #1 -- confusing if a farmer
@@ -1838,8 +1860,12 @@
             ${recYieldRange(top) ? `<div class="kpi__sub">${text('8 seasons in 10:')} ${NUM(recYieldRange(top))}</div>` : ''}</div>
           <div class="kpi kpi--good"><div class="kpi__lbl">Profit (${area} ac)</div>
             <div class="kpi__val">${TT(top.expected_profit, INR(top.expected_profit))}</div>
-            <div class="kpi__sub">ROI ${PCT(top.roi_percent)}</div>
+            <div class="kpi__sub">ROI ${PCT(top.roi_percent)}${top.good_farm ? ` · ${text('Typical farm in this district')}` : ''}</div>
             ${recProfitRange(top) ? `<div class="kpi__sub">${text('8 seasons in 10:')} ${NUM(recProfitRange(top))}</div>` : ''}</div>
+          ${top.good_farm ? `
+          <div class="kpi kpi--info"><div class="kpi__lbl">${text('Good farm')} (${NUM(area)} ac)</div>
+            <div class="kpi__val">${TT(top.good_farm.expected_profit, INR(top.good_farm.expected_profit))}</div>
+            <div class="kpi__sub">${NUM(Math.round(top.good_farm.yield_kg_per_acre))} kg/ac · ${text('well-managed field')}</div></div>` : ''}
         </div>
         ${recBasisLine(top, true)}
 

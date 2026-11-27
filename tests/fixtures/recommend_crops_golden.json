@@ -97,6 +97,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 853.85,
+     "expected_profit": 16477.2,
+     "roi_percent": 36.62,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -144,6 +150,12 @@
      "years_on_record": 26,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 542.31,
+     "expected_profit": 104677.56,
+     "roi_percent": 232.62,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -193,6 +205,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 520.51,
+     "expected_profit": 73676.28,
+     "roi_percent": 163.73,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -240,6 +258,12 @@
      "years_on_record": 22,
      "last_year": 2021,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 850.0,
+     "expected_profit": 36000.0,
+     "roi_percent": 80.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -289,6 +313,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 1225.18,
+     "expected_profit": 30348.57,
+     "roi_percent": 67.44,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -336,6 +366,12 @@
      "years_on_record": 15,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 676.92,
+     "expected_profit": 66691.8,
+     "roi_percent": 148.2,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -414,6 +450,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 446.15,
+     "expected_profit": 75460.5,
+     "roi_percent": 167.69,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -462,6 +504,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 900.0,
+     "expected_profit": 45600.0,
+     "roi_percent": 101.33,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -509,6 +557,12 @@
      "years_on_record": 26,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 182.69,
+     "expected_profit": -5171.75,
+     "roi_percent": -11.49,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -751,6 +805,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -876,6 +936,12 @@
      "last_year": 2019,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -980,6 +1046,12 @@
      "last_year": 2021,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 17.83,
+     "expected_profit": -5224.4,
+     "roi_percent": -87.07,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -1028,6 +1100,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -1075,6 +1153,12 @@
      "years_on_record": 26,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -1171,6 +1255,12 @@
      "years_on_record": 26,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -1297,6 +1387,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -1344,6 +1440,12 @@
      "years_on_record": 20,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -1421,6 +1523,12 @@
      "years_on_record": 25,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -1547,6 +1655,12 @@
      "last_year": 2019,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -1653,6 +1767,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -1700,6 +1820,12 @@
      "years_on_record": 26,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -1777,6 +1903,12 @@
      "years_on_record": 25,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -2055,6 +2187,12 @@
      "last_year": 2020,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 669.23,
+     "expected_profit": 72449.87,
+     "roi_percent": 161.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -2102,6 +2240,12 @@
      "years_on_record": 21,
      "last_year": 2020,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 900.0,
+     "expected_profit": 133200.0,
+     "roi_percent": 296.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -2286,6 +2430,12 @@
      "last_year": 2017,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -2362,6 +2512,12 @@
      "years_on_record": 18,
      "last_year": 2019,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    }
@@ -2592,6 +2748,12 @@
      "last_year": 2020,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -2717,6 +2879,12 @@
      "last_year": 2017,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -2793,6 +2961,12 @@
      "years_on_record": 18,
      "last_year": 2019,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -2871,6 +3045,12 @@
      "last_year": 2020,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    }
   ],
@@ -2927,6 +3107,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 761.54,
+     "expected_profit": 63519.45,
+     "roi_percent": 141.15,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -2975,6 +3161,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 520.51,
+     "expected_profit": 76018.57,
+     "roi_percent": 168.93,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -3022,6 +3214,12 @@
      "years_on_record": 25,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 1225.18,
+     "expected_profit": 30348.57,
+     "roi_percent": 67.44,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -3186,6 +3384,12 @@
      "years_on_record": 26,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 853.85,
+     "expected_profit": 16477.2,
+     "roi_percent": 36.62,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -3380,6 +3584,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 182.69,
+     "expected_profit": -6635.1,
+     "roi_percent": -14.74,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -3456,6 +3666,12 @@
      "years_on_record": 25,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -3534,6 +3750,12 @@
      "last_year": 2020,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -3581,6 +3803,12 @@
      "years_on_record": 26,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -3630,6 +3858,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -3678,6 +3912,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -3722,6 +3962,12 @@
      "years_on_record": 18,
      "last_year": 2017,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    }
@@ -3808,6 +4054,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -3855,6 +4107,12 @@
      "years_on_record": 25,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -3904,6 +4162,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -3951,6 +4215,12 @@
      "years_on_record": 26,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -4145,6 +4415,12 @@
      "last_year": 2020,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -4192,6 +4468,12 @@
      "years_on_record": 26,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -4241,6 +4523,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -4288,6 +4576,12 @@
      "years_on_record": 24,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -4482,6 +4776,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -4530,6 +4830,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -4574,6 +4880,12 @@
      "years_on_record": 18,
      "last_year": 2017,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    }
@@ -4631,6 +4943,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 900.0,
+     "expected_profit": 133200.0,
+     "roi_percent": 296.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -4678,6 +4996,12 @@
      "years_on_record": 26,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 655.2,
+     "expected_profit": 97506.0,
+     "roi_percent": 216.68,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -4755,6 +5079,12 @@
      "years_on_record": 26,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 1020.98,
+     "expected_profit": 34636.44,
+     "roi_percent": 76.97,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -4891,6 +5221,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 98.9,
+     "expected_profit": -40585.1,
+     "roi_percent": -90.19,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -4939,6 +5275,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -4986,6 +5328,12 @@
      "years_on_record": 26,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -5064,6 +5412,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    }
   ],
@@ -5119,6 +5473,12 @@
      "years_on_record": 26,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -5197,6 +5557,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -5245,6 +5611,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -5292,6 +5664,12 @@
      "years_on_record": 26,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -5370,6 +5748,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -5417,6 +5801,12 @@
      "years_on_record": 26,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -5494,6 +5884,12 @@
      "years_on_record": 24,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -5654,6 +6050,12 @@
      "last_year": 2020,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 542.31,
+     "expected_profit": 109558.35,
+     "roi_percent": 243.46,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -5702,6 +6104,12 @@
      "last_year": 2019,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 1400.0,
+     "expected_profit": 126600.0,
+     "roi_percent": 281.33,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -5747,6 +6155,12 @@
      "last_year": 2021,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 850.0,
+     "expected_profit": 36000.0,
+     "roi_percent": 80.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -5791,6 +6205,12 @@
      "years_on_record": 14,
      "last_year": 2019,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 446.15,
+     "expected_profit": 75460.5,
+     "roi_percent": 167.69,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -5869,6 +6289,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 900.0,
+     "expected_profit": 45600.0,
+     "roi_percent": 101.33,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -5917,6 +6343,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 853.85,
+     "expected_profit": -121.64,
+     "roi_percent": -0.27,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -5964,6 +6396,12 @@
      "years_on_record": 26,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 1225.18,
+     "expected_profit": 20461.37,
+     "roi_percent": 45.47,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -6186,6 +6624,12 @@
      "years_on_record": 24,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -6414,6 +6858,12 @@
      "last_year": 2021,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 17.83,
+     "expected_profit": -5224.4,
+     "roi_percent": -87.07,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -6461,6 +6911,12 @@
      "years_on_record": 26,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -6510,6 +6966,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -6557,6 +7019,12 @@
      "years_on_record": 24,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -6721,6 +7189,12 @@
      "years_on_record": 16,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -6944,6 +7418,12 @@
      "last_year": 2019,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -6989,6 +7469,12 @@
      "last_year": 2020,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -7033,6 +7519,12 @@
      "years_on_record": 14,
      "last_year": 2019,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -7225,6 +7717,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 655.2,
+     "expected_profit": 97506.0,
+     "roi_percent": 216.68,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -7272,6 +7770,12 @@
      "years_on_record": 26,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 900.0,
+     "expected_profit": 144810.0,
+     "roi_percent": 321.8,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -7321,6 +7825,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 1020.98,
+     "expected_profit": 29061.89,
+     "roi_percent": 64.58,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -7368,6 +7878,12 @@
      "years_on_record": 18,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 669.23,
+     "expected_profit": 72449.87,
+     "roi_percent": 161.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -7417,6 +7933,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 1600.0,
+     "expected_profit": 65400.0,
+     "roi_percent": 145.33,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -7465,6 +7987,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 1225.18,
+     "expected_profit": 20461.37,
+     "roi_percent": 45.47,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -7512,6 +8040,12 @@
      "years_on_record": 8,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 98.9,
+     "expected_profit": -40647.41,
+     "roi_percent": -90.33,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -7590,6 +8124,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -7637,6 +8177,12 @@
      "years_on_record": 7,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -7752,6 +8298,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -7799,6 +8351,12 @@
      "years_on_record": 26,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -7848,6 +8406,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -7896,6 +8460,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -7943,6 +8513,12 @@
      "years_on_record": 26,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -8021,6 +8597,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -8068,6 +8650,12 @@
      "years_on_record": 7,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -8175,6 +8763,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -8222,6 +8816,12 @@
      "years_on_record": 18,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    }
@@ -8278,6 +8878,12 @@
      "years_on_record": 25,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 488.13,
+     "expected_profit": 149676.01,
+     "roi_percent": 332.61,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -8385,6 +8991,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 542.31,
+     "expected_profit": 100724.12,
+     "roi_percent": 223.83,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -8432,6 +9044,12 @@
      "years_on_record": 23,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 446.15,
+     "expected_profit": 72596.22,
+     "roi_percent": 161.32,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -8481,6 +9099,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 853.85,
+     "expected_profit": 3618.22,
+     "roi_percent": 8.04,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -8529,6 +9153,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 1225.18,
+     "expected_profit": 15242.1,
+     "roi_percent": 33.87,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -8573,6 +9203,12 @@
      "years_on_record": 6,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 850.0,
+     "expected_profit": 25290.0,
+     "roi_percent": 56.2,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -8622,6 +9258,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 676.92,
+     "expected_profit": 11861.28,
+     "roi_percent": 26.36,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -8669,6 +9311,12 @@
      "years_on_record": 26,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 520.51,
+     "expected_profit": 40884.15,
+     "roi_percent": 90.85,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -8718,6 +9366,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 182.69,
+     "expected_profit": -6635.1,
+     "roi_percent": -14.74,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -8762,6 +9416,12 @@
      "years_on_record": 12,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 1400.0,
+     "expected_profit": 40542.0,
+     "roi_percent": 90.09,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -8901,6 +9561,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -8978,6 +9644,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -9025,6 +9697,12 @@
      "years_on_record": 22,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -9074,6 +9752,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -9121,6 +9805,12 @@
      "years_on_record": 23,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -9204,6 +9894,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 17.83,
+     "expected_profit": -5336.72,
+     "roi_percent": -88.95,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -9251,6 +9947,12 @@
      "years_on_record": 25,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -9300,6 +10002,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -9348,6 +10056,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -9395,6 +10109,12 @@
      "years_on_record": 8,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -9473,6 +10193,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -9520,6 +10246,12 @@
      "years_on_record": 26,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -9627,6 +10359,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -9674,6 +10412,12 @@
      "years_on_record": 22,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -9723,6 +10467,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -9770,6 +10520,12 @@
      "years_on_record": 23,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -9848,6 +10604,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -9896,6 +10658,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -9943,6 +10711,12 @@
      "years_on_record": 23,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -10020,6 +10794,12 @@
      "years_on_record": 26,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -10135,6 +10915,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 900.0,
+     "expected_profit": 207855.0,
+     "roi_percent": 461.9,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -10183,6 +10969,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 655.2,
+     "expected_profit": 55933.56,
+     "roi_percent": 124.3,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -10230,6 +11022,12 @@
      "years_on_record": 25,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 1020.98,
+     "expected_profit": 29766.37,
+     "roi_percent": 66.15,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -10366,6 +11164,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 98.9,
+     "expected_profit": -40549.5,
+     "roi_percent": -90.11,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -10443,6 +11247,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -10490,6 +11300,12 @@
      "years_on_record": 24,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -10568,6 +11384,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    }
   ],
@@ -10623,6 +11445,12 @@
      "years_on_record": 25,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -10701,6 +11529,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -10749,6 +11583,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -10796,6 +11636,12 @@
      "years_on_record": 26,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -10874,6 +11720,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -10921,6 +11773,12 @@
      "years_on_record": 24,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -10998,6 +11856,12 @@
      "years_on_record": 23,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -11113,6 +11977,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 488.13,
+     "expected_profit": 42863.4,
+     "roi_percent": 95.25,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -11189,6 +12059,12 @@
      "years_on_record": 18,
      "last_year": 2021,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 853.85,
+     "expected_profit": 16477.2,
+     "roi_percent": 36.62,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -11586,6 +12462,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -11750,6 +12632,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -11864,6 +12752,12 @@
      "last_year": 2021,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -11940,6 +12834,12 @@
      "years_on_record": 19,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -12046,6 +12946,12 @@
      "years_on_record": 20,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -12268,6 +13174,12 @@
      "years_on_record": 10,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -12789,6 +13701,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -12894,6 +13812,12 @@
      "years_on_record": 10,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    }
@@ -13008,6 +13932,12 @@
      "years_on_record": 19,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -13231,6 +14161,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -13345,6 +14281,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 850.0,
+     "expected_profit": 21796.5,
+     "roi_percent": 48.44,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -13389,6 +14331,12 @@
      "years_on_record": 7,
      "last_year": 2021,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 542.31,
+     "expected_profit": 109558.35,
+     "roi_percent": 243.46,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -13467,6 +14415,12 @@
      "last_year": 2017,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 446.15,
+     "expected_profit": 72355.3,
+     "roi_percent": 160.79,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -13514,6 +14468,12 @@
      "years_on_record": 7,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 676.92,
+     "expected_profit": 25061.22,
+     "roi_percent": 55.69,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -13563,6 +14523,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 1225.18,
+     "expected_profit": 74455.05,
+     "roi_percent": 165.46,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -13610,6 +14576,12 @@
      "years_on_record": 20,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 853.85,
+     "expected_profit": 14889.04,
+     "roi_percent": 33.09,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -13659,6 +14631,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 520.51,
+     "expected_profit": -2354.62,
+     "roi_percent": -5.23,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -13707,6 +14685,12 @@
      "last_year": 2019,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 900.0,
+     "expected_profit": -4350.0,
+     "roi_percent": -9.67,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -13754,6 +14738,12 @@
      "years_on_record": 20,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 182.69,
+     "expected_profit": -6635.1,
+     "roi_percent": -14.74,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -14006,6 +14996,12 @@
      "last_year": 2020,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -14216,6 +15212,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 17.83,
+     "expected_profit": -5373.36,
+     "roi_percent": -89.56,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -14264,6 +15266,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -14311,6 +15319,12 @@
      "years_on_record": 16,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -14388,6 +15402,12 @@
      "years_on_record": 20,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -14495,6 +15515,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -14542,6 +15568,12 @@
      "years_on_record": 7,
      "last_year": 2019,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -14619,6 +15651,12 @@
      "years_on_record": 18,
      "last_year": 2020,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -14829,6 +15867,12 @@
      "last_year": 2021,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -14876,6 +15920,12 @@
      "years_on_record": 15,
      "last_year": 2017,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -14953,6 +16003,12 @@
      "years_on_record": 20,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -15087,6 +16143,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 900.0,
+     "expected_profit": 38700.0,
+     "roi_percent": 86.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -15134,6 +16196,12 @@
      "years_on_record": 20,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 655.2,
+     "expected_profit": 43452.0,
+     "roi_percent": 96.56,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -15183,6 +16251,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 1020.98,
+     "expected_profit": 27959.23,
+     "roi_percent": 62.13,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -15230,6 +16304,12 @@
      "years_on_record": 7,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 1225.18,
+     "expected_profit": 74455.05,
+     "roi_percent": 165.46,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -15576,6 +16656,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -15623,6 +16709,12 @@
      "years_on_record": 7,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -15701,6 +16793,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -15748,6 +16846,12 @@
      "years_on_record": 20,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -16113,6 +17217,12 @@
      "last_year": 2021,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 900.0,
+     "expected_profit": 75327.0,
+     "roi_percent": 167.39,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -16160,6 +17270,12 @@
      "years_on_record": 26,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 488.13,
+     "expected_profit": 59103.49,
+     "roi_percent": 131.34,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -16238,6 +17354,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 542.31,
+     "expected_profit": 74465.47,
+     "roi_percent": 165.48,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -16285,6 +17407,12 @@
      "years_on_record": 9,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 676.92,
+     "expected_profit": 94391.37,
+     "roi_percent": 209.76,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -16392,6 +17520,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 850.0,
+     "expected_profit": 10423.5,
+     "roi_percent": 23.16,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -16439,6 +17573,12 @@
      "years_on_record": 26,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 446.15,
+     "expected_profit": 66198.43,
+     "roi_percent": 147.11,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -16488,6 +17628,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 182.69,
+     "expected_profit": 2835.55,
+     "roi_percent": 6.3,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -16535,6 +17681,12 @@
      "years_on_record": 23,
      "last_year": 2021,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 1225.18,
+     "expected_profit": 30017.77,
+     "roi_percent": 66.71,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -16748,6 +17900,12 @@
      "last_year": 2017,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -16920,6 +18078,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 17.83,
+     "expected_profit": -5492.65,
+     "roi_percent": -91.54,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -16996,6 +18160,12 @@
      "years_on_record": 23,
      "last_year": 2021,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -17093,6 +18263,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -17170,6 +18346,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -17218,6 +18400,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -17265,6 +18453,12 @@
      "years_on_record": 21,
      "last_year": 2021,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -17342,6 +18536,12 @@
      "years_on_record": 18,
      "last_year": 2017,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -17536,6 +18736,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -17583,6 +18789,12 @@
      "years_on_record": 26,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -17775,6 +18987,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 900.0,
+     "expected_profit": 131202.0,
+     "roi_percent": 291.56,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -17871,6 +19089,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 1020.98,
+     "expected_profit": 27806.08,
+     "roi_percent": 61.79,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -17915,6 +19139,12 @@
      "years_on_record": 5,
      "last_year": 2018,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 900.0,
+     "expected_profit": 75327.0,
+     "roi_percent": 167.39,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -18242,6 +19472,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -18415,6 +19651,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -18459,6 +19701,12 @@
      "years_on_record": 5,
      "last_year": 2018,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -18757,6 +20005,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 853.85,
+     "expected_profit": 48701.5,
+     "roi_percent": 108.23,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -18805,6 +20059,12 @@
      "last_year": 2019,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 520.51,
+     "expected_profit": 76018.57,
+     "roi_percent": 168.93,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -18849,6 +20109,12 @@
      "years_on_record": 9,
      "last_year": 2019,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 542.31,
+     "expected_profit": 109558.35,
+     "roi_percent": 243.46,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -18898,6 +20164,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 1225.18,
+     "expected_profit": 30348.57,
+     "roi_percent": 67.44,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -18945,6 +20217,12 @@
      "years_on_record": 5,
      "last_year": 2021,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 446.15,
+     "expected_profit": 75460.5,
+     "roi_percent": 167.69,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -19329,6 +20607,12 @@
      "last_year": 2021,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -45000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -19549,6 +20833,12 @@
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -19596,6 +20886,12 @@
      "years_on_record": 15,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -19864,6 +21160,12 @@
      "last_year": 2021,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -20054,6 +21356,12 @@
      "last_year": 2019,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
     },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
+    },
     "grown_locally": true
    },
    {
@@ -20101,6 +21409,12 @@
      "years_on_record": 5,
      "last_year": 2021,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -20178,6 +21492,12 @@
      "years_on_record": 21,
      "last_year": 2019,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -20388,6 +21708,12 @@
      "years_on_record": 10,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 655.2,
+     "expected_profit": 97506.0,
+     "roi_percent": 216.68,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
@@ -20890,6 +22216,12 @@
      "years_on_record": 10,
      "last_year": 2022,
      "range": "80%: how far seasons have strayed from the 5-year mean (calibrated 80%)"
+    },
+    "good_farm": {
+     "yield_kg_per_acre": 0.0,
+     "expected_profit": -6000.0,
+     "roi_percent": -100.0,
+     "basis": "reference yield for a well-managed field (crop_parameters base_yield)"
     },
     "grown_locally": true
    },
