@@ -7325,6 +7325,32 @@ body {
   .mm-farm-bar[data-mode="summary"] .mm-plotpick--empty {
     display: none;
   }
+  /* With a drawn plot the picker shares the row: it shrinks (the plot name
+     ellipsizes in the select) instead of pushing Change past the screen
+     edge, which widened the page to 399 px at 375. "+ another plot" stays
+     on the farm page and in the menu. */
+  .mm-farm-bar[data-mode="summary"] .mm-farm-bar__plot-slot {
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: 34%;
+  }
+  .mm-farm-bar[data-mode="summary"] .mm-plotpick,
+  .mm-farm-bar[data-mode="summary"] .mm-plotpick__row {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .mm-farm-bar[data-mode="summary"] .mm-plotpick select {
+    /* Enough for "Plot · 3.0 ac" to start; the district text shrinks first. */
+    min-width: 6.5em;
+    max-width: 100%;
+    text-overflow: ellipsis;
+  }
+  .mm-farm-bar[data-mode="summary"] .mm-plotpick__add {
+    display: none;
+  }
+  .mm-farm-bar[data-mode="summary"] .mm-farm-bar__plot-slot:not(:empty) ~ .mm-farm-bar__text {
+    flex: 1 1 0;
+  }
 }
 
 html[data-theme="dark"] .mm-tabbar,
