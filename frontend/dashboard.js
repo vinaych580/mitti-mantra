@@ -331,8 +331,53 @@
     setTimeout(() => el.classList.add('offline-banner--hide'), 8000);
     setTimeout(() => el.remove(), 8600);
   }
+  /* Phase 4.7: a loading state shaped like the result it stands in for (a
+     heading, three figures, two lines), not a spinner, with the step in
+     words for everyone and announced once to screen readers.
+     While it shows, the tool's own run buttons are disabled (F-10): a second
+     tap used to start a second request whose answer could land after, and
+     overwrite, the first. They come back as soon as the loading state is
+     replaced -- by a result, an error or an empty state -- so no handler
+     has to remember to do it. */
   function showLoading(el, text = 'Working…') {
-    el.innerHTML = `<div class="loading"><div class="spinner"></div><span>${text}</span></div>`;
+    el.setAttribute('aria-busy', 'true');
+    el.innerHTML =
+      `<div class="loading loading--skel" role="status">
+         <div class="skel" aria-hidden="true">
+           <div class="skel__head"></div>
+           <div class="skel__kpis"><div></div><div></div><div></div></div>
+           <div class="skel__line"></div>
+           <div class="skel__line skel__line--short"></div>
+         </div>
+         <span class="loading__text">${text}</span>
+       </div>`;
+    holdRunButtons(el);
+  }
+  const busyOutputs = new WeakSet();
+  function holdRunButtons(out) {
+    const tool = out.closest('.tool');
+    if (!tool || busyOutputs.has(out)) return;
+    // Only buttons that start a run and are enabled now: buttons inside a
+    // result act on that result, and a button its own tool disabled (disease
+    // scan before a photo is chosen) is not ours to re-enable.
+    const held = Array.from(tool.querySelectorAll('form[data-form] button, button[data-action]'))
+      .filter(b => !b.closest('.output') && !b.disabled && (b.type === 'submit' || b.hasAttribute('data-action')));
+    busyOutputs.add(out);
+    held.forEach(b => { b.disabled = true; b.setAttribute('aria-busy', 'true'); b.classList.add('is-busy'); });
+    let timer = null;
+    const release = () => {
+      observer.disconnect();
+      clearTimeout(timer);
+      busyOutputs.delete(out);
+      out.removeAttribute('aria-busy');
+      held.forEach(b => { b.disabled = false; b.removeAttribute('aria-busy'); b.classList.remove('is-busy'); });
+    };
+    const observer = new MutationObserver(() => {
+      if (!out.firstElementChild || !out.firstElementChild.classList.contains('loading')) release();
+    });
+    observer.observe(out, { childList: true });
+    // Backstop: a request that never settles must not lock the tool for good.
+    timer = setTimeout(release, 90000);
   }
   // The band at the top of the screen that a scrolled-to element would hide
   // beneath: the fixed nav plus the Farm Profile bar that sticks under it.
