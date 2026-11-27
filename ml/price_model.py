@@ -21,11 +21,12 @@ from __future__ import annotations
 
 import logging
 import math
-import threading
 from pathlib import Path
 from typing import Any
 
 import numpy as np
+
+from ml._artifact import LazyArtifact
 
 logger = logging.getLogger(__name__)
 
@@ -276,28 +277,12 @@ def sell_advice(fc: dict[str, Any], quantity_kg: float, storage_inr_kg_month: fl
     }
 
 
-_model: PriceModel | None = None
-_loaded = False
-_lock = threading.Lock()
+_artifact: LazyArtifact[PriceModel] = LazyArtifact("price model", PriceModel)
 
 
 def load(path: Path = RELEASED) -> PriceModel | None:
-    global _model, _loaded
-    if _loaded:
-        return _model
-    with _lock:
-        if not _loaded:
-            try:
-                import joblib
-                _model = PriceModel(joblib.load(path)) if path.exists() else None
-            except Exception as exc:
-                logger.warning("price model not loaded: %s", exc)
-                _model = None
-            _loaded = True
-    return _model
+    return _artifact.get(path)
 
 
 def reset() -> None:
-    global _model, _loaded
-    with _lock:
-        _model, _loaded = None, False
+    _artifact.reset()
