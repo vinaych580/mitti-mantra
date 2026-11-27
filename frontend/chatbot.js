@@ -389,14 +389,18 @@
       // Append TTS Audio Speaker Icon
       const ttsBtn = document.createElement("button");
       ttsBtn.type = "button";
-      ttsBtn.title = tr("Listen to answer");
+      // English source, translated by the page's i18n pass below (C-20): a
+      // label written in already translated could never follow a later
+      // language switch, because i18n.js took the Hindi as its original.
+      ttsBtn.title = "Listen to answer";
       ttsBtn.style.cssText = "background:none;border:none;color:var(--brand,#2f6b3a);cursor:pointer;font-size:12px;margin-top:6px;display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border-radius:4px;border:1px solid #c8dcc8;";
-      ttsBtn.innerHTML = `🔊 <span>${tr("Listen")}</span>`;
+      ttsBtn.innerHTML = `🔊 <span>Listen</span>`;
       ttsBtn.addEventListener("click", () => speakText(text));
       div.appendChild(ttsBtn);
     }
     body.appendChild(div);
     body.scrollTop = body.scrollHeight;
+    retranslate();
     return div;
   }
 
@@ -482,6 +486,22 @@
     document.documentElement.getAttribute("lang") || "en";
   // UI strings this file writes itself; translated from the page catalog.
   const tr = (s) => (window.AgriSimI18n && window.AgriSimI18n.t ? window.AgriSimI18n.t(s) : s);
+  // Injected chat DOM carries English and is translated in place, so it
+  // re-translates on every later switch (C-20). retranslate() fires
+  // mm:lang-changed, which re-greets below: the flag stops that recursing.
+  let translating = false;
+  function retranslate() {
+    if (translating || !window.AgriSimI18n || window.AgriSimI18n.getLanguage() === "en") return;
+    translating = true;
+    try { window.AgriSimI18n.retranslate(); } catch (_) { /* the English stays */ } finally { translating = false; }
+  }
+  // The launcher carries data-no-translate (its drag handle must keep its
+  // icon), so its accessible name and tooltip are set from the catalog here
+  // and again on every switch (C-19).
+  function labelLauncher() {
+    fab.setAttribute("aria-label", tr("Open Mitti Mantra assistant"));
+    fab.title = tr("Click to chat · drag to move");
+  }
 
   // True until the farmer sends something, so a language switch can redo
   // the greeting without touching a conversation already under way.
@@ -500,8 +520,11 @@
     onlyGreeted = true;
   }
   document.addEventListener("mm:lang-changed", () => {
+    if (translating) return;
+    labelLauncher();
     if (onlyGreeted && body.childElementCount) greet();
   });
+  labelLauncher();
 
   // --------------- session memory ---------------
   let sessionCtx = {};
@@ -571,20 +594,20 @@
       } catch (_) {
         typing.remove();
         console.error("[chat] non-JSON response from", API, res.status);
-        addMsg("bot", tr("The assistant isn't available right now. Please try again in a little while."));
+        addMsg("bot", "The assistant isn't available right now. Please try again in a little while.");
         return;
       }
       typing.remove();
       if (!res.ok) {
         console.error("[chat] API error", res.status, formatApiError(data));
-        addMsg("bot", tr(res.status === 422
+        addMsg("bot", res.status === 422
           ? "I couldn't read that message. Try asking in a shorter sentence."
-          : "Sorry, something went wrong on my side. Please try asking again."));
+          : "Sorry, something went wrong on my side. Please try asking again.");
         return;
       }
       if (data.reply == null || data.reply === "") {
         console.error("[chat] empty reply", data);
-        addMsg("bot", tr("I didn't get an answer for that. Please try rephrasing your question."));
+        addMsg("bot", "I didn't get an answer for that. Please try rephrasing your question.");
         return;
       }
       addMsg("bot", data.reply);
@@ -594,9 +617,9 @@
     } catch (err) {
       typing.remove();
       console.error("[chat] request failed", err);
-      addMsg("bot", tr(navigator.onLine
+      addMsg("bot", navigator.onLine
         ? "I couldn't reach the assistant. Please try again in a moment."
-        : "You're offline. Reconnect and ask again."));
+        : "You're offline. Reconnect and ask again.");
     } finally {
       // FIX (5.2): Always release the send mutex
       _sending = false;

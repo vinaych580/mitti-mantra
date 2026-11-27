@@ -669,13 +669,22 @@
     fab.setAttribute('data-no-translate', '');
     fab.innerHTML = `<span class="qw-fab__glyph" aria-hidden="true">अA</span><svg class="qw-fab__close" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>`;
     document.body.appendChild(fab);
+    // The FAB is data-no-translate (its "अA" glyph is the same in every
+    // language), so its accessible name comes from the catalog here and on
+    // every switch (C-19).
+    const tr = (s) => (window.AgriSimI18n && window.AgriSimI18n.t ? window.AgriSimI18n.t(s) : s);
+    function labelFab() {
+      fab.setAttribute('aria-label', tr(panel.classList.contains('open') ? 'Close language and tools' : 'Language and tools'));
+    }
+    labelFab();
+    document.addEventListener('mm:lang-changed', labelFab);
 
     function togglePanel(open, { restoreFocus = false } = {}) {
       const willOpen = typeof open === 'boolean' ? open : !panel.classList.contains('open');
       panel.classList.toggle('open', willOpen);
       fab.classList.toggle('open', willOpen);
       fab.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
-      fab.setAttribute('aria-label', willOpen ? 'Close language and tools' : 'Language and tools');
+      labelFab();
       if (willOpen) {
         const first = panel.querySelector('button:not([disabled]), select, [tabindex="0"]');
         if (first) setTimeout(() => first.focus(), 0);
