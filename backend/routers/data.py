@@ -99,14 +99,19 @@ def get_yield_trend(region_id: str, crop_id: str):
     }
 
 @router.get("/satellite")
-async def get_satellite_data(lat: float, lon: float):
-    """Retrieve satellite telemetry when Earth Engine is configured."""
-    from data_ingestion.fetchers.google_earth_engine import get_satellite_ndvi
+def get_satellite_data(lat: float, lon: float):
+    """Retrieve satellite telemetry when Earth Engine is configured.
+
+    A plain def (it runs in the thread pool): the Earth Engine calls block. The
+    fetcher is imported through utils.lazy_import, inside the try: a cold-start
+    concurrent import used to raise here, outside the try, and answer 500."""
     from datetime import date, timedelta
+    from utils.lazy_import import fetcher
     today = date.today()
     start_date = today - timedelta(days=30)
-    
+
     try:
+        get_satellite_ndvi = fetcher("google_earth_engine").get_satellite_ndvi
         ndvi = get_satellite_ndvi(lat, lon, start_date, today)
         if ndvi is None:
             return {"available": False, "source": "not_configured", "message": "Live satellite imagery is not configured."}
