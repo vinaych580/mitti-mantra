@@ -19,15 +19,17 @@ from backend.main import app
 
 client = TestClient(app)
 
-# mp_indore has no "rice" rows in dataset/mandi_prices.csv at all -- see
-# price_forecast()'s "need at least 12 months of data" guard.
-REGION_WITHOUT_RICE_HISTORY = "mp_indore"
+# Tea is sold at auction, not in mandis, so no region has tea rows in
+# dataset/mandi_prices.csv -- the zero-history case behind price_forecast()'s
+# "need at least 12 months of data" guard. (This was mp_indore rice until the
+# Phase 1 measured prices gave Indore a rice series.)
+REGION_WITHOUT_HISTORY, CROP_WITHOUT_HISTORY = "mp_indore", "tea"
 REGION_WITH_RICE_HISTORY = "telangana_medak"
 
 
 def test_market_degrades_gracefully_without_enough_price_history():
     response = client.get(
-        f"/api/market?region_id={REGION_WITHOUT_RICE_HISTORY}&crop_id=rice"
+        f"/api/market?region_id={REGION_WITHOUT_HISTORY}&crop_id={CROP_WITHOUT_HISTORY}"
     )
     assert response.status_code == 200
     data = response.json()

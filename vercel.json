@@ -1,8 +1,9 @@
 {
   "version": 2,
+  "buildCommand": "node scripts/fetch_serving_store.cjs",
   "functions": {
     "api/index.py": {
-      "includeFiles": "{dataset/*.csv,backend/**/*.py,backend/*.json,engine/**/*.py,utils/**/*.py,ml/**/*.py,ml/models/*.joblib,ml/models/*.json,ml/models/*.onnx,data_ingestion/**/*.py}",
+      "includeFiles": "{dataset/*.csv,dataset/serving.sqlite,backend/**/*.py,backend/*.json,engine/**/*.py,utils/**/*.py,ml/**/*.py,ml/models/*.joblib,ml/models/*.json,ml/models/*.onnx,data_ingestion/**/*.py}",
       "maxDuration": 30,
       "memory": 1024
     }

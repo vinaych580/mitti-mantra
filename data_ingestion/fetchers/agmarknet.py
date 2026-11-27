@@ -1,8 +1,8 @@
-# Agmarknet HTTP client. `fetch_mandi_records` (uncached) is the shared
-# transport used by both the live price path (data_ingestion/fetchers/mandi.py,
-# which layers its own 1-hour cache and CSV fallback on top) and the offline
-# ETL pipeline (data_ingestion/etl_pipeline.py, itself still unwired -- see
-# AUDIT_REPORT.md D-4) via the cached get_mandi_prices() below.
+# Agmarknet HTTP client. `fetch_mandi_records` (uncached) is the transport for
+# the live price path (data_ingestion/fetchers/mandi.py, which layers its own
+# 1-hour cache and CSV fallback on top); get_mandi_prices() below is the cached
+# variant. The scheduled daily snapshot job (pipelines/sources/agmarknet_live.py)
+# reads the same OGD resource directly.
 import logging
 import os
 from typing import Dict, List, Optional

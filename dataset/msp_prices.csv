@@ -1,37 +1,505 @@
-crop_id,crop_name,year,season,msp_inr_per_quintal,msp_inr_per_kg
-rice,Rice (Paddy),2024,kharif,2300,23.00
-rice,Rice (Paddy),2025,kharif,2400,24.00
-wheat,Wheat,2024,rabi,2275,22.75
-wheat,Wheat,2025,rabi,2425,24.25
-maize,Maize,2024,kharif,2090,20.90
-maize,Maize,2025,kharif,2225,22.25
-sugarcane,Sugarcane,2024,annual,315,3.15
-sugarcane,Sugarcane,2025,annual,340,3.40
-cotton,Cotton (Medium Staple),2024,kharif,7121,71.21
-cotton,Cotton (Medium Staple),2025,kharif,7521,75.21
-pulses,Pulses (Tur/Arhar),2024,kharif,7000,70.00
-pulses,Pulses (Tur/Arhar),2025,kharif,7550,75.50
-groundnut,Groundnut,2024,kharif,6377,63.77
-groundnut,Groundnut,2025,kharif,6783,67.83
-soybean,Soybean,2024,kharif,4892,48.92
-soybean,Soybean,2025,kharif,5240,52.40
-mustard,Mustard (Sarson),2024,rabi,5650,56.50
-mustard,Mustard (Sarson),2025,rabi,5950,59.50
-bajra,Pearl Millet (Bajra),2024,kharif,2500,25.00
-bajra,Pearl Millet (Bajra),2025,kharif,2625,26.25
-jowar,Sorghum (Jowar),2024,kharif,3180,31.80
-jowar,Sorghum (Jowar),2025,kharif,3371,33.71
-barley,Barley,2024,rabi,1850,18.50
-barley,Barley,2025,rabi,1980,19.80
-ragi,Finger Millet (Ragi),2024,kharif,4290,42.90
-ragi,Finger Millet (Ragi),2025,kharif,4886,48.86
-sunflower,Sunflower Seed,2024,kharif,7280,72.80
-sunflower,Sunflower Seed,2025,kharif,7721,77.21
-urad,Black Gram (Urad),2024,kharif,7400,74.00
-urad,Black Gram (Urad),2025,kharif,7800,78.00
-moong,Green Gram (Moong),2024,kharif,8682,86.82
-moong,Green Gram (Moong),2025,kharif,8768,87.68
-arhar,Pigeon Pea (Arhar/Tur),2024,kharif,7550,75.50
-arhar,Pigeon Pea (Arhar/Tur),2025,kharif,8000,80.00
-paddy_basmati,Basmati Rice,2024,kharif,3700,37.00
-paddy_basmati,Basmati Rice,2025,kharif,3900,39.00
+crop_id,crop_name,year,season,msp_inr_per_quintal,msp_inr_per_kg,msp_variety,source,is_synthetic
+arhar,Pigeon Pea (Arhar/Tur),1998,kharif,960,9.60,Arhar(Tur),CACP Minimum Support Prices via India Data Portal,false
+arhar,Pigeon Pea (Arhar/Tur),1999,kharif,1105,11.05,Arhar(Tur),CACP Minimum Support Prices via India Data Portal,false
+arhar,Pigeon Pea (Arhar/Tur),2000,kharif,1200,12.00,Arhar(Tur),CACP Minimum Support Prices via India Data Portal,false
+arhar,Pigeon Pea (Arhar/Tur),2001,kharif,1320,13.20,Arhar(Tur),CACP Minimum Support Prices via India Data Portal,false
+arhar,Pigeon Pea (Arhar/Tur),2002,kharif,1320,13.20,Arhar(Tur),CACP Minimum Support Prices via India Data Portal,false
+arhar,Pigeon Pea (Arhar/Tur),2003,kharif,1360,13.60,Arhar(Tur),CACP Minimum Support Prices via India Data Portal,false
+arhar,Pigeon Pea (Arhar/Tur),2004,kharif,1390,13.90,Arhar(Tur),CACP Minimum Support Prices via India Data Portal,false
+arhar,Pigeon Pea (Arhar/Tur),2005,kharif,1400,14.00,Arhar(Tur),CACP Minimum Support Prices via India Data Portal,false
+arhar,Pigeon Pea (Arhar/Tur),2006,kharif,1410,14.10,Arhar(Tur),CACP Minimum Support Prices via India Data Portal,false
+arhar,Pigeon Pea (Arhar/Tur),2007,kharif,1550,15.50,Arhar(Tur),CACP Minimum Support Prices via India Data Portal,false
+arhar,Pigeon Pea (Arhar/Tur),2008,kharif,2000,20.00,Arhar(Tur),CACP Minimum Support Prices via India Data Portal,false
+arhar,Pigeon Pea (Arhar/Tur),2009,kharif,2300,23.00,Arhar(Tur),CACP Minimum Support Prices via India Data Portal,false
+arhar,Pigeon Pea (Arhar/Tur),2010,kharif,3000,30.00,Arhar(Tur),CACP Minimum Support Prices via India Data Portal,false
+arhar,Pigeon Pea (Arhar/Tur),2011,kharif,3200,32.00,Arhar(Tur),CACP Minimum Support Prices via India Data Portal,false
+arhar,Pigeon Pea (Arhar/Tur),2012,kharif,3850,38.50,Arhar(Tur),CACP Minimum Support Prices via India Data Portal,false
+arhar,Pigeon Pea (Arhar/Tur),2013,kharif,4300,43.00,Arhar(Tur),CACP Minimum Support Prices via India Data Portal,false
+arhar,Pigeon Pea (Arhar/Tur),2014,kharif,4350,43.50,Arhar(Tur),CACP Minimum Support Prices via India Data Portal,false
+arhar,Pigeon Pea (Arhar/Tur),2015,kharif,4625,46.25,Arhar(Tur),CACP Minimum Support Prices via India Data Portal,false
+arhar,Pigeon Pea (Arhar/Tur),2016,kharif,5050,50.50,Arhar(Tur),CACP Minimum Support Prices via India Data Portal,false
+arhar,Pigeon Pea (Arhar/Tur),2017,kharif,5450,54.50,Arhar(Tur),CACP Minimum Support Prices via India Data Portal,false
+arhar,Pigeon Pea (Arhar/Tur),2018,kharif,5675,56.75,Arhar(Tur),CACP Minimum Support Prices via India Data Portal,false
+arhar,Pigeon Pea (Arhar/Tur),2019,kharif,5800,58.00,Arhar(Tur),CACP Minimum Support Prices via India Data Portal,false
+arhar,Pigeon Pea (Arhar/Tur),2020,kharif,6000,60.00,Arhar(Tur),CACP Minimum Support Prices via India Data Portal,false
+arhar,Pigeon Pea (Arhar/Tur),2021,kharif,6300,63.00,Arhar(Tur),CACP Minimum Support Prices via India Data Portal,false
+arhar,Pigeon Pea (Arhar/Tur),2022,kharif,6600,66.00,Arhar(Tur),CACP Minimum Support Prices via India Data Portal,false
+arhar,Pigeon Pea (Arhar/Tur),2023,kharif,7000,70.00,Arhar(Tur),CACP Minimum Support Prices via India Data Portal,false
+arhar,Pigeon Pea (Arhar/Tur),2024,kharif,7550,75.50,Arhar(Tur),CACP Minimum Support Prices via India Data Portal,false
+arhar,Pigeon Pea (Arhar/Tur),2025,kharif,8000,80.00,Arhar(Tur),CACP Minimum Support Prices via India Data Portal,false
+bajra,Pearl Millet (Bajra),1998,kharif,390,3.90,Bajra,CACP Minimum Support Prices via India Data Portal,false
+bajra,Pearl Millet (Bajra),1999,kharif,415,4.15,Bajra,CACP Minimum Support Prices via India Data Portal,false
+bajra,Pearl Millet (Bajra),2000,kharif,445,4.45,Bajra,CACP Minimum Support Prices via India Data Portal,false
+bajra,Pearl Millet (Bajra),2001,kharif,485,4.85,Bajra,CACP Minimum Support Prices via India Data Portal,false
+bajra,Pearl Millet (Bajra),2002,kharif,485,4.85,Bajra,CACP Minimum Support Prices via India Data Portal,false
+bajra,Pearl Millet (Bajra),2003,kharif,505,5.05,Bajra,CACP Minimum Support Prices via India Data Portal,false
+bajra,Pearl Millet (Bajra),2004,kharif,515,5.15,Bajra,CACP Minimum Support Prices via India Data Portal,false
+bajra,Pearl Millet (Bajra),2005,kharif,525,5.25,Bajra,CACP Minimum Support Prices via India Data Portal,false
+bajra,Pearl Millet (Bajra),2006,kharif,540,5.40,Bajra,CACP Minimum Support Prices via India Data Portal,false
+bajra,Pearl Millet (Bajra),2007,kharif,600,6.00,Bajra,CACP Minimum Support Prices via India Data Portal,false
+bajra,Pearl Millet (Bajra),2008,kharif,840,8.40,Bajra,CACP Minimum Support Prices via India Data Portal,false
+bajra,Pearl Millet (Bajra),2009,kharif,840,8.40,Bajra,CACP Minimum Support Prices via India Data Portal,false
+bajra,Pearl Millet (Bajra),2010,kharif,880,8.80,Bajra,CACP Minimum Support Prices via India Data Portal,false
+bajra,Pearl Millet (Bajra),2011,kharif,980,9.80,Bajra,CACP Minimum Support Prices via India Data Portal,false
+bajra,Pearl Millet (Bajra),2012,kharif,1175,11.75,Bajra,CACP Minimum Support Prices via India Data Portal,false
+bajra,Pearl Millet (Bajra),2013,kharif,1250,12.50,Bajra,CACP Minimum Support Prices via India Data Portal,false
+bajra,Pearl Millet (Bajra),2014,kharif,1250,12.50,Bajra,CACP Minimum Support Prices via India Data Portal,false
+bajra,Pearl Millet (Bajra),2015,kharif,1275,12.75,Bajra,CACP Minimum Support Prices via India Data Portal,false
+bajra,Pearl Millet (Bajra),2016,kharif,1330,13.30,Bajra,CACP Minimum Support Prices via India Data Portal,false
+bajra,Pearl Millet (Bajra),2017,kharif,1425,14.25,Bajra,CACP Minimum Support Prices via India Data Portal,false
+bajra,Pearl Millet (Bajra),2018,kharif,1950,19.50,Bajra,CACP Minimum Support Prices via India Data Portal,false
+bajra,Pearl Millet (Bajra),2019,kharif,2000,20.00,Bajra,CACP Minimum Support Prices via India Data Portal,false
+bajra,Pearl Millet (Bajra),2020,kharif,2150,21.50,Bajra,CACP Minimum Support Prices via India Data Portal,false
+bajra,Pearl Millet (Bajra),2021,kharif,2250,22.50,Bajra,CACP Minimum Support Prices via India Data Portal,false
+bajra,Pearl Millet (Bajra),2022,kharif,2350,23.50,Bajra,CACP Minimum Support Prices via India Data Portal,false
+bajra,Pearl Millet (Bajra),2023,kharif,2500,25.00,Bajra,CACP Minimum Support Prices via India Data Portal,false
+bajra,Pearl Millet (Bajra),2024,kharif,2625,26.25,Bajra,CACP Minimum Support Prices via India Data Portal,false
+bajra,Pearl Millet (Bajra),2025,kharif,2775,27.75,Bajra,CACP Minimum Support Prices via India Data Portal,false
+barley,Barley,1998,rabi,385,3.85,Barley,CACP Minimum Support Prices via India Data Portal,false
+barley,Barley,1999,rabi,430,4.30,Barley,CACP Minimum Support Prices via India Data Portal,false
+barley,Barley,2000,rabi,500,5.00,Barley,CACP Minimum Support Prices via India Data Portal,false
+barley,Barley,2001,rabi,500,5.00,Barley,CACP Minimum Support Prices via India Data Portal,false
+barley,Barley,2002,rabi,500,5.00,Barley,CACP Minimum Support Prices via India Data Portal,false
+barley,Barley,2003,rabi,525,5.25,Barley,CACP Minimum Support Prices via India Data Portal,false
+barley,Barley,2004,rabi,540,5.40,Barley,CACP Minimum Support Prices via India Data Portal,false
+barley,Barley,2005,rabi,550,5.50,Barley,CACP Minimum Support Prices via India Data Portal,false
+barley,Barley,2006,rabi,565,5.65,Barley,CACP Minimum Support Prices via India Data Portal,false
+barley,Barley,2007,rabi,650,6.50,Barley,CACP Minimum Support Prices via India Data Portal,false
+barley,Barley,2008,rabi,680,6.80,Barley,CACP Minimum Support Prices via India Data Portal,false
+barley,Barley,2009,rabi,750,7.50,Barley,CACP Minimum Support Prices via India Data Portal,false
+barley,Barley,2010,rabi,780,7.80,Barley,CACP Minimum Support Prices via India Data Portal,false
+barley,Barley,2011,rabi,980,9.80,Barley,CACP Minimum Support Prices via India Data Portal,false
+barley,Barley,2012,rabi,980,9.80,Barley,CACP Minimum Support Prices via India Data Portal,false
+barley,Barley,2013,rabi,1100,11.00,Barley,CACP Minimum Support Prices via India Data Portal,false
+barley,Barley,2014,rabi,1150,11.50,Barley,CACP Minimum Support Prices via India Data Portal,false
+barley,Barley,2015,rabi,1225,12.25,Barley,CACP Minimum Support Prices via India Data Portal,false
+barley,Barley,2016,rabi,1325,13.25,Barley,CACP Minimum Support Prices via India Data Portal,false
+barley,Barley,2017,rabi,1410,14.10,Barley,CACP Minimum Support Prices via India Data Portal,false
+barley,Barley,2018,rabi,1440,14.40,Barley,CACP Minimum Support Prices via India Data Portal,false
+barley,Barley,2019,rabi,1525,15.25,Barley,CACP Minimum Support Prices via India Data Portal,false
+barley,Barley,2020,rabi,1600,16.00,Barley,CACP Minimum Support Prices via India Data Portal,false
+barley,Barley,2021,rabi,1635,16.35,Barley,CACP Minimum Support Prices via India Data Portal,false
+barley,Barley,2022,rabi,1635,16.35,Barley,CACP Minimum Support Prices via India Data Portal,false
+barley,Barley,2023,rabi,1735,17.35,Barley,CACP Minimum Support Prices via India Data Portal,false
+barley,Barley,2024,rabi,1850,18.50,Barley,CACP Minimum Support Prices via India Data Portal,false
+barley,Barley,2025,rabi,1980,19.80,Barley,CACP Minimum Support Prices via India Data Portal,false
+cotton,Cotton,1998,kharif,1440,14.40,Cotton,CACP Minimum Support Prices via India Data Portal,false
+cotton,Cotton,1999,kharif,1575,15.75,Cotton,CACP Minimum Support Prices via India Data Portal,false
+cotton,Cotton,2000,kharif,1625,16.25,Cotton,CACP Minimum Support Prices via India Data Portal,false
+cotton,Cotton,2001,kharif,1675,16.75,Cotton,CACP Minimum Support Prices via India Data Portal,false
+cotton,Cotton,2002,kharif,1675,16.75,Cotton,CACP Minimum Support Prices via India Data Portal,false
+cotton,Cotton,2003,kharif,1725,17.25,Cotton,CACP Minimum Support Prices via India Data Portal,false
+cotton,Cotton,2004,kharif,1760,17.60,Cotton,CACP Minimum Support Prices via India Data Portal,false
+cotton,Cotton,2005,kharif,1760,17.60,Cotton,CACP Minimum Support Prices via India Data Portal,false
+cotton,Cotton,2006,kharif,1770,17.70,Cotton,CACP Minimum Support Prices via India Data Portal,false
+cotton,Cotton,2007,kharif,1800,18.00,Cotton,CACP Minimum Support Prices via India Data Portal,false
+cotton,Cotton,2008,kharif,2500,25.00,Cotton,CACP Minimum Support Prices via India Data Portal,false
+cotton,Cotton,2009,kharif,2500,25.00,Cotton,CACP Minimum Support Prices via India Data Portal,false
+cotton,Cotton,2010,kharif,2500,25.00,Cotton,CACP Minimum Support Prices via India Data Portal,false
+cotton,Cotton,2011,kharif,2800,28.00,Cotton,CACP Minimum Support Prices via India Data Portal,false
+cotton,Cotton,2012,kharif,3600,36.00,Cotton,CACP Minimum Support Prices via India Data Portal,false
+cotton,Cotton,2013,kharif,3700,37.00,Cotton,CACP Minimum Support Prices via India Data Portal,false
+cotton,Cotton,2014,kharif,3750,37.50,Cotton,CACP Minimum Support Prices via India Data Portal,false
+cotton,Cotton,2015,kharif,3800,38.00,Cotton,CACP Minimum Support Prices via India Data Portal,false
+cotton,Cotton,2016,kharif,3860,38.60,Cotton,CACP Minimum Support Prices via India Data Portal,false
+cotton,Cotton,2017,kharif,4020,40.20,Cotton,CACP Minimum Support Prices via India Data Portal,false
+cotton,Cotton,2018,kharif,5150,51.50,Cotton,CACP Minimum Support Prices via India Data Portal,false
+cotton,Cotton,2019,kharif,5255,52.55,Cotton,CACP Minimum Support Prices via India Data Portal,false
+cotton,Cotton,2020,kharif,5515,55.15,Cotton,CACP Minimum Support Prices via India Data Portal,false
+cotton,Cotton,2021,kharif,5726,57.26,Cotton - Medium Staple,CACP Minimum Support Prices via India Data Portal,false
+cotton,Cotton,2022,kharif,6080,60.80,Cotton - Medium Staple,CACP Minimum Support Prices via India Data Portal,false
+cotton,Cotton,2023,kharif,6620,66.20,Cotton - Medium Staple,CACP Minimum Support Prices via India Data Portal,false
+cotton,Cotton,2024,kharif,7121,71.21,Cotton - Medium Staple,CACP Minimum Support Prices via India Data Portal,false
+cotton,Cotton,2025,kharif,7710,77.10,Cotton - Medium Staple,CACP Minimum Support Prices via India Data Portal,false
+groundnut,Groundnut,1998,kharif,1040,10.40,Groundnut In Shell,CACP Minimum Support Prices via India Data Portal,false
+groundnut,Groundnut,1999,kharif,1155,11.55,Groundnut In Shell,CACP Minimum Support Prices via India Data Portal,false
+groundnut,Groundnut,2000,kharif,1220,12.20,Groundnut In Shell,CACP Minimum Support Prices via India Data Portal,false
+groundnut,Groundnut,2001,kharif,1340,13.40,Groundnut In Shell,CACP Minimum Support Prices via India Data Portal,false
+groundnut,Groundnut,2002,kharif,1355,13.55,Groundnut In Shell,CACP Minimum Support Prices via India Data Portal,false
+groundnut,Groundnut,2003,kharif,1400,14.00,Groundnut In Shell,CACP Minimum Support Prices via India Data Portal,false
+groundnut,Groundnut,2004,kharif,1500,15.00,Groundnut In Shell,CACP Minimum Support Prices via India Data Portal,false
+groundnut,Groundnut,2005,kharif,1520,15.20,Groundnut In Shell,CACP Minimum Support Prices via India Data Portal,false
+groundnut,Groundnut,2006,kharif,1520,15.20,Groundnut In Shell,CACP Minimum Support Prices via India Data Portal,false
+groundnut,Groundnut,2007,kharif,1550,15.50,Groundnut In Shell,CACP Minimum Support Prices via India Data Portal,false
+groundnut,Groundnut,2008,kharif,2100,21.00,Groundnut In Shell,CACP Minimum Support Prices via India Data Portal,false
+groundnut,Groundnut,2009,kharif,2100,21.00,Groundnut In Shell,CACP Minimum Support Prices via India Data Portal,false
+groundnut,Groundnut,2010,kharif,2300,23.00,Groundnut In Shell,CACP Minimum Support Prices via India Data Portal,false
+groundnut,Groundnut,2011,kharif,2700,27.00,Groundnut In Shell,CACP Minimum Support Prices via India Data Portal,false
+groundnut,Groundnut,2012,kharif,3700,37.00,Groundnut In Shell,CACP Minimum Support Prices via India Data Portal,false
+groundnut,Groundnut,2013,kharif,4000,40.00,Groundnut In Shell,CACP Minimum Support Prices via India Data Portal,false
+groundnut,Groundnut,2014,kharif,4000,40.00,Groundnut In Shell,CACP Minimum Support Prices via India Data Portal,false
+groundnut,Groundnut,2015,kharif,4030,40.30,Groundnut In Shell,CACP Minimum Support Prices via India Data Portal,false
+groundnut,Groundnut,2016,kharif,4220,42.20,Groundnut In Shell,CACP Minimum Support Prices via India Data Portal,false
+groundnut,Groundnut,2017,kharif,4450,44.50,Groundnut In Shell,CACP Minimum Support Prices via India Data Portal,false
+groundnut,Groundnut,2018,kharif,4890,48.90,Groundnut In Shell,CACP Minimum Support Prices via India Data Portal,false
+groundnut,Groundnut,2019,kharif,5090,50.90,Groundnut In Shell,CACP Minimum Support Prices via India Data Portal,false
+groundnut,Groundnut,2020,kharif,5275,52.75,Groundnut In Shell,CACP Minimum Support Prices via India Data Portal,false
+groundnut,Groundnut,2021,kharif,5550,55.50,Groundnut In Shell,CACP Minimum Support Prices via India Data Portal,false
+groundnut,Groundnut,2022,kharif,5850,58.50,Groundnut In Shell,CACP Minimum Support Prices via India Data Portal,false
+groundnut,Groundnut,2023,kharif,6377,63.77,Groundnut In Shell,CACP Minimum Support Prices via India Data Portal,false
+groundnut,Groundnut,2024,kharif,6783,67.83,Groundnut In Shell,CACP Minimum Support Prices via India Data Portal,false
+groundnut,Groundnut,2025,kharif,7263,72.63,Groundnut In Shell,CACP Minimum Support Prices via India Data Portal,false
+jowar,Sorghum (Jowar),1998,kharif,390,3.90,Jowar - Hybrid,CACP Minimum Support Prices via India Data Portal,false
+jowar,Sorghum (Jowar),1999,kharif,415,4.15,Jowar - Hybrid,CACP Minimum Support Prices via India Data Portal,false
+jowar,Sorghum (Jowar),2000,kharif,445,4.45,Jowar - Hybrid,CACP Minimum Support Prices via India Data Portal,false
+jowar,Sorghum (Jowar),2001,kharif,485,4.85,Jowar - Hybrid,CACP Minimum Support Prices via India Data Portal,false
+jowar,Sorghum (Jowar),2002,kharif,485,4.85,Jowar - Hybrid,CACP Minimum Support Prices via India Data Portal,false
+jowar,Sorghum (Jowar),2003,kharif,505,5.05,Jowar - Hybrid,CACP Minimum Support Prices via India Data Portal,false
+jowar,Sorghum (Jowar),2004,kharif,515,5.15,Jowar - Hybrid,CACP Minimum Support Prices via India Data Portal,false
+jowar,Sorghum (Jowar),2005,kharif,525,5.25,Jowar - Hybrid,CACP Minimum Support Prices via India Data Portal,false
+jowar,Sorghum (Jowar),2006,kharif,540,5.40,Jowar - Hybrid,CACP Minimum Support Prices via India Data Portal,false
+jowar,Sorghum (Jowar),2007,kharif,600,6.00,Jowar - Hybrid,CACP Minimum Support Prices via India Data Portal,false
+jowar,Sorghum (Jowar),2008,kharif,840,8.40,Jowar - Hybrid,CACP Minimum Support Prices via India Data Portal,false
+jowar,Sorghum (Jowar),2009,kharif,840,8.40,Jowar - Hybrid,CACP Minimum Support Prices via India Data Portal,false
+jowar,Sorghum (Jowar),2010,kharif,880,8.80,Jowar - Hybrid,CACP Minimum Support Prices via India Data Portal,false
+jowar,Sorghum (Jowar),2011,kharif,980,9.80,Jowar - Hybrid,CACP Minimum Support Prices via India Data Portal,false
+jowar,Sorghum (Jowar),2012,kharif,1500,15.00,Jowar - Hybrid,CACP Minimum Support Prices via India Data Portal,false
+jowar,Sorghum (Jowar),2013,kharif,1500,15.00,Jowar - Hybrid,CACP Minimum Support Prices via India Data Portal,false
+jowar,Sorghum (Jowar),2014,kharif,1530,15.30,Jowar - Hybrid,CACP Minimum Support Prices via India Data Portal,false
+jowar,Sorghum (Jowar),2015,kharif,1570,15.70,Jowar - Hybrid,CACP Minimum Support Prices via India Data Portal,false
+jowar,Sorghum (Jowar),2016,kharif,1625,16.25,Jowar - Hybrid,CACP Minimum Support Prices via India Data Portal,false
+jowar,Sorghum (Jowar),2017,kharif,1700,17.00,Jowar - Hybrid,CACP Minimum Support Prices via India Data Portal,false
+jowar,Sorghum (Jowar),2018,kharif,2430,24.30,Jowar - Hybrid,CACP Minimum Support Prices via India Data Portal,false
+jowar,Sorghum (Jowar),2019,kharif,2550,25.50,Jowar - Hybrid,CACP Minimum Support Prices via India Data Portal,false
+jowar,Sorghum (Jowar),2020,kharif,2620,26.20,Jowar - Hybrid,CACP Minimum Support Prices via India Data Portal,false
+jowar,Sorghum (Jowar),2021,kharif,2738,27.38,Jowar - Hybrid,CACP Minimum Support Prices via India Data Portal,false
+jowar,Sorghum (Jowar),2022,kharif,2970,29.70,Jowar - Hybrid,CACP Minimum Support Prices via India Data Portal,false
+jowar,Sorghum (Jowar),2023,kharif,3180,31.80,Jowar - Hybrid,CACP Minimum Support Prices via India Data Portal,false
+jowar,Sorghum (Jowar),2024,kharif,3371,33.71,Jowar - Hybrid,CACP Minimum Support Prices via India Data Portal,false
+jowar,Sorghum (Jowar),2025,kharif,3699,36.99,Jowar - Hybrid,CACP Minimum Support Prices via India Data Portal,false
+jute,Jute,1998,annual,650,6.50,Jute,CACP Minimum Support Prices via India Data Portal,false
+jute,Jute,1999,annual,750,7.50,Jute,CACP Minimum Support Prices via India Data Portal,false
+jute,Jute,2000,annual,785,7.85,Jute,CACP Minimum Support Prices via India Data Portal,false
+jute,Jute,2001,annual,810,8.10,Jute,CACP Minimum Support Prices via India Data Portal,false
+jute,Jute,2002,annual,850,8.50,Jute,CACP Minimum Support Prices via India Data Portal,false
+jute,Jute,2003,annual,860,8.60,Jute,CACP Minimum Support Prices via India Data Portal,false
+jute,Jute,2004,annual,890,8.90,Jute,CACP Minimum Support Prices via India Data Portal,false
+jute,Jute,2005,annual,910,9.10,Jute,CACP Minimum Support Prices via India Data Portal,false
+jute,Jute,2006,annual,1000,10.00,Jute,CACP Minimum Support Prices via India Data Portal,false
+jute,Jute,2007,annual,1055,10.55,Jute,CACP Minimum Support Prices via India Data Portal,false
+jute,Jute,2008,annual,1250,12.50,Jute,CACP Minimum Support Prices via India Data Portal,false
+jute,Jute,2009,annual,1375,13.75,Jute,CACP Minimum Support Prices via India Data Portal,false
+jute,Jute,2010,annual,1575,15.75,Jute,CACP Minimum Support Prices via India Data Portal,false
+jute,Jute,2011,annual,1675,16.75,Jute,CACP Minimum Support Prices via India Data Portal,false
+jute,Jute,2012,annual,2200,22.00,Jute,CACP Minimum Support Prices via India Data Portal,false
+jute,Jute,2013,annual,2300,23.00,Jute,CACP Minimum Support Prices via India Data Portal,false
+jute,Jute,2014,annual,2400,24.00,Jute,CACP Minimum Support Prices via India Data Portal,false
+jute,Jute,2015,annual,2700,27.00,Jute,CACP Minimum Support Prices via India Data Portal,false
+jute,Jute,2016,annual,3200,32.00,Jute,CACP Minimum Support Prices via India Data Portal,false
+jute,Jute,2017,annual,3500,35.00,Jute,CACP Minimum Support Prices via India Data Portal,false
+jute,Jute,2018,annual,3700,37.00,Jute,CACP Minimum Support Prices via India Data Portal,false
+jute,Jute,2019,annual,3950,39.50,Jute,CACP Minimum Support Prices via India Data Portal,false
+jute,Jute,2020,annual,4225,42.25,Jute,CACP Minimum Support Prices via India Data Portal,false
+jute,Jute,2021,annual,4500,45.00,Jute,CACP Minimum Support Prices via India Data Portal,false
+jute,Jute,2022,annual,4750,47.50,Jute,CACP Minimum Support Prices via India Data Portal,false
+jute,Jute,2023,annual,5050,50.50,Jute,CACP Minimum Support Prices via India Data Portal,false
+jute,Jute,2024,annual,5335,53.35,Jute,CACP Minimum Support Prices via India Data Portal,false
+jute,Jute,2025,annual,5650,56.50,Jute,CACP Minimum Support Prices via India Data Portal,false
+maize,Maize,1998,kharif,390,3.90,Maize,CACP Minimum Support Prices via India Data Portal,false
+maize,Maize,1999,kharif,415,4.15,Maize,CACP Minimum Support Prices via India Data Portal,false
+maize,Maize,2000,kharif,445,4.45,Maize,CACP Minimum Support Prices via India Data Portal,false
+maize,Maize,2001,kharif,485,4.85,Maize,CACP Minimum Support Prices via India Data Portal,false
+maize,Maize,2002,kharif,485,4.85,Maize,CACP Minimum Support Prices via India Data Portal,false
+maize,Maize,2003,kharif,505,5.05,Maize,CACP Minimum Support Prices via India Data Portal,false
+maize,Maize,2004,kharif,525,5.25,Maize,CACP Minimum Support Prices via India Data Portal,false
+maize,Maize,2005,kharif,540,5.40,Maize,CACP Minimum Support Prices via India Data Portal,false
+maize,Maize,2006,kharif,540,5.40,Maize,CACP Minimum Support Prices via India Data Portal,false
+maize,Maize,2007,kharif,620,6.20,Maize,CACP Minimum Support Prices via India Data Portal,false
+maize,Maize,2008,kharif,840,8.40,Maize,CACP Minimum Support Prices via India Data Portal,false
+maize,Maize,2009,kharif,840,8.40,Maize,CACP Minimum Support Prices via India Data Portal,false
+maize,Maize,2010,kharif,880,8.80,Maize,CACP Minimum Support Prices via India Data Portal,false
+maize,Maize,2011,kharif,980,9.80,Maize,CACP Minimum Support Prices via India Data Portal,false
+maize,Maize,2012,kharif,1175,11.75,Maize,CACP Minimum Support Prices via India Data Portal,false
+maize,Maize,2013,kharif,1310,13.10,Maize,CACP Minimum Support Prices via India Data Portal,false
+maize,Maize,2014,kharif,1310,13.10,Maize,CACP Minimum Support Prices via India Data Portal,false
+maize,Maize,2015,kharif,1325,13.25,Maize,CACP Minimum Support Prices via India Data Portal,false
+maize,Maize,2016,kharif,1365,13.65,Maize,CACP Minimum Support Prices via India Data Portal,false
+maize,Maize,2017,kharif,1425,14.25,Maize,CACP Minimum Support Prices via India Data Portal,false
+maize,Maize,2018,kharif,1700,17.00,Maize,CACP Minimum Support Prices via India Data Portal,false
+maize,Maize,2019,kharif,1760,17.60,Maize,CACP Minimum Support Prices via India Data Portal,false
+maize,Maize,2020,kharif,1850,18.50,Maize,CACP Minimum Support Prices via India Data Portal,false
+maize,Maize,2021,kharif,1870,18.70,Maize,CACP Minimum Support Prices via India Data Portal,false
+maize,Maize,2022,kharif,1962,19.62,Maize,CACP Minimum Support Prices via India Data Portal,false
+maize,Maize,2023,kharif,2090,20.90,Maize,CACP Minimum Support Prices via India Data Portal,false
+maize,Maize,2024,kharif,2225,22.25,Maize,CACP Minimum Support Prices via India Data Portal,false
+maize,Maize,2025,kharif,2400,24.00,Maize,CACP Minimum Support Prices via India Data Portal,false
+moong,Green Gram (Moong),1998,kharif,960,9.60,Moong,CACP Minimum Support Prices via India Data Portal,false
+moong,Green Gram (Moong),1999,kharif,1105,11.05,Moong,CACP Minimum Support Prices via India Data Portal,false
+moong,Green Gram (Moong),2000,kharif,1200,12.00,Moong,CACP Minimum Support Prices via India Data Portal,false
+moong,Green Gram (Moong),2001,kharif,1320,13.20,Moong,CACP Minimum Support Prices via India Data Portal,false
+moong,Green Gram (Moong),2002,kharif,1330,13.30,Moong,CACP Minimum Support Prices via India Data Portal,false
+moong,Green Gram (Moong),2003,kharif,1370,13.70,Moong,CACP Minimum Support Prices via India Data Portal,false
+moong,Green Gram (Moong),2004,kharif,1410,14.10,Moong,CACP Minimum Support Prices via India Data Portal,false
+moong,Green Gram (Moong),2005,kharif,1520,15.20,Moong,CACP Minimum Support Prices via India Data Portal,false
+moong,Green Gram (Moong),2006,kharif,1520,15.20,Moong,CACP Minimum Support Prices via India Data Portal,false
+moong,Green Gram (Moong),2007,kharif,1700,17.00,Moong,CACP Minimum Support Prices via India Data Portal,false
+moong,Green Gram (Moong),2008,kharif,2520,25.20,Moong,CACP Minimum Support Prices via India Data Portal,false
+moong,Green Gram (Moong),2009,kharif,2760,27.60,Moong,CACP Minimum Support Prices via India Data Portal,false
+moong,Green Gram (Moong),2010,kharif,3170,31.70,Moong,CACP Minimum Support Prices via India Data Portal,false
+moong,Green Gram (Moong),2011,kharif,3500,35.00,Moong,CACP Minimum Support Prices via India Data Portal,false
+moong,Green Gram (Moong),2012,kharif,4400,44.00,Moong,CACP Minimum Support Prices via India Data Portal,false
+moong,Green Gram (Moong),2013,kharif,4500,45.00,Moong,CACP Minimum Support Prices via India Data Portal,false
+moong,Green Gram (Moong),2014,kharif,4600,46.00,Moong,CACP Minimum Support Prices via India Data Portal,false
+moong,Green Gram (Moong),2015,kharif,4850,48.50,Moong,CACP Minimum Support Prices via India Data Portal,false
+moong,Green Gram (Moong),2016,kharif,5225,52.25,Moong,CACP Minimum Support Prices via India Data Portal,false
+moong,Green Gram (Moong),2017,kharif,5575,55.75,Moong,CACP Minimum Support Prices via India Data Portal,false
+moong,Green Gram (Moong),2018,kharif,6975,69.75,Moong,CACP Minimum Support Prices via India Data Portal,false
+moong,Green Gram (Moong),2019,kharif,7050,70.50,Moong,CACP Minimum Support Prices via India Data Portal,false
+moong,Green Gram (Moong),2020,kharif,7196,71.96,Moong,CACP Minimum Support Prices via India Data Portal,false
+moong,Green Gram (Moong),2021,kharif,7275,72.75,Moong,CACP Minimum Support Prices via India Data Portal,false
+moong,Green Gram (Moong),2022,kharif,7755,77.55,Moong,CACP Minimum Support Prices via India Data Portal,false
+moong,Green Gram (Moong),2023,kharif,8558,85.58,Moong,CACP Minimum Support Prices via India Data Portal,false
+moong,Green Gram (Moong),2024,kharif,8682,86.82,Moong,CACP Minimum Support Prices via India Data Portal,false
+moong,Green Gram (Moong),2025,kharif,8768,87.68,Moong,CACP Minimum Support Prices via India Data Portal,false
+mustard,Mustard (Sarson),1998,rabi,1000,10.00,Rapeseed/Mustard,CACP Minimum Support Prices via India Data Portal,false
+mustard,Mustard (Sarson),1999,rabi,1100,11.00,Rapeseed/Mustard,CACP Minimum Support Prices via India Data Portal,false
+mustard,Mustard (Sarson),2000,rabi,1200,12.00,Rapeseed/Mustard,CACP Minimum Support Prices via India Data Portal,false
+mustard,Mustard (Sarson),2001,rabi,1300,13.00,Rapeseed/Mustard,CACP Minimum Support Prices via India Data Portal,false
+mustard,Mustard (Sarson),2002,rabi,1330,13.30,Rapeseed/Mustard,CACP Minimum Support Prices via India Data Portal,false
+mustard,Mustard (Sarson),2003,rabi,1600,16.00,Rapeseed/Mustard,CACP Minimum Support Prices via India Data Portal,false
+mustard,Mustard (Sarson),2004,rabi,1700,17.00,Rapeseed/Mustard,CACP Minimum Support Prices via India Data Portal,false
+mustard,Mustard (Sarson),2005,rabi,1715,17.15,Rapeseed/Mustard,CACP Minimum Support Prices via India Data Portal,false
+mustard,Mustard (Sarson),2006,rabi,1715,17.15,Rapeseed/Mustard,CACP Minimum Support Prices via India Data Portal,false
+mustard,Mustard (Sarson),2007,rabi,1800,18.00,Rapeseed/Mustard,CACP Minimum Support Prices via India Data Portal,false
+mustard,Mustard (Sarson),2008,rabi,1830,18.30,Rapeseed/Mustard,CACP Minimum Support Prices via India Data Portal,false
+mustard,Mustard (Sarson),2009,rabi,1830,18.30,Rapeseed/Mustard,CACP Minimum Support Prices via India Data Portal,false
+mustard,Mustard (Sarson),2010,rabi,1850,18.50,Rapeseed/Mustard,CACP Minimum Support Prices via India Data Portal,false
+mustard,Mustard (Sarson),2011,rabi,2500,25.00,Rapeseed/Mustard,CACP Minimum Support Prices via India Data Portal,false
+mustard,Mustard (Sarson),2012,rabi,3000,30.00,Rapeseed/Mustard,CACP Minimum Support Prices via India Data Portal,false
+mustard,Mustard (Sarson),2013,rabi,3050,30.50,Rapeseed/Mustard,CACP Minimum Support Prices via India Data Portal,false
+mustard,Mustard (Sarson),2014,rabi,3100,31.00,Rapeseed/Mustard,CACP Minimum Support Prices via India Data Portal,false
+mustard,Mustard (Sarson),2015,rabi,3350,33.50,Rapeseed/Mustard,CACP Minimum Support Prices via India Data Portal,false
+mustard,Mustard (Sarson),2016,rabi,3700,37.00,Rapeseed/Mustard,CACP Minimum Support Prices via India Data Portal,false
+mustard,Mustard (Sarson),2017,rabi,4000,40.00,Rapeseed/Mustard,CACP Minimum Support Prices via India Data Portal,false
+mustard,Mustard (Sarson),2018,rabi,4200,42.00,Rapeseed/Mustard,CACP Minimum Support Prices via India Data Portal,false
+mustard,Mustard (Sarson),2019,rabi,4425,44.25,Rapeseed/Mustard,CACP Minimum Support Prices via India Data Portal,false
+mustard,Mustard (Sarson),2020,rabi,4650,46.50,Rapeseed/Mustard,CACP Minimum Support Prices via India Data Portal,false
+mustard,Mustard (Sarson),2021,rabi,5050,50.50,Rapeseed/Mustard,CACP Minimum Support Prices via India Data Portal,false
+mustard,Mustard (Sarson),2022,rabi,5050,50.50,Rapeseed/Mustard,CACP Minimum Support Prices via India Data Portal,false
+mustard,Mustard (Sarson),2023,rabi,5450,54.50,Rapeseed/Mustard,CACP Minimum Support Prices via India Data Portal,false
+mustard,Mustard (Sarson),2024,rabi,5650,56.50,Rapeseed/Mustard,CACP Minimum Support Prices via India Data Portal,false
+mustard,Mustard (Sarson),2025,rabi,5950,59.50,Rapeseed/Mustard,CACP Minimum Support Prices via India Data Portal,false
+pulses,Pulses (Chickpea/Tur),1998,rabi,895,8.95,Gram,CACP Minimum Support Prices via India Data Portal,false
+pulses,Pulses (Chickpea/Tur),1999,rabi,1015,10.15,Gram,CACP Minimum Support Prices via India Data Portal,false
+pulses,Pulses (Chickpea/Tur),2000,rabi,1100,11.00,Gram,CACP Minimum Support Prices via India Data Portal,false
+pulses,Pulses (Chickpea/Tur),2001,rabi,1200,12.00,Gram,CACP Minimum Support Prices via India Data Portal,false
+pulses,Pulses (Chickpea/Tur),2002,rabi,1220,12.20,Gram,CACP Minimum Support Prices via India Data Portal,false
+pulses,Pulses (Chickpea/Tur),2003,rabi,1400,14.00,Gram,CACP Minimum Support Prices via India Data Portal,false
+pulses,Pulses (Chickpea/Tur),2004,rabi,1425,14.25,Gram,CACP Minimum Support Prices via India Data Portal,false
+pulses,Pulses (Chickpea/Tur),2005,rabi,1435,14.35,Gram,CACP Minimum Support Prices via India Data Portal,false
+pulses,Pulses (Chickpea/Tur),2006,rabi,1445,14.45,Gram,CACP Minimum Support Prices via India Data Portal,false
+pulses,Pulses (Chickpea/Tur),2007,rabi,1600,16.00,Gram,CACP Minimum Support Prices via India Data Portal,false
+pulses,Pulses (Chickpea/Tur),2008,rabi,1730,17.30,Gram,CACP Minimum Support Prices via India Data Portal,false
+pulses,Pulses (Chickpea/Tur),2009,rabi,1760,17.60,Gram,CACP Minimum Support Prices via India Data Portal,false
+pulses,Pulses (Chickpea/Tur),2010,rabi,2100,21.00,Gram,CACP Minimum Support Prices via India Data Portal,false
+pulses,Pulses (Chickpea/Tur),2011,rabi,2800,28.00,Gram,CACP Minimum Support Prices via India Data Portal,false
+pulses,Pulses (Chickpea/Tur),2012,rabi,3000,30.00,Gram,CACP Minimum Support Prices via India Data Portal,false
+pulses,Pulses (Chickpea/Tur),2013,rabi,3100,31.00,Gram,CACP Minimum Support Prices via India Data Portal,false
+pulses,Pulses (Chickpea/Tur),2014,rabi,3175,31.75,Gram,CACP Minimum Support Prices via India Data Portal,false
+pulses,Pulses (Chickpea/Tur),2015,rabi,3500,35.00,Gram,CACP Minimum Support Prices via India Data Portal,false
+pulses,Pulses (Chickpea/Tur),2016,rabi,4000,40.00,Gram,CACP Minimum Support Prices via India Data Portal,false
+pulses,Pulses (Chickpea/Tur),2017,rabi,4400,44.00,Gram,CACP Minimum Support Prices via India Data Portal,false
+pulses,Pulses (Chickpea/Tur),2018,rabi,4620,46.20,Gram,CACP Minimum Support Prices via India Data Portal,false
+pulses,Pulses (Chickpea/Tur),2019,rabi,4875,48.75,Gram,CACP Minimum Support Prices via India Data Portal,false
+pulses,Pulses (Chickpea/Tur),2020,rabi,5100,51.00,Gram,CACP Minimum Support Prices via India Data Portal,false
+pulses,Pulses (Chickpea/Tur),2021,rabi,5230,52.30,Gram,CACP Minimum Support Prices via India Data Portal,false
+pulses,Pulses (Chickpea/Tur),2022,rabi,5230,52.30,Gram,CACP Minimum Support Prices via India Data Portal,false
+pulses,Pulses (Chickpea/Tur),2023,rabi,5335,53.35,Gram,CACP Minimum Support Prices via India Data Portal,false
+pulses,Pulses (Chickpea/Tur),2024,rabi,5440,54.40,Gram,CACP Minimum Support Prices via India Data Portal,false
+pulses,Pulses (Chickpea/Tur),2025,rabi,5650,56.50,Gram,CACP Minimum Support Prices via India Data Portal,false
+ragi,Finger Millet (Ragi),1998,kharif,390,3.90,Ragi,CACP Minimum Support Prices via India Data Portal,false
+ragi,Finger Millet (Ragi),1999,kharif,415,4.15,Ragi,CACP Minimum Support Prices via India Data Portal,false
+ragi,Finger Millet (Ragi),2000,kharif,445,4.45,Ragi,CACP Minimum Support Prices via India Data Portal,false
+ragi,Finger Millet (Ragi),2001,kharif,485,4.85,Ragi,CACP Minimum Support Prices via India Data Portal,false
+ragi,Finger Millet (Ragi),2002,kharif,485,4.85,Ragi,CACP Minimum Support Prices via India Data Portal,false
+ragi,Finger Millet (Ragi),2003,kharif,505,5.05,Ragi,CACP Minimum Support Prices via India Data Portal,false
+ragi,Finger Millet (Ragi),2004,kharif,515,5.15,Ragi,CACP Minimum Support Prices via India Data Portal,false
+ragi,Finger Millet (Ragi),2005,kharif,525,5.25,Ragi,CACP Minimum Support Prices via India Data Portal,false
+ragi,Finger Millet (Ragi),2006,kharif,540,5.40,Ragi,CACP Minimum Support Prices via India Data Portal,false
+ragi,Finger Millet (Ragi),2007,kharif,600,6.00,Ragi,CACP Minimum Support Prices via India Data Portal,false
+ragi,Finger Millet (Ragi),2008,kharif,915,9.15,Ragi,CACP Minimum Support Prices via India Data Portal,false
+ragi,Finger Millet (Ragi),2009,kharif,915,9.15,Ragi,CACP Minimum Support Prices via India Data Portal,false
+ragi,Finger Millet (Ragi),2010,kharif,965,9.65,Ragi,CACP Minimum Support Prices via India Data Portal,false
+ragi,Finger Millet (Ragi),2011,kharif,1050,10.50,Ragi,CACP Minimum Support Prices via India Data Portal,false
+ragi,Finger Millet (Ragi),2012,kharif,1500,15.00,Ragi,CACP Minimum Support Prices via India Data Portal,false
+ragi,Finger Millet (Ragi),2013,kharif,1500,15.00,Ragi,CACP Minimum Support Prices via India Data Portal,false
+ragi,Finger Millet (Ragi),2014,kharif,1550,15.50,Ragi,CACP Minimum Support Prices via India Data Portal,false
+ragi,Finger Millet (Ragi),2015,kharif,1650,16.50,Ragi,CACP Minimum Support Prices via India Data Portal,false
+ragi,Finger Millet (Ragi),2016,kharif,1725,17.25,Ragi,CACP Minimum Support Prices via India Data Portal,false
+ragi,Finger Millet (Ragi),2017,kharif,1900,19.00,Ragi,CACP Minimum Support Prices via India Data Portal,false
+ragi,Finger Millet (Ragi),2018,kharif,2897,28.97,Ragi,CACP Minimum Support Prices via India Data Portal,false
+ragi,Finger Millet (Ragi),2019,kharif,3150,31.50,Ragi,CACP Minimum Support Prices via India Data Portal,false
+ragi,Finger Millet (Ragi),2020,kharif,3295,32.95,Ragi,CACP Minimum Support Prices via India Data Portal,false
+ragi,Finger Millet (Ragi),2021,kharif,3377,33.77,Ragi,CACP Minimum Support Prices via India Data Portal,false
+ragi,Finger Millet (Ragi),2022,kharif,3578,35.78,Ragi,CACP Minimum Support Prices via India Data Portal,false
+ragi,Finger Millet (Ragi),2023,kharif,3846,38.46,Ragi,CACP Minimum Support Prices via India Data Portal,false
+ragi,Finger Millet (Ragi),2024,kharif,4290,42.90,Ragi,CACP Minimum Support Prices via India Data Portal,false
+ragi,Finger Millet (Ragi),2025,kharif,4886,48.86,Ragi,CACP Minimum Support Prices via India Data Portal,false
+rice,Rice (Paddy),1998,kharif,440,4.40,Paddy - Common,CACP Minimum Support Prices via India Data Portal,false
+rice,Rice (Paddy),1999,kharif,490,4.90,Paddy - Common,CACP Minimum Support Prices via India Data Portal,false
+rice,Rice (Paddy),2000,kharif,510,5.10,Paddy - Common,CACP Minimum Support Prices via India Data Portal,false
+rice,Rice (Paddy),2001,kharif,530,5.30,Paddy - Common,CACP Minimum Support Prices via India Data Portal,false
+rice,Rice (Paddy),2002,kharif,530,5.30,Paddy - Common,CACP Minimum Support Prices via India Data Portal,false
+rice,Rice (Paddy),2003,kharif,550,5.50,Paddy - Common,CACP Minimum Support Prices via India Data Portal,false
+rice,Rice (Paddy),2004,kharif,560,5.60,Paddy - Common,CACP Minimum Support Prices via India Data Portal,false
+rice,Rice (Paddy),2005,kharif,570,5.70,Paddy - Common,CACP Minimum Support Prices via India Data Portal,false
+rice,Rice (Paddy),2006,kharif,580,5.80,Paddy - Common,CACP Minimum Support Prices via India Data Portal,false
+rice,Rice (Paddy),2007,kharif,645,6.45,Paddy - Common,CACP Minimum Support Prices via India Data Portal,false
+rice,Rice (Paddy),2008,kharif,850,8.50,Paddy - Common,CACP Minimum Support Prices via India Data Portal,false
+rice,Rice (Paddy),2009,kharif,950,9.50,Paddy - Common,CACP Minimum Support Prices via India Data Portal,false
+rice,Rice (Paddy),2010,kharif,1000,10.00,Paddy - Common,CACP Minimum Support Prices via India Data Portal,false
+rice,Rice (Paddy),2011,kharif,1080,10.80,Paddy - Common,CACP Minimum Support Prices via India Data Portal,false
+rice,Rice (Paddy),2012,kharif,1250,12.50,Paddy - Common,CACP Minimum Support Prices via India Data Portal,false
+rice,Rice (Paddy),2013,kharif,1310,13.10,Paddy - Common,CACP Minimum Support Prices via India Data Portal,false
+rice,Rice (Paddy),2014,kharif,1360,13.60,Paddy - Common,CACP Minimum Support Prices via India Data Portal,false
+rice,Rice (Paddy),2015,kharif,1410,14.10,Paddy - Common,CACP Minimum Support Prices via India Data Portal,false
+rice,Rice (Paddy),2016,kharif,1470,14.70,Paddy - Common,CACP Minimum Support Prices via India Data Portal,false
+rice,Rice (Paddy),2017,kharif,1550,15.50,Paddy - Common,CACP Minimum Support Prices via India Data Portal,false
+rice,Rice (Paddy),2018,kharif,1750,17.50,Paddy - Common,CACP Minimum Support Prices via India Data Portal,false
+rice,Rice (Paddy),2019,kharif,1815,18.15,Paddy - Common,CACP Minimum Support Prices via India Data Portal,false
+rice,Rice (Paddy),2020,kharif,1868,18.68,Paddy - Common,CACP Minimum Support Prices via India Data Portal,false
+rice,Rice (Paddy),2021,kharif,1940,19.40,Paddy - Common,CACP Minimum Support Prices via India Data Portal,false
+rice,Rice (Paddy),2022,kharif,2040,20.40,Paddy - Common,CACP Minimum Support Prices via India Data Portal,false
+rice,Rice (Paddy),2023,kharif,2183,21.83,Paddy - Common,CACP Minimum Support Prices via India Data Portal,false
+rice,Rice (Paddy),2024,kharif,2300,23.00,Paddy - Common,CACP Minimum Support Prices via India Data Portal,false
+rice,Rice (Paddy),2025,kharif,2369,23.69,Paddy - Common,CACP Minimum Support Prices via India Data Portal,false
+soybean,Soybean,1998,kharif,795,7.95,Soyabean - Yellow,CACP Minimum Support Prices via India Data Portal,false
+soybean,Soybean,1999,kharif,845,8.45,Soyabean - Yellow,CACP Minimum Support Prices via India Data Portal,false
+soybean,Soybean,2000,kharif,865,8.65,Soyabean - Yellow,CACP Minimum Support Prices via India Data Portal,false
+soybean,Soybean,2001,kharif,885,8.85,Soyabean - Yellow,CACP Minimum Support Prices via India Data Portal,false
+soybean,Soybean,2002,kharif,885,8.85,Soyabean - Yellow,CACP Minimum Support Prices via India Data Portal,false
+soybean,Soybean,2003,kharif,930,9.30,Soyabean - Yellow,CACP Minimum Support Prices via India Data Portal,false
+soybean,Soybean,2004,kharif,1000,10.00,Soyabean - Yellow,CACP Minimum Support Prices via India Data Portal,false
+soybean,Soybean,2005,kharif,1010,10.10,Soyabean - Yellow,CACP Minimum Support Prices via India Data Portal,false
+soybean,Soybean,2006,kharif,1020,10.20,Soyabean - Yellow,CACP Minimum Support Prices via India Data Portal,false
+soybean,Soybean,2007,kharif,1050,10.50,Soyabean - Yellow,CACP Minimum Support Prices via India Data Portal,false
+soybean,Soybean,2008,kharif,1390,13.90,Soyabean - Yellow,CACP Minimum Support Prices via India Data Portal,false
+soybean,Soybean,2009,kharif,1390,13.90,Soyabean - Yellow,CACP Minimum Support Prices via India Data Portal,false
+soybean,Soybean,2010,kharif,1440,14.40,Soyabean - Yellow,CACP Minimum Support Prices via India Data Portal,false
+soybean,Soybean,2011,kharif,1690,16.90,Soyabean - Yellow,CACP Minimum Support Prices via India Data Portal,false
+soybean,Soybean,2012,kharif,2240,22.40,Soyabean - Yellow,CACP Minimum Support Prices via India Data Portal,false
+soybean,Soybean,2013,kharif,2560,25.60,Soyabean - Yellow,CACP Minimum Support Prices via India Data Portal,false
+soybean,Soybean,2014,kharif,2560,25.60,Soyabean - Yellow,CACP Minimum Support Prices via India Data Portal,false
+soybean,Soybean,2015,kharif,2600,26.00,Soyabean - Yellow,CACP Minimum Support Prices via India Data Portal,false
+soybean,Soybean,2016,kharif,2775,27.75,Soyabean - Yellow,CACP Minimum Support Prices via India Data Portal,false
+soybean,Soybean,2017,kharif,3050,30.50,Soyabean - Yellow,CACP Minimum Support Prices via India Data Portal,false
+soybean,Soybean,2018,kharif,3399,33.99,Soyabean - Yellow,CACP Minimum Support Prices via India Data Portal,false
+soybean,Soybean,2019,kharif,3710,37.10,Soyabean - Yellow,CACP Minimum Support Prices via India Data Portal,false
+soybean,Soybean,2020,kharif,3880,38.80,Soyabean - Yellow,CACP Minimum Support Prices via India Data Portal,false
+soybean,Soybean,2021,kharif,3950,39.50,Soyabean - Yellow,CACP Minimum Support Prices via India Data Portal,false
+soybean,Soybean,2022,kharif,4300,43.00,Soyabean - Yellow,CACP Minimum Support Prices via India Data Portal,false
+soybean,Soybean,2023,kharif,4600,46.00,Soyabean - Yellow,CACP Minimum Support Prices via India Data Portal,false
+soybean,Soybean,2024,kharif,4892,48.92,Soyabean - Yellow,CACP Minimum Support Prices via India Data Portal,false
+soybean,Soybean,2025,kharif,5328,53.28,Soyabean - Yellow,CACP Minimum Support Prices via India Data Portal,false
+sugarcane,Sugarcane,1998,annual,53,0.53,Sugarcane,CACP Minimum Support Prices via India Data Portal,false
+sugarcane,Sugarcane,1999,annual,56,0.56,Sugarcane,CACP Minimum Support Prices via India Data Portal,false
+sugarcane,Sugarcane,2000,annual,60,0.59,Sugarcane,CACP Minimum Support Prices via India Data Portal,false
+sugarcane,Sugarcane,2001,annual,62,0.62,Sugarcane,CACP Minimum Support Prices via India Data Portal,false
+sugarcane,Sugarcane,2002,annual,70,0.69,Sugarcane,CACP Minimum Support Prices via India Data Portal,false
+sugarcane,Sugarcane,2003,annual,73,0.73,Sugarcane,CACP Minimum Support Prices via India Data Portal,false
+sugarcane,Sugarcane,2004,annual,74,0.74,Sugarcane,CACP Minimum Support Prices via India Data Portal,false
+sugarcane,Sugarcane,2005,annual,80,0.80,Sugarcane,CACP Minimum Support Prices via India Data Portal,false
+sugarcane,Sugarcane,2006,annual,80,0.80,Sugarcane,CACP Minimum Support Prices via India Data Portal,false
+sugarcane,Sugarcane,2007,annual,81,0.81,Sugarcane,CACP Minimum Support Prices via India Data Portal,false
+sugarcane,Sugarcane,2008,annual,81,0.81,Sugarcane,CACP Minimum Support Prices via India Data Portal,false
+sugarcane,Sugarcane,2009,annual,130,1.30,Sugarcane,CACP Minimum Support Prices via India Data Portal,false
+sugarcane,Sugarcane,2010,annual,139,1.39,Sugarcane,CACP Minimum Support Prices via India Data Portal,false
+sugarcane,Sugarcane,2011,annual,145,1.45,Sugarcane,CACP Minimum Support Prices via India Data Portal,false
+sugarcane,Sugarcane,2012,annual,170,1.70,Sugarcane,CACP Minimum Support Prices via India Data Portal,false
+sugarcane,Sugarcane,2013,annual,210,2.10,Sugarcane,CACP Minimum Support Prices via India Data Portal,false
+sugarcane,Sugarcane,2014,annual,220,2.20,Sugarcane,CACP Minimum Support Prices via India Data Portal,false
+sugarcane,Sugarcane,2015,annual,230,2.30,Sugarcane,CACP Minimum Support Prices via India Data Portal,false
+sugarcane,Sugarcane,2016,annual,230,2.30,Sugarcane,CACP Minimum Support Prices via India Data Portal,false
+sugarcane,Sugarcane,2017,annual,255,2.55,Sugarcane,CACP Minimum Support Prices via India Data Portal,false
+sugarcane,Sugarcane,2018,annual,275,2.75,FRP,CCEA sugarcane FRP announcements (pipelines/reference/sugarcane_frp.csv),false
+sugarcane,Sugarcane,2019,annual,275,2.75,FRP,CCEA sugarcane FRP announcements (pipelines/reference/sugarcane_frp.csv),false
+sugarcane,Sugarcane,2020,annual,285,2.85,FRP,CCEA sugarcane FRP announcements (pipelines/reference/sugarcane_frp.csv),false
+sugarcane,Sugarcane,2021,annual,290,2.90,FRP,CCEA sugarcane FRP announcements (pipelines/reference/sugarcane_frp.csv),false
+sugarcane,Sugarcane,2022,annual,305,3.05,FRP,CCEA sugarcane FRP announcements (pipelines/reference/sugarcane_frp.csv),false
+sugarcane,Sugarcane,2023,annual,315,3.15,FRP,CCEA sugarcane FRP announcements (pipelines/reference/sugarcane_frp.csv),false
+sugarcane,Sugarcane,2024,annual,340,3.40,FRP,CCEA sugarcane FRP announcements (pipelines/reference/sugarcane_frp.csv),false
+sugarcane,Sugarcane,2025,annual,355,3.55,FRP,CCEA sugarcane FRP announcements (pipelines/reference/sugarcane_frp.csv),false
+sunflower,Sunflower,1998,kharif,1060,10.60,Sunflower Seed,CACP Minimum Support Prices via India Data Portal,false
+sunflower,Sunflower,1999,kharif,1155,11.55,Sunflower Seed,CACP Minimum Support Prices via India Data Portal,false
+sunflower,Sunflower,2000,kharif,1170,11.70,Sunflower Seed,CACP Minimum Support Prices via India Data Portal,false
+sunflower,Sunflower,2001,kharif,1185,11.85,Sunflower Seed,CACP Minimum Support Prices via India Data Portal,false
+sunflower,Sunflower,2002,kharif,1195,11.95,Sunflower Seed,CACP Minimum Support Prices via India Data Portal,false
+sunflower,Sunflower,2003,kharif,1250,12.50,Sunflower Seed,CACP Minimum Support Prices via India Data Portal,false
+sunflower,Sunflower,2004,kharif,1340,13.40,Sunflower Seed,CACP Minimum Support Prices via India Data Portal,false
+sunflower,Sunflower,2005,kharif,1500,15.00,Sunflower Seed,CACP Minimum Support Prices via India Data Portal,false
+sunflower,Sunflower,2006,kharif,1500,15.00,Sunflower Seed,CACP Minimum Support Prices via India Data Portal,false
+sunflower,Sunflower,2007,kharif,1510,15.10,Sunflower Seed,CACP Minimum Support Prices via India Data Portal,false
+sunflower,Sunflower,2008,kharif,2215,22.15,Sunflower Seed,CACP Minimum Support Prices via India Data Portal,false
+sunflower,Sunflower,2009,kharif,2215,22.15,Sunflower Seed,CACP Minimum Support Prices via India Data Portal,false
+sunflower,Sunflower,2010,kharif,2350,23.50,Sunflower Seed,CACP Minimum Support Prices via India Data Portal,false
+sunflower,Sunflower,2011,kharif,2800,28.00,Sunflower Seed,CACP Minimum Support Prices via India Data Portal,false
+sunflower,Sunflower,2012,kharif,3700,37.00,Sunflower Seed,CACP Minimum Support Prices via India Data Portal,false
+sunflower,Sunflower,2013,kharif,3700,37.00,Sunflower Seed,CACP Minimum Support Prices via India Data Portal,false
+sunflower,Sunflower,2014,kharif,3750,37.50,Sunflower Seed,CACP Minimum Support Prices via India Data Portal,false
+sunflower,Sunflower,2015,kharif,3800,38.00,Sunflower Seed,CACP Minimum Support Prices via India Data Portal,false
+sunflower,Sunflower,2016,kharif,3950,39.50,Sunflower Seed,CACP Minimum Support Prices via India Data Portal,false
+sunflower,Sunflower,2017,kharif,4100,41.00,Sunflower Seed,CACP Minimum Support Prices via India Data Portal,false
+sunflower,Sunflower,2018,kharif,5388,53.88,Sunflower Seed,CACP Minimum Support Prices via India Data Portal,false
+sunflower,Sunflower,2019,kharif,5650,56.50,Sunflower Seed,CACP Minimum Support Prices via India Data Portal,false
+sunflower,Sunflower,2020,kharif,5885,58.85,Sunflower Seed,CACP Minimum Support Prices via India Data Portal,false
+sunflower,Sunflower,2021,kharif,6015,60.15,Sunflower Seed,CACP Minimum Support Prices via India Data Portal,false
+sunflower,Sunflower,2022,kharif,6400,64.00,Sunflower Seed,CACP Minimum Support Prices via India Data Portal,false
+sunflower,Sunflower,2023,kharif,6760,67.60,Sunflower Seed,CACP Minimum Support Prices via India Data Portal,false
+sunflower,Sunflower,2024,kharif,7280,72.80,Sunflower Seed,CACP Minimum Support Prices via India Data Portal,false
+sunflower,Sunflower,2025,kharif,7721,77.21,Sunflower Seed,CACP Minimum Support Prices via India Data Portal,false
+urad,Black Gram (Urad),1998,kharif,960,9.60,Urad,CACP Minimum Support Prices via India Data Portal,false
+urad,Black Gram (Urad),1999,kharif,1105,11.05,Urad,CACP Minimum Support Prices via India Data Portal,false
+urad,Black Gram (Urad),2000,kharif,1200,12.00,Urad,CACP Minimum Support Prices via India Data Portal,false
+urad,Black Gram (Urad),2001,kharif,1320,13.20,Urad,CACP Minimum Support Prices via India Data Portal,false
+urad,Black Gram (Urad),2002,kharif,1330,13.30,Urad,CACP Minimum Support Prices via India Data Portal,false
+urad,Black Gram (Urad),2003,kharif,1370,13.70,Urad,CACP Minimum Support Prices via India Data Portal,false
+urad,Black Gram (Urad),2004,kharif,1410,14.10,Urad,CACP Minimum Support Prices via India Data Portal,false
+urad,Black Gram (Urad),2005,kharif,1520,15.20,Urad,CACP Minimum Support Prices via India Data Portal,false
+urad,Black Gram (Urad),2006,kharif,1520,15.20,Urad,CACP Minimum Support Prices via India Data Portal,false
+urad,Black Gram (Urad),2007,kharif,1700,17.00,Urad,CACP Minimum Support Prices via India Data Portal,false
+urad,Black Gram (Urad),2008,kharif,2520,25.20,Urad,CACP Minimum Support Prices via India Data Portal,false
+urad,Black Gram (Urad),2009,kharif,2520,25.20,Urad,CACP Minimum Support Prices via India Data Portal,false
+urad,Black Gram (Urad),2010,kharif,2900,29.00,Urad,CACP Minimum Support Prices via India Data Portal,false
+urad,Black Gram (Urad),2011,kharif,3300,33.00,Urad,CACP Minimum Support Prices via India Data Portal,false
+urad,Black Gram (Urad),2012,kharif,4300,43.00,Urad,CACP Minimum Support Prices via India Data Portal,false
+urad,Black Gram (Urad),2013,kharif,4300,43.00,Urad,CACP Minimum Support Prices via India Data Portal,false
+urad,Black Gram (Urad),2014,kharif,4350,43.50,Urad,CACP Minimum Support Prices via India Data Portal,false
+urad,Black Gram (Urad),2015,kharif,4625,46.25,Urad,CACP Minimum Support Prices via India Data Portal,false
+urad,Black Gram (Urad),2016,kharif,5000,50.00,Urad,CACP Minimum Support Prices via India Data Portal,false
+urad,Black Gram (Urad),2017,kharif,5400,54.00,Urad,CACP Minimum Support Prices via India Data Portal,false
+urad,Black Gram (Urad),2018,kharif,5600,56.00,Urad,CACP Minimum Support Prices via India Data Portal,false
+urad,Black Gram (Urad),2019,kharif,5700,57.00,Urad,CACP Minimum Support Prices via India Data Portal,false
+urad,Black Gram (Urad),2020,kharif,6000,60.00,Urad,CACP Minimum Support Prices via India Data Portal,false
+urad,Black Gram (Urad),2021,kharif,6300,63.00,Urad,CACP Minimum Support Prices via India Data Portal,false
+urad,Black Gram (Urad),2022,kharif,6600,66.00,Urad,CACP Minimum Support Prices via India Data Portal,false
+urad,Black Gram (Urad),2023,kharif,6950,69.50,Urad,CACP Minimum Support Prices via India Data Portal,false
+urad,Black Gram (Urad),2024,kharif,7400,74.00,Urad,CACP Minimum Support Prices via India Data Portal,false
+urad,Black Gram (Urad),2025,kharif,7800,78.00,Urad,CACP Minimum Support Prices via India Data Portal,false
+wheat,Wheat,1998,rabi,550,5.50,Wheat,CACP Minimum Support Prices via India Data Portal,false
+wheat,Wheat,1999,rabi,580,5.80,Wheat,CACP Minimum Support Prices via India Data Portal,false
+wheat,Wheat,2000,rabi,610,6.10,Wheat,CACP Minimum Support Prices via India Data Portal,false
+wheat,Wheat,2001,rabi,620,6.20,Wheat,CACP Minimum Support Prices via India Data Portal,false
+wheat,Wheat,2002,rabi,620,6.20,Wheat,CACP Minimum Support Prices via India Data Portal,false
+wheat,Wheat,2003,rabi,630,6.30,Wheat,CACP Minimum Support Prices via India Data Portal,false
+wheat,Wheat,2004,rabi,640,6.40,Wheat,CACP Minimum Support Prices via India Data Portal,false
+wheat,Wheat,2005,rabi,650,6.50,Wheat,CACP Minimum Support Prices via India Data Portal,false
+wheat,Wheat,2006,rabi,750,7.50,Wheat,CACP Minimum Support Prices via India Data Portal,false
+wheat,Wheat,2007,rabi,1000,10.00,Wheat,CACP Minimum Support Prices via India Data Portal,false
+wheat,Wheat,2008,rabi,1080,10.80,Wheat,CACP Minimum Support Prices via India Data Portal,false
+wheat,Wheat,2009,rabi,1100,11.00,Wheat,CACP Minimum Support Prices via India Data Portal,false
+wheat,Wheat,2010,rabi,1120,11.20,Wheat,CACP Minimum Support Prices via India Data Portal,false
+wheat,Wheat,2011,rabi,1285,12.85,Wheat,CACP Minimum Support Prices via India Data Portal,false
+wheat,Wheat,2012,rabi,1350,13.50,Wheat,CACP Minimum Support Prices via India Data Portal,false
+wheat,Wheat,2013,rabi,1400,14.00,Wheat,CACP Minimum Support Prices via India Data Portal,false
+wheat,Wheat,2014,rabi,1450,14.50,Wheat,CACP Minimum Support Prices via India Data Portal,false
+wheat,Wheat,2015,rabi,1525,15.25,Wheat,CACP Minimum Support Prices via India Data Portal,false
+wheat,Wheat,2016,rabi,1625,16.25,Wheat,CACP Minimum Support Prices via India Data Portal,false
+wheat,Wheat,2017,rabi,1735,17.35,Wheat,CACP Minimum Support Prices via India Data Portal,false
+wheat,Wheat,2018,rabi,1840,18.40,Wheat,CACP Minimum Support Prices via India Data Portal,false
+wheat,Wheat,2019,rabi,1925,19.25,Wheat,CACP Minimum Support Prices via India Data Portal,false
+wheat,Wheat,2020,rabi,1975,19.75,Wheat,CACP Minimum Support Prices via India Data Portal,false
+wheat,Wheat,2021,rabi,2015,20.15,Wheat,CACP Minimum Support Prices via India Data Portal,false
+wheat,Wheat,2022,rabi,2015,20.15,Wheat,CACP Minimum Support Prices via India Data Portal,false
+wheat,Wheat,2023,rabi,2125,21.25,Wheat,CACP Minimum Support Prices via India Data Portal,false
+wheat,Wheat,2024,rabi,2275,22.75,Wheat,CACP Minimum Support Prices via India Data Portal,false
+wheat,Wheat,2025,rabi,2425,24.25,Wheat,CACP Minimum Support Prices via India Data Portal,false

@@ -6,6 +6,8 @@
 
 # Used by ml/audit_models.py, ml/evaluate_models.py, data_ingestion/feature_pipeline.py.
 pandas>=2.0.0
+# Parquet for the Phase 1 data pipeline (pipelines/), never imported by the app.
+pyarrow>=15
 
 # Used only by ml/training/disease_cnn.py to fine-tune and export the disease
 # classifier. The live request path never imports torch/torchvision -- it

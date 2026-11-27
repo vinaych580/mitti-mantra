@@ -1,8 +1,8 @@
 /* AgriSim — static region centroid table for geolocation-to-region matching.
    Coordinates are real district-headquarters centroids (public geographic
    data), used only to pick the nearest of the app's 30 known regions from a
-   GPS reading — not survey-precision figures. Three entries are corroborated
-   directly by this repo's own training-data filenames (see dataset/training/). */
+   GPS reading — not survey-precision figures. The same points are recorded
+   in pipelines/reference/pilot_regions.csv. */
 (() => {
   'use strict';
 

@@ -1,0 +1,36 @@
+crop_id,apy_name,apy_kg_per_unit,apmc_commodity,apmc_commodity_new,coc_name,msp_name,irrigation_name,note
+rice,Rice,1500,Paddy(Dhan)(Common),Paddy(Common),Paddy,Paddy - Common,Rice,APY rice is milled; paddy = rice / 0.667. Price is paddy (matches MSP basis)
+paddy_basmati,,,Paddy(Dhan)(Basmati),Paddy(Basmati),,,,APY does not separate basmati; no yield series
+wheat,Wheat,1000,Wheat,,Wheat,Wheat,Wheat,
+maize,Maize,1000,Maize,,Maize,Maize,Maize,
+sugarcane,Sugarcane,1000,Sugarcane,,Sugarcane,Sugarcane,Sugarcane,Cane. Mandi series is thin (cane is sold to mills at FRP)
+cotton,Cotton(Lint),500,Cotton,,Cotton,Cotton - Medium Staple|Cotton,Cotton,APY reports bales of 170 kg lint; kapas = lint / 0.34 so one bale = 500 kg kapas. Price is kapas
+pulses,Gram,1000,Bengal Gram(Gram)(Whole),,Gram,Gram,Gram,App's pulses row is chickpea/tur; mapped to gram (arhar has its own row)
+groundnut,Groundnut,1000,Groundnut,,Groundnut,Groundnut In Shell,Groundnut,
+soybean,Soyabean,1000,Soyabean,,Soyabean,Soyabean - Yellow,Soyabean,
+mustard,Rapeseed &Mustard,1000,Mustard,,Rapeseed & Mustard (Toria/Taramira),Rapeseed/Mustard,Rapeseed and Mustard,
+bajra,Bajra,1000,Bajra(Pearl Millet/Cumbu),,Bajra,Bajra,Bajra,
+jowar,Jowar,1000,Jowar(Sorghum),,Jowar,Jowar - Hybrid,Jowar,
+potato,Potato,1000,Potato,,Potato,,,
+onion,Onion,1000,Onion,,Onion,,,
+tomato,Tomato,1000,Tomato,,,,,APY tomato is horticulture-thin (few districts)
+chilli,Dry Chillies,1000,Dry Chillies,,,,,Dry chilli in both sources
+turmeric,Turmeric,1000,Turmeric,,,,,
+ginger,Ginger,1000,Ginger(Green),,,,,
+banana,Banana,1000,Banana,,,,,
+coconut,,,,,,,,APY reports nuts and mandi units vary (per nut / per 100 / per quintal); left without a series rather than converted by guess
+tea,Tea,1000,,,,,Tea,No mandi series (tea is auctioned)
+coffee,Coffee,1000,Coffee,,,,Coffee,
+barley,Barley,1000,Barley (Jau),Barley(Jau),Barley,Barley,Barley,
+sunflower,Sunflower,1000,Sunflower,Sunflower/Sunflower Seed,Sunflower,Sunflower Seed,Sunflower,
+ragi,Ragi,1000,Ragi (Finger Millet),Ragi(Finger Millet),Ragi,Ragi,Ragi,
+urad,Urad,1000,Black Gram (Urd Beans)(Whole),Black Gram(Urd Beans)(Whole),Urad,Urad,,
+moong,Moong(Green Gram),1000,Green Gram (Moong)(Whole),Green Gram(Moong)(Whole),Moong,Moong,,
+mango,Mango,1000,Mango,,,,,
+arhar,Arhar/Tur,1000,Arhar (Tur/Red Gram)(Whole),Red Gram/Arhar/Tur(Whole),Tur (Arhar),Arhar(Tur),Arhar(Tur),
+jute,Jute,180,Jute,,Jute,Jute,Jute,APY reports bales of 180 kg fibre
+tobacco,Tobacco,1000,Tobacco,,,,Tobacco,
+cashew,Cashewnut,1000,Cashewnuts,,,,,
+watermelon,Water Melon,1000,Water Melon,,,,,
+cucumber,Cucumber,1000,Cucumbar(Kheera),,,,,
+muskmelon,,,Karbuja(Musk Melon),,,,,No APY series

@@ -1,0 +1,8 @@
+apy_season,season,note
+Kharif,kharif,
+Autumn,kharif,Aus rice (WB/Assam/Odisha) is sown Apr-May and harvested Aug-Sep
+Winter,kharif,Aman rice is transplanted Jun-Aug and harvested Nov-Dec: the main kharif crop
+Rabi,rabi,
+Summer,zaid,Boro rice and summer pulses; sown Dec-Feb or Mar and harvested by June
+Whole Year,annual,Crops whose app season is perennial are relabelled perennial
+Total,,Dropped: the sum of the other seasons

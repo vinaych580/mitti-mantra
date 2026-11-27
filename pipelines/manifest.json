@@ -1,0 +1,88 @@
+{
+  "built_at": "2026-11-19T07:54:40+00:00",
+  "tables": {
+    "yield_dcy": {
+      "rows": 269821,
+      "sha256": "11bee401b3d2a752759e42e6b90cd7ea8e3e2b1b02bc2963ef1d81debd32e849",
+      "sources": [
+        "DES APY via India Data Portal"
+      ]
+    },
+    "price_district_weekly": {
+      "rows": 980831,
+      "sha256": "9485d1981db443f45c923a8d7246662e2cce168949288eaab293d392dde9c51d",
+      "sources": [
+        "Agmarknet APMC arrivals and prices via India Data Portal"
+      ]
+    },
+    "weather_daily": {
+      "rows": 7703472,
+      "sha256": "239a52c04359bf9fc108f92fded4f8f18d18c052212951dbb3e70066ca4d5c12",
+      "sources": [
+        "NASA POWER daily (MERRA-2)"
+      ]
+    },
+    "weather_season": {
+      "rows": 62923,
+      "sha256": "65f9fdf078134491009e6ea3148eb2356ab69ace1d6ddee2e9d2daab89977bf5",
+      "sources": [
+        "NASA POWER daily (MERRA-2)"
+      ]
+    },
+    "weather_stage": {
+      "rows": 922635,
+      "sha256": "e9fb47c98eb0d53c33a02b3d85e0ad4d80fab851b5de6faad70d929c3e34fdd6",
+      "sources": [
+        "Derived from NASA POWER daily with the app's crop calendar (pipelines/weather_stage.py)"
+      ]
+    },
+    "monsoon_onset": {
+      "rows": 18759,
+      "sha256": "d759ff4fce08e68309e2df2a9a7ba1482b8f1f197365326d773a1e6dee552fbb",
+      "sources": [
+        "Derived from NASA POWER daily with the app's crop calendar (pipelines/weather_stage.py)"
+      ]
+    },
+    "cost_state_crop": {
+      "rows": 3527,
+      "sha256": "1c7b701e4b29cc2b0fc056c202fc0466f024bcf21837dccc0269cfabfc35e06b",
+      "sources": [
+        "DES Cost of Cultivation (CACP farm surveys) via India Data Portal"
+      ]
+    },
+    "msp": {
+      "rows": 504,
+      "sha256": "7e82cb257e19a11944da6a7be6c70b0558efb6de5c34698ea81ab852000a7a44",
+      "sources": [
+        "CACP Minimum Support Prices via India Data Portal",
+        "CCEA sugarcane FRP announcements (pipelines/reference/sugarcane_frp.csv)"
+      ]
+    },
+    "soil_district": {
+      "rows": 16382,
+      "sha256": "8b70b7e61ab5b98f2cba76aeba84eb8f4d302fcd875b29ff5084cd9d85a5fff1",
+      "sources": [
+        "Soil Health Card nutrient analysis (DA&FW) via India Data Portal"
+      ]
+    },
+    "irrigation_share": {
+      "rows": 106698,
+      "sha256": "a737a751b53b85ce4fe4b2573da67b67636c4c83f678b3be3274ba56ddd67392",
+      "sources": [
+        "DES Land Use Statistics, crop-wise irrigated area, via India Data Portal"
+      ]
+    },
+    "districts": {
+      "rows": 765,
+      "sha256": "85d857fe14c979caf554406466505427e5741b1bca2176a114ac49b326d1fad6",
+      "sources": []
+    }
+  },
+  "serving": {
+    "release_tag": "data-store",
+    "asset": "serving-40c84f668c60071d.sqlite",
+    "sha256": "40c84f668c60071d9e0e3fd9b1c7e42122751883b4991515534deb1bec71d728",
+    "bytes": 39428096,
+    "built_at": "2026-11-19T16:13:17+00:00"
+  }
+}

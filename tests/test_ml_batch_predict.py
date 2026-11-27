@@ -27,6 +27,15 @@ is capped at 1.15x a crop's typical input cost, which changes profit and
 ROI (never yield) where the budget exceeds that; and losing crops follow in
 order of smallest loss. Yields are identical to the previous fixtures.
 These tests pass include_losses=True so the full scored list stays pinned.
+
+Regenerated again on 2026-11-19 (Phase 1), deliberately: the pilot CSVs
+the ranking reads are now measured data (DES yields, NASA POWER weather,
+Agmarknet prices) instead of seed rows. No ranking code changed. Yields
+moved because yield_history now records the crops each district really
+grows (the climate guard's "no recorded harvest" cap applies to different
+crops) and calibrates the heuristic against real district yields, about
+half of base_yield. Prices are real mandi prices. The yield model itself is
+still the one trained on seed data; Phase 2 retrains it on the measured store.
 """
 from __future__ import annotations
 

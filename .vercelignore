@@ -47,7 +47,9 @@ catboost_info/
 # Unneeded project directories
 tests/
 docs/
-scripts/
+scripts/*
+# ...except the build step that fetches dataset/serving.sqlite (vercel.json buildCommand)
+!scripts/fetch_serving_store.cjs
 
 # ML bulk — training scripts & large artefacts not needed at runtime
 ml/training/
@@ -69,3 +71,22 @@ dataset/dynamic/
 node_modules
 package.json
 package-lock.json
+
+# Phase 1 pipeline: build-time only; the app reads dataset/serving.sqlite
+data/
+pipelines/*
+!pipelines/manifest.json
+
+# Untracked vendored packages in the repo root (N-33); the bundle installs
+# from requirements.txt, so these must never ship
+requests/
+certifi/
+charset_normalizer/
+idna/
+urllib3/
+dotenv/
+*.dist-info/
+bin/
+catboost_info/
+frontend.zip
+*.pyd
