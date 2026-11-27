@@ -35,6 +35,17 @@
     'Field': 'खेत',
     'Finance': 'वित्त',
     'System': 'सिस्टम',
+    'Grow': 'उगाएं',
+    'Sell': 'बेचें',
+    'Money': 'पैसा',
+    'About the models': 'मॉडल के बारे में',
+    'What should I sow?': 'क्या बोऊं?',
+    'What do I do this week?': 'इस हफ़्ते क्या करूं?',
+    'When and where do I sell?': 'कब और कहां बेचूं?',
+    'Can I afford it?': 'क्या ख़र्च उठा पाऊंगा?',
+    'Tools have moved.': 'टूल की जगह बदल गई है।',
+    'They are now grouped by the season: Plan, Grow, Sell and Money.': 'अब ये मौसम के क्रम में हैं: योजना, उगाएं, बेचें और पैसा।',
+    'Got it': 'ठीक है',
 
     // Sidebar tool names
     'Smart recommend': 'स्मार्ट सिफ़ारिश',

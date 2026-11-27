@@ -7671,6 +7671,65 @@ html[data-theme="dark"] .mm-palette__backdrop { background: rgba(0, 0, 0, .5); }
   font-size: var(--fs-2xs);
 }
 
+/* Phase 4.1: season sections. Each label carries the question it answers on
+   a second line, in sentence case, so the regrouping explains itself. */
+.sidebar__label {
+  flex-wrap: wrap;
+}
+.sidebar__q {
+  order: 3;
+  flex-basis: 100%;
+  margin-top: 2px;
+  font-size: var(--fs-3xs, .68rem);
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  /* --ink-soft, not --ink-faint: faint is 3.9:1 on the rail, under AA. */
+  color: var(--ink-soft);
+}
+.sidebar__group--home {
+  margin-bottom: 14px;
+}
+.sidebar__moved {
+  margin: 0 4px 14px;
+  padding: 10px 12px;
+  border-radius: var(--r-md, 14px);
+  background: var(--accent-soft, #f7ecd7);
+  color: var(--ink);
+  font-size: var(--fs-2xs, .82rem);
+  line-height: 1.45;
+}
+.sidebar__moved p {
+  margin: 0 0 8px;
+}
+.sidebar__moved-ok {
+  min-height: 36px;
+  padding: 6px 14px;
+  border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+  border-radius: 999px;
+  background: var(--surface, #fff);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.sidebar__moved-ok:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+html[data-theme="dark"] .sidebar__moved {
+  background: rgba(200, 138, 58, .16);
+}
+@media (max-width: 860px) {
+  .sidebar__q {
+    order: 0;
+    flex-basis: auto;
+    flex: 1;
+    margin: 0 0 0 4px;
+    text-align: left;
+  }
+}
+
 /* The farm-pickup banner sits outside .dashx__wrap, which is what gives the
    dashboard its 24px side gutter, so below ~1250px it ran edge to edge on its
    own. Same gutter as the cards under it; still 1200px and centred on wide

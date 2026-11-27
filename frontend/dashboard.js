@@ -673,7 +673,8 @@
       if (b.hidden) return false;
       const group = b.closest('.sidebar__group');
       if (!group || group.hidden) return false;
-      if (sidebarMq.matches && !group.classList.contains('is-open')) return false;
+      // The home button sits in a group with no label: it never collapses.
+      if (sidebarMq.matches && group.querySelector('.sidebar__label') && !group.classList.contains('is-open')) return false;
       return true;
     });
   }
@@ -887,6 +888,35 @@
         const visible = $$('.sidebar__btn').filter(b => !b.hidden);
         if (visible.length === 1) visible[0].click();
       }
+    });
+  })();
+
+  /* ---------- "Tools have moved" (Phase 4.1) ----------
+     The rail used to group tools by type (Market, Field, Crop health,
+     Finance); it now follows the season (Plan, Grow, Sell, Money). Someone
+     who learned the old groups gets one short note, dismissed for good. A
+     first visit has nothing to unlearn, so the note only shows when a saved
+     Farm Profile says this browser has been here before. */
+  (function initMovedNote() {
+    const KEY = 'mm_nav_moved_v1';
+    let returning = false;
+    try {
+      if (localStorage.getItem(KEY)) return;
+      returning = !!localStorage.getItem('mm_farm_profile');
+    } catch (_) { return; }
+    const sidebar = document.querySelector('.sidebar');
+    if (!returning || !sidebar) return;
+    const note = document.createElement('div');
+    note.className = 'sidebar__moved';
+    note.setAttribute('role', 'note');
+    note.innerHTML =
+      `<p><strong>${text('Tools have moved.')}</strong> ${text('They are now grouped by the season: Plan, Grow, Sell and Money.')}</p>
+       <button type="button" class="sidebar__moved-ok">${text('Got it')}</button>`;
+    const search = sidebar.querySelector('.sidebar__search');
+    if (search) search.after(note); else sidebar.prepend(note);
+    note.querySelector('button').addEventListener('click', () => {
+      try { localStorage.setItem(KEY, '1'); } catch (_) {}
+      note.remove();
     });
   })();
 
