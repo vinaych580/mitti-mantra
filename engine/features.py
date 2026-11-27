@@ -294,12 +294,22 @@ def best_time_to_sell(region_id: str, crop_id: str) -> dict[str, Any]:
     recent_3 = [p["price"] for p in prices[-3:]]
     trend = "rising" if recent_3[-1] > recent_3[0] else ("falling" if recent_3[-1] < recent_3[0] else "flat")
 
-    # Decision
+    # Decision. A hold is only offered for as long as the crop keeps without cold
+    # storage (engine/storability.py): "hold tomato until month 5" is advice to let
+    # it rot.
+    from engine.storability import max_storage_weeks
+    keeps = max_storage_weeks(crop_id)
     months_to_best = (best_month - current_month) % 12
-    if months_to_best == 0:
+    can_wait = (lambda weeks: keeps is None or weeks <= keeps)
+    if keeps is not None and keeps < 2 and months_to_best != 0:
+        advice = (f"SELL NOW — {crop_id} keeps only about {keeps} week(s) without cold storage, "
+                  "so holding for a better month is not an option." if keeps else
+                  f"SELL NOW — {crop_id} must be sold within days of harvest.")
+        action = "sell"
+    elif months_to_best == 0:
         advice = "SELL NOW — Current month historically has the best prices."
         action = "sell"
-    elif potential_gain_pct > 10 and months_to_best <= 4:
+    elif potential_gain_pct > 10 and months_to_best <= 4 and can_wait(months_to_best * 4.35):
         advice = f"HOLD — Prices typically peak in month {best_month} ({potential_gain_pct}% higher). Consider storing and selling then."
         action = "hold"
     elif trend == "rising":
@@ -308,9 +318,13 @@ def best_time_to_sell(region_id: str, crop_id: str) -> dict[str, Any]:
     elif current_price >= best_price * 0.95:
         advice = "SELL NOW — Current price is within 5% of historical peak. Good time to sell."
         action = "sell"
-    else:
+    elif can_wait(months_to_best * 4.35):
         advice = f"SELL GRADUALLY — No strong signal. Sell 50% now and hold 50% for month {best_month}."
         action = "partial_sell"
+    else:
+        advice = (f"SELL NOW — Prices typically peak in month {best_month}, but {crop_id} keeps only about "
+                  f"{keeps} weeks without cold storage.")
+        action = "sell"
 
     return {
         "crop_id": crop_id,
@@ -326,6 +340,7 @@ def best_time_to_sell(region_id: str, crop_id: str) -> dict[str, Any]:
         "months_to_peak": months_to_best,
         "action": action,
         "advice": advice,
+        "max_storage_weeks": keeps,
         "monthly_avg_prices": monthly_avg,
         **price_freshness(prices[-1]["date"]),
     }

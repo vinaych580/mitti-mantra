@@ -212,7 +212,7 @@ def get_district_sell_advice(district_id: str, crop_id: str, quantity_kg: float 
         raise HTTPException(status_code=422, detail="quantity must be positive; costs non-negative")
     from ml import price_model
     d, fc = _price_forecast(district_id, crop_id)
-    return {**price_model.sell_advice(fc, quantity_kg, storage_inr_kg_month, interest_pct_year),
+    return {**price_model.sell_advice(fc, quantity_kg, storage_inr_kg_month, interest_pct_year, crop_id),
             "district": d, "crop_id": crop_id, "freshness": fc["freshness"],
             "assumptions": {"quantity_kg": quantity_kg, "storage_inr_kg_month": storage_inr_kg_month,
                             "interest_pct_year": interest_pct_year}}
