@@ -12,6 +12,8 @@
     'How it works': 'இது எப்படி செயல்படுகிறது',
     'Draw farm': 'பண்ணையை வரையவும்',
     'Demo': 'டெமோ',
+    'Sample booking saved on this phone': 'மாதிரி முன்பதிவு இந்த போனில் சேமிக்கப்பட்டது',
+    'Districts with sample listings': 'மாதிரி பட்டியல்கள் உள்ள மாவட்டங்கள்',
     'API Docs': 'API ஆவணங்கள்',
     'Back to site': 'தளத்திற்குத் திரும்பு',
     'Try it free': 'இலவசமாக முயற்சிக்கவும்',
@@ -537,6 +539,9 @@
 
   // Home page answer: a top crop with no harvest record in the district.
   "Not grown in this district before": "இந்த மாவட்டத்தில் இதற்கு முன் பயிரிடப்படவில்லை",
+    'You are back online': 'நீங்கள் மீண்டும் ஆன்லைனில் உள்ளீர்கள்',
+    'You are offline': 'நீங்கள் ஆஃப்லைனில் உள்ளீர்கள்',
+    'km away': 'கி.மீ. தொலைவில்',
 };
 
 // Season planning workflow (Phase 0: brought level with hi and te).

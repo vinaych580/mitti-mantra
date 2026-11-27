@@ -12,6 +12,8 @@
     'How it works': 'ಇದು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ',
     'Draw farm': 'ಜಮೀನು ಬರೆಯಿರಿ',
     'Demo': 'ಡೆಮೊ',
+    'Sample booking saved on this phone': 'ಮಾದರಿ ಬುಕಿಂಗ್ ಈ ಫೋನ್‌ನಲ್ಲಿ ಉಳಿಸಲಾಗಿದೆ',
+    'Districts with sample listings': 'ಮಾದರಿ ಪಟ್ಟಿಗಳಿರುವ ಜಿಲ್ಲೆಗಳು',
     'API Docs': 'API ದಸ್ತಾವೇಜು',
     'Back to site': 'ಸೈಟ್‌ಗೆ ಹಿಂತಿರುಗಿ',
     'Try it free': 'ಉಚಿತವಾಗಿ ಪ್ರಯತ್ನಿಸಿ',
@@ -537,6 +539,9 @@
 
   // Home page answer: a top crop with no harvest record in the district.
   "Not grown in this district before": "ಈ ಜಿಲ್ಲೆಯಲ್ಲಿ ಹಿಂದೆ ಬೆಳೆದಿಲ್ಲ",
+    'You are back online': 'ನೀವು ಮತ್ತೆ ಆನ್‌ಲೈನ್‌ನಲ್ಲಿದ್ದೀರಿ',
+    'You are offline': 'ನೀವು ಆಫ್‌ಲೈನ್‌ನಲ್ಲಿದ್ದೀರಿ',
+    'km away': 'ಕಿ.ಮೀ. ದೂರ',
 };
 
 // Season planning workflow (Phase 0: brought level with hi and te).
