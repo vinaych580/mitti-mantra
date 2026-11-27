@@ -238,6 +238,14 @@
       panel.classList.remove('open');
       pill.setAttribute('aria-expanded', 'false');
     });
+    // Esc closes it and leaves focus on the pill (F-11). The panel is text
+    // only, inside the pill, so focus never needs to move into it.
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape' || !panel.classList.contains('open')) return;
+      panel.classList.remove('open');
+      pill.setAttribute('aria-expanded', 'false');
+      pill.focus();
+    });
 
     host.appendChild(pill);
     return pill;

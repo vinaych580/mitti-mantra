@@ -281,6 +281,7 @@
     'Accessibility': 'ಪ್ರವೇಶಿಸುವಿಕೆ',
     'Large text': 'ದೊಡ್ಡ ಪಠ್ಯ',
     'High contrast': 'ಹೆಚ್ಚಿನ ಕಾಂಟ್ರಾಸ್ಟ್',
+    'Reduce motion': 'ಚಲನೆ ಕಡಿಮೆ ಮಾಡಿ',
     'Privacy': 'ಗೌಪ್ಯತೆ',
     'Count my tool usage': 'ನನ್ನ ಟೂಲ್ ಬಳಕೆಯನ್ನು ಎಣಿಸಿ',
     'Share anonymous counts': 'ಅನಾಮಧೇಯ ಎಣಿಕೆಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳಿ',

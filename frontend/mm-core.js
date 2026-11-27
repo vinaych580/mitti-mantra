@@ -168,6 +168,7 @@
       const next = Object.assign(this.get(), patch || {});
       try { localStorage.setItem(LS.a11y, JSON.stringify(next)); } catch (_) {}
       apply();
+      if ('reduceMotion' in (patch || {}) && window.mmMotion) window.mmMotion.notify();
     },
     toggle(key) { this.set({ [key]: !this.get()[key] }); },
   };
@@ -175,6 +176,7 @@
     const a = a11y.get();
     document.documentElement.classList.toggle("mm-hc", !!a.highContrast);
     document.documentElement.classList.toggle("mm-lg", !!a.largeText);
+    document.documentElement.classList.toggle("mm-rm", !!a.reduceMotion);
   }
 
   // ------------------------------------------------------------------

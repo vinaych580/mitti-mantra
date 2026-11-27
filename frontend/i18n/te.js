@@ -289,6 +289,7 @@
     'Accessibility': 'అందుబాటు',
     'Large text': 'పెద్ద అక్షరాలు',
     'High contrast': 'అధిక కాంట్రాస్ట్',
+    'Reduce motion': 'కదలిక తగ్గించు',
     'Privacy': 'గోప్యత',
     'Count my tool usage': 'నా టూల్ వినియోగాన్ని లెక్కించండి',
     'Share anonymous counts': 'అనామక గణాంకాలు షేర్ చేయండి',

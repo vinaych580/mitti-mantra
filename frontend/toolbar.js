@@ -544,6 +544,7 @@
     text:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>',
     contrast: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20z" fill="currentColor" stroke="none"/></svg>',
     install: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>',
+    motion: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4"/><path d="M3 7h7"/><path d="M3 17h7"/><circle cx="16" cy="12" r="5"/><path d="M14.5 12h3"/></svg>',
     privacy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/></svg>',
   };
 
@@ -561,6 +562,11 @@
     // translated arbitrary text and risked mangling short button labels.
     const panel = document.createElement('div');
     panel.className = 'qw-panel';
+    panel.id = 'qwPanel';
+    // A dialog, not a menu: it holds the language pills and switches as
+    // well as actions. Focus moves in, Tab stays in, Esc returns it (F-11).
+    panel.setAttribute('role', 'dialog');
+    panel.setAttribute('aria-label', 'Language and tools');
 
     // Language section — the i18n switcher is reparented here (if present).
     const langLabel = document.createElement('div');
@@ -629,11 +635,25 @@
         textBtn.classList.toggle('active', !!window.MM.a11y.get().largeText);
       });
       textBtn.classList.toggle('active', !!window.MM.a11y.get().largeText);
+      textBtn.setAttribute('aria-pressed', String(!!window.MM.a11y.get().largeText));
+      textBtn.addEventListener('click', () => textBtn.setAttribute('aria-pressed', String(!!window.MM.a11y.get().largeText)));
       const contrastBtn = mkBtn(ICONS.contrast, 'High contrast', () => {
         window.MM.a11y.toggle('highContrast');
         contrastBtn.classList.toggle('active', !!window.MM.a11y.get().highContrast);
       });
       contrastBtn.classList.toggle('active', !!window.MM.a11y.get().highContrast);
+      contrastBtn.setAttribute('aria-pressed', String(!!window.MM.a11y.get().highContrast));
+      contrastBtn.addEventListener('click', () => contrastBtn.setAttribute('aria-pressed', String(!!window.MM.a11y.get().highContrast)));
+      // Reduce motion: the OS setting already applies everywhere; this is for
+      // a phone whose owner cannot find it.
+      const motionOn = () => !!window.MM.a11y.get().reduceMotion;
+      const motionBtn = mkBtn(ICONS.motion, 'Reduce motion', () => {
+        window.MM.a11y.toggle('reduceMotion');
+        motionBtn.classList.toggle('active', motionOn());
+        motionBtn.setAttribute('aria-pressed', String(motionOn()));
+      }, 'qw-motion');
+      motionBtn.classList.toggle('active', motionOn());
+      motionBtn.setAttribute('aria-pressed', String(motionOn()));
     }
 
     // Install (PWA) — stays hidden until the browser offers it.
@@ -665,11 +685,13 @@
     fab.className = 'qw-fab';
     fab.setAttribute('aria-label', 'Language and tools');
     fab.setAttribute('aria-expanded', 'false');
-    fab.setAttribute('aria-haspopup', 'true');
+    fab.setAttribute('aria-haspopup', 'dialog');
+    fab.setAttribute('aria-controls', 'qwPanel');
     fab.setAttribute('data-no-translate', '');
     fab.innerHTML = `<span class="qw-fab__glyph" aria-hidden="true">अA</span><svg class="qw-fab__close" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>`;
     document.body.appendChild(fab);
 
+    let releasePanel = null;
     function togglePanel(open, { restoreFocus = false } = {}) {
       const willOpen = typeof open === 'boolean' ? open : !panel.classList.contains('open');
       panel.classList.toggle('open', willOpen);
@@ -677,10 +699,17 @@
       fab.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
       fab.setAttribute('aria-label', willOpen ? 'Close language and tools' : 'Language and tools');
       if (willOpen) {
-        const first = panel.querySelector('button:not([disabled]), select, [tabindex="0"]');
-        if (first) setTimeout(() => first.focus(), 0);
-      } else if (restoreFocus || panel.contains(document.activeElement)) {
-        fab.focus();
+        // Focus once the panel is visible to the browser. The trap (site-ui.js)
+        // keeps Tab inside and closes on Esc; a click on the FAB still closes.
+        setTimeout(() => {
+          if (!panel.classList.contains('open')) return;
+          if (window.mmFocus) releasePanel = window.mmFocus.trap(panel, { onEscape: () => togglePanel(false, { restoreFocus: true }), returnTo: fab });
+          else { const first = panel.querySelector('button:not([disabled]), select, [tabindex="0"]'); if (first) first.focus(); }
+        }, 0);
+      } else {
+        const restore = restoreFocus || panel.contains(document.activeElement);
+        if (releasePanel) { releasePanel({ restore }); releasePanel = null; }
+        else if (restore) fab.focus();
       }
     }
     fab.addEventListener('click', (e) => { e.stopPropagation(); togglePanel(); });
@@ -690,8 +719,9 @@
       if (panel.contains(e.target) || fab.contains(e.target)) return;
       togglePanel(false);
     });
+    // Without site-ui.js's trap: Esc still closes and returns focus.
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && panel.classList.contains('open')) togglePanel(false, { restoreFocus: true });
+      if (!window.mmFocus && e.key === 'Escape' && panel.classList.contains('open')) togglePanel(false, { restoreFocus: true });
     });
   }
 
@@ -709,6 +739,7 @@
   /* ---------- Modal helper ---------- */
   let modalEl = null;
   let modalReturnFocus = null;
+  let releaseModal = null;
   function showModal(title, bodyHtml, actions = []) {
     if (!modalEl) {
       modalEl = document.createElement('div');
@@ -716,7 +747,7 @@
       modalEl.setAttribute('role', 'dialog');
       modalEl.setAttribute('aria-modal', 'true');
       modalEl.setAttribute('data-no-translate', '');
-      modalEl.addEventListener('keydown', e => { if (e.key === 'Escape') hideModal(); });
+      modalEl.addEventListener('keydown', e => { if (!window.mmFocus && e.key === 'Escape') hideModal(); });
       modalEl.innerHTML = `
         <div class="qw-modal__card">
           <h3 class="qw-modal__h"></h3>
@@ -742,13 +773,20 @@
     if (!modalEl.classList.contains('show')) modalReturnFocus = document.activeElement;
     modalEl.classList.add('show');
     const primary = row.querySelector('.qw-modal__btn--primary') || row.querySelector('button');
-    if (primary) setTimeout(() => primary.focus(), 0);
+    // Tab stays inside the card while it is up (F-11). A second showModal
+    // re-traps and keeps the original return target.
+    if (window.mmFocus) setTimeout(() => {
+      if (!modalEl.classList.contains('show')) return;
+      releaseModal = window.mmFocus.trap(modalEl, { onEscape: hideModal, initial: primary, returnTo: modalReturnFocus });
+    }, 0);
+    else if (primary) setTimeout(() => primary.focus(), 0);
     return modalEl;
   }
   function hideModal() {
     if (!modalEl || !modalEl.classList.contains('show')) return;
     modalEl.classList.remove('show');
-    if (modalReturnFocus && document.contains(modalReturnFocus)) modalReturnFocus.focus();
+    if (releaseModal) { releaseModal(); releaseModal = null; }
+    else if (modalReturnFocus && document.contains(modalReturnFocus)) modalReturnFocus.focus();
     modalReturnFocus = null;
   }
   function escapeHtml(s) {

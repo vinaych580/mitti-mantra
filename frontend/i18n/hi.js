@@ -300,6 +300,7 @@
     'Accessibility': 'सुगम्यता',
     'Large text': 'बड़ा टेक्स्ट',
     'High contrast': 'उच्च कंट्रास्ट',
+    'Reduce motion': 'गति कम करें',
     'Privacy': 'गोपनीयता',
     'Count my tool usage': 'मेरे टूल उपयोग की गिनती करें',
     'Share anonymous counts': 'अज्ञात गणना साझा करें',

@@ -5292,6 +5292,29 @@ body.page-farm-boundary {
   }
 }
 
+/* The same net for the in-app "Reduce motion" switch (tools panel), for
+   phones whose owner cannot find, or does not have, the OS setting.
+   mm-core.js sets html.mm-rm. View transitions are opted into by an
+   at-rule that a class cannot reach, so their animation is cancelled. */
+html.mm-rm *,
+html.mm-rm *::before,
+html.mm-rm *::after {
+  animation-duration: .01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: .01ms !important;
+  scroll-behavior: auto !important;
+}
+
+html.mm-rm {
+  scroll-behavior: auto !important;
+}
+
+html.mm-rm::view-transition-group(*),
+html.mm-rm::view-transition-old(*),
+html.mm-rm::view-transition-new(*) {
+  animation: none !important;
+}
+
 /* ---- Page-to-page transitions ----
    Navigating between pages cross-fades the content instead of flashing
    white, and the nav -- the same bar on every page -- is its own group so it
