@@ -3725,6 +3725,9 @@ body.mm-menu-open .qw-panel {
   .chart-grid {
     grid-template-columns: minmax(0, 1fr); /* same reason: a 1fr track grew to the canvas and widened a 375px page */
   }
+  .chart-box canvas {
+    max-width: 100%;
+  }
 }
 
 /* 3D scene on landing */
