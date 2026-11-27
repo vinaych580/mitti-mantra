@@ -536,6 +536,9 @@
 
   // Home page answer: a top crop with no harvest record in the district.
   "Not grown in this district before": "இந்த மாவட்டத்தில் இதற்கு முன் பயிரிடப்படவில்லை",
+    'You are back online': 'நீங்கள் மீண்டும் ஆன்லைனில் உள்ளீர்கள்',
+    'You are offline': 'நீங்கள் ஆஃப்லைனில் உள்ளீர்கள்',
+    'km away': 'கி.மீ. தொலைவில்',
 };
 
 // Season planning workflow (Phase 0: brought level with hi and te).
