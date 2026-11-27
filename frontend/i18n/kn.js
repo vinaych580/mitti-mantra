@@ -12,6 +12,8 @@
     'How it works': 'ಇದು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ',
     'Draw farm': 'ಜಮೀನು ಬರೆಯಿರಿ',
     'Demo': 'ಡೆಮೊ',
+    'Sample booking saved on this phone': 'ಮಾದರಿ ಬುಕಿಂಗ್ ಈ ಫೋನ್‌ನಲ್ಲಿ ಉಳಿಸಲಾಗಿದೆ',
+    'Districts with sample listings': 'ಮಾದರಿ ಪಟ್ಟಿಗಳಿರುವ ಜಿಲ್ಲೆಗಳು',
     'API Docs': 'API ದಸ್ತಾವೇಜು',
     'Back to site': 'ಸೈಟ್‌ಗೆ ಹಿಂತಿರುಗಿ',
     'Try it free': 'ಉಚಿತವಾಗಿ ಪ್ರಯತ್ನಿಸಿ',

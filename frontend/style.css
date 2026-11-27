@@ -7349,6 +7349,41 @@ html[data-theme="dark"] .mm-tabbar__btn {
   }
 }
 
+/* ---- Demo banner (Phase 4.11) ----
+   One short note at the top of each demo page (Marketplace, Book a Tractor,
+   Gyan Seva): what is sample data, that nothing leaves the phone, and what
+   on the page is real. Inline-flex so a centred hero centres it too. */
+.mm-demo-banner {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  max-width: 640px;
+  margin: 0 0 22px;
+  padding: 10px 16px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  background: var(--accent-soft);
+  color: var(--ink);
+  font-size: .9rem;
+  line-height: 1.45;
+  text-align: left;
+}
+.mm-demo-banner__tag {
+  flex: none;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--accent-deep, #8a5a1e);
+  color: #fff;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+html[data-theme="dark"] .mm-demo-banner {
+  background: rgba(200, 138, 58, .16);
+  color: var(--ink);
+}
+
 /* ---- Compare crops: checkbox chips (replaces <select multiple>) ---- */
 .crop-checks {
   display: flex;

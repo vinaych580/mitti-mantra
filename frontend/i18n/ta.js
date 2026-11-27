@@ -12,6 +12,8 @@
     'How it works': 'இது எப்படி செயல்படுகிறது',
     'Draw farm': 'பண்ணையை வரையவும்',
     'Demo': 'டெமோ',
+    'Sample booking saved on this phone': 'மாதிரி முன்பதிவு இந்த போனில் சேமிக்கப்பட்டது',
+    'Districts with sample listings': 'மாதிரி பட்டியல்கள் உள்ள மாவட்டங்கள்',
     'API Docs': 'API ஆவணங்கள்',
     'Back to site': 'தளத்திற்குத் திரும்பு',
     'Try it free': 'இலவசமாக முயற்சிக்கவும்',
