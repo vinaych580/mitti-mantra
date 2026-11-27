@@ -169,6 +169,11 @@ app.add_middleware(StaticCacheHeaders)
 from backend.security import SecurityHeaders
 app.add_middleware(SecurityHeaders)
 
+# Phase 3.6: one JSON log line per request (backend/observability.py). Outermost, so
+# the duration covers every other layer and the status is what the client got.
+from backend.observability import RequestLog
+app.add_middleware(RequestLog)
+
 from backend.models import (
     SimulationRequest,
     RecommendationRequest,
