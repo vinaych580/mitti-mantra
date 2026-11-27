@@ -1,12 +1,12 @@
 {
   "version": 2,
-  "buildCommand": "node scripts/fetch_serving_store.cjs",
-  "outputDirectory": ".",
+  "buildCommand": "node scripts/fetch_serving_store.cjs && rm -rf public && mkdir -p public && cp -r frontend public/frontend",
+  "outputDirectory": "public",
   "installCommand": "",
   "functions": {
     "api/index.py": {
       "includeFiles": "{dataset/*.csv,dataset/serving.sqlite,backend/**/*.py,backend/*.json,engine/**/*.py,utils/**/*.py,ml/**/*.py,ml/models/*.joblib,ml/models/*.json,ml/models/*.onnx,data_ingestion/**/*.py}",
-      "excludeFiles": "{.venv/**,venv/**,.vercel/**,node_modules/**,dataset/plantvillage/**}",
+      "excludeFiles": "{.venv/**,venv/**,.vercel/**,public/**,node_modules/**,dataset/plantvillage/**}",
       "maxDuration": 30,
       "memory": 1024
     }
