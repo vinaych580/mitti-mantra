@@ -64,12 +64,12 @@
 
   // --- helpers ---
   const SOURCES = {
-    recommend: { label: "Crop recommendations", src: "Crop parameters, soil, weather, mandi prices (Mitti Mantra dataset) + trained ML model" },
+    recommend: { label: "Crop recommendations", src: "District crop yield records (DES), mandi prices, soil and weather; yield ranges hold 8 seasons in 10" },
     simulate:  { label: "Yield & profit simulation", src: "Physics-based yield model + cost breakdown (engine.simulator)" },
-    forecast:  { label: "Price forecast",          src: "Historical mandi prices (agmarknet-compatible CSV) + ML forecast" },
+    forecast:  { label: "Price forecast",          src: "Agmarknet weekly mandi prices (India Data Portal); price model where it beat simple rules in testing" },
     rotation:  { label: "Rotation plan",           src: "Soil health projection + regional ML recommendations" },
     optimal:   { label: "Optimal crop mix",        src: "Smart-score weighted allocation across ML-ranked crops" },
-    sell:      { label: "Sell advisor",            src: "Historical + forecasted mandi prices vs MSP" },
+    sell:      { label: "Sell advisor",            src: "Weekly price forecast and its 80% range, minus storage and interest" },
     msp:       { label: "MSP data",                src: "Government-notified MSPs (CACP / Ministry of Agriculture)" },
     pest:      { label: "Pest & disease alerts",   src: "Weather triggers × crop-specific pest rules" },
     irrigate:  { label: "Irrigation schedule",     src: "Crop water-demand model × seasonal rainfall" },
@@ -113,7 +113,8 @@
       if (name && val && !row.querySelector(".mm-why")) {
         const profit = (val.textContent.match(/[\d,]+(?:\.\d+)?/) || ["—"])[0];
         const roi    = (val.textContent.match(/ROI\s*([\d.\-]+%)/) || [,"—"])[1];
-        const yieldS = (name.textContent.match(/Yield\s+(\d+)\s*kg/) || [,"—"])[1];
+        // Rows give the central yield as data-yield; the text may show a range.
+        const yieldS = row.dataset.yield || (name.textContent.match(/Yield\s+(\d+)\s*kg/) || [,"—"])[1];
         const score  = (name.textContent.match(/Score\s+([\d.]+)/) || [,"—"])[1];
         const risk   = (name.textContent.match(/Risk\s+(\d+)/) || [,"—"])[1];
         const factors = [
@@ -135,7 +136,7 @@
           <div class="mm-why__body">${bars}
             <div style="margin-top:6px;font-size:.72rem;color:var(--ink-faint);">
               Ranked by the ML model using soil fit, rainfall match, expected profit
-              (₹${profit}) and risk. Confidence shown in the KPI card above.
+              (₹${profit}) and risk. The row above says which yield record it rests on.
             </div>
           </div>`;
         name.appendChild(d);

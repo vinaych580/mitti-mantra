@@ -32,6 +32,15 @@
   const escHtml = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => (
     { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  // text() marks an English string the page's i18n pass translates in place
+  // (scripts/ci/check_i18n.cjs checks it has hi/te entries); t() translates now,
+  // for chart labels, which live on a canvas the DOM pass never sees.
+  // Its own span, so a neighbouring " · " or number never joins the text node
+  // the lookup has to match exactly.
+  const text = s => `<span>${escHtml(s)}</span>`;
+  const t = s => (window.AgriSimI18n && window.AgriSimI18n.t ? window.AgriSimI18n.t(s) : s);
+  // Numbers, dates and names: kept out of the catalog lookup.
+  const NUM = s => `<span data-no-translate>${s}</span>`;
   const INR = n => {
     const v = Math.round(Number(n) || 0);
     return (v < 0 ? '−₹' : '₹') + Math.abs(v).toLocaleString('en-IN');
@@ -773,15 +782,15 @@
      disappear on their own the moment a tool is run. */
   const TOOL_OUTPUTS = {
     score: ['One blended 0-100 farm grade', 'Profit, risk & market pillars', 'Field-health & pest pressure (if located)', 'Top alternative crops'],
-    recommend: ['Ranked crop shortlist', 'Expected ROI per crop', 'Risk & soil-health score', 'ML model confidence'],
+    recommend: ['Ranked crop shortlist', 'Expected ROI per crop', 'Risk & soil-health score', 'Yield range from district records'],
     simulate: ['Yield in kg/acre', 'Full cost breakdown', 'Profit & ROI', 'Water efficiency & nutrient gap'],
     rotation: ['Kharif × rabi pairings', 'Combined two-season profit', 'Soil nitrogen impact', 'Ranked rotation options'],
     templates: ['Preset farming strategies', 'Expected return per template', 'Risk profile', 'Best-fit match for your plot'],
     compare: ['Side-by-side metrics', 'Winner per category', 'Profit difference', 'Water & input demand'],
     mix: ['Acres for each crop', 'Blended profit estimate', 'What spreading risk costs', 'Per-crop share'],
-    forecast: ['Six-month price curve', 'Confidence range', 'Sell-or-hold signal', 'Historical trend'],
+    forecast: ['Weekly price, 1 to 26 weeks ahead', '80% price range', 'Model or simple rule, per week', 'Warning when prices are old'],
     msp: ['MSP vs live mandi price', 'Gap per quintal', 'Whether MSP beats market', 'Procurement guidance'],
-    sell: ['Best selling window', 'Expected price gain', 'Month-by-month outlook', 'Holding-cost trade-off'],
+    sell: ['Sell now vs hold, in rupees', 'Storage and interest counted', 'What you risk if prices fall', 'Every holding period compared'],
     arbitrage: ['Price gaps across mandis', 'Transport-adjusted margin', 'Best destination mandi', 'Net gain per quintal'],
     calendar: ['Sowing-to-harvest timeline', 'Stage-wise field tasks', 'Critical care windows', 'Days to maturity'],
     irrigation: ['Week-by-week water plan', 'Critical stress stages', 'Total season water need', 'Rainfall offset'],
@@ -1733,6 +1742,41 @@
     } catch (err) { showError(out, err); }
   });
 
+  /* ---------- Phase 2 recommendation evidence ----------
+     Rows carry an 80% yield range and the profit at its two ends, where the
+     district has a record (yield_basis says which record), plus the share of
+     this season's sown area the crop already has here. A row without them is
+     an estimate for a crop the district has no record of; say so. */
+  const REC_SOURCE = {
+    district_record: text('District yield record'),
+    yield_model: text('Yield model on district record'),
+    ml_model: text('Older yield model'),
+    heuristic: text('Estimate: no yield record here'),
+  };
+  const recYieldRange = r => {
+    const y = r.yield_range_kg_per_acre;
+    return Array.isArray(y) && y.length === 2 ? `${Math.round(y[0]).toLocaleString('en-IN')}–${Math.round(y[1]).toLocaleString('en-IN')} kg/ac` : '';
+  };
+  const recProfitRange = r => {
+    const p = r.profit_range;
+    return Array.isArray(p) && p.length === 2 ? `${INR(p[0])} – ${INR(p[1])}` : '';
+  };
+  const recAdoption = r => {
+    if (r.adoption_share == null) return '';
+    const pct = r.adoption_share * 100;
+    if (pct <= 0) return r.grown_in_state === false ? text('Not grown anywhere in this state on record') : text('Not grown in this district on record');
+    return `${text('Grown on')} ${NUM(pct < 1 ? '<1%' : `${FIX(pct, pct < 10 ? 1 : 0)}%`)} ${text("of this season's area here")}`;
+  };
+  function recBasisLine(r, wide) {
+    const b = r.yield_basis || {};
+    const parts = [REC_SOURCE[r.prediction_source] || REC_SOURCE.heuristic];
+    if (b.years_on_record) parts.push(`${NUM(b.years_on_record)} ${text('seasons on record')}${b.last_year ? ` (${text('last recorded')} ${NUM(b.last_year)})` : ''}`);
+    const adopt = recAdoption(r);
+    if (adopt) parts.push(adopt);
+    const warn = r.grown_in_state === false || (r.adoption_share != null && r.adoption_share <= 0);
+    return `<div class="mm-rec-basis${wide ? ' mm-rec-basis--wide' : ''}${warn ? ' mm-rec-basis--warn' : ''}">${parts.join(' · ')}</div>`;
+  }
+
   /* ==========================================================
      TOOL 1: Smart recommend — returns LIST directly
      ========================================================== */
@@ -1790,11 +1834,14 @@
             <div class="kpi__val" style="font-size:1.3rem;">${cropLabel(top.crop_id)}</div>
             <div class="kpi__sub">Smart score ${FIX(top.smart_score, 1)} / 100</div></div>
           <div class="kpi"><div class="kpi__lbl">Predicted yield</div>
-            <div class="kpi__val">${Math.round(top.predicted_yield_kg_per_acre)} <span style="font-size:.5em;color:var(--ink-faint)">kg/ac</span></div></div>
+            <div class="kpi__val">${Math.round(top.predicted_yield_kg_per_acre)} <span style="font-size:.5em;color:var(--ink-faint)">kg/ac</span></div>
+            ${recYieldRange(top) ? `<div class="kpi__sub">${text('8 seasons in 10:')} ${NUM(recYieldRange(top))}</div>` : ''}</div>
           <div class="kpi kpi--good"><div class="kpi__lbl">Profit (${area} ac)</div>
             <div class="kpi__val">${TT(top.expected_profit, INR(top.expected_profit))}</div>
-            <div class="kpi__sub">ROI ${PCT(top.roi_percent)}</div></div>
+            <div class="kpi__sub">ROI ${PCT(top.roi_percent)}</div>
+            ${recProfitRange(top) ? `<div class="kpi__sub">${text('8 seasons in 10:')} ${NUM(recProfitRange(top))}</div>` : ''}</div>
         </div>
+        ${recBasisLine(top, true)}
 
         <div id="mm-planting-status">${alreadyCommitted ? plantingStatusHtml(alreadyCommitted.crop_id) : ''}</div>
 
@@ -1860,10 +1907,11 @@
 
         <h4 style="font-size:.85rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin:16px 0 12px;">Ranked alternatives · pick the one you're planting</h4>
         ${recs.slice(0, 5).map((r, i) => `
-          <div class="list-row">
+          <div class="list-row" data-yield="${Math.round(r.predicted_yield_kg_per_acre)}">
             <div class="list-row__bullet">${i + 1}</div>
             <div class="list-row__name">${cropLabel(r.crop_id)}
-              <small>Yield ${Math.round(r.predicted_yield_kg_per_acre)} kg/ac · Risk ${Math.round(r.risk_score)}/100 · Score ${FIX(r.smart_score, 1)}</small>
+              <small>Yield ${recYieldRange(r) ? NUM(recYieldRange(r)) : `${Math.round(r.predicted_yield_kg_per_acre)} kg/ac`} · Risk ${Math.round(r.risk_score)}/100 · Score ${FIX(r.smart_score, 1)}</small>
+              ${recBasisLine(r, false)}
               ${r.reasons ? `<div style="font-size: 0.76rem; color: var(--brand-deep); margin-top: 4px;">• ${r.reasons[0]}</div>` : ''}
               ${r.saturation_label ? `<div style="font-size: 0.76rem; color: var(--ink-soft); margin-top: 2px;">📊 ${r.saturation_label}</div>` : ''}
               <div style="margin-top:6px;">
@@ -1875,7 +1923,7 @@
                 </button>
               </div>
             </div>
-            <div class="list-row__val">${INR(r.expected_profit)}<small>ROI ${PCT(r.roi_percent)}</small></div>
+            <div class="list-row__val">${INR(r.expected_profit)}<small>ROI ${PCT(r.roi_percent)}</small>${recProfitRange(r) ? `<small>${NUM(recProfitRange(r))}</small>` : ''}</div>
           </div>`).join('')}`;
 
       // Re-run the static-catalog i18n pass (see i18n.js) whenever this panel's
@@ -2335,112 +2383,193 @@
   });
 
   /* ==========================================================
-     TOOL 4: Price forecast — forecasts[] + historical via /mandi-prices
+     Phase 2 price tools: shared pieces
+     /api/v1/districts/{id}/price-forecast gives 1/4/8/12/26-week prices with an
+     80% range; each horizon says whether the model or a baseline produced it
+     (ml/models/price/model_card.md). The model clears its gate on 38 of 165
+     crop x horizon cells, so most horizons are "typical for this time of year"
+     or "no expected change" -- the card has to say which, every time.
+     ========================================================== */
+  // Labels are stored already escaped by text(), so they render as-is.
+  const FC_METHOD = {
+    model: { label: text('Model forecast'), short: text('Model'), chip: 'chip--green' },
+    seasonal: { label: text("Typical for this time of year (last year's pattern)"), short: text('Seasonal pattern'), chip: 'chip--gold' },
+    mean: { label: text('Typical for this time of year (long-run average)'), short: text('Long-run average'), chip: 'chip--gold' },
+    last: { label: text('No expected change (latest price)'), short: text('No change expected'), chip: '' },
+  };
+  const fcMethod = m => FC_METHOD[m] || FC_METHOD.last;
+  const fmtWeek = iso => {
+    const d = new Date(String(iso).slice(0, 10) + 'T00:00:00');
+    return isNaN(d) ? escHtml(iso) : d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+  };
+  const addWeeks = (iso, n) => {
+    const d = new Date(String(iso).slice(0, 10) + 'T00:00:00Z');
+    d.setUTCDate(d.getUTCDate() + 7 * n);
+    return d.toISOString().slice(0, 10);
+  };
+  const INFO_ICO = '<svg class="alert__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>';
+
+  // Shown whenever the newest price on record is older than the freshness
+  // limit: the forecast starts from that week, and a farmer must not read
+  // "1 week ahead" as next week.
+  function staleNotice(fresh) {
+    if (!fresh || !fresh.stale) return '';
+    const age = fresh.data_age_days;
+    return `<div class="alert alert--gold mm-stale" role="status">${INFO_ICO}
+      <div class="alert__body"><strong>${text('These prices are old')}</strong>
+        <p>${text('Latest mandi price on record:')} ${NUM(fmtWeek(fresh.data_through))}${age != null ? ` (${NUM(age)} ${text('days old')})` : ''}.
+        ${text('Every forecast below counts forward from that week, not from today.')}</p></div></div>`;
+  }
+
+  // 404: the district has no price for this crop. 503: no price model on
+  // this deployment. Both are honest answers, not failures. On a 404 the
+  // crops this district does have prices for are offered as one-tap retries.
+  function priceUnavailable(out, err, form) {
+    if (!(err instanceof HttpError && (err.status === 404 || err.status === 503))) return false;
+    const f = formToObj(form);
+    const missing = err.status === 404;
+    out.innerHTML = `<div class="alert alert--gold">${INFO_ICO}<div class="alert__body">
+      <strong>${missing ? text('No recent mandi prices for this crop here') : text('Price forecasts are not available right now')}</strong>
+      <p>${missing ? `${NUM(escHtml(cropLabel(f.crop_id)))} · ${text('Pick a crop this district trades:')}` : text('Please try again later.')}</p>
+      ${missing ? '<div class="mm-crop-chips" data-price-crops></div>' : ''}</div></div>`;
+    if (!missing) return true;
+    const box = $('[data-price-crops]', out);
+    api(`/api/v1/districts/${encodeURIComponent(f.region_id)}/price-forecast/crops`).then(r => {
+      if (!box || !box.isConnected) return;
+      const crops = ((r && r.crops) || [])
+        .filter(c => form.crop_id.querySelector(`option[value="${CSS.escape(c.crop_id)}"]`)).slice(0, 12);
+      if (!crops.length) { box.innerHTML = `<span>${text('None on record for this district yet.')}</span>`; return; }
+      box.innerHTML = crops.map(c => `<button type="button" class="chip chip--btn" data-crop="${escHtml(c.crop_id)}">${NUM(escHtml(cropLabel(c.crop_id)))}</button>`).join('');
+      $$('[data-crop]', box).forEach(btn => btn.addEventListener('click', () => {
+        form.crop_id.value = btn.dataset.crop;
+        form.requestSubmit();
+      }));
+    }).catch(() => { if (box) box.hidden = true; });
+    return true;
+  }
+
+  /* ==========================================================
+     TOOL 4: Price forecast -- weekly, with 80% ranges
      ========================================================== */
   $('[data-form="forecast"]')?.addEventListener('submit', async e => {
     e.preventDefault();
     const out = $('[data-out="forecast"]');
     showLoading(out, 'Forecasting mandi prices…');
+    const f = formToObj(e.target);
     try {
-      const f = formToObj(e.target);
-      const months = parseInt(f.months_ahead) || 6;
-      const [data, history] = await Promise.all([
-        api(`/api/price-forecast/${f.region_id}/${f.crop_id}?months_ahead=${months}`),
-        api(`/api/mandi-prices/${f.region_id}?crop_id=${f.crop_id}`).catch(() => [])
+      const q = `crop_id=${encodeURIComponent(f.crop_id)}`;
+      const base = `/api/v1/districts/${encodeURIComponent(f.region_id)}`;
+      const [fc, hist] = await Promise.all([
+        api(`${base}/price-forecast?${q}`),
+        api(`${base}/prices?${q}`).catch(() => null),
       ]);
-      const fcst = data.forecasts || [];
-      if (!fcst.length) { out.innerHTML = '<div class="alert"><div class="alert__body"><strong>No forecast available.</strong></div></div>'; return; }
-
-      // Build historical series (last 12 rows sorted by date)
-      const histSorted = (Array.isArray(history) ? history : [])
-        .map(h => ({ date: h.date || h.price_date, price: parseFloat(h.price_inr_per_kg || h.price || 0) }))
-        .filter(h => h.date && !isNaN(h.price))
-        .sort((a, b) => a.date.localeCompare(b.date))
-        .slice(-12);
-
-      const histLabels = histSorted.map(h => h.date.slice(0, 7));
-      const histData = histSorted.map(h => h.price);
-      const fcstLabels = fcst.map(fo => fo.month);
-      const fcstData = fcst.map(fo => fo.forecast_price);
-
-      // Combined series: history followed by forecast (padded with nulls so they align on same chart)
-      const combinedLabels = [...histLabels, ...fcstLabels];
-      const histPad = [...histData, ...fcstLabels.map(() => null)];
-      // With history, the forecast line starts from the last actual point so
-      // the two series join up; without any, it's just the forecast -- a
-      // bridging null there would shift every forecast point one month right.
-      const fcstPad = histData.length
-        ? [...histLabels.slice(0, -1).map(() => null), histData[histData.length - 1], ...fcstData]
-        : fcstData;
-
-      const lastHist = histData[histData.length - 1] || data.current_price || 0;
-      const lastFcst = fcstData[fcstData.length - 1] || 0;
-      const deltaPct = lastHist ? ((lastFcst - lastHist) / lastHist) * 100 : 0;
+      const hz = (fc.horizons || []).slice().sort((a, b) => a.horizon_weeks - b.horizon_weeks);
+      if (!hz.length) throw new HttpError(404, 'no horizons');
+      const p0 = fc.latest_price_inr_kg;
+      const origin = fc.origin_week;
+      const nModel = hz.filter(h => h.method === 'model').length;
+      const pick = w => hz.find(h => h.horizon_weeks === w);
+      const tiles = [4, 12, 26].map(pick).filter(Boolean);
 
       out.innerHTML = `
+        ${staleNotice(fc.freshness)}
         <div class="kpi-grid">
-          <div class="kpi"><div class="kpi__lbl">Current price</div>
-            <div class="kpi__val">${TT(data.current_price, INR2(data.current_price))}<span style="font-size:.5em">/kg</span></div></div>
-          <div class="kpi kpi--info"><div class="kpi__lbl">+${months} mo forecast</div>
-            <div class="kpi__val">${TT(lastFcst, INR2(lastFcst))}<span style="font-size:.5em">/kg</span></div>
-            <div class="kpi__sub"><span class="chip ${deltaPct >= 0 ? 'chip--green' : 'chip--red'}">${deltaPct >= 0 ? '+' : ''}${FIX(deltaPct, 1)}% vs now</span></div></div>
-          <div class="kpi ${data.trend_direction === 'rising' ? 'kpi--good' : data.trend_direction === 'falling' ? 'kpi--warn' : 'kpi--info'}">
-            <div class="kpi__lbl">Trend</div>
-            <div class="kpi__val" style="font-size:1.3rem;text-transform:capitalize;">${data.trend_direction || '—'}</div>
-            <div class="kpi__sub">Slope ${FIX(data.trend_slope_per_month || 0, 2)}/mo</div></div>
-          <div class="kpi"><div class="kpi__lbl">Model</div>
-            <div class="kpi__val" style="font-size:1rem;">${data.prediction_source === 'ml_model' ? 'ML model' : data.prediction_source ? 'Trend estimate' : '—'}</div>
-            ${fcst[0]?.confidence ? `<div class="kpi__sub">${escHtml(fcst[0].confidence)} confidence</div>` : ''}</div>
+          <div class="kpi"><div class="kpi__lbl">${text('Latest price')}</div>
+            <div class="kpi__val">${TT(p0, INR2(p0))}<span style="font-size:.5em">/kg</span></div>
+            <div class="kpi__sub">${text('Week of')} ${NUM(fmtWeek(origin))}</div></div>
+          ${tiles.map(h => {
+            const m = fcMethod(h.method);
+            const d = p0 ? ((h.price_inr_kg - p0) / p0) * 100 : 0;
+            return `<div class="kpi ${h.method === 'model' ? 'kpi--info' : ''}">
+              <div class="kpi__lbl">${NUM(h.horizon_weeks)} ${text('weeks ahead')}</div>
+              <div class="kpi__val">${TT(h.price_inr_kg, INR2(h.price_inr_kg))}<span style="font-size:.5em">/kg</span></div>
+              <div class="kpi__sub">${NUM(`${INR2(h.low_inr_kg)} – ${INR2(h.high_inr_kg)}`)}
+                ${Math.abs(d) >= 0.5 ? NUM(` · ${d > 0 ? '+' : ''}${FIX(d, 1)}%`) : ''}</div>
+              <div class="kpi__sub"><span class="chip ${m.chip}">${m.short}</span></div></div>`;
+          }).join('')}
         </div>
 
         <div class="chart-box">
-          <div class="chart-box__title">Price trajectory · ${cropLabel(f.crop_id)}</div>
-          <canvas data-chart="fcst-line"></canvas>
-        </div>`;
+          <div class="chart-box__title">${text('Weekly mandi price and forecast')} · ${NUM(escHtml(cropLabel(f.crop_id)))}</div>
+          <canvas data-chart="fcst-band"></canvas>
+          <p class="mm-chart-note">${text('Shaded band: 8 in 10 past forecasts for this crop and horizon landed inside it.')}</p>
+        </div>
 
-      makeChart($('[data-chart="fcst-line"]'), {
+        <h4 class="mm-subhead">${text('Week by week')}</h4>
+        ${hz.map(h => {
+          const m = fcMethod(h.method);
+          return `<div class="list-row">
+            <div class="list-row__bullet" aria-hidden="true">${NUM(h.horizon_weeks)}</div>
+            <div class="list-row__name">${NUM(h.horizon_weeks)} ${(h.horizon_weeks === 1 ? text('week ahead') : text('weeks ahead'))} · ${NUM(fmtWeek(h.week))}
+              <small><span class="chip ${m.chip}" style="margin-top:4px;">${m.label}</span></small></div>
+            <div class="list-row__val">${INR2(h.price_inr_kg)}<small>${NUM(`${INR2(h.low_inr_kg)} – ${INR2(h.high_inr_kg)}`)}</small></div>
+          </div>`;
+        }).join('')}
+        <p class="mm-basis">
+          ${nModel
+            ? `${text('The price model is used for')} ${NUM(`${nModel} / ${hz.length}`)} ${text('of these horizons; it beat simple rules for them in testing.')}`
+            : text('For this crop the price model did not beat simple rules in testing, so every horizon uses one.')}
+          ${text('Prices: Agmarknet, via India Data Portal.')}
+          ${fc.model_version ? `${text('Model version')} ${NUM(escHtml(fc.model_version))}.` : ''}
+        </p>`;
+
+      // One weekly axis: recorded prices up to the origin, then the horizons.
+      // Half a year of history: enough to see the recent trend without
+      // stretching the forecast into a sliver.
+      const since = addWeeks(origin, -26);
+      const rows = ((hist && hist.rows) || [])
+        .filter(r => r.week && r.week >= since && r.week <= origin && isFinite(r.price_inr_kg))
+        .sort((a, b) => a.week.localeCompare(b.week));
+      const firstWeek = rows.length ? rows[0].week : origin;
+      const lastWeek = addWeeks(origin, hz[hz.length - 1].horizon_weeks);
+      const weeks = [];
+      for (let w = firstWeek, i = 0; w <= lastWeek && i < 120; w = addWeeks(w, 1), i++) weeks.push(w);
+      const at = new Map(weeks.map((w, i) => [w, i]));
+      const blank = () => weeks.map(() => null);
+      const histData = blank(), mid = blank(), lo = blank(), hi = blank();
+      rows.forEach(r => { if (at.has(r.week)) histData[at.get(r.week)] = r.price_inr_kg; });
+      const o = at.get(origin);
+      if (o != null) { histData[o] = p0; mid[o] = lo[o] = hi[o] = p0; }
+      hz.forEach(h => {
+        const i = at.get(addWeeks(origin, h.horizon_weeks));
+        if (i != null) { mid[i] = h.price_inr_kg; lo[i] = h.low_inr_kg; hi[i] = h.high_inr_kg; }
+      });
+      const isHorizon = weeks.map((_, i) => mid[i] != null && i !== o);
+      const RANGE = t('80% range');
+      makeChart($('[data-chart="fcst-band"]'), {
         type: 'line',
         data: {
-          labels: combinedLabels,
+          labels: weeks.map(w => fmtWeek(w).replace(/ \d{4}$/, '')),
           datasets: [
-            {
-              label: 'Historical',
-              data: histPad,
-              borderColor: BRAND,
-              backgroundColor: BRAND + '20',
-              borderWidth: 2.5,
-              pointRadius: 3,
-              pointBackgroundColor: BRAND,
-              tension: 0.3,
-              fill: true,
-              spanGaps: false
-            },
-            {
-              label: 'ML forecast',
-              data: fcstPad,
-              borderColor: ACCENT,
-              backgroundColor: ACCENT + '20',
-              borderWidth: 2.5,
-              borderDash: [6, 4],
-              pointRadius: 3,
-              pointBackgroundColor: ACCENT,
-              tension: 0.3,
-              fill: true,
-              spanGaps: false
-            }
+            { label: RANGE, data: hi, borderColor: 'transparent', backgroundColor: ACCENT + '33', pointRadius: 0, spanGaps: true, fill: '+1', tension: 0.25 },
+            { label: '_low', data: lo, borderColor: 'transparent', pointRadius: 0, spanGaps: true, fill: false, tension: 0.25 },
+            { label: t('Forecast (middle estimate)'), data: mid, borderColor: ACCENT, backgroundColor: ACCENT, borderWidth: 2.5, borderDash: [6, 4],
+              pointRadius: isHorizon.map(x => (x ? 4 : 0)), spanGaps: true, fill: false, tension: 0.25 },
+            // Bridge a missing week or three, never a season with no trading.
+            { label: t('Mandi price (weekly)'), data: histData, borderColor: BRAND, backgroundColor: BRAND, borderWidth: 2.5, pointRadius: 2, spanGaps: 4, fill: false, tension: 0.25 },
           ]
         },
         options: {
           responsive: true, maintainAspectRatio: false,
           interaction: { mode: 'index', intersect: false },
           scales: {
-            y: { beginAtZero: false, grid: { color: 'rgba(29,26,21,.06)' }, ticks: { callback: v => '₹' + v } },
-            x: { grid: { display: false } }
+            y: { beginAtZero: false, ticks: { callback: v => '₹' + v } },
+            x: { grid: { display: false }, ticks: { autoSkip: true, maxTicksLimit: 8, maxRotation: 0 } }
           },
-          plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 10 } }, tooltip: { callbacks: { label: c => c.dataset.label + ': ₹' + FIX(c.parsed.y, 2) + '/kg' } } }
+          plugins: {
+            legend: { position: 'bottom', labels: { boxWidth: 12, padding: 10, filter: l => !l.text.startsWith('_') } },
+            tooltip: {
+              filter: c => c.dataset.label !== '_low' && c.parsed.y != null && !(c.dataset.label === RANGE && !isHorizon[c.dataIndex]),
+              callbacks: {
+                label: c => c.dataset.label === RANGE
+                  ? `${RANGE}: ${INR2(lo[c.dataIndex])} – ${INR2(hi[c.dataIndex])}`
+                  : `${c.dataset.label}: ${INR2(c.parsed.y)}/kg`
+              }
+            }
+          }
         }
       });
-    } catch (err) { showError(out, err); }
+    } catch (err) { if (!priceUnavailable(out, err, e.target)) showError(out, err); }
   });
 
   /* ==========================================================
@@ -2494,73 +2623,121 @@
   });
 
   /* ==========================================================
-     TOOL 6: Sell advisor
+     TOOL 6: Sell advice -- sell now or hold, net of storage and interest
+     /api/v1/districts/{id}/sell-advice holds only when the middle estimate
+     beats selling now after carrying costs; the low end of each range is
+     shown beside it so the farmer sees what holding risks.
      ========================================================== */
   $('[data-form="sell"]')?.addEventListener('submit', async e => {
     e.preventDefault();
     const out = $('[data-out="sell"]');
     showLoading(out);
+    const f = formToObj(e.target);
     try {
-      const f = formToObj(e.target);
-      const r = await api(`/api/sell-advisor/${f.region_id}/${f.crop_id}`);
-      const action = (r.action || '').toLowerCase();
-      const cls = action.includes('hold') ? 'kpi--warn' : action.includes('sell') ? 'kpi--good' : 'kpi--info';
-      const alertCls = action.includes('hold') ? 'alert--gold' : action.includes('sell') ? 'alert--green' : 'alert--gold';
-      const monthly = r.monthly_avg_prices || {};
-      const monthEntries = Object.entries(monthly).map(([m, p]) => ({ m: parseInt(m), p: parseFloat(p) })).sort((a, b) => a.m - b.m);
+      const qs = new URLSearchParams({
+        crop_id: f.crop_id,
+        quantity_kg: String(parseFloat(f.quantity_kg) || 1000),
+        storage_inr_kg_month: String(Math.max(0, parseFloat(f.storage_inr_kg_month) || 0)),
+        interest_pct_year: String(Math.max(0, parseFloat(f.interest_pct_year) || 0)),
+      });
+      const r = await api(`/api/v1/districts/${encodeURIComponent(f.region_id)}/sell-advice?${qs}`);
+      const opts = r.options || [];
+      const now = opts.find(o => o.action === 'sell_now') || opts[0];
+      if (!now) throw new HttpError(404, 'no options');
+      const holds = opts.filter(o => o.action !== 'sell_now');
+      const best = opts.find(o => o.action === r.recommendation) || now;
+      const hold = best !== now;
+      const qty = r.assumptions ? r.assumptions.quantity_kg : parseFloat(f.quantity_kg);
+      const weeksLbl = w => `${NUM(w)} ${w === 1 ? text('week') : text('weeks')}`;
+      const vsNow = n => {
+        const d = n - now.net_inr;
+        return NUM(`${d >= 0 ? '+' : '−'}${INR(Math.abs(d))}`);
+      };
+      // Of the hold options, the one whose low end is best: what a cautious
+      // farmer would compare against selling now.
+      const safest = holds.slice().sort((a, b) => b.low_net_inr - a.low_net_inr)[0];
 
       out.innerHTML = `
+        ${staleNotice(r.freshness)}
         <div class="kpi-grid">
-          <div class="kpi ${cls}"><div class="kpi__lbl">Action</div>
-            <div class="kpi__val" style="font-size:1.4rem;text-transform:uppercase;">${r.action || '—'}</div></div>
-          <div class="kpi"><div class="kpi__lbl">Current price</div>
-            <div class="kpi__val">${TT(r.current_price, INR2(r.current_price))}<span style="font-size:.5em">/kg</span></div>
-            <div class="kpi__sub">${MONTH_NAMES[r.current_month] || ''}</div></div>
-          <div class="kpi kpi--good"><div class="kpi__lbl">Best month</div>
-            <div class="kpi__val" style="font-size:1.3rem;">${MONTH_NAMES[r.best_month] || '—'}</div>
-            <div class="kpi__sub">${INR2(r.best_month_avg_price)}/kg</div></div>
-          <div class="kpi kpi--warn"><div class="kpi__lbl">Worst month</div>
-            <div class="kpi__val" style="font-size:1.3rem;">${MONTH_NAMES[r.worst_month] || '—'}</div>
-            <div class="kpi__sub">${INR2(r.worst_month_avg_price)}/kg</div></div>
-          <div class="kpi kpi--info"><div class="kpi__lbl">Gain if held</div>
-            <div class="kpi__val">${FIX(r.potential_gain_pct || 0, 1)}%</div>
-            <div class="kpi__sub">${r.months_to_peak} mo to peak</div></div>
+          <div class="kpi ${hold ? 'kpi--warn' : 'kpi--good'}"><div class="kpi__lbl">${text('Advice')}</div>
+            <div class="kpi__val" style="font-size:1.3rem;">${hold ? `${text('Hold')} ${weeksLbl(best.weeks)}` : text('Sell now')}</div>
+            <div class="kpi__sub">${NUM(qty.toLocaleString('en-IN'))} kg · ${NUM(escHtml(cropLabel(f.crop_id)))}</div></div>
+          <div class="kpi"><div class="kpi__lbl">${text('If you sell now')}</div>
+            <div class="kpi__val">${TT(now.net_inr, INR(now.net_inr))}</div>
+            <div class="kpi__sub">${NUM(INR2(now.price_inr_kg))}/kg · ${text('week of')} ${NUM(fmtWeek(r.origin_week))}</div></div>
+          ${hold ? `
+          <div class="kpi kpi--info"><div class="kpi__lbl">${text('Hold')} ${weeksLbl(best.weeks)}: ${text('middle estimate')}</div>
+            <div class="kpi__val">${TT(best.net_inr, INR(best.net_inr))}</div>
+            <div class="kpi__sub">${vsNow(best.net_inr)} ${text('vs selling now, after storage and interest')}</div></div>
+          <div class="kpi ${best.low_net_inr < now.net_inr ? 'kpi--bad' : 'kpi--good'}"><div class="kpi__lbl">${text('If prices fall')}</div>
+            <div class="kpi__val">${TT(best.low_net_inr, INR(best.low_net_inr))}</div>
+            <div class="kpi__sub">${vsNow(best.low_net_inr)} ${text('vs selling now (low end of the range)')}</div></div>`
+          : safest ? `
+          <div class="kpi"><div class="kpi__lbl">${text('Safest hold')} · ${weeksLbl(safest.weeks)}</div>
+            <div class="kpi__val">${TT(safest.net_inr, INR(safest.net_inr))}</div>
+            <div class="kpi__sub">${text('If prices fall:')} ${NUM(INR(safest.low_net_inr))} (${vsNow(safest.low_net_inr)})</div></div>` : ''}
         </div>
 
-        ${monthEntries.length ? `<div class="chart-box">
-          <div class="chart-box__title">Seasonal price pattern (12-month average)</div>
-          <canvas data-chart="sell-line"></canvas>
-        </div>` : ''}
+        <div class="alert ${hold ? 'alert--gold' : 'alert--green'}">${INFO_ICO}
+          <div class="alert__body"><strong>${hold ? `${text('Holding')} ${weeksLbl(best.weeks)} ${text('looks better on the middle estimate')}` : text('Selling now looks best')}</strong>
+            <p>${hold
+              ? `${text('After storage and interest you would expect')} ${NUM(INR(best.net_inr - now.net_inr))} ${text('more than selling now.')}
+                 ${best.low_net_inr < now.net_inr
+                   ? `${text('But if prices land at the low end of the range you would get')} ${NUM(INR(now.net_inr - best.low_net_inr))} ${text('less. Hold only if you can carry that loss.')}`
+                   : text('Even the low end of the range beats selling now.')}`
+              : text('No holding period beats today’s price on the middle estimate, once storage and interest are paid.')}</p></div>
+        </div>
 
-        <div class="alert ${alertCls}">
-          <svg class="alert__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-          <div class="alert__body"><strong>Advice</strong><p>${r.advice}</p></div>
-        </div>`;
+        <div class="chart-box">
+          <div class="chart-box__title">${text('What you would take home')} · ${NUM(qty.toLocaleString('en-IN'))} kg</div>
+          <canvas data-chart="sell-range"></canvas>
+          <p class="mm-chart-note">${text('Bar: 8 in 10 past forecasts landed in this range. Dot: middle estimate.')}</p>
+        </div>
 
-      if (monthEntries.length) {
-        makeChart($('[data-chart="sell-line"]'), {
-          type: 'line',
-          data: {
-            labels: monthEntries.map(e => MONTH_NAMES[e.m]),
-            datasets: [{
-              label: 'Avg price',
-              data: monthEntries.map(e => e.p),
-              borderColor: BRAND,
-              backgroundColor: BRAND + '25',
-              borderWidth: 2.5, tension: 0.4, fill: true,
-              pointRadius: monthEntries.map(e => e.m === r.best_month ? 6 : e.m === r.worst_month ? 6 : 3),
-              pointBackgroundColor: monthEntries.map(e => e.m === r.best_month ? BRAND : e.m === r.worst_month ? CLAY : BRAND),
-              pointBorderColor: '#fff', pointBorderWidth: 2
-            }]
+        <h4 class="mm-subhead">${text('Every option')}</h4>
+        ${opts.map(o => {
+          const isNow = o === now;
+          const m = isNow ? null : fcMethod(o.method);
+          return `<div class="list-row${o === best ? ' list-row--pick' : ''}">
+            <div class="list-row__bullet" aria-hidden="true">${NUM(o.weeks)}</div>
+            <div class="list-row__name">${isNow ? text('Sell now') : `${text('Hold')} ${weeksLbl(o.weeks)}`}
+              <small>${NUM(`${INR2(o.price_inr_kg)}/kg`)}${isNow ? '' : ` · ${text('storage + interest')} ${NUM(`${INR2(o.carry_cost_inr_kg)}/kg`)}`}</small>
+              ${m ? `<small><span class="chip ${m.chip}" style="margin-top:4px;">${m.label}</span></small>` : ''}</div>
+            <div class="list-row__val">${INR(o.net_inr)}${isNow ? '' : `<small>${text('If prices fall:')} ${NUM(INR(o.low_net_inr))}</small>`}</div>
+          </div>`;
+        }).join('')}
+        <p class="mm-basis">${text('Assumes')} ${NUM(INR2(r.assumptions ? r.assumptions.storage_inr_kg_month : f.storage_inr_kg_month))}${text('/kg a month for storage and')} ${NUM(`${FIX(r.assumptions ? r.assumptions.interest_pct_year : f.interest_pct_year, 1)}%`)} ${text('a year interest on the money you wait for.')}</p>`;
+
+      const labels = opts.map(o => (o === now ? t('Now') : `${o.weeks} ${(o.weeks === 1 ? t('wk') : t('wks'))}`));
+      makeChart($('[data-chart="sell-range"]'), {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            { type: 'line', label: t('Middle estimate'), data: opts.map(o => o.net_inr), showLine: false,
+              pointRadius: 6, pointHoverRadius: 7, pointBackgroundColor: opts.map(o => (o === best ? BRAND_D : INK)), pointBorderColor: '#fff', pointBorderWidth: 2 },
+            { label: t('80% range'), data: opts.map(o => [o.low_net_inr, o.high_net_inr === o.low_net_inr ? o.low_net_inr + 1 : o.high_net_inr]),
+              backgroundColor: opts.map(o => (o === best ? BRAND + '55' : ACCENT + '44')), borderRadius: 6, borderSkipped: false, barPercentage: 0.55 },
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          scales: {
+            y: { beginAtZero: false, ticks: { callback: v => '₹' + (Math.abs(v) >= 1e5 ? FIX(v / 1e5, 1) + 'L' : FIX(v / 1000, 0) + 'K') } },
+            x: { grid: { display: false } }
           },
-          options: {
-            responsive: true, maintainAspectRatio: false,
-            scales: { y: { grid: { color: 'rgba(29,26,21,.06)' }, ticks: { callback: v => '₹' + v } }, x: { grid: { display: false } } },
-            plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => '₹' + FIX(c.parsed.y, 2) + '/kg' } } }
+          plugins: {
+            legend: { position: 'bottom', labels: { boxWidth: 12, padding: 10, usePointStyle: true } },
+            tooltip: { callbacks: { label: c => {
+              const o = opts[c.dataIndex];
+              return c.datasetIndex === 0 ? `${c.dataset.label}: ${INR(o.net_inr)}` : `${c.dataset.label}: ${INR(o.low_net_inr)} – ${INR(o.high_net_inr)}`;
+            } } }
           }
-        });
-      }
-    } catch (err) { showError(out, err); }
+        }
+      });
+    } catch (err) { if (!priceUnavailable(out, err, e.target)) showError(out, err); }
   });
 
   /* ==========================================================

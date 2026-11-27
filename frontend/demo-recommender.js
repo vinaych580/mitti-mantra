@@ -150,9 +150,13 @@
         </li>`;
     }).join('');
 
+    // Phase 2 rows rest on the district's own yield record (district_record,
+    // yield_model); ml_model is the older model; heuristic is the formula.
+    const record = top.some((r) => r.prediction_source === 'district_record' || r.prediction_source === 'yield_model');
     const model = top.some((r) => r.prediction_source === 'ml_model');
     if (source === 'live') {
-      srcEl.innerHTML = model ? '<span>Ranked by the live model</span>' : '<span>Ranked by the rule-based engine</span>';
+      srcEl.innerHTML = record ? '<span>Ranked on this district\'s yield records</span>'
+        : model ? '<span>Ranked by the live model</span>' : '<span>Ranked by the rule-based engine</span>';
     } else {
       const d = new Date(source.at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
       srcEl.innerHTML = `<span>You're offline — saved answer from</span> ${esc(d)}`;
