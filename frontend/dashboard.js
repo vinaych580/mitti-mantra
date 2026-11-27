@@ -560,18 +560,12 @@
     window.mmScroll.intoView(el, 'center');
   }, true);
 
-  /* ---------- Sidebar: collapsible groups ----------
-     On desktop the 24-tool rail is a scannable palette. Linearised onto a
-     375px phone it became a 1,346px wall -- 37% of the document, sitting
-     above the content, with no way to reach a tool except scrolling past all
-     of them. The seven group labels already in the markup are the structure
-     to collapse onto, so below 860px each group becomes a disclosure and only
-     the active one starts open.
-
-     The buttons are wrapped here rather than in the HTML so the markup stays
-     flat and this stays one concern in one place. It must run before the tool
-     search is wired up, though the search's descendant queries keep working
-     through the wrapper either way. */
+  /* ---------- Sidebar groups ----------
+     On desktop the rail is a scannable palette. Below 860px it no longer
+     sits in the page at all: the mobile shell (Phase 4.2, below) opens one
+     section of it at a time as a bottom sheet from the tab bar. The groups
+     used to collapse into disclosures there instead, which still left the
+     whole rail above the active tool. */
   const groupEls = $$('.sidebar__group');
 
   // Real ARIA tabs, not just styled buttons: role=tablist wraps the seven
@@ -587,60 +581,7 @@
   groupEls[0]?.parentNode.insertBefore(tablist, groupEls[0]);
   groupEls.forEach(group => tablist.appendChild(group));
 
-  groupEls.forEach(group => {
-    const label = group.querySelector('.sidebar__label');
-    const groupBtns = group.querySelectorAll('.sidebar__btn');
-    if (!label || !groupBtns.length) return;
-
-    // Two elements, not one: the 0fr collapse only sizes the tracks it declares,
-    // so with the buttons as direct grid children every button past the first
-    // got an implicit auto row and the group stayed open. The inner wrapper
-    // gives the grid exactly one row to collapse.
-    const items = document.createElement('div');
-    items.className = 'sidebar__items';
-    const inner = document.createElement('div');
-    inner.className = 'sidebar__items-inner';
-    groupBtns.forEach(b => inner.appendChild(b));
-    items.appendChild(inner);
-    group.appendChild(items);
-
-    // The label is a <div>; give it real button semantics only while it acts
-    // as one, so desktop keeps its original seven non-focusable headings.
-    label.addEventListener('click', () => {
-      if (!window.matchMedia('(max-width: 860px)').matches) return;
-      const open = group.classList.toggle('is-open');
-      label.setAttribute('aria-expanded', String(open));
-    });
-    label.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); label.click(); }
-    });
-  });
-
   const sidebarMq = window.matchMedia('(max-width: 860px)');
-  function syncSidebarGroups() {
-    const mobile = sidebarMq.matches;
-    groupEls.forEach(group => {
-      const label = group.querySelector('.sidebar__label');
-      if (!label) return;
-      if (mobile) {
-        label.setAttribute('role', 'button');
-        label.setAttribute('tabindex', '0');
-        label.setAttribute('aria-expanded', String(group.classList.contains('is-open')));
-      } else {
-        label.removeAttribute('role');
-        label.removeAttribute('tabindex');
-        label.removeAttribute('aria-expanded');
-      }
-    });
-  }
-  function openActiveGroup() {
-    const active = document.querySelector('.sidebar__btn.active');
-    const group = active && active.closest('.sidebar__group');
-    if (group) group.classList.add('is-open');
-    syncSidebarGroups();
-  }
-  openActiveGroup();
-  sidebarMq.addEventListener('change', syncSidebarGroups);
 
   /* ---------- Sidebar tool switcher ---------- */
   const btns = $$('.sidebar__btn');
@@ -666,14 +607,14 @@
     t.setAttribute('aria-labelledby', `tool-tab-${tool}`);
   });
 
-  // Only buttons in a currently-reachable group: not search-filtered out,
-  // and not sitting inside a collapsed mobile group.
+  // Only buttons that are on screen: not search-filtered out, and on a
+  // phone only those in the section the sheet is showing.
   function reachableTabs() {
     return btns.filter(b => {
       if (b.hidden) return false;
       const group = b.closest('.sidebar__group');
       if (!group || group.hidden) return false;
-      if (sidebarMq.matches && !group.classList.contains('is-open')) return false;
+      if (sidebarMq.matches && !b.getClientRects().length) return false;
       return true;
     });
   }
@@ -710,10 +651,6 @@
       outgoing.addEventListener('transitionend', cleanup, { once: true });
       setTimeout(cleanup, 250); // backstop if transitionend never fires
     }
-    // Keep the open group in step when a tool is chosen programmatically
-    // (several call sites click these buttons directly).
-    groupEls.forEach(g => g.classList.toggle('is-open', g.contains(b)));
-    syncSidebarGroups();
     // The rail scrolls independently of the page (it has its own max-height
     // and overflow), so a selection made programmatically -- a deep link, an
     // "open the irrigation schedule" cross-link from inside another tool --
@@ -887,6 +824,195 @@
         const visible = $$('.sidebar__btn').filter(b => !b.hidden);
         if (visible.length === 1) visible[0].click();
       }
+    });
+  })();
+
+  /* ---------- "Tools have moved" (Phase 4.1) ----------
+     The rail used to group tools by type (Market, Field, Crop health,
+     Finance); it now follows the season (Plan, Grow, Sell, Money). Someone
+     who learned the old groups gets one short note, dismissed for good. A
+     first visit has nothing to unlearn, so the note only shows when a saved
+     Farm Profile says this browser has been here before. */
+  (function initMovedNote() {
+    const KEY = 'mm_nav_moved_v1';
+    let returning = false;
+    try {
+      if (localStorage.getItem(KEY)) return;
+      returning = !!localStorage.getItem('mm_farm_profile');
+    } catch (_) { return; }
+    const sidebar = document.querySelector('.sidebar');
+    if (!returning || !sidebar) return;
+    const note = document.createElement('div');
+    note.className = 'sidebar__moved';
+    note.setAttribute('role', 'note');
+    note.innerHTML =
+      `<p><strong>${text('Tools have moved.')}</strong> ${text('They are now grouped by the season: Plan, Grow, Sell and Money.')}</p>
+       <button type="button" class="sidebar__moved-ok">${text('Got it')}</button>`;
+    const search = sidebar.querySelector('.sidebar__search');
+    if (search) search.after(note); else sidebar.prepend(note);
+    note.querySelector('button').addEventListener('click', () => {
+      try { localStorage.setItem(KEY, '1'); } catch (_) {}
+      note.remove();
+    });
+  })();
+
+  /* ---------- Mobile shell (Phase 4.2) ----------
+     Below 860px the rail stood above the active tool, so opening any tool
+     put a list of tools on screen first. Now a bottom tab bar carries the
+     season's sections (Home, Plan, Grow, Sell, More = Money + the models)
+     and each opens its tools in a bottom sheet -- the same .sidebar and the
+     same buttons, so deep links, the palette, search and the tab semantics
+     are untouched. Desktop keeps the sidebar as it is. */
+  (function initMobileShell() {
+    const sidebar = document.getElementById('dashTools');
+    if (!sidebar) return;
+    const SVG = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+    const TABS = [
+      { id: 'home', label: 'Home', icon: '<path d="M3 11l9-8 9 8"/><path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"/>' },
+      { id: 'plan', label: 'Plan', icon: '<path d="M12 22V12"/><path d="M12 12C12 7 8 4 3 4c0 5 4 8 9 8z"/><path d="M12 14c0-4 3-7 9-7 0 5-3 7-9 7z"/>' },
+      { id: 'grow', label: 'Grow', icon: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>' },
+      { id: 'sell', label: 'Sell', icon: '<path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/>' },
+      { id: 'more', label: 'More', icon: '<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>' },
+    ];
+    // Which tab a tool's group belongs to: Money and the model page live
+    // under More.
+    const tabFor = (group) => {
+      const sec = group && group.dataset.section;
+      return (sec === 'money' || sec === 'about') ? 'more' : (sec || 'home');
+    };
+
+    const bar = document.createElement('nav');
+    bar.className = 'mm-tabbar';
+    bar.setAttribute('aria-label', 'Dashboard sections');
+    bar.innerHTML = TABS.map(t =>
+      `<button type="button" class="mm-tabbar__btn" data-tab="${t.id}"${t.id === 'home' ? '' : ' aria-haspopup="dialog" aria-expanded="false" aria-controls="dashTools"'}>
+         ${SVG(t.icon)}<span>${text(t.label)}</span>
+       </button>`).join('');
+    document.body.appendChild(bar);
+    // Tell the chat launcher (positioned in JS) to clear the bar.
+    const announceDock = () => document.dispatchEvent(new Event('mm:dock-changed'));
+    announceDock();
+
+    // The sheet's own header: one title per section, so each is a plain
+    // text node the language switcher can translate.
+    const head = document.createElement('div');
+    head.className = 'sidebar__sheethead';
+    head.innerHTML =
+      `<h2 class="sidebar__sheettitle" id="dashToolsTitle">${TABS.filter(t => t.id !== 'home').map(t => `<span data-for="${t.id}">${text(t.label)}</span>`).join('')}</h2>
+       <button type="button" class="sidebar__sheetclose" aria-label="Close">${SVG('<path d="M18 6L6 18M6 6l12 12"/>')}</button>`;
+    sidebar.prepend(head);
+
+    const backdrop = document.createElement('div');
+    backdrop.className = 'mm-sheet-backdrop';
+    backdrop.hidden = true;
+    document.body.appendChild(backdrop);
+
+    const mq = window.matchMedia('(max-width: 860px)');
+    let opener = null;
+
+    function syncCurrent() {
+      const active = sidebar.querySelector('.sidebar__btn.active');
+      const current = tabFor(active && active.closest('.sidebar__group'));
+      bar.querySelectorAll('.mm-tabbar__btn').forEach(b => {
+        const on = b.dataset.tab === current;
+        b.classList.toggle('is-current', on);
+        if (on) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current');
+      });
+    }
+
+    function focusables() {
+      return Array.from(sidebar.querySelectorAll('button, input, a[href]'))
+        .filter(el => !el.disabled && el.getClientRects().length);
+    }
+
+    function openSheet(tab, btn) {
+      if (sidebar.dataset.sheet === tab) { closeSheet(); return; }
+      sidebar.dataset.sheet = tab;
+      sidebar.classList.add('is-sheet-open');
+      sidebar.setAttribute('role', 'dialog');
+      sidebar.setAttribute('aria-modal', 'true');
+      sidebar.setAttribute('aria-labelledby', 'dashToolsTitle');
+      document.body.classList.add('mm-sheet-open');
+      backdrop.hidden = false;
+      bar.querySelectorAll('[aria-expanded]').forEach(b => b.setAttribute('aria-expanded', String(b === btn)));
+      opener = btn;
+      // Start on the tool already open in this section, else its first one.
+      const active = sidebar.querySelector('.sidebar__btn.active');
+      const target = (active && active.getClientRects().length) ? active : focusables().find(el => el.classList.contains('sidebar__btn'));
+      sidebar.scrollTop = 0;
+      if (target) target.focus({ preventScroll: true });
+    }
+
+    function closeSheet({ restoreFocus = true } = {}) {
+      if (!sidebar.classList.contains('is-sheet-open')) return;
+      delete sidebar.dataset.sheet;
+      sidebar.classList.remove('is-sheet-open');
+      sidebar.removeAttribute('role');
+      sidebar.removeAttribute('aria-modal');
+      sidebar.removeAttribute('aria-labelledby');
+      document.body.classList.remove('mm-sheet-open');
+      backdrop.hidden = true;
+      bar.querySelectorAll('[aria-expanded]').forEach(b => b.setAttribute('aria-expanded', 'false'));
+      // A search left in the box would keep every group showing next time.
+      const filter = document.getElementById('toolFilter');
+      if (filter && filter.value) { filter.value = ''; filter.dispatchEvent(new Event('input')); }
+      if (restoreFocus && opener) opener.focus({ preventScroll: true });
+      opener = null;
+    }
+
+    bar.addEventListener('click', (e) => {
+      const b = e.target.closest('.mm-tabbar__btn');
+      if (!b) return;
+      if (b.dataset.tab === 'home') {
+        closeSheet({ restoreFocus: false });
+        document.querySelector('.sidebar__btn[data-tool="home"]')?.click();
+        return;
+      }
+      openSheet(b.dataset.tab, b);
+    });
+    head.querySelector('.sidebar__sheetclose').addEventListener('click', () => closeSheet());
+    backdrop.addEventListener('click', () => closeSheet());
+
+    // Choosing a tool closes the sheet first (capture phase), so the
+    // switch's own scroll-to-tool runs on an unlocked page, and focus goes
+    // to the tool's heading rather than a button that just disappeared.
+    sidebar.addEventListener('click', (e) => {
+      const b = e.target.closest('.sidebar__btn');
+      if (!b || !sidebar.classList.contains('is-sheet-open')) return;
+      closeSheet({ restoreFocus: false });
+      requestAnimationFrame(() => {
+        const heading = document.querySelector(`.tool[data-tool="${b.dataset.tool}"] h2, .tool[data-tool="${b.dataset.tool}"] h3`);
+        if (heading) { heading.tabIndex = -1; heading.focus({ preventScroll: true }); }
+      });
+    }, true);
+
+    // Esc closes; Tab stays inside the open sheet.
+    document.addEventListener('keydown', (e) => {
+      if (!sidebar.classList.contains('is-sheet-open')) return;
+      if (e.key === 'Escape') { e.preventDefault(); closeSheet(); return; }
+      if (e.key !== 'Tab') return;
+      const list = focusables();
+      if (!list.length) return;
+      const first = list[0], last = list[list.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      else if (!sidebar.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+    });
+
+    // The sheet is a phone-only state: widening the window puts the rail
+    // back in the page.
+    mq.addEventListener('change', () => { if (!mq.matches) closeSheet({ restoreFocus: false }); announceDock(); });
+
+    // Keep the current tab in step with whichever tool is active, however
+    // it was chosen (deep link, palette, chatbot, cross-link).
+    new MutationObserver(syncCurrent).observe(sidebar, { subtree: true, attributes: true, attributeFilter: ['class'] });
+    syncCurrent();
+
+    // Farm bar: on a phone the summary is one line; tapping it edits.
+    document.addEventListener('click', (e) => {
+      const t = e.target.closest && e.target.closest('.mm-farm-bar__text');
+      if (!t || !mq.matches) return;
+      t.closest('.mm-farm-bar')?.querySelector('.mm-farm-bar__edit')?.click();
     });
   })();
 
