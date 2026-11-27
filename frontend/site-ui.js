@@ -499,6 +499,15 @@
   };
   window.addEventListener('pageswap', quietTransition);
   window.addEventListener('pagereveal', quietTransition);
+  // pagereveal can fire before this deferred script runs, so the incoming
+  // page's transition promise is sometimes rejected with no handler attached
+  // yet ("Transition was aborted ... Page already revealed"). Swallow only
+  // that rejection; every other unhandled rejection still reports.
+  window.addEventListener('unhandledrejection', (e) => {
+    const r = e.reason;
+    if (r && (r.name === 'InvalidStateError' || r.name === 'AbortError') &&
+        /transition/i.test(String(r.message || ''))) e.preventDefault();
+  });
 
   /* ---------- Subtle parallax on hero image ---------- */
   const heroBgImg = document.querySelector('.hero__bg img');

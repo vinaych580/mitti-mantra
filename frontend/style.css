@@ -1730,8 +1730,10 @@ section {
   }
 
   /* Five compact cards would otherwise leave a half-empty row —
-     the last one stretches to close it. */
-  .feature:nth-last-of-type(2) {
+     the odd one out (Loans, just before the wide Marketplace card)
+     stretches to close it. A class, not :nth-last-of-type: the count
+     changed once already and left the gap open. */
+  .feature--fill-tablet {
     grid-column: span 4;
   }
 }
@@ -1746,7 +1748,7 @@ section {
   .feature,
   .feature--hero,
   .feature--cta,
-  .feature:nth-last-of-type(2) {
+  .feature--fill-tablet {
     grid-column: 1 / -1;
   }
 
@@ -3098,6 +3100,14 @@ body.mm-menu-open .qw-panel {
   flex-shrink: 0;
 }
 
+/* A one-line caveat under a tool's headline figures. */
+.tool-note {
+  margin: 12px 0 0;
+  font-size: .85rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
 .kpi-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -3713,7 +3723,10 @@ body.mm-menu-open .qw-panel {
 
 @media (max-width: 640px) {
   .chart-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr); /* same reason: a 1fr track grew to the canvas and widened a 375px page */
+  }
+  .chart-box canvas {
+    max-width: 100%;
   }
 }
 
@@ -7505,13 +7518,15 @@ body {
      on it; both hide while a sheet is open so they never cover a tool. */
   /* The chat launcher places itself in JS (it can be dragged) and keeps
      above the bar there; see dock() in chatbot.js. */
-  body .qw-fab {
+  /* Only where the tab bar exists (the dashboard): on every other page
+     these lifted the language button into the chat button's spot. */
+  body:has(.mm-tabbar) .qw-fab {
     bottom: calc(var(--mm-tabbar-h) + 12px);
   }
-  body .qw-panel {
+  body:has(.mm-tabbar) .qw-panel {
     bottom: calc(var(--mm-tabbar-h) + 66px);
   }
-  body .mm-toast {
+  body:has(.mm-tabbar) .mm-toast {
     bottom: calc(var(--mm-tabbar-h) + 16px);
   }
   body.mm-sheet-open .mm-chat-fab,

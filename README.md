@@ -1,5 +1,7 @@
 <div align="center">
 
+> **New here? Read [HANDOFF.md](HANDOFF.md) first** — what is done, what is in flight, what is left.
+
 # 🌾 Mitti Mantra · AgriSim
 
 **Farm-planning tools for Indian agriculture.**
