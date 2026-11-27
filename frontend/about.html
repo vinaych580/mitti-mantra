@@ -152,12 +152,12 @@
           <h2 class="ab-h2" id="problemTitle" data-i18n>The problem</h2>
           <p class="ab-intro" data-i18n>Small and medium farmers in India decide what to sow with scattered information about soil, weather, input costs and mandi prices. The result is avoidable yield loss, unstable profit and more financial risk.</p>
         </div>
-        <aside class="ab-persona" aria-labelledby="personaTitle">
+        <div class="ab-persona">
           <h3 class="ab-h3" id="personaTitle" data-i18n>Who it is designed for</h3>
           <p data-i18n>Ramesh is a composite persona, not a real user: 38, three semi-irrigated acres in Telangana, choosing between cotton, soybean and maize, more at home in Telugu and Hindi than in English.</p>
           <p data-i18n>He wants the best profit per acre, to avoid a failed crop in a bad-rain year, and a risk figure he can understand.</p>
           <p data-i18n>Farm advisors, who serve many farmers and compare scenarios side by side, matter just as much.</p>
-        </aside>
+        </div>
       </div>
     </section>
 
@@ -187,7 +187,7 @@
         <h2 class="ab-h2" id="builtTitle" data-i18n>How it is built</h2>
         <p class="ab-intro" data-i18n>One repository and no build step. Vercel serves the pages as static files and runs the API as one Python function.</p>
         <figure class="ab-fig">
-          <div class="ab-fig__scroll">
+          <div class="ab-fig__scroll" tabindex="0" role="region" aria-labelledby="archCaption">
             <svg class="ab-arch" viewBox="0 0 820 470" role="img" aria-labelledby="archCaption" data-no-translate focusable="false">
               <defs>
                 <marker id="abArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
@@ -259,9 +259,10 @@
               <path d="M499 198 V218" class="ab-arch__flow" marker-end="url(#abArrow)"/>
               <path d="M343 298 V318" class="ab-arch__flow" marker-end="url(#abArrow)"/>
               <path d="M499 298 V318" class="ab-arch__flow" marker-end="url(#abArrow)"/>
-              <path d="M570 163 C600 163 600 196 636 196" class="ab-arch__flow" marker-end="url(#abArrow)"/>
-              <path d="M570 170 C604 170 604 262 636 262" class="ab-arch__flow" marker-end="url(#abArrow)"/>
-              <path d="M570 177 C608 177 608 331 636 331" class="ab-arch__flow" marker-end="url(#abArrow)"/>
+              <path d="M570 146 C604 146 600 196 636 196" class="ab-arch__flow" marker-end="url(#abArrow)"/>
+              <path d="M570 163 C606 163 602 262 636 262" class="ab-arch__flow" marker-end="url(#abArrow)"/>
+              <path d="M570 180 C608 180 604 331 636 331" class="ab-arch__flow" marker-end="url(#abArrow)"/>
+              <path d="M421 390 V374" class="ab-arch__flow ab-arch__flow--dash" marker-end="url(#abArrow)"/>
               <path d="M115 40 C115 6 715 6 715 168" class="ab-arch__flow ab-arch__flow--dash" marker-end="url(#abArrow)"/>
               <text x="600" y="22" class="ab-arch__lbl">farm boundary page</text>
             </svg>

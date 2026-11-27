@@ -17,7 +17,9 @@
   const PROFILE_KEY = 'mm_farm_profile';
   const SAVED_KEY = 'mm_about_saved_profile';   // what the visitor had before
   const NONE = '__none__';                        // there was no profile at all
-  const DEMO = { region_id: 'telangana_medak', season: 'kharif', area_acres: 3, budget_per_acre: 25000 };
+  // crop_id too: a crop left over from the visitor's own farm (wheat for a
+  // rabi plan, say) would otherwise ride along into a kharif demo.
+  const DEMO = { region_id: 'telangana_medak', season: 'kharif', area_acres: 3, budget_per_acre: 25000, crop_id: 'soybean' };
 
   const $ = (id) => document.getElementById(id);
   const use = $('demoUse');

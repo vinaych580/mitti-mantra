@@ -16,7 +16,7 @@
 
 /* style.css gives every <section> 72–140 px of padding; this page has six
    in a row, so each one gets a calmer rhythm. */
-.ab .ab-section { padding: clamp(40px, 6vw, 72px) 0; }
+.ab .ab-section { padding: clamp(40px, 6vw, 72px) 0; scroll-margin-top: var(--nav-h); }
 .ab .ab-section + .ab-section { border-top: 1px solid var(--border-strong); }
 
 /* ---------- Hero ---------- */
