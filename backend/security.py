@@ -88,3 +88,80 @@ class SecurityHeaders(BaseHTTPMiddleware):
         for name, value in headers_for("/" if path.startswith(DOCS_PATHS) else path).items():
             response.headers.setdefault(name, value)
         return response
+
+
+# ---- Request body size (3.4) ------------------------------------------------------
+# Vercel already refuses bodies over 4.5 MB, but a function still reads, parses and
+# validates whatever fits under that. Every JSON route here takes a few kilobytes,
+# so the default is small; the two upload routes keep the room their models allow.
+DEFAULT_MAX_BODY = 256 * 1024
+MAX_BODY_BY_PATH = {
+    "/api/disease/predict": 11 * 1024 * 1024,  # image_b64 up to 10,000,000 characters
+    "/api/sensors/upload": 5 * 1024 * 1024,    # CSV content up to 2,000,000 characters
+}
+_BODY_METHODS = {"POST", "PUT", "PATCH", "DELETE"}
+
+
+def max_body_for(path: str) -> int:
+    return MAX_BODY_BY_PATH.get(path.rstrip("/") or "/", DEFAULT_MAX_BODY)
+
+
+class BodySizeLimit:
+    """Pure ASGI middleware: 413 for a body over the route's limit. Checks
+    Content-Length first; a body without one (chunked) is read up to the limit and
+    then replayed to the app, so nothing larger is ever held in memory."""
+
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        if scope.get("type") != "http" or scope.get("method") not in _BODY_METHODS:
+            await self.app(scope, receive, send)
+            return
+        limit = max_body_for(scope.get("path") or "/")
+        headers = dict(scope.get("headers") or [])
+        length = headers.get(b"content-length")
+        if length is not None:
+            try:
+                too_big = int(length) > limit
+            except ValueError:
+                too_big = True
+            if too_big:
+                await _too_large(send, limit)
+                return
+            await self.app(scope, receive, send)
+            return
+
+        chunks, size = [], 0
+        while True:
+            message = await receive()
+            if message["type"] != "http.request":
+                break
+            chunk = message.get("body", b"")
+            size += len(chunk)
+            if size > limit:
+                await _too_large(send, limit)
+                return
+            chunks.append(chunk)
+            if not message.get("more_body", False):
+                break
+        body, replayed = b"".join(chunks), False
+
+        async def replay():
+            nonlocal replayed
+            if not replayed:
+                replayed = True
+                return {"type": "http.request", "body": body, "more_body": False}
+            return await receive()
+
+        await self.app(scope, replay, send)
+
+
+async def _too_large(send, limit: int) -> None:
+    import json
+
+    payload = json.dumps({"detail": f"Request body too large (limit {limit:,} bytes)"}).encode()
+    await send({"type": "http.response.start", "status": 413,
+                "headers": [(b"content-type", b"application/json"),
+                            (b"content-length", str(len(payload)).encode())]})
+    await send({"type": "http.response.body", "body": payload})

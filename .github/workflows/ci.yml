@@ -69,3 +69,31 @@ jobs:
       - name: Full suite
         if: github.event_name == 'pull_request'
         run: pytest -q tests --durations=15 -p no:cacheprovider
+
+  # Phase 3.4: known vulnerabilities in the production dependencies. Report-only
+  # for now: findings go to the job summary and a warning annotation, and the job
+  # stays green until the existing pins have been reviewed (scikit-learn and numpy
+  # are pinned to what the released models were pickled with). Make it blocking by
+  # changing the final `exit 0` to `exit "$status"`.
+  pip-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pip-audit
+        run: pip install pip-audit
+      - name: Audit requirements.txt
+        run: |
+          status=0
+          pip-audit -r requirements.txt --progress-spinner off --desc on -f markdown > audit.md || status=$?
+          {
+            echo "## pip-audit (requirements.txt)"
+            if [ -s audit.md ]; then cat audit.md; else echo "No known vulnerabilities found."; fi
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$status" -ne 0 ]; then
+            echo "::warning title=pip-audit::pip-audit exited $status; see the job summary for the findings."
+          fi
+          exit 0

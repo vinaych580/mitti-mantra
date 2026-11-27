@@ -1,12 +1,20 @@
 from datetime import date
 from pydantic import BaseModel, Field, field_validator
-from typing import Dict, Any, List, Optional
+from typing import Annotated, Dict, Any, List, Optional
 
 # Upper bounds shared by every request model (defect N-8: 1e9 acres at
 # Rs 1e12/acre used to return 200 with a profit of -1e21). Same limits as
 # backend/season_routes.py.
 MAX_AREA_ACRES = 100_000
 MAX_BUDGET_PER_ACRE = 10_000_000
+
+
+# Size bounds on free-form fields (Phase 3.4). Ids are short slugs ("mp_sehore",
+# "kharif"); soil and weather dicts carry a few dozen numbers. Generous, so no real
+# client is refused, but an oversized payload is a 422 before any engine runs.
+Id = Annotated[str, Field(max_length=100)]
+DateText = Annotated[str, Field(max_length=32)]
+MAX_DICT_KEYS = 100
 
 
 def _check_area(v: float) -> float:
@@ -38,16 +46,16 @@ def parse_sowing_date(v: Optional[str]) -> Optional[str]:
     except ValueError as exc:
         raise ValueError("sowing_date must be a real date in YYYY-MM-DD format") from exc
 class SimulationRequest(BaseModel):
-    crop_id: str
+    crop_id: Id
     area_acres: float
-    region_id: str
+    region_id: Id
     mandi_price_per_kg: float
     irrigation_level: Optional[float] = 0.5
-    seed_variety: Optional[str] = "standard"
-    sowing_date: Optional[str] = "2024-06-15"
-    soil: Dict[str, Any]
-    weather: Dict[str, Any]
-    input_plan: Optional[Dict[str, float]] = Field(default_factory=dict)
+    seed_variety: Optional[Id] = "standard"
+    sowing_date: Optional[DateText] = "2024-06-15"
+    soil: Dict[str, Any] = Field(..., max_length=MAX_DICT_KEYS)
+    weather: Dict[str, Any] = Field(..., max_length=MAX_DICT_KEYS)
+    input_plan: Optional[Dict[str, float]] = Field(default_factory=dict, max_length=MAX_DICT_KEYS)
 
     @field_validator("area_acres")
     @classmethod
@@ -74,8 +82,8 @@ class SimulationRequest(BaseModel):
         return v
 
 class RecommendationRequest(BaseModel):
-    region_id: str
-    season: str
+    region_id: Id
+    season: Id
     budget_per_acre: float
     area_acres: float
 
@@ -85,11 +93,11 @@ class RecommendationRequest(BaseModel):
         return _check_area_or_budget(v, info.field_name)
 
 class CommitmentRequest(BaseModel):
-    region_id: str
-    crop_id: str
-    season: str
+    region_id: Id
+    crop_id: Id
+    season: Id
     area_acres: float
-    device_id: str
+    device_id: Id
 
     @field_validator("area_acres")
     @classmethod
@@ -101,7 +109,7 @@ class CommitmentRequest(BaseModel):
         return v
 
 class CompareRequest(BaseModel):
-    strategies: List[SimulationRequest]
+    strategies: List[SimulationRequest] = Field(..., max_length=20)
 
     @field_validator("strategies")
     @classmethod
@@ -111,7 +119,7 @@ class CompareRequest(BaseModel):
         return v
 
 class RotationRequest(BaseModel):
-    region_id: str
+    region_id: Id
     budget_per_acre: float
     area_acres: float
 
@@ -121,15 +129,15 @@ class RotationRequest(BaseModel):
         return _check_area_or_budget(v, info.field_name)
 
 class BatchSimRequest(BaseModel):
-    crop_ids: List[str]
+    crop_ids: List[Id] = Field(..., max_length=100)
     area_acres: float
-    region_id: str
+    region_id: Id
     budget_per_acre: float
     irrigation_level: Optional[float] = 0.5
-    seed_variety: Optional[str] = "standard"
-    sowing_date: Optional[str] = "2024-06-15"
-    soil: Dict[str, Any]
-    weather: Dict[str, Any]
+    seed_variety: Optional[Id] = "standard"
+    sowing_date: Optional[DateText] = "2024-06-15"
+    soil: Dict[str, Any] = Field(..., max_length=MAX_DICT_KEYS)
+    weather: Dict[str, Any] = Field(..., max_length=MAX_DICT_KEYS)
 
     @field_validator("crop_ids")
     @classmethod
@@ -150,14 +158,14 @@ class BatchSimRequest(BaseModel):
 
 
 class CropMixRequest(BaseModel):
-    region_id: str
-    season: str
+    region_id: Id
+    season: Id
     total_area_acres: float
     total_budget: float
     # Accepted for backward compatibility with older clients; the allocation
     # reads the region's own soil/weather through recommend_crops().
-    soil: Optional[Dict[str, Any]] = None
-    weather: Optional[Dict[str, Any]] = None
+    soil: Optional[Dict[str, Any]] = Field(None, max_length=MAX_DICT_KEYS)
+    weather: Optional[Dict[str, Any]] = Field(None, max_length=MAX_DICT_KEYS)
 
     @field_validator("total_area_acres", "total_budget")
     @classmethod
@@ -179,15 +187,17 @@ class LoanRequest(BaseModel):
 
 class DiseasePredictQuery(BaseModel):
     image_b64: str = Field(..., max_length=10_000_000, description="Base64 encoded crop leaf image (JPEG or PNG, max 10MB)")
-    crop_id: Optional[str] = Field(None, description="Crop identifier, e.g., 'tomato'")
-    region_id: Optional[str] = Field(None, description="Region identifier, e.g., 'up_lucknow'")
+    crop_id: Optional[str] = Field(None, max_length=100, description="Crop identifier, e.g., 'tomato'")
+    region_id: Optional[str] = Field(None, max_length=100, description="Region identifier, e.g., 'up_lucknow'")
     area_acres: Optional[float] = Field(1.0, gt=0, le=100_000, description="Affected plot area, used to scale treatment quantity and cost")
 
 
 class SoilProjectionRequest(BaseModel):
-    current_soil: Dict[str, Any]
-    rotation: List[Dict[str, str]]
-    years: Optional[int] = 5
+    current_soil: Dict[str, Any] = Field(..., max_length=MAX_DICT_KEYS)
+    rotation: List[Annotated[Dict[str, Id], Field(max_length=10)]] = Field(..., max_length=20)
+    # The projection loops years x rotation steps; an unbounded years kept a
+    # function busy until its timeout.
+    years: Optional[int] = Field(5, ge=1, le=50)
     apply_fertilizer: Optional[bool] = True
 
 class ExpenseLogRequest(BaseModel):
@@ -198,8 +208,8 @@ class ExpenseLogRequest(BaseModel):
     note: Optional[str] = Field("", max_length=1_000)
 
 class BenchmarkRequest(BaseModel):
-    region_id: str
-    crop_id: str
+    region_id: Id
+    crop_id: Id
     user_yield_kg_per_acre: float
     user_profit_per_acre: float
 
@@ -207,28 +217,28 @@ class BenchmarkRequest(BaseModel):
 class NDVIQuery(BaseModel):
     lat: float = Field(ge=-90, le=90)
     lon: float = Field(ge=-180, le=180)
-    crop_id: Optional[str] = "wheat"
+    crop_id: Optional[Id] = "wheat"
     area_acres: Optional[float] = Field(4.0, gt=0, le=100_000)
 
 class FarmScoreQuery(BaseModel):
-    region_id: str
-    season: str
+    region_id: Id
+    season: Id
     budget_per_acre: float = Field(gt=0, le=MAX_BUDGET_PER_ACRE)
     area_acres: float = Field(gt=0, le=MAX_AREA_ACRES)
-    crop_id: Optional[str] = None
+    crop_id: Optional[Id] = None
     lat: Optional[float] = Field(None, ge=-90, le=90)
     lon: Optional[float] = Field(None, ge=-180, le=180)
 
 
 class ClimateAlertQuery(BaseModel):
-    crop_id: str = "wheat"
-    region_id: Optional[str] = "mp_sehore"
-    weather: Optional[Dict[str, float]] = None
+    crop_id: Id = "wheat"
+    region_id: Optional[Id] = "mp_sehore"
+    weather: Optional[Dict[str, float]] = Field(None, max_length=MAX_DICT_KEYS)
 
 class CarbonCreditQuery(BaseModel):
-    crop_id: str = "wheat"
+    crop_id: Id = "wheat"
     area_acres: float = Field(4.0, gt=0, le=100_000)
-    tillage_practice: Optional[str] = "no_till"  # 'conventional', 'reduced_till', 'no_till'
+    tillage_practice: Optional[Id] = "no_till"  # 'conventional', 'reduced_till', 'no_till'
     cover_crop: Optional[bool] = True
     biochar_application: Optional[bool] = False
 
@@ -258,26 +268,26 @@ class IoTTriggerRequest(BaseModel):
 
 
 class CropRecQuery(BaseModel):
-    region_id: str
-    season: str
+    region_id: Id
+    season: Id
     budget_per_acre: float = Field(..., gt=0, le=MAX_BUDGET_PER_ACRE, description="Financial budget constraint per acre in INR")
     area_acres: float = Field(..., gt=0, le=MAX_AREA_ACRES, description="Total farm area size in acres")
 
 class YieldPredQuery(BaseModel):
-    crop_id: str
-    region_id: str
-    season: str
+    crop_id: Id
+    region_id: Id
+    season: Id
     irrigation_level: Optional[float] = Field(0.5, ge=0.0, le=1.0, description="Irrigation level multiplier (0.0 to 1.0)")
 
 class ProfitEstRequest(BaseModel):
-    crop_id: str
+    crop_id: Id
     predicted_yield_kg_per_acre: float = Field(..., ge=0, description="Predicted yield volume in kg per acre")
     area_acres: float = Field(..., gt=0, le=MAX_AREA_ACRES, description="Total farm area size in acres")
     budget_per_acre: float = Field(..., gt=0, le=MAX_BUDGET_PER_ACRE, description="Allocated budget limit per acre in INR")
     mandi_price_per_kg: Optional[float] = Field(None, ge=0, description="Current market price per kg in INR")
 
 class IrrigationQuery(BaseModel):
-    crop_id: str
+    crop_id: Id
     # Query-parameter model (used with Depends()), so the format check is a
     # Field pattern FastAPI turns into a 422; the route checks it is a real date.
     sowing_date: Optional[str] = Field(None, pattern=r"^\d{4}-\d{2}-\d{2}$", description="Sowing date in YYYY-MM-DD format; defaults to the crop's calendar sowing date for the current or next season")
@@ -285,7 +295,7 @@ class IrrigationQuery(BaseModel):
     irrigation_level: Optional[float] = Field(0.5, ge=0.0, le=1.0, description="Irrigation level multiplier (0.0 to 1.0)")
 
 class FertilizerQuery(BaseModel):
-    crop_id: str
+    crop_id: Id
     n_kg_per_acre: float = Field(..., ge=0, description="Current soil Nitrogen content in kg per acre")
     p_kg_per_acre: float = Field(..., ge=0, description="Current soil Phosphorus content in kg per acre")
     k_kg_per_acre: float = Field(..., ge=0, description="Current soil Potassium content in kg per acre")

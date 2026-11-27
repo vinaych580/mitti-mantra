@@ -166,7 +166,10 @@ app.add_middleware(StaticCacheHeaders)
 
 # Phase 3.4: security headers on every response (backend/security.py). Added last,
 # so it is the outermost layer and also covers responses other middleware builds.
-from backend.security import SecurityHeaders
+# Phase 3.4: refuse oversized request bodies before any route parses them. Inside
+# SecurityHeaders, so a 413 still carries the security headers.
+from backend.security import BodySizeLimit, SecurityHeaders
+app.add_middleware(BodySizeLimit)
 app.add_middleware(SecurityHeaders)
 
 from backend.models import (
@@ -2021,8 +2024,8 @@ def get_market_pricing_api(region_id: str, crop_id: str):
 # Chatbot
 # ---------------------------------------------------------------------------
 class ChatRequest(BaseModel):
-    message: str
-    context: Optional[Dict[str, Any]] = None
+    message: str = Field(..., max_length=2_000)
+    context: Optional[Dict[str, Any]] = Field(None, max_length=50)
 
 
 @app.post("/api/chat")
