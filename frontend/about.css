@@ -84,9 +84,9 @@
 .ab-status {
   margin-top: 28px;
   padding: 14px 18px;
-  border-left: 3px solid var(--accent);
+  border: 1px solid var(--accent);
   background: var(--accent-soft);
-  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  border-radius: var(--r-sm);
   color: var(--ink);
   font-size: var(--fs-xs);
   line-height: 1.6;
@@ -195,7 +195,6 @@ html[data-theme="dark"] .ab-step__n { color: #9ed2a7; }
   padding: 20px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-top: 3px solid var(--brand);
   border-radius: var(--r-md);
 }
 .ab-card p { font-size: var(--fs-xs); line-height: 1.6; }
