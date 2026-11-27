@@ -7085,72 +7085,363 @@ body {
   }
 }
 
-/* --- Sidebar groups as disclosures on touch ---------------------------------
-   Desktop keeps the flat 24-tool palette: it is scannable at a glance and the
-   whole point of a persistent rail. Below 860px that same markup ran 1,346px
-   tall -- 37% of the dashboard document -- and sat above the content, so
-   reaching any tool meant scrolling past every tool. Collapsing onto the seven
-   labels already in the markup takes it to roughly 350px.
+/* --- Mobile shell (Phase 4.2) ---------------------------------------------
+   Below 860px the rail used to sit in the page above the active tool (first
+   as a 1,346px wall, then as seven disclosures). Now it leaves the page: a
+   bottom tab bar (Home, Plan, Grow, Sell, More) opens one section of it at a
+   time as a bottom sheet, so the active tool is the first thing under the
+   farm bar. The tab bar and sheet are built by dashboard.js; desktop never
+   sees either. */
+.mm-tabbar,
+.mm-sheet-backdrop,
+.sidebar__sheethead {
+  display: none;
+}
 
-   minmax(0, …) rather than a bare 0fr: an fr track still takes auto as its
-   minimum, which the button padding would hold open. */
 @media (max-width: 860px) {
-  .sidebar__label {
+  :root {
+    --mm-tabbar-h: calc(60px + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* Room under the last card for the bar and the two floating buttons. */
+  .dashx {
+    padding-bottom: calc(var(--mm-tabbar-h) + 88px);
+  }
+
+  .mm-tabbar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9990;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    height: var(--mm-tabbar-h);
+    padding: 0 4px env(safe-area-inset-bottom, 0px);
+    background: var(--surface);
+    border-top: 1px solid var(--border-strong, rgba(29, 26, 21, .1));
+    box-shadow: 0 -6px 20px rgba(29, 26, 21, .06);
+  }
+  .mm-tabbar__btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    min-height: 44px;
+    margin: 4px 2px;
+    padding: 4px 2px;
+    border: none;
+    border-radius: var(--r-md, 14px);
+    background: none;
+    color: var(--ink-soft);
+    font: inherit;
+    font-size: .74rem;
+    font-weight: 600;
+    line-height: 1.15;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .mm-tabbar__btn svg {
+    width: 22px;
+    height: 22px;
+    flex: none;
+  }
+  .mm-tabbar__btn span {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .mm-tabbar__btn.is-current {
+    color: var(--brand-deep);
+    background: var(--brand-soft);
+  }
+  .mm-tabbar__btn[aria-expanded="true"] {
+    color: var(--brand-deep);
+    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--brand) 45%, transparent);
+  }
+  .mm-tabbar__btn:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 1px;
+  }
+
+  /* The rail itself is off the page until a tab opens it. */
+  .sidebar {
+    display: none;
+  }
+  .sidebar.is-sheet-open {
+    display: block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: auto;
+    bottom: var(--mm-tabbar-h);
+    z-index: 9989;
+    max-height: calc(100dvh - var(--mm-tabbar-h) - 64px);
+    max-height: calc(100vh - var(--mm-tabbar-h) - 64px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    margin: 0;
+    padding: 0 16px 16px;
+    border-radius: 22px 22px 0 0;
+    border: none;
+    box-shadow: 0 -18px 50px rgba(29, 26, 21, .22);
+    background: var(--surface);
+    animation: mmSheetIn .24s var(--ease, ease) both;
+  }
+  @supports (height: 100dvh) {
+    .sidebar.is-sheet-open {
+      max-height: calc(100dvh - var(--mm-tabbar-h) - 64px);
+    }
+  }
+  @keyframes mmSheetIn {
+    from { transform: translateY(24px); opacity: 0; }
+    to { transform: none; opacity: 1; }
+  }
+  .mm-sheet-backdrop:not([hidden]) {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 9988;
+    background: rgba(20, 17, 16, .42);
+  }
+  body.mm-sheet-open {
+    overflow: hidden;
+  }
+
+  .sidebar.is-sheet-open .sidebar__sheethead {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
-    width: 100%;
-    min-height: 44px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    margin: 0 -16px 8px;
+    padding: 14px 8px 10px 20px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border-strong, rgba(29, 26, 21, .1));
+  }
+  .sidebar__sheettitle {
     margin: 0;
-    cursor: pointer;
-    user-select: none;
-    border-bottom: 1px solid var(--border-strong);
+    font-family: var(--font-display, Fraunces, Georgia, serif);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--ink);
   }
-
-  .sidebar__label::after {
-    content: '';
-    width: 8px;
-    height: 8px;
-    flex: 0 0 auto;
-    border-right: 2px solid currentColor;
-    border-bottom: 2px solid currentColor;
-    transform: rotate(45deg) translate(-2px, -2px);
-    transition: transform 0.25s var(--ease);
-    opacity: 0.55;
+  .sidebar__sheettitle > span {
+    display: none;
   }
-
-  .sidebar__group.is-open > .sidebar__label::after {
-    transform: rotate(-135deg) translate(-2px, -2px);
+  .sidebar[data-sheet="plan"] .sidebar__sheettitle > [data-for="plan"],
+  .sidebar[data-sheet="grow"] .sidebar__sheettitle > [data-for="grow"],
+  .sidebar[data-sheet="sell"] .sidebar__sheettitle > [data-for="sell"],
+  .sidebar[data-sheet="more"] .sidebar__sheettitle > [data-for="more"] {
+    display: inline;
   }
-
-  .sidebar__label:focus-visible {
-    outline: 2px solid var(--brand);
-    outline-offset: 2px;
-  }
-
-  .sidebar__items {
+  .sidebar__sheetclose {
     display: grid;
-    grid-template-rows: minmax(0, 0fr);
-    overflow: hidden;
-    transition: grid-template-rows 0.28s var(--ease);
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 50%;
+    background: none;
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .sidebar__sheetclose svg {
+    width: 20px;
+    height: 20px;
+  }
+  .sidebar__sheetclose:focus-visible {
+    outline: 2px solid var(--brand);
   }
 
-  .sidebar__group.is-open > .sidebar__items,
-  .sidebar.is-searching .sidebar__items {
-    grid-template-rows: minmax(0, 1fr);
+  /* One section per sheet (More = Money + the models). A search shows
+     every match whatever the section. Home has its own tab, and the
+     "tools have moved" note is for the desktop rail. */
+  .sidebar.is-sheet-open .sidebar__group,
+  .sidebar.is-sheet-open .sidebar__moved,
+  .sidebar.is-sheet-open .sidebar__guide {
+    display: none;
   }
-
-  /* Exactly one grid child, so there is exactly one track to collapse; the
-     buttons keep their original block layout inside it. */
-  .sidebar__items-inner {
-    min-height: 0;
+  .sidebar[data-sheet="plan"] .sidebar__group[data-section="plan"],
+  .sidebar[data-sheet="grow"] .sidebar__group[data-section="grow"],
+  .sidebar[data-sheet="sell"] .sidebar__group[data-section="sell"],
+  .sidebar[data-sheet="more"] .sidebar__group[data-section="money"],
+  .sidebar[data-sheet="more"] .sidebar__group[data-section="about"],
+  .sidebar.is-sheet-open.is-searching .sidebar__group:not([hidden]) {
+    display: block;
+  }
+  .sidebar[data-sheet="plan"]:not(.is-searching) .sidebar__guide {
+    display: block;
+    margin: 4px 4px 12px;
+  }
+  .sidebar.is-sheet-open .sidebar__search {
+    margin-bottom: 10px;
+  }
+  .sidebar.is-sheet-open .sidebar__group {
+    margin-bottom: 14px;
+  }
+  .sidebar.is-sheet-open .sidebar__label {
+    margin: 6px 0 6px;
+    padding: 0 10px;
   }
 
   /* The rail's own buttons were 40px; four short of a comfortable thumb. */
   .sidebar__btn {
     min-height: 44px;
   }
+
+  /* The active tool first: the region telemetry block moves below it. */
+  .toolbox {
+    display: flex;
+    flex-direction: column;
+  }
+  #regionalTelemetry {
+    order: 1;
+    margin-top: 24px;
+  }
+
+  /* Chat and the language/settings button sit above the tab bar instead of
+     on it; both hide while a sheet is open so they never cover a tool. */
+  /* The chat launcher places itself in JS (it can be dragged) and keeps
+     above the bar there; see dock() in chatbot.js. */
+  body .qw-fab {
+    bottom: calc(var(--mm-tabbar-h) + 12px);
+  }
+  body .qw-panel {
+    bottom: calc(var(--mm-tabbar-h) + 66px);
+  }
+  body .mm-toast {
+    bottom: calc(var(--mm-tabbar-h) + 16px);
+  }
+  body.mm-sheet-open .mm-chat-fab,
+  body.mm-sheet-open .qw-fab,
+  body.mm-sheet-open .qw-panel {
+    visibility: hidden;
+  }
+
+  /* Farm bar on one line: icon, district · season · acres (tap to edit),
+     the data-age dot, Change. The full wording returns in edit mode. */
+  .mm-farm-bar[data-mode="summary"] {
+    /* A grid item defaults to min-width:auto, so unwrapped text would widen
+       the whole page instead of ellipsizing. */
+    min-width: 0;
+    flex-wrap: nowrap;
+    gap: 8px;
+    padding: 6px 6px 6px 12px;
+  }
+  .mm-farm-bar[data-mode="summary"] .mm-farm-bar__lbl {
+    font-size: 0;
+    gap: 0;
+    margin: 0;
+  }
+  .mm-farm-bar[data-mode="summary"] .mm-farm-bar__lbl svg {
+    width: 16px;
+    height: 16px;
+  }
+  .mm-farm-bar[data-mode="summary"] .mm-farm-bar__summary {
+    flex: 1 1 auto;
+    flex-wrap: nowrap;
+    gap: 6px;
+    min-width: 0;
+  }
+  .mm-farm-bar[data-mode="summary"] .mm-farm-bar__text {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+    padding: 10px 0;
+  }
+  .mm-farm-bar[data-mode="summary"] .mm-farm-bar__state {
+    display: none;
+  }
+  .mm-farm-bar[data-mode="summary"] .mm-farm-bar__fresh {
+    flex: none;
+    margin-left: 0;
+  }
+  .mm-farm-bar[data-mode="summary"] .mm-fresh--inbar > span:not(.mm-fresh__dot) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .mm-farm-bar[data-mode="summary"] .mm-fresh--inbar {
+    min-width: 44px;
+    min-height: 44px;
+    justify-content: center;
+  }
+  .mm-farm-bar[data-mode="summary"] .mm-farm-bar__edit {
+    flex: none;
+    margin-left: 0;
+  }
+  /* "Draw your farm →" (no plots yet) stays in the menu and on My Farm;
+     a phone row has no room for it beside the summary. */
+  .mm-farm-bar[data-mode="summary"] .mm-plotpick--empty {
+    display: none;
+  }
+}
+
+html[data-theme="dark"] .mm-tabbar,
+html[data-theme="dark"] .sidebar.is-sheet-open,
+html[data-theme="dark"] .sidebar.is-sheet-open .sidebar__sheethead {
+  background: var(--surface, #23201c);
+}
+html[data-theme="dark"] .mm-tabbar__btn.is-current,
+html[data-theme="dark"] .mm-tabbar__btn[aria-expanded="true"] {
+  color: #9ed2a7;
+}
+html[data-theme="dark"] .mm-tabbar__btn.is-current {
+  background: rgba(158, 210, 167, .14);
+}
+html[data-theme="dark"] .mm-tabbar__btn {
+  color: var(--ink-soft, #c9bfb0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar.is-sheet-open {
+    animation: none;
+  }
+}
+
+/* ---- Demo banner (Phase 4.11) ----
+   One short note at the top of each demo page (Marketplace, Book a Tractor,
+   Gyan Seva): what is sample data, that nothing leaves the phone, and what
+   on the page is real. Inline-flex so a centred hero centres it too. */
+.mm-demo-banner {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  max-width: 640px;
+  margin: 0 0 22px;
+  padding: 10px 16px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  background: var(--accent-soft);
+  color: var(--ink);
+  font-size: .9rem;
+  line-height: 1.45;
+  text-align: left;
+}
+.mm-demo-banner__tag {
+  flex: none;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--accent-deep, #8a5a1e);
+  color: #fff;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+html[data-theme="dark"] .mm-demo-banner {
+  background: rgba(200, 138, 58, .16);
+  color: var(--ink);
 }
 
 /* ---- Compare crops: checkbox chips (replaces <select multiple>) ---- */
@@ -7729,6 +8020,65 @@ html[data-theme="dark"] .mm-palette__backdrop { background: rgba(0, 0, 0, .5); }
   display: block;
   margin: 0 4px 14px;
   font-size: var(--fs-2xs);
+}
+
+/* Phase 4.1: season sections. Each label carries the question it answers on
+   a second line, in sentence case, so the regrouping explains itself. */
+.sidebar__label {
+  flex-wrap: wrap;
+}
+.sidebar__q {
+  order: 3;
+  flex-basis: 100%;
+  margin-top: 2px;
+  font-size: var(--fs-3xs, .68rem);
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  /* --ink-soft, not --ink-faint: faint is 3.9:1 on the rail, under AA. */
+  color: var(--ink-soft);
+}
+.sidebar__group--home {
+  margin-bottom: 14px;
+}
+.sidebar__moved {
+  margin: 0 4px 14px;
+  padding: 10px 12px;
+  border-radius: var(--r-md, 14px);
+  background: var(--accent-soft, #f7ecd7);
+  color: var(--ink);
+  font-size: var(--fs-2xs, .82rem);
+  line-height: 1.45;
+}
+.sidebar__moved p {
+  margin: 0 0 8px;
+}
+.sidebar__moved-ok {
+  min-height: 36px;
+  padding: 6px 14px;
+  border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+  border-radius: 999px;
+  background: var(--surface, #fff);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.sidebar__moved-ok:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+html[data-theme="dark"] .sidebar__moved {
+  background: rgba(200, 138, 58, .16);
+}
+@media (max-width: 860px) {
+  .sidebar__q {
+    order: 0;
+    flex-basis: auto;
+    flex: 1;
+    margin: 0 0 0 4px;
+    text-align: left;
+  }
 }
 
 /* The farm-pickup banner sits outside .dashx__wrap, which is what gives the

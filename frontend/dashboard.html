@@ -69,10 +69,9 @@
     <div class="dashx__wrap">
 
       <!-- ========== SIDEBAR ========== -->
-      <aside class="sidebar">
+      <aside class="sidebar" id="dashTools">
         <a class="sidebar__guide" href="decide.html">New here? Get one answer →</a>
-        <div class="sidebar__group">
-          <div class="sidebar__label">Overview</div>
+        <div class="sidebar__group sidebar__group--home" data-section="home">
           <button class="sidebar__btn active" data-tool="home">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
               <path d="M3 11l9-8 9 8" />
@@ -80,17 +79,10 @@
             </svg>
             My Farm
           </button>
-          <button class="sidebar__btn" data-tool="score">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-              <circle cx="12" cy="12" r="9" />
-              <path d="M12 7v5l3.5 2" />
-            </svg>
-            Farm Score
-          </button>
         </div>
 
-        <div class="sidebar__group">
-          <div class="sidebar__label">Plan</div>
+        <div class="sidebar__group" data-section="plan">
+          <div class="sidebar__label">Plan<span class="sidebar__q">What should I sow?</span></div>
           <button class="sidebar__btn" data-tool="recommend">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
               <path d="M12 22V12" />
@@ -137,8 +129,60 @@
           </button>
         </div>
 
-        <div class="sidebar__group">
-          <div class="sidebar__label">Market</div>
+        <div class="sidebar__group" data-section="grow">
+          <div class="sidebar__label">Grow<span class="sidebar__q">What do I do this week?</span></div>
+          <button class="sidebar__btn" data-tool="calendar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" />
+              <path d="M16 2v4M8 2v4M3 10h18" />
+            </svg>
+            Crop calendar
+          </button>
+          <button class="sidebar__btn" data-tool="irrigation">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M12 2 C9 8 7 12 7 15 a5 5 0 0 0 10 0 c0-3-2-7-5-13z" />
+            </svg>
+            Irrigation plan
+          </button>
+          <button class="sidebar__btn" data-tool="fertilizer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <rect x="6" y="2" width="12" height="20" rx="2" />
+              <path d="M6 8h12" />
+            </svg>
+            Fertilizer mix
+          </button>
+          <button class="sidebar__btn" data-tool="pest">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path
+                d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+              <circle cx="12" cy="12" r="4" />
+            </svg>
+            Pest alerts
+          </button>
+          <button class="sidebar__btn" data-tool="disease">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+              <circle cx="12" cy="13" r="4" />
+            </svg>
+            Disease scan
+          </button>
+          <button class="sidebar__btn" data-tool="ndvi">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 3a9 9 0 0 0 0 18" />
+            </svg>
+            Satellite NDVI
+          </button>
+          <button class="sidebar__btn" data-tool="iot">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M12 2v6M12 17v6M1 12h6M17 12h6" />
+            </svg>
+            Smart IoT Pump
+          </button>
+        </div>
+
+        <div class="sidebar__group" data-section="sell">
+          <div class="sidebar__label">Sell<span class="sidebar__q">When and where do I sell?</span></div>
           <button class="sidebar__btn" data-tool="forecast">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
               <path d="M3 12h4l3-8 4 16 3-8h4" />
@@ -166,64 +210,8 @@
           </button>
         </div>
 
-        <div class="sidebar__group">
-          <div class="sidebar__label">Field</div>
-          <button class="sidebar__btn" data-tool="calendar">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-              <rect x="3" y="4" width="18" height="18" rx="2" />
-              <path d="M16 2v4M8 2v4M3 10h18" />
-            </svg>
-            Crop calendar
-          </button>
-          <button class="sidebar__btn" data-tool="irrigation">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-              <path d="M12 2 C9 8 7 12 7 15 a5 5 0 0 0 10 0 c0-3-2-7-5-13z" />
-            </svg>
-            Irrigation plan
-          </button>
-          <button class="sidebar__btn" data-tool="iot">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-              <path d="M12 2v6M12 17v6M1 12h6M17 12h6" />
-            </svg>
-            Smart IoT Pump
-          </button>
-          <button class="sidebar__btn" data-tool="fertilizer">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-              <rect x="6" y="2" width="12" height="20" rx="2" />
-              <path d="M6 8h12" />
-            </svg>
-            Fertilizer mix
-          </button>
-        </div>
-
-        <div class="sidebar__group">
-          <div class="sidebar__label">Crop health</div>
-          <button class="sidebar__btn" data-tool="pest">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-              <path
-                d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
-              <circle cx="12" cy="12" r="4" />
-            </svg>
-            Pest alerts
-          </button>
-          <button class="sidebar__btn" data-tool="disease">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
-              <circle cx="12" cy="13" r="4" />
-            </svg>
-            Disease scan
-          </button>
-          <button class="sidebar__btn" data-tool="ndvi">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-              <circle cx="12" cy="12" r="9" />
-              <path d="M12 3a9 9 0 0 0 0 18" />
-            </svg>
-            Satellite NDVI
-          </button>
-        </div>
-
-        <div class="sidebar__group">
-          <div class="sidebar__label">Finance</div>
+        <div class="sidebar__group" data-section="money">
+          <div class="sidebar__label">Money<span class="sidebar__q">Can I afford it?</span></div>
           <button class="sidebar__btn" data-tool="loan">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
               <rect x="2" y="6" width="20" height="14" rx="2" />
@@ -254,10 +242,17 @@
             </svg>
             Carbon credits
           </button>
+          <button class="sidebar__btn" data-tool="score">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 7v5l3.5 2" />
+            </svg>
+            Farm Score
+          </button>
         </div>
 
-        <div class="sidebar__group">
-          <div class="sidebar__label">System</div>
+        <div class="sidebar__group" data-section="about">
+          <div class="sidebar__label">About the models</div>
           <button class="sidebar__btn" data-tool="ml">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
               <circle cx="12" cy="12" r="3" />

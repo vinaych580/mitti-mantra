@@ -576,9 +576,14 @@
       const opt = regSel && regSel.selectedOptions && regSel.selectedOptions[0];
       const region = (opt && opt.value === p.region_id) ? opt.textContent : regionLabel(p.region_id);
       const season = SEASON_NAMES[p.season] || p.season;
-      const bits = [region, season, `${+Number(p.area_acres || 0).toFixed(2)} ac`];
+      const bits = [season, `${+Number(p.area_acres || 0).toFixed(2)} ac`];
       if (Number(p.budget_per_acre) > 0) bits.push(`₹${Number(p.budget_per_acre).toLocaleString("en-IN")}/ac`);
-      return bits.join(" · ");
+      // "Telangana · Medak": the state goes in its own span so the one-line
+      // phone bar can drop it and lead with the district.
+      const parts = String(region || "").split(" · ");
+      const district = parts.pop();
+      const state = parts.length ? `<span class="mm-farm-bar__state">${escapeHtml(parts.join(" · "))} · </span>` : "";
+      return state + escapeHtml([district, ...bits].join(" · "));
     }
     function setMode(mode) {
       bar.dataset.mode = mode;
@@ -589,7 +594,7 @@
         return;
       }
       const set = hasFarm();
-      textEl.textContent = set ? summaryText() : "Not set up yet";
+      if (set) textEl.innerHTML = summaryText(); else textEl.textContent = "Not set up yet";
       textEl.classList.toggle("is-empty", !set);
       editBtn.textContent = set ? "Change" : "Set up my farm";
       retranslateIfNeeded();
