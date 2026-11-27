@@ -896,10 +896,18 @@
   const overlay = () => document.getElementById('mktDetailOverlay');
   const card = () => document.getElementById('mktDetailCard');
 
-  function closeDetail() {
+  // Focus moves into each modal, Tab stays inside, Esc and close return it
+  // to what opened it (F-11; site-ui.js's mmFocus).
+  let releaseDetail = null;
+  let releaseSeller = null;
+  let detailOpener = null;
+  const trapIn = (el, returnTo) => (window.mmFocus && el ? window.mmFocus.trap(el, { initial: '.mm-modal-close', returnTo }) : null);
+
+  function closeDetail({ restore = true } = {}) {
     const o = overlay();
     if (o) o.classList.remove('open');
     state.detailId = null;
+    if (releaseDetail) { releaseDetail({ restore }); releaseDetail = null; }
   }
 
   function openDetail(id) {
@@ -909,6 +917,7 @@
     if (!isMine(l)) bumpView(id);
     renderDetail(l, 'info');
     overlay().classList.add('open');
+    if (!releaseDetail) { detailOpener = document.activeElement; releaseDetail = trapIn(card(), detailOpener); }
   }
 
   function reviewsFor(listingId) {
@@ -960,13 +969,16 @@
     </div>`;
   }
 
-  function closeSellerProfile() {
+  function closeSellerProfile({ restore = true } = {}) {
     const o = document.getElementById('mktSellerOverlay');
     if (o) o.classList.remove('open');
+    if (releaseSeller) { releaseSeller({ restore }); releaseSeller = null; }
   }
 
   function openSellerProfile(sellerId, sellerName) {
-    closeDetail();
+    // Hand the detail modal's return target on to this one.
+    const back = releaseDetail ? detailOpener : document.activeElement;
+    closeDetail({ restore: false });
     const overlay2 = document.getElementById('mktSellerOverlay');
     const card2 = document.getElementById('mktSellerCard');
     if (!overlay2 || !card2) return;
@@ -999,9 +1011,11 @@
 
     document.getElementById('mktSellerClose').addEventListener('click', closeSellerProfile);
     card2.querySelectorAll('.mkt-card').forEach((c) => {
-      c.addEventListener('click', () => { closeSellerProfile(); openDetail(c.dataset.id); });
+      c.addEventListener('click', () => { closeSellerProfile({ restore: false }); openDetail(c.dataset.id); });
     });
     overlay2.classList.add('open');
+    if (releaseSeller) releaseSeller({ restore: false });
+    releaseSeller = trapIn(card2, back);
 
     if (sample && typeof sample.lat === 'number' && typeof sample.lon === 'number') {
       fetchFieldHealth(sample.lat, sample.lon, sample.cropId, 4).then((fh) => {

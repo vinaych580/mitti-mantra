@@ -45,6 +45,12 @@ if (!window.MM_TRACTOR_FALLBACK_BOUND) {
   const starSVG =
     '<svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.9L5.7 21l1.7-7-5.4-4.7 7.1-.6L12 2z"/></svg>';
 
+  /* Phase 4.11: the 528 listings in Data/tractors.js are generated sample
+     data, and their operator numbers are generated too -- realistic 10-digit
+     mobiles that may well belong to real people. Only a tractor someone
+     listed on this device ("owner_…") has an operator who can be called. */
+  const isSampleListing = (t) => !(t && (t.isOwnerListing || String(t.id || t.tractorId || '').startsWith('owner_')));
+
   const availClass = (status) => {
     if (status === 'Limited') return 'tractor-card__avail--limited';
     if (status === 'Booked')  return 'tractor-card__avail--booked';
@@ -358,7 +364,8 @@ if (!window.MM_TRACTOR_FALLBACK_BOUND) {
 
   function bookingRowHtml(b) {
     const isPast = b.date && new Date(b.date) < new Date(new Date().toDateString());
-    const phoneDigits = (b.operatorPhone || '').replace(/\D/g, '');
+    const sample = isSampleListing({ tractorId: b.tractorId });
+    const phoneDigits = sample ? '' : (b.operatorPhone || '').replace(/\D/g, '');
     return `
       <article class="tractor-booking-row" data-booking-id="${esc(b.bookingId)}">
         ${b.tractorImage ? `<img src="${esc(b.tractorImage)}" alt="${esc(b.tractorName || '')}" loading="lazy" referrerpolicy="no-referrer" data-img-fallback="tractor">` : `<div class="tractor-booking-row__noimg">🚜</div>`}
@@ -379,7 +386,7 @@ if (!window.MM_TRACTOR_FALLBACK_BOUND) {
           </div>
           <div class="tractor-booking-row__foot">
             <span class="tractor-booking-row__cost">₹${(b.myShare != null ? b.myShare : (b.cost || 0)).toLocaleString('en-IN')}${b.splitWith ? ` <small style="font-weight:400;color:var(--ink-soft);">of ₹${(b.cost || 0).toLocaleString('en-IN')} total</small>` : ''}</span>
-            ${phoneDigits ? `<a class="tractor-booking-row__call" href="tel:+91${phoneDigits}">📞 Call ${esc(b.operatorName || 'operator')}</a>` : `<span class="tractor-booking-row__call" style="opacity:.6;cursor:default;">Operator phone not listed</span>`}
+            ${phoneDigits ? `<a class="tractor-booking-row__call" href="tel:+91${phoneDigits}">📞 Call ${esc(b.operatorName || 'operator')}</a>` : `<span class="tractor-booking-row__call tractor-booking-row__call--none">${sample ? 'Sample listing: no operator to call' : 'Operator phone not listed'}</span>`}
           </div>
           ${isPast ? (b.outcomeLogged
             ? `<div class="tractor-verify tractor-verify--done">✓ Thanks — your report helps other farmers trust this operator.</div>`
@@ -830,21 +837,19 @@ if (!window.MM_TRACTOR_FALLBACK_BOUND) {
     const ownerInDistrict = getOwnerListings().filter((t) => t.district === district && t.state === state).length;
     const myBookingsInDistrict = getMyBookings().filter((b) => b.district === district && b.state === state && b.date && new Date(b.date) >= new Date(new Date().toDateString())).length;
 
+    // The statuses are part of the sample data, so they are reported as
+    // such: no "right now", and no "book ahead" urgency built on them.
     let pressureMsg;
     if (total === 0) {
       pressureMsg = `No listed tractors in ${esc(district)} yet — be the first to <a href="#" id="demandListLink">list one</a>.`;
-    } else if (pressurePct >= 60) {
-      pressureMsg = `<strong>${pressurePct}% of tractors in ${esc(district)} are Limited or Booked right now.</strong> This is a high-demand window — book ahead, or use "split with a neighbor" to make sure you get a slot.`;
-    } else if (pressurePct >= 30) {
-      pressureMsg = `${pressurePct}% of tractors in ${esc(district)} are Limited or Booked. Moderate demand — booking a few days ahead is a good idea.`;
     } else {
-      pressureMsg = `Only ${pressurePct}% of tractors in ${esc(district)} are Limited or Booked — plenty of availability right now.`;
+      pressureMsg = `In the sample listings, ${pressurePct}% of tractors in ${esc(district)} are marked Limited or Booked.`;
     }
 
     box.style.display = '';
     box.innerHTML = `
       ${pressureMsg}<br><br>
-      📍 <strong>${total}</strong> tractors tracked in ${esc(district)} (${available} available, ${limited} limited, ${booked} booked)${ownerInDistrict ? `, plus <strong>${ownerInDistrict}</strong> community-listed` : ''}.
+      📍 <strong>${total}</strong> sample tractors in ${esc(district)} (${available} available, ${limited} limited, ${booked} booked)${ownerInDistrict ? `, plus <strong>${ownerInDistrict}</strong> community-listed` : ''}.
       ${myBookingsInDistrict ? `<br>You have <strong>${myBookingsInDistrict}</strong> upcoming booking${myBookingsInDistrict === 1 ? '' : 's'} in this district.` : ''}
     `;
     const listLink = document.getElementById('demandListLink');
@@ -915,11 +920,11 @@ if (!window.MM_TRACTOR_FALLBACK_BOUND) {
     statsEl.innerHTML = `
       <div class="tractor-intel__stat">
         <div class="tractor-intel__stat-val">${overallPct}%</div>
-        <div class="tractor-intel__stat-label">Fleet-wide booking pressure (Limited + Booked)</div>
+        <div class="tractor-intel__stat-label">Sample listings marked Limited or Booked</div>
       </div>
       <div class="tractor-intel__stat">
         <div class="tractor-intel__stat-val">${districtStats.length}</div>
-        <div class="tractor-intel__stat-label">Districts with tracked demand signal</div>
+        <div class="tractor-intel__stat-label">Districts with sample listings</div>
       </div>
       <div class="tractor-intel__stat">
         <div class="tractor-intel__stat-val">${ownerCount}</div>
@@ -1027,6 +1032,7 @@ if (!window.MM_TRACTOR_FALLBACK_BOUND) {
         const date = document.getElementById('bookingDate').value;
         const durationStr = rateType === 'hour' ? `${hours} hours` : `${days} days`;
         const safeName = esc(name);
+        const sample = isSampleListing(t);
         const safeDate = esc(date);
 
         // Proxy-booking details, if someone else is booking on the farmer's behalf
@@ -1064,7 +1070,7 @@ if (!window.MM_TRACTOR_FALLBACK_BOUND) {
           lat: t.lat,
           lng: t.lng,
           operatorName: t.operatorName || 'Partner Farmer',
-          operatorPhone: t.operatorPhone || null,
+          operatorPhone: isSampleListing(t) ? null : (t.operatorPhone || null),
           name,
           phone,
           date,
@@ -1109,8 +1115,8 @@ if (!window.MM_TRACTOR_FALLBACK_BOUND) {
         card.innerHTML = `
           <div class="mm-success-screen">
             <div class="mm-success-icon">✓</div>
-            <h3>Booking saved — call to confirm</h3>
-            <p>${bookedBy ? `<strong>${esc(bookedBy.name)}</strong> booked this for` : 'Namaste'} <strong>${safeName}</strong>, ${bookedBy ? 'their' : 'your'} request for the <strong>${esc(t.name)}</strong> is saved on this phone. It is confirmed only once the operator agrees on a call.</p>
+            <h3>${sample ? 'Sample booking saved on this phone' : 'Booking saved — call to confirm'}</h3>
+            <p>${bookedBy ? `<strong>${esc(bookedBy.name)}</strong> booked this for` : 'Namaste'} <strong>${safeName}</strong>, ${bookedBy ? 'their' : 'your'} request for the <strong>${esc(t.name)}</strong> is saved on this phone. ${sample ? 'This is a sample listing: no operator was contacted and nothing was booked.' : 'It is confirmed only once the operator agrees on a call.'}</p>
 
             ${etaHtml}
 
@@ -1122,10 +1128,10 @@ if (!window.MM_TRACTOR_FALLBACK_BOUND) {
               ${splitWith ? `<div class="mm-success-row"><span>Your Share</span><strong>₹${myShare.toLocaleString('en-IN')} (split with ${esc(splitWith.name)})</strong></div>` : ''}
               <div class="mm-success-row"><span>Date</span><strong>${safeDate}</strong></div>
               ${bookedBy ? `<div class="mm-success-row"><span>Booked By</span><strong>${esc(bookedBy.name)}${bookedBy.phone ? ` (+91 ${esc(bookedBy.phone)})` : ''}</strong></div>` : ''}
-              <div class="mm-success-row"><span>Operator</span><strong>${esc(t.operatorName || 'Partner Farmer')}</strong></div>
-              <div class="mm-success-row"><span>Operator Phone</span><strong>${t.operatorPhone ? '+91 ' + esc(t.operatorPhone) : 'Not listed yet'}</strong></div>
+              ${sample ? '' : `<div class="mm-success-row"><span>Operator</span><strong>${esc(t.operatorName || 'Partner Farmer')}</strong></div>
+              <div class="mm-success-row"><span>Operator Phone</span><strong>${t.operatorPhone ? '+91 ' + esc(t.operatorPhone) : 'Not listed yet'}</strong></div>`}
             </div>
-            <p class="mm-split-note">Demo: this app has no live backend, so the operator isn't notified automatically. Call them with the number above to confirm your booking.</p>
+            <p class="mm-split-note">${sample ? 'Demo: this tractor and its operator are sample data, so there is nobody to call.' : "Demo: this app has no live backend, so the operator isn't notified automatically. Call them with the number above to confirm your booking."}</p>
             ${splitWith ? `<p class="mm-split-note">🤝 Let ${esc(splitWith.name)} know they owe ₹${splitWith.theirShare.toLocaleString('en-IN')} for their share — settle it between yourselves, Mitti Mantra doesn't handle payments.</p>` : ''}
 
             <button class="mm-form-submit" id="btnCloseSuccess" style="margin-top: 10px;">Close Window</button>

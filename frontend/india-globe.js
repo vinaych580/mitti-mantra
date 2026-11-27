@@ -630,7 +630,11 @@
   // CSS animation/transition durations -- it has no effect on this rAF loop,
   // so a vestibular-sensitive visitor gets a continuously spinning globe
   // regardless of their OS setting unless it's checked here directly.
-  const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // site-ui.js's mmMotion also counts the in-app Reduce motion switch and
+  // tells us when either changes; the media query is the fallback.
+  const motionNow = () => window.mmMotion ? window.mmMotion.reduced()
+    : !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  let prefersReducedMotion = motionNow();
   let isDragging = false, didDrag = false, lastX = 0, lastY = 0;
   let autoRotate = !prefersReducedMotion;
   let zoom = 9.5;
@@ -780,13 +784,15 @@
       targetRotY = centre + SWAY * Math.sin(swayT * 0.35);
       targetRotX += (INDIA_ROT_X - targetRotX) * 0.02;
     }
-    rotY += (targetRotY - rotY) * 0.08;
-    rotX += (targetRotX - rotX) * 0.08;
-    zoom += (targetZoom - zoom) * 0.08;
+    // Reduced motion: a selected state is shown at once, not flown to.
+    const k = prefersReducedMotion ? 1 : 0.08;
+    rotY += (targetRotY - rotY) * k;
+    rotX += (targetRotX - rotX) * k;
+    zoom += (targetZoom - zoom) * k;
     world.rotation.y = rotY;
     world.rotation.x = rotX;
     camera.position.z = zoom;
-    particles.rotation.y += dt * 0.04;
+    if (!prefersReducedMotion) particles.rotation.y += dt * 0.04;
     renderer.render(scene, camera);
     rafId = requestAnimationFrame(tick);
   }
@@ -825,6 +831,10 @@
     clearTimeout(autoTimer);
     autoTimer = setTimeout(() => { if (!selected) autoRotate = true; }, 6000);
   }
+  if (window.mmMotion) window.mmMotion.onChange((r) => {
+    prefersReducedMotion = r;
+    if (r) { autoRotate = false; clearTimeout(autoTimer); }
+  });
   canvas.addEventListener('pointerdown', resumeAuto);
   canvas.addEventListener('wheel', resumeAuto);
 

@@ -14,6 +14,81 @@
     el.textContent = String(new Date().getFullYear());
   });
 
+  /* ---------- Motion preference (Phase 4.8) ----------
+     One answer to "should this move?": the OS reduced-motion setting, or
+     the in-app "Reduce motion" switch in the tools panel (stored by
+     mm-core.js under mm_a11y). Read from storage rather than from the
+     <html> class because this file can run before mm-core.js applies it.
+     Scripts that animate from JS -- the globe, Lenis, parallax, count-up --
+     ask here, and subscribe so that turning it on stops motion that is
+     already running instead of waiting for the next page. */
+  const motionMq = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  const appReducedMotion = () => {
+    try { return !!JSON.parse(localStorage.getItem('mm_a11y') || '{}').reduceMotion; } catch (_) { return false; }
+  };
+  const motionSubs = [];
+  window.mmMotion = {
+    reduced: () => !!(motionMq && motionMq.matches) || appReducedMotion(),
+    onChange(fn) { if (typeof fn === 'function') motionSubs.push(fn); },
+    notify() {
+      const r = this.reduced();
+      motionSubs.forEach(fn => { try { fn(r); } catch (_) { /* one listener must not stop the rest */ } });
+    },
+  };
+  if (motionMq && motionMq.addEventListener) motionMq.addEventListener('change', () => window.mmMotion.notify());
+
+  /* ---------- Focus handling for popovers, sheets and modals (F-11) ----------
+     trap(root, opts) moves focus in, keeps Tab and Shift+Tab inside root,
+     closes on Escape (opts.onEscape) and hands back a release() that returns
+     focus to whatever had it before. `modal: false` is for a floating panel
+     the page stays usable behind (the chat): Tab only wraps while focus is
+     already inside, and a click on the page is not pulled back. */
+  const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]), [contenteditable="true"]';
+  const focusablesIn = (root) => [...root.querySelectorAll(FOCUSABLE)]
+    .filter(el => !el.closest('[hidden], [inert]') && el.getClientRects().length);
+  const traps = [];
+  document.addEventListener('keydown', (e) => {
+    const top = traps[traps.length - 1];
+    if (!top || !document.contains(top.root)) return;
+    if (e.key === 'Escape' && top.onEscape) {
+      // An open <select> or a field's own Escape (clearing a search) wins.
+      if (e.defaultPrevented) return;
+      e.preventDefault();
+      top.onEscape(e);
+      return;
+    }
+    if (e.key !== 'Tab') return;
+    const inside = top.root.contains(document.activeElement);
+    if (!top.modal && !inside) return;
+    const list = focusablesIn(top.root);
+    if (!list.length) { e.preventDefault(); top.root.focus(); return; }
+    const first = list[0], last = list[list.length - 1];
+    if (!inside) { e.preventDefault(); first.focus(); }
+    else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+  window.mmFocus = {
+    focusables: focusablesIn,
+    trap(root, { onEscape = null, initial = null, returnTo = null, modal = true } = {}) {
+      if (!root) return () => {};
+      const entry = { root, onEscape, modal, returnTo: returnTo || document.activeElement };
+      // Re-trapping the same root (re-rendered content) replaces its entry.
+      const prev = traps.findIndex(t => t.root === root);
+      if (prev >= 0) { entry.returnTo = traps[prev].returnTo; traps.splice(prev, 1); }
+      traps.push(entry);
+      const target = (typeof initial === 'string' ? root.querySelector(initial) : initial) || focusablesIn(root)[0];
+      if (target) target.focus({ preventScroll: true });
+      else { if (!root.hasAttribute('tabindex')) root.tabIndex = -1; root.focus({ preventScroll: true }); }
+      return ({ restore = true } = {}) => {
+        const i = traps.indexOf(entry);
+        if (i < 0) return;
+        traps.splice(i, 1);
+        const back = entry.returnTo;
+        if (restore && back && document.contains(back) && back.getClientRects().length) back.focus({ preventScroll: true });
+      };
+    },
+  };
+
   /* ---------- Nav: scrolled state ---------- */
   const nav = document.getElementById('nav');
   if (nav) {
@@ -32,12 +107,23 @@
   // on top of the open nav menu, reading as two unrelated buttons stuck to
   // someone else's panel. Hiding them for the duration keeps the open menu
   // the one thing on screen.
-  const openMenu = () => { mPanel?.classList.add('open'); mBackdrop?.classList.add('open'); document.body.classList.add('mm-menu-open'); document.body.style.overflow = 'hidden'; };
-  const closeMenu = () => { mPanel?.classList.remove('open'); mBackdrop?.classList.remove('open'); document.body.classList.remove('mm-menu-open'); document.body.style.overflow = ''; };
+  let releaseMenu = null;
+  const closeMenu = ({ restore = true } = {}) => {
+    mPanel?.classList.remove('open'); mBackdrop?.classList.remove('open'); document.body.classList.remove('mm-menu-open'); document.body.style.overflow = '';
+    burger?.setAttribute('aria-expanded', 'false');
+    if (releaseMenu) { releaseMenu({ restore }); releaseMenu = null; }
+  };
+  const openMenu = () => {
+    mPanel?.classList.add('open'); mBackdrop?.classList.add('open'); document.body.classList.add('mm-menu-open'); document.body.style.overflow = 'hidden';
+    burger?.setAttribute('aria-expanded', 'true');
+    if (mPanel && !releaseMenu) releaseMenu = window.mmFocus.trap(mPanel, { onEscape: () => closeMenu(), returnTo: burger });
+  };
+  burger?.setAttribute('aria-expanded', 'false');
   burger?.addEventListener('click', openMenu);
   mClose?.addEventListener('click', closeMenu);
   mBackdrop?.addEventListener('click', closeMenu);
-  mPanel?.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+  // Following a link leaves focus where the link took it.
+  mPanel?.querySelectorAll('a').forEach(a => a.addEventListener('click', () => closeMenu({ restore: false })));
 
   /* ---------- Scroll reveal via IntersectionObserver ---------- */
   const revealEls = document.querySelectorAll('.reveal, .reveal-stagger');
@@ -132,7 +218,7 @@
      custom properties; all the painting is done by the stylesheet. */
   const bento = document.getElementById('featuresBento');
   const fineHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-  const noMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let noMotion = window.mmMotion.reduced();
 
   if (bento && fineHover && !noMotion) {
     let frame = 0;
@@ -169,11 +255,12 @@
     const animateCount = (el) => {
       const target = parseFloat(el.dataset.count);
       const suffix = el.querySelector('small')?.outerHTML || '';
-      const duration = 1600;
+      // Reduced motion: the final figure at once, no count.
+      const duration = noMotion ? 0 : 1600;
       const start = performance.now();
       const from = 0;
       const step = (now) => {
-        const p = Math.min((now - start) / duration, 1);
+        const p = duration ? Math.min((now - start) / duration, 1) : 1;
         const eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
         const val = from + (target - from) * eased;
         let display;
@@ -242,6 +329,7 @@
       // overflow:hidden on <body>. Lenis scrolls with scrollTo, which ignores
       // that, so mirror the lock instead of teaching each caller about Lenis.
       const syncLock = () => {
+        if (!lenis) return; // dropped for reduced motion
         if (getComputedStyle(document.body).overflowY === 'hidden') lenis.stop();
         else lenis.start();
       };
@@ -253,6 +341,37 @@
     };
     document.head.appendChild(s);
   }
+
+  /* ---------- Reduced motion switched on mid-page ----------
+     Everything above reads the preference once, at load. When it changes
+     to "reduce" while the page is open (OS setting, or the tools panel's
+     Reduce motion), stop what is already moving: hand the page back to
+     native scrolling, settle every reveal, park the parallax layers.
+     Turning it off again takes effect on the next page. */
+  window.mmMotion.onChange((reduced) => {
+    noMotion = reduced;
+    if (!reduced) return;
+    document.querySelectorAll('.reveal-scrub').forEach(el => {
+      el.classList.remove('reveal-scrub');
+      el.style.removeProperty('--rp');
+    });
+    revealEls.forEach(el => el.classList.add('in-view'));
+    if (typeof dropNativeParallax === 'function') dropNativeParallax();
+    if (lenis) {
+      lenis.destroy();
+      lenis = null;
+      window.mmLenis = null;
+      document.documentElement.style.scrollBehavior = '';
+      document.documentElement.style.height = '';
+      document.body.style.height = '';
+    }
+    const heroImg = document.querySelector('.hero__bg img');
+    if (heroImg) heroImg.style.transform = '';
+    const heroWrap = document.querySelector('.hero__wrap');
+    if (heroWrap) heroWrap.style.translate = '';
+    const showImg = document.querySelector('.showcase__media img');
+    if (showImg) { showImg.style.scale = ''; showImg.style.translate = ''; }
+  });
 
   /* ---------- Programmatic scrolling ----------
      One place for "bring this into view" so every jump on the site shares an

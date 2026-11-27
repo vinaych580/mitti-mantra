@@ -12,6 +12,8 @@
     'How it works': 'ಇದು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ',
     'Draw farm': 'ಜಮೀನು ಬರೆಯಿರಿ',
     'Demo': 'ಡೆಮೊ',
+    'Sample booking saved on this phone': 'ಮಾದರಿ ಬುಕಿಂಗ್ ಈ ಫೋನ್‌ನಲ್ಲಿ ಉಳಿಸಲಾಗಿದೆ',
+    'Districts with sample listings': 'ಮಾದರಿ ಪಟ್ಟಿಗಳಿರುವ ಜಿಲ್ಲೆಗಳು',
     'API Docs': 'API ದಸ್ತಾವೇಜು',
     'Back to site': 'ಸೈಟ್‌ಗೆ ಹಿಂತಿರುಗಿ',
     'Try it free': 'ಉಚಿತವಾಗಿ ಪ್ರಯತ್ನಿಸಿ',
@@ -279,6 +281,7 @@
     'Accessibility': 'ಪ್ರವೇಶಿಸುವಿಕೆ',
     'Large text': 'ದೊಡ್ಡ ಪಠ್ಯ',
     'High contrast': 'ಹೆಚ್ಚಿನ ಕಾಂಟ್ರಾಸ್ಟ್',
+    'Reduce motion': 'ಚಲನೆ ಕಡಿಮೆ ಮಾಡಿ',
     'Privacy': 'ಗೌಪ್ಯತೆ',
     'Count my tool usage': 'ನನ್ನ ಟೂಲ್ ಬಳಕೆಯನ್ನು ಎಣಿಸಿ',
     'Share anonymous counts': 'ಅನಾಮಧೇಯ ಎಣಿಕೆಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳಿ',
@@ -655,6 +658,9 @@
 
   // Home page answer: a top crop with no harvest record in the district.
   "Not grown in this district before": "ಈ ಜಿಲ್ಲೆಯಲ್ಲಿ ಹಿಂದೆ ಬೆಳೆದಿಲ್ಲ",
+    'You are back online': 'ನೀವು ಮತ್ತೆ ಆನ್‌ಲೈನ್‌ನಲ್ಲಿದ್ದೀರಿ',
+    'You are offline': 'ನೀವು ಆಫ್‌ಲೈನ್‌ನಲ್ಲಿದ್ದೀರಿ',
+    'km away': 'ಕಿ.ಮೀ. ದೂರ',
 };
 
 // Season planning workflow (Phase 0: brought level with hi and te).
@@ -688,6 +694,14 @@ Object.assign(window.MM_I18N_CATALOG.kn, {
   "Your plan is saved": "ನಿಮ್ಮ ಯೋಜನೆ ಉಳಿಸಲಾಗಿದೆ",
   "Return to My season to follow tasks, record spending, and compare your harvest with this estimate.": "ಕೆಲಸಗಳನ್ನು ಅನುಸರಿಸಲು, ಖರ್ಚು ದಾಖಲಿಸಲು ಮತ್ತು ಕೊಯ್ಲನ್ನು ಈ ಅಂದಾಜಿನೊಂದಿಗೆ ಹೋಲಿಸಲು 'ನನ್ನ ಹಂಗಾಮು'ಗೆ ಹಿಂತಿರುಗಿ.",
   "Open My season": "ನನ್ನ ಹಂಗಾಮು ತೆರೆಯಿರಿ",
+  "Prepare land": "ಭೂಮಿ ಸಿದ್ಧತೆ",
+  "Sow": "ಬಿತ್ತನೆ",
+  "Harvest": "ಕೊಯ್ಲು",
+  "When to sell": "ಯಾವಾಗ ಮಾರಬೇಕು",
+  "about": "ಸುಮಾರು",
+  "Now:": "ಈಗ:",
+  "day": "ದಿನ",
+  "of about": "ರಲ್ಲಿ ಸುಮಾರು",
   "From sowing to harvest": "ಬಿತ್ತನೆಯಿಂದ ಕೊಯ್ಲಿನವರೆಗೆ",
   "Your saved decision, next field tasks, and season accounts in one place.": "ನಿಮ್ಮ ಉಳಿಸಿದ ನಿರ್ಧಾರ, ಮುಂದಿನ ಹೊಲದ ಕೆಲಸಗಳು ಮತ್ತು ಹಂಗಾಮಿನ ಲೆಕ್ಕ ಒಂದೇ ಕಡೆ.",
   "Saved comparisons": "ಉಳಿಸಿದ ಹೋಲಿಕೆಗಳು",

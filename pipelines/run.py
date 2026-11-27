@@ -10,6 +10,8 @@ from __future__ import annotations
 
 import json
 import logging
+import os
+import re
 import shutil
 import sys
 
@@ -20,6 +22,8 @@ from pipelines.sources import agmarknet_live, apmc, apy, costs, irrigation, msp,
 # Smaller national and state tables: optional in a build (skipped with a warning
 # when not downloaded), so a pilots-only checkout still builds.
 EXTRA_SOURCES = (costs, msp, irrigation, soil_health)
+
+log = logging.getLogger(__name__)
 
 
 def download(pilots_only: bool = False) -> None:
@@ -59,6 +63,23 @@ def build(allow_shrink: bool = False) -> int:
     return 0
 
 
+def live_snapshot() -> None:
+    """Save today's live mandi snapshot, or say why not and carry on.
+
+    The snapshot is extra on top of the bulk price history, so a failed fetch must not
+    throw away the rest of the refresh. data.gov.in does not answer GitHub's hosted
+    runners at all ("No route to host"), and before this a failed fetch failed the whole
+    job after every other source had downloaded.
+    """
+    try:
+        agmarknet_live.download()
+    except Exception as exc:  # network or API error: build from what is already on disk
+        reason = re.sub(r"api-key=[^&\s'\"]+", "api-key=***", str(exc))
+        log.warning("agmarknet_live: live snapshot skipped: %s", reason)
+        if os.getenv("GITHUB_ACTIONS") == "true":
+            print(f"::warning title=Live mandi prices skipped::{reason}")
+
+
 def main(argv: list[str]) -> int:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
     cmd = argv[0] if argv else "build"
@@ -73,7 +94,7 @@ def main(argv: list[str]) -> int:
             download()
         # Daily: today's live mandi snapshot (needs DATAGOV_API_KEY). The bulk
         # mirror and weather change slowly, so they are re-pulled on Mondays.
-        agmarknet_live.download()
+        live_snapshot()
         if date.today().weekday() == 0 or "--full" in argv:
             apmc.download(refresh_since=date.today().year)
             nasa_power.download(max_age_days=30)

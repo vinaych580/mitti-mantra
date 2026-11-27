@@ -545,6 +545,8 @@
       transition: all 0.2s var(--ease);
     }
     .tractor-booking-row__call:hover { background: var(--brand); color: #fff; }
+    .tractor-booking-row__call--none { opacity: .7; cursor: default; border-style: dashed; }
+    .tractor-booking-row__call--none:hover { background: none; color: var(--brand); }
     @media (max-width: 560px) {
       .tractor-booking-row { flex-direction: column; }
       .tractor-booking-row img { width: 100%; height: 140px; }
@@ -876,10 +878,7 @@
   <header class="tractor-hero">
     <div class="container">
       <div class="tractor-hero__inner">
-        <div class="tractor-hero__badge">
-          <span class="tractor-hero__badge-dot"></span>
-          Prototype · demo listings
-        </div>
+        <p class="mm-demo-banner" role="note"><strong class="mm-demo-banner__tag" data-i18n>Demo</strong> <span data-i18n>Sample tractors and operators. Bookings stay on this phone; nobody is contacted or charged.</span></p>
         <h1>Rent the right tractor,<br><em>right to your farm.</em></h1>
         <p class="tractor-hero__sub">Stop paying for more horsepower than you need. Browse, compare, and reserve the perfect machine for your plot size, crop, and soil — from partner farmers near you.</p>
 
