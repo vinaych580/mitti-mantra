@@ -60,6 +60,13 @@ price forecasts, sell advice, season planner, chatbot, multilingual EN/HI/TE/KN/
 5. **Branch `phase4-about`** (pushed, **no PR yet**) — Phase 4.12: `/about` page and two-minute demo path. Last
    commit is a WIP save of uncommitted tweaks; check it in the browser, then open a PR.
 
+6. **Branches `final-polish-2` and `phase4-e2e`** (pushed 2026-11-27 as **half-done WIP** from other sessions,
+   no PR). `final-polish-2` = a second polish pass after #31; `phase4-e2e` = the start of the Playwright/e2e
+   suite. Run the tests, finish, open PRs.
+7. Other pushed branches (`all-round-upgrade`, `fix-turmeric-cost`, `fix-scroll-decide-globe`, `sweep`,
+   `integration-*`, `claude/*`) are older experiments or merge scratch — check `git log origin/master..<branch>`
+   before deleting; most are already merged.
+
 Merge rule: every code PR bumps `frontend/sw.js`; after one merges, rebase the next onto `master` and take the
 next free version number. Check `check_sw_version` and `check_i18n` before merging.
 
