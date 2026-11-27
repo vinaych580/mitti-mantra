@@ -538,6 +538,18 @@
 
   // Home page answer: a top crop with no harvest record in the district.
   "Not grown in this district before": "இந்த மாவட்டத்தில் இதற்கு முன் பயிரிடப்படவில்லை",
+    'Confidence:': 'நம்பகத்தன்மை:',
+    'Strong': 'வலுவானது',
+    'Fair': 'பரவாயில்லை',
+    'Weak': 'பலவீனம்',
+    'Why this range': 'இந்த வரம்பு ஏன்',
+    'Source:': 'ஆதாரம்:',
+    'data to': 'தரவு வரை',
+    'model': 'மாதிரி',
+    'How this is worked out': 'இது எப்படிக் கணக்கிடப்படுகிறது',
+    'Most likely': 'பெரும்பாலும்',
+    'Yield:': 'மகசூல்:',
+    'years old.': 'ஆண்டுகள் பழையது.',
 };
 
 // Season planning workflow (Phase 0: brought level with hi and te).
