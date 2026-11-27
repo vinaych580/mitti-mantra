@@ -175,12 +175,68 @@ all four files 200, API unaffected.
 
 Each step is a few hours and can be reverted on its own; none should land in the week of a demo.
 
+## Fixes after Phase 3 (2026-11-27, owner's go-ahead)
+
+The owner asked for: sell advice perishability, turmeric input cost, the daily production check, both profit
+figures (district average and good farm; the shortlist rule stays), and a sweep for bugs not yet reported.
+The CSP stays report-only for now.
+
+| PR | What |
+|---|---|
+| [#13](https://github.com/vinaych580/mitti-mantra/pull/13) | Sell advice never holds a crop longer than it keeps (`engine/storability.py`): Sehore tomato was "hold 26 weeks", now "sell now"; the chatbot drops the "best month" for a crop that cannot wait for it |
+| [#14](https://github.com/vinaych580/mitti-mantra/pull/14) | `good_farm` profit beside the district average (Medak rice ₹85,869 typical vs ₹1,36,932 good farm); the dashboard no longer shows a total loss as "TOP PICK" |
+| [#15](https://github.com/vinaych580/mitti-mantra/pull/15) | Daily production check (health, version, pages, `frontend/Data/`, the eight defect-register ranking cases); opens an issue on failure |
+| [#16](https://github.com/vinaych580/mitti-mantra/pull/16) | Chatbot: typical budget when none is given (was a flat ₹15,000); "3 acres 20000 budget" no longer swaps the numbers |
+
+#13 and #14 both bump `sw.js` to v67 and append to the hi/te catalogs: the second to merge needs a rebase and v68.
+
+### Turmeric input cost: the cost is not the problem
+
+The Phase 2 notes suspected turmeric's ₹68,000/acre (342% ROI in Medak). No cost survey in the store covers
+turmeric (CACP covers principal crops only), so the check used a published farm survey:
+
+- Guntur, Andhra Pradesh, 2017–18, 120 farms (Kumar et al., *J. Pharmacognosy and Phytochemistry* 7(3):
+  2596–2599, Tables 4.1–4.3): total cost of cultivation (Cost C) ₹1,39,095/ha = **₹56,290/acre**; Cost A2 +
+  family labour ₹1,29,095/ha = ₹52,240/acre; cured yield 53 q/ha (2,148 kg/acre); price ₹65/kg.
+- The other crops' costs in `crop_parameters.csv` sit at the CACP 2020–21 level (rice ₹27,000 against AP's 2021
+  A2+FL ₹29,258). Four years of cost growth from 2017–18 puts turmeric at roughly ₹63,000–68,000 on that basis:
+  **₹68,000 is consistent.**
+- The 342% comes from Medak's recorded yield (2,914 kg/acre, 36% above the Guntur survey) at the recent mandi
+  price (₹106/kg, against ₹65 in 2017–18).
+
+So nothing was changed for turmeric. The real issue is general: **costs are on a 2021 basis and prices on a
+2025–26 basis for every crop**, which flatters every ROI a little and turmeric (whose price rose most) a lot.
+Re-basing all costs (for example by CACP's latest cost index, when it is in the store) is an owner decision and a
+model change; not done the night before a presentation. Farmer-reported figures quoted in the press (₹85,000 to
+₹1.2 lakh/acre) include costs the CACP basis leaves out.
+
+### Bug sweep
+
+Probed on production: every GET route in OpenAPI (60 of 62 return 200; the other two are the intentionally
+disabled expense and usage routes), the main POST routes with realistic bodies, all nine pages for failed
+requests and console errors, horizontal overflow at 375 px, and the open defect-register items.
+
+Found and fixed:
+- **`frontend/Data/` 404 on production since Phase 1** (#12, merged): tractors, consultants, marketplace
+  listings and the India map; the service worker could not install.
+- **Dashboard showed a total loss as "TOP PICK"** (Medak zaid, banana −₹1,00,000, with "I'm planting this"
+  and a sell link), ignoring `all_options_lose` (#14).
+- **Chatbot sell advice** kept "best month 7, +153%" for tomato (#13).
+- **Chatbot default budget** ₹15,000/acre and **"3 acres 20000 budget" parsed as ₹3 on 20,000 acres** (#16).
+
+Checked and fine: no page scrolls horizontally at 375 px; no failed requests on any page; N-13, N-18, N-19,
+N-20, N-30, N-31 fixed earlier. Still open from the register: N-23 (climate alerts and carbon credits default
+the crop to wheat, and the dashboard itself sends wheat as its fallback: a 3.3 contract item), N-12 (Kannada and
+Tamil lack 70-odd newer strings; CI warns, hi/te are complete), N-22 (a few naive `datetime.now()` calls, all at
+date resolution).
+
 ## Owner checklist (from all sessions)
 
 - Before the repo goes private: add `DATA_STORE_TOKEN` in Vercel; revoke the Vercel protection-bypass secrets that
   `vercel curl` added (Deployment Protection settings).
 - Enforce the page CSP after clean production reports (see #7).
 - Choose: Postgres provider (3.1), SMS provider (3.5), error-tracking vendor (3.6); turn on GitHub secret scanning.
-- Open product questions from Phase 2: district-average vs good-farm profit figures; the shortlist rule that drops
-  crops no district in the state grows; turmeric's input cost; sell advice ignoring perishability (it says to hold
-  tomato for 26 weeks).
+- Phase 2 product questions, settled 2026-11-27: both profit figures shown (#14); the shortlist rule stays;
+  turmeric's cost is consistent with a published survey (above); sell advice respects perishability (#13).
+- New: costs (2021 basis) and prices (2025–26) are on different years for every crop; decide whether to re-base
+  costs. Review the storage weeks in `engine/storability.py`.
