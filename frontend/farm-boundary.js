@@ -144,13 +144,16 @@
 
   /* ── Drawing controls ──────────────────────────────── */
   const drawnItems = new L.FeatureGroup().addTo(map);
-  const STROKE = '#2f6b3a'; // MittiMantra brand green
+  // The plot sits on satellite imagery, where the brand green (#2f6b3a) all
+  // but vanished into fields and trees. A warm yellow reads on green, brown
+  // and grey ground alike.
+  const STROKE = '#ffd23f';
   const SKY    = '#6ea7c7'; // design-system sky — GPS accuracy halo, distinct from the plot
 
   const POLYGON_OPTIONS = {
     allowIntersection: false,
     showArea: true,
-    shapeOptions: { color: STROKE, weight: 2.5, fillColor: STROKE, fillOpacity: 0.18 }
+    shapeOptions: { color: STROKE, weight: 3, fillColor: STROKE, fillOpacity: 0.22 }
   };
 
   // Editing an existing shape's vertices still uses leaflet-draw's own icon —
@@ -695,7 +698,7 @@
     if (!plot || !plot.geojson) return;
     try {
       const layer = L.geoJSON(plot.geojson, {
-        style: { color: STROKE, weight: 2, fillColor: STROKE, fillOpacity: 0.15, dashArray: '5 5' }
+        style: { color: STROKE, weight: 2.5, fillColor: STROKE, fillOpacity: 0.15, dashArray: '5 5' }
       });
       map.fitBounds(layer.getBounds(), { padding: [40, 40] });
       layer.addTo(map);
