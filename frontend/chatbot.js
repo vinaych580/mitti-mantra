@@ -159,10 +159,17 @@
 
   function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
 
+  // The dashboard's phone tab bar (Phase 4.2) owns the bottom of the screen:
+  // the launcher and its panel stay above it, dragged or not.
+  function dock() {
+    const bar = document.querySelector(".mm-tabbar");
+    return bar ? bar.getBoundingClientRect().height : 0;
+  }
+
   function applyFabPos(x, y) {
     const vw = window.innerWidth, vh = window.innerHeight;
     x = clamp(x, 8, vw - FAB_SIZE - 8);
-    y = clamp(y, 8, vh - FAB_SIZE - 8);
+    y = clamp(y, 8, vh - FAB_SIZE - 8 - dock());
     fab.style.left = x + "px";
     fab.style.top = y + "px";
     fab.style.right = "auto";
@@ -179,7 +186,7 @@
   }
 
   function positionPanel(fx, fy) {
-    const vw = window.innerWidth, vh = window.innerHeight;
+    const vw = window.innerWidth, vh = window.innerHeight - dock();
     const pw = Math.min(PANEL_W, vw - 16);
     const ph = Math.min(PANEL_H, vh - 24);
     // Prefer placing panel above the FAB; fall back to below.
@@ -201,7 +208,8 @@
   // line, so the two corner buttons read as one column.
   function defaultEdges() {
     const small = window.innerWidth <= 480;
-    return small ? { r: 12, b: 70 } : { r: 18, b: 76 };
+    const d = dock();
+    return small ? { r: 12, b: 70 + d } : { r: 18, b: 76 + d };
   }
 
   function loadEdges() {
@@ -222,10 +230,13 @@
 
   let edges = loadEdges();              // null = never dragged: follow the default
   let current = applyFabPos(fromEdges(edges || defaultEdges()).x, fromEdges(edges || defaultEdges()).y);
-  window.addEventListener("resize", () => {
+  const reposition = () => {
     const e = edges || defaultEdges();
     current = applyFabPos(fromEdges(e).x, fromEdges(e).y);
-  });
+  };
+  window.addEventListener("resize", reposition);
+  // The tab bar can appear after this script has placed the launcher.
+  document.addEventListener("mm:dock-changed", reposition);
 
   let dragState = null; // { startX, startY, origX, origY, moved }
 
