@@ -200,7 +200,9 @@ def _mandi_entry() -> Dict[str, Any]:
     # (e.g. no DATAGOV_API_KEY) even though the "live" outcome can't occur.
     # If get_mandi_price() is wired into the live path in the future, restore
     # a mode == "live" branch here.
-    from data_ingestion.fetchers.mandi import last_resolution
+    from utils.lazy_import import fetcher
+
+    last_resolution = fetcher("mandi").last_resolution
 
     resolution = last_resolution()
     key_present = bool(os.getenv("DATAGOV_API_KEY"))
