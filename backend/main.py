@@ -1917,7 +1917,8 @@ def get_weather_details_api(region_id: str, season: str = "kharif"):
         latest_weather = results[-1]
         
         # Integrate severe warning simulation matching fetcher class
-        from data_ingestion.fetchers.imd import get_imd_alerts
+        from utils.lazy_import import fetcher
+        get_imd_alerts = fetcher("imd").get_imd_alerts
         parts = region_id.split("_")
         state = parts[0].capitalize()
         district = parts[1].capitalize() if len(parts) > 1 else ""
