@@ -3,7 +3,9 @@
   const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const t = s => window.AgriSimI18n?.t(s) || s;
   const text = s => `<span data-i18n>${esc(t(s))}</span>`;
-  const money = n => n !== null && n !== undefined && Number.isFinite(Number(n)) ? '₹' + Math.round(n).toLocaleString('en-IN') : '—';
+  // A loss reads "−₹8,361", not "₹-8,361".
+  const money = n => n !== null && n !== undefined && Number.isFinite(Number(n))
+    ? (Math.round(n) < 0 ? '−' : '') + '₹' + Math.abs(Math.round(n)).toLocaleString('en-IN') : '—';
   // Dates follow the page language (N-29); digits stay Indian-grouped.
   const LOCALES = {en:'en-IN', hi:'hi-IN', te:'te-IN', kn:'kn-IN', ta:'ta-IN'};
   const locale = () => LOCALES[window.AgriSimI18n?.getLanguage?.() || 'en'] || 'en-IN';
@@ -107,7 +109,7 @@
       <p>${text('The yield model cannot yet respond to rainfall or irrigation, so each scenario scales its estimate by how the rule-based simulator responds.')}</p>
       ${c.crops.some(r => r.unspent_budget > 0) ? `<p>${text('Budget above what a crop typically uses is shown as unspent, not as cost.')}</p>` : ''}
       <p>${text('Water need is a crop reference, not a measured irrigation requirement.')}</p>
-      ${c.crops.map(r => `<p><span data-no-translate>${esc(r.crop_name)}</span>: ${text('Reference price')} ${money(r.price_per_kg)}/kg · ${r.price_as_of ? `<time>${esc(date(r.price_as_of))}</time>` : text('Unknown date')} · ${text(PRICE_SOURCES[r.price_source] || r.price_source || 'Unknown source')}</p>`).join('')}`;
+      ${c.crops.map(r => `<p><span data-no-translate>${esc(r.crop_name)}</span>: ${text('Reference price')} ${money(r.price_per_kg)}/kg${r.price_as_of ? ` · <time>${esc(date(r.price_as_of))}</time>` : ''} · ${text(PRICE_SOURCES[r.price_source] || r.price_source || 'Unknown source')}</p>`).join('')}`;
   }
   // Shown above a list in which every option is expected to lose money.
   const LOSS_REASONS = {

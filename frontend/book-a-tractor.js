@@ -1132,7 +1132,7 @@ if (!window.MM_TRACTOR_FALLBACK_BOUND) {
               <div class="mm-success-row"><span>Operator Phone</span><strong>${t.operatorPhone ? '+91 ' + esc(t.operatorPhone) : 'Not listed yet'}</strong></div>`}
             </div>
             <p class="mm-split-note">${sample ? 'Demo: this tractor and its operator are sample data, so there is nobody to call.' : "Demo: this app has no live backend, so the operator isn't notified automatically. Call them with the number above to confirm your booking."}</p>
-            ${splitWith ? `<p class="mm-split-note">🤝 Let ${esc(splitWith.name)} know they owe ₹${splitWith.theirShare.toLocaleString('en-IN')} for their share — settle it between yourselves, MittiMantra doesn't handle payments.</p>` : ''}
+            ${splitWith ? `<p class="mm-split-note">🤝 Let ${esc(splitWith.name)} know they owe ₹${splitWith.theirShare.toLocaleString('en-IN')} for their share — settle it between yourselves, Mitti Mantra doesn't handle payments.</p>` : ''}
 
             <button class="mm-form-submit" id="btnCloseSuccess" style="margin-top: 10px;">Close Window</button>
           </div>

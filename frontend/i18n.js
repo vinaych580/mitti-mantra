@@ -127,7 +127,11 @@
     if (GLOSSARY.has(trimmed.toLowerCase())) return text;
     const dict = CATALOG[lang];
     if (!dict) return text;
-    const hit = dict[trimmed];
+    // HTML source wraps long sentences across lines, so a text node can hold
+    // a line break and indentation where the catalog key has one space.
+    // Exact match first, then the whitespace-collapsed form;
+    // without the fallback every wrapped sentence stayed in English.
+    const hit = dict[trimmed] || dict[trimmed.replace(/\s+/g, ' ')];
     if (!hit) return text;
     return text.replace(trimmed, hit);
   }

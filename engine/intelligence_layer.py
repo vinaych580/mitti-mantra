@@ -4,6 +4,23 @@ from utils.calculations import CROP_OPTIMAL_PH
 
 logger = logging.getLogger("IntelligenceLayer")
 
+
+def _inr(v: float) -> str:
+    """Rupees with Indian digit grouping: 123456 -> ₹1,23,456."""
+    n = int(round(float(v)))
+    sign, n = ("-" if n < 0 else ""), abs(n)
+    s = str(n)
+    if len(s) > 3:
+        head, tail = s[:-3], s[-3:]
+        groups = []
+        while len(head) > 2:
+            groups.insert(0, head[-2:])
+            head = head[:-2]
+        if head:
+            groups.insert(0, head)
+        s = ",".join(groups) + "," + tail
+    return f"{sign}₹{s}"
+
 def explain_crop_recommendation(
     crop_id: str,
     crop_name: str,
@@ -27,16 +44,21 @@ def explain_crop_recommendation(
     
     ph_min, ph_max = CROP_OPTIMAL_PH.get(crop_id.lower(), (6.0, 7.5))
     if ph_min <= ph <= ph_max:
-        reasons.append(f"✓ Soil pH ({ph}) is optimal for {crop_name} (prefers {ph_min}--{ph_max}).")
+        reasons.append(f"✓ Soil pH ({ph}) is optimal for {crop_name} (prefers {ph_min}–{ph_max}).")
+    elif ph < ph_min:
+        # Acidic: lime raises pH.
+        reasons.append(f"⚠ Soil pH ({ph}) is more acidic than {crop_name} prefers ({ph_min}–{ph_max}); agricultural lime raises it.")
     else:
-        reasons.append(f"⚠ Soil pH ({ph}) is sub-optimal but manageable with field liming or gypsum treatment (ideal range is {ph_min}--{ph_max}).")
+        # Alkaline: lime would push it the wrong way; gypsum and organic
+        # matter are the usual correction (sulphur for strongly alkaline soil).
+        reasons.append(f"⚠ Soil pH ({ph}) is more alkaline than {crop_name} prefers ({ph_min}–{ph_max}); gypsum, organic manure or elemental sulphur bring it down. Do not lime.")
         
     # 2. Temperature check
     avg_temp = float(weather.get("avg_temp_c", 28.0))
     if temp_min <= avg_temp <= temp_max:
-        reasons.append(f"✓ Temperature ({avg_temp}°C) fits within crop limits ({temp_min}°C--{temp_max}°C).")
+        reasons.append(f"✓ Temperature ({avg_temp}°C) fits within crop limits ({temp_min}–{temp_max}°C).")
     else:
-        reasons.append(f"⚠ Average temperature ({avg_temp}°C) is outside ideal bounds ({temp_min}°C--{temp_max}°C).")
+        reasons.append(f"⚠ Average temperature ({avg_temp}°C) is outside ideal bounds ({temp_min}–{temp_max}°C).")
         
     # 3. Water / Rainfall check
     rain = float(weather.get("rainfall_mm", 800.0))
@@ -49,9 +71,9 @@ def explain_crop_recommendation(
         
     # 4. Budget check
     if budget >= cost:
-        reasons.append(f"✓ Budget constraint met: budget ({budget} INR) covers average cost ({cost} INR/acre).")
+        reasons.append(f"✓ Your budget ({_inr(budget)}/acre) covers the typical input cost ({_inr(cost)}/acre).")
     else:
-        reasons.append(f"⚠ Financial warning: average input cost ({cost} INR/acre) exceeds your budget ({budget} INR).")
+        reasons.append(f"⚠ Typical input cost ({_inr(cost)}/acre) is above your budget ({_inr(budget)}/acre).")
         
     # 5. Soil Organic Carbon check
     oc = float(soil.get("organic_carbon_percent", 0.5))
@@ -93,7 +115,7 @@ def explain_yield_prediction(
     if ph_min <= ph <= ph_max:
         positive_drivers.append(f"Optimal soil pH ({ph}) ensures high nutrient availability.")
     else:
-        negative_drivers.append(f"Sub-optimal soil pH ({ph}) limits fertilizer uptake efficiency (ideal range is {ph_min}--{ph_max}).")
+        negative_drivers.append(f"Sub-optimal soil pH ({ph}) limits fertilizer uptake efficiency (ideal range is {ph_min}–{ph_max}).")
         
     if rain > 900.0:
         positive_drivers.append(f"High cumulative precipitation ({rain}mm) provides strong water supply.")

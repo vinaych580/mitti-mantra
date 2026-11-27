@@ -1188,6 +1188,20 @@
     const expert = CONSULTANTS.find(e => e.id == id);
     if (!expert || !bookingSummaryPlaceholder) return;
 
+    // A request with no state or district used to be saved anyway, as
+    // "Location: Not specified". Ask for where the farm is first.
+    if (!stateSelect.value || !districtSelect.value) {
+      bookingSummaryPlaceholder.innerHTML = `
+        <div class="gs-booking-card" role="status">
+          <div class="gs-highstakes-banner"><span>Choose your state and district in the form above first, so the request says where you farm.</span></div>
+        </div>`;
+      retranslate();
+      const target = !stateSelect.value ? stateSelect : districtSelect;
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => target.focus({ preventScroll: true }), 400);
+      return;
+    }
+
     const booking = createBooking(expert, null);
     const { arrivalDate, arrivalTime, estDuration, estDistance } = computeBookingEstimate(expert);
     const focusVal = booking.topic;
@@ -1203,7 +1217,7 @@
       <div class="gs-booking-card">
         <div class="gs-success-banner">
           ${checkSVG}
-          <span>Your consultation request has been received. The expert will confirm shortly.</span>
+          <span>Sample request saved on this phone. These experts are sample data, so nobody was contacted and nothing was charged.</span>
         </div>
         ${highStakes ? `
         <div class="gs-highstakes-banner" style="margin-bottom:16px;">
@@ -1340,7 +1354,7 @@
      ========================================================================= */
   function buildPrepSheetText(booking) {
     const lines = [];
-    lines.push('MittiMantra — Consultation Prep Sheet');
+    lines.push('Mitti Mantra — Consultation Prep Sheet');
     lines.push('');
     lines.push(`For: ${booking.expertName}`);
     lines.push(`Topic: ${booking.topic} · ${booking.problemCategory}`);
@@ -1365,7 +1379,7 @@
       lines.push('AI Leaf Scan: not run this session');
     }
     lines.push('');
-    lines.push('Generated with MittiMantra.');
+    lines.push('Generated with Mitti Mantra.');
     return lines.join('\n');
   }
 

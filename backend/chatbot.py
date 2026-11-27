@@ -22,6 +22,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from engine.features import (
     best_time_to_sell,
+    fertilizer_recommendation,
     get_crop_calendar,
     get_msp_data,
     irrigation_schedule,
@@ -365,7 +366,30 @@ def _sane_area(v: float) -> bool:
 
 
 def _fmt_inr(v: float) -> str:
-    return f"₹{v:,.0f}"
+    """Rupees with Indian digit grouping (₹1,53,496), as the rest of the site shows them."""
+    n = int(round(float(v)))
+    sign, digits = ("-" if n < 0 else ""), str(abs(n))
+    if len(digits) > 3:
+        head, tail = digits[:-3], digits[-3:]
+        groups = []
+        while len(head) > 2:
+            groups.insert(0, head[-2:])
+            head = head[:-2]
+        if head:
+            groups.insert(0, head)
+        digits = ",".join(groups) + "," + tail
+    return f"{sign}₹{digits}"
+
+
+_MONTHS = ["January", "February", "March", "April", "May", "June", "July",
+           "August", "September", "October", "November", "December"]
+
+
+def _month_name(m: Any) -> str:
+    try:
+        return _MONTHS[int(m) - 1]
+    except (TypeError, ValueError, IndexError):
+        return str(m)
 
 
 # ---------------------------------------------------------------------------
@@ -597,11 +621,16 @@ def _intent_recommend(region: Optional[str], season: Optional[str], text: str, l
             f"(budget {_fmt_inr(budget)}/acre, {area} acres):\n"
         ]
         for i, r in enumerate(recs[:5], 1):
+            share = r.get("adoption_share")
+            grown = (f" · grown on {round(share * 100)}% of this district's area"
+                     if isinstance(share, (int, float)) and share >= 0.25 else "")
             lines.append(
                 f"{i}. **{r.get('crop_name')}** — "
                 f"profit {_fmt_inr(r.get('expected_profit',0))}, "
-                f"ROI {r.get('roi_percent',0)}%, risk {r.get('risk_score',0)}/100"
+                f"ROI {round(r.get('roi_percent',0))}%, risk {round(r.get('risk_score',0))}/100{grown}"
             )
+        lines.append("\n_Ranked on profit, risk and what already grows well in this district, "
+                     "so a widely grown crop can sit above a richer one on paper._")
         return "\n".join(lines), [
             "Open dashboard",
             f"Rotation plan for {region_disp}",
@@ -613,7 +642,7 @@ def _intent_recommend(region: Optional[str], season: Optional[str], text: str, l
         lines.append(T(
             lang, "recommend_line", i=i, name=r.get("crop_name"),
             profit=_fmt_inr(r.get("expected_profit", 0)),
-            roi=r.get("roi_percent", 0), risk=r.get("risk_score", 0),
+            roi=round(r.get("roi_percent", 0)), risk=round(r.get("risk_score", 0)),
         ))
     return "\n".join(lines), [
         T(lang, "sug_open_dashboard"),
@@ -665,7 +694,7 @@ def _intent_sell_advice(crop: Dict[str, str], region: Optional[str], lang: str) 
             if res.get("max_storage_weeks") is not None and "best_month" not in res:
                 lines.append(f"- **Keeps without cold storage:** about {res['max_storage_weeks']} week(s)")
             if "best_month" in res:
-                lines.append(f"- **Best month to sell:** Month {res['best_month']}")
+                lines.append(f"- **Best month to sell:** {_month_name(res['best_month'])}")
             if "best_month_avg_price" in res:
                 lines.append(f"- **Expected peak price:** ₹{res['best_month_avg_price']:.2f}/kg")
             if "current_price" in res:
@@ -1056,6 +1085,223 @@ def _intent_rotation(region: Optional[str], lang: str) -> Reply:
     return "\n".join(lines), ["Recommend crops for this region", "Open dashboard"]
 
 
+# ---------------------------------------------------------------------------
+# Intents added for the questions farmers most often typed that used to fall
+# through to "I didn't catch that": leaf symptoms, fertilizer doses, weather,
+# a plain EMI, two-crop comparisons, model accuracy, carbon credits, the
+# site's other pages, and who the assistant is.
+# ---------------------------------------------------------------------------
+_SCREENED_CROPS = {"maize", "potato", "soybean", "tomato"}
+
+
+def _intent_symptoms(crop: Optional[Dict[str, str]], region: Optional[str],
+                     season: Optional[str], lang: str) -> Reply:
+    name = crop["crop_name"] if crop else "your crop"
+    lines = [f"### Leaf trouble on {name}\n"]
+    if crop and crop["crop_id"] in _SCREENED_CROPS:
+        lines.append("Upload a clear photo of one affected leaf to **Leaf symptom screening** on the "
+                     "dashboard. It screens maize, potato, soybean and tomato leaves for 18 conditions "
+                     "and gives an organic and a chemical plan.")
+    else:
+        lines.append("Photo screening covers **maize, potato, soybean and tomato** leaves. For "
+                     f"{name}, the weather-based pest and disease rules are the closest check.")
+    lines += ["", "**Until you know what it is:**",
+              "- Pick off and destroy the worst-affected leaves; do not compost them.",
+              "- Water at the base in the morning, not over the leaves.",
+              "- Do not spray a chemical until the problem is identified.",
+              "- Show a sample to your nearest **KVK** (Krishi Vigyan Kendra) for a confirmed diagnosis."]
+    if crop:
+        try:
+            alerts = pest_disease_alerts(crop["crop_id"], _region_weather(region, season))
+            items = alerts if isinstance(alerts, list) else alerts.get("alerts", []) if isinstance(alerts, dict) else []
+            likely = [a for a in items
+                      if str(a.get("risk_level") or a.get("severity") or "").lower() in ("high", "medium")]
+            if likely:
+                lines += ["", "**Likely in this weather:** " + ", ".join(
+                    str(a.get("pest_disease") or a.get("name")) for a in likely[:3])]
+        except Exception:
+            pass
+    return "\n".join(lines), ["Pest alerts for " + (crop["crop_id"] if crop else "tomato"), "Find an expert near me"]
+
+
+def _intent_fertilizer(crop: Dict[str, str], region: Optional[str], lang: str) -> Reply:
+    soil_row = next((r for r in _soil() if r.get("region_id") == region), None) if region else None
+    if soil_row:
+        soil = {k: float(soil_row[k]) for k in ("n_kg_per_acre", "p_kg_per_acre", "k_kg_per_acre")}
+    else:
+        soil = {"n_kg_per_acre": 0.0, "p_kg_per_acre": 0.0, "k_kg_per_acre": 0.0}
+    try:
+        rec = fertilizer_recommendation(crop["crop_id"], soil)
+    except Exception as e:
+        return f"Couldn't work out a dose: {e}", []
+    where = (f"the average soil of {region_display_name(region)}" if soil_row
+             else "no soil test (the crop's full requirement)")
+    lines = [f"### Fertilizer for {crop['crop_name']}, per acre\n", f"_Based on {where}._\n"]
+    for r in rec.get("recommendations", []) or []:
+        nm = r.get("fertilizer") or r.get("name")
+        qty = r.get("quantity_kg_per_acre")
+        if qty is None:
+            qty = r.get("kg_per_acre", r.get("quantity_kg"))
+        when = r.get("application_timing") or r.get("timing") or ""
+        if nm and qty is not None:
+            lines.append(f"- **{nm}:** {round(float(qty), 1)} kg" + (f" · {when}" if when else ""))
+    cost = rec.get("total_fertilizer_cost_per_acre") or rec.get("total_cost")
+    if len(lines) <= 2:
+        lines.append("The soil already supplies what this crop needs; no top-up is required.")
+    elif cost:
+        lines.append(f"\n**Cost:** about {_fmt_inr(cost)} per acre.")
+    lines.append("\nA soil test (Soil Health Card) on your own field gives a better dose than the district average.")
+    return "\n".join(lines), [f"Irrigation for {crop['crop_id']}", f"Pest alerts for {crop['crop_id']}"]
+
+
+def _intent_weather(region: Optional[str], season: Optional[str], lang: str) -> Reply:
+    if not region:
+        return ("Which district? e.g. _\"weather in MH Pune\"_. The **My Farm** page on the dashboard "
+                "shows the next 7 days for your saved farm."), ["List regions"]
+    season = season if season in _VALID_SEASONS else "kharif"
+    w = _region_weather(region, season)
+    reply = (f"### Weather in {region_display_name(region)}, {season.title()}\n\n"
+             f"- **Typical season temperature:** {w['avg_temp_c']}°C\n"
+             f"- **Typical season rainfall:** {round(w['rainfall_mm'])} mm\n\n"
+             "These are the district's seasonal reference values. For the next 7 days (rain, "
+             "temperature and whether it is a good day to spray), open **My Farm** on the dashboard.")
+    return reply, ["Irrigation for rice", "Pest alerts for rice"]
+
+
+_LAKH = re.compile(r"(\d+(?:\.\d+)?)\s*(lakhs?|lacs?|l\b)", re.I)
+_THOUSAND = re.compile(r"(\d+(?:\.\d+)?)\s*(k\b|thousand)", re.I)
+_RATE = re.compile(r"(\d+(?:\.\d+)?)\s*(%|percent|per cent)", re.I)
+_MONTHS_RE = re.compile(r"(\d+)\s*(months?|mo\b)", re.I)
+_YEARS_RE = re.compile(r"(\d+(?:\.\d+)?)\s*(years?|yrs?)", re.I)
+
+
+def _plain_emi(text: str) -> Optional[Reply]:
+    """'loan of 2 lakh at 7% for 12 months' -> EMI. None when no principal is given."""
+    m = _LAKH.search(text)
+    k = _THOUSAND.search(text)
+    if m:
+        principal = float(m.group(1)) * 100_000
+    elif k:
+        principal = float(k.group(1)) * 1_000
+    else:
+        big = [float(x.replace(",", "")) for x in re.findall(r"\d[\d,]{3,}", text)]
+        principal = big[0] if big else None
+    if not principal or principal < 1000:
+        return None
+    rm = _RATE.search(text)
+    rate = float(rm.group(1)) if rm else 7.0
+    mm = _MONTHS_RE.search(text)
+    ym = _YEARS_RE.search(text)
+    months = int(mm.group(1)) if mm else int(round(float(ym.group(1)) * 12)) if ym else 12
+    months = max(1, min(months, 360))
+    r = rate / 100 / 12
+    emi = principal * r * (1 + r) ** months / ((1 + r) ** months - 1) if r > 0 else principal / months
+    total = emi * months
+    lines = ["### Loan EMI\n",
+             f"- **Loan:** {_fmt_inr(principal)}",
+             f"- **Interest:** {rate:g}% a year" + ("" if rm else " (assumed; tell me your rate)"),
+             f"- **Tenure:** {months} months",
+             f"- **EMI:** {_fmt_inr(emi)} a month",
+             f"- **Total interest:** {_fmt_inr(total - principal)}",
+             f"- **Total repayment:** {_fmt_inr(total)}"]
+    if rate > 4:
+        lines.append("\nA **Kisan Credit Card** crop loan up to ₹3 lakh works out to about **4%** a year "
+                     "when repaid on time (7% less the 3% prompt-repayment incentive).")
+    return "\n".join(lines), ["Government schemes for me", "Loan for cost 80000 profit 120000"]
+
+
+def _find_crops(text: str) -> List[Dict[str, str]]:
+    """Every crop named in the message, in the order they appear."""
+    t = text.lower()
+    found: Dict[str, Tuple[int, Dict[str, str]]] = {}
+    cbi = _crop_by_id()
+    names = list(_crop_by_name().items())
+    names += [(a, cbi[c]) for a, c in _ENGLISH_CROP_ALIASES.items() if c in cbi]
+    names += [(cid.replace("_", " "), row) for cid, row in cbi.items()]
+    for name, row in sorted(names, key=lambda kv: -len(kv[0])):
+        hit = re.search(rf"\b{re.escape(name)}\b", t)
+        if hit and row["crop_id"] not in found:
+            found[row["crop_id"]] = (hit.start(), row)
+    return [row for _, row in sorted(found.values(), key=lambda x: x[0])]
+
+
+def _intent_compare(crops: List[Dict[str, str]], region: Optional[str], season: Optional[str],
+                    lang: str) -> Reply:
+    if not region:
+        return "Which district should I compare them in? e.g. _\"compare rice and maize in Telangana Medak\"_.", []
+    season = season if season in _VALID_SEASONS else "kharif"
+    budget = _default_budget(region, season)
+    try:
+        recs = recommend_crops(region_id=region, season=season, budget_per_acre=budget,
+                               area_acres=3.0, top_k=50, include_losses=True)
+    except Exception as e:
+        return f"Couldn't compare: {e}", []
+    by_id = {r["crop_id"]: r for r in recs}
+    lines = [f"### {' vs '.join(c['crop_name'] for c in crops)}: {region_display_name(region)}, {season.title()}\n",
+             f"_3 acres at the typical {_fmt_inr(budget)}/acre:_\n"]
+    rows = [(c, by_id.get(c["crop_id"])) for c in crops]
+    for c, r in sorted(rows, key=lambda x: -(x[1]["expected_profit"] if x[1] else -1e12)):
+        if not r:
+            lines.append(f"- **{c['crop_name']}:** not a {season} crop here")
+            continue
+        lines.append(f"- **{c['crop_name']}:** profit {_fmt_inr(r['expected_profit'])}, "
+                     f"ROI {round(r['roi_percent'])}%, risk {round(r['risk_score'])}/100, "
+                     f"yield {round(r['predicted_yield_kg_per_acre'])} kg/acre")
+    return "\n".join(lines), [f"Recommend crops for {region_display_name(region)}"]
+
+
+def _intent_models(lang: str) -> Reply:
+    return ("### How good are the models?\n\n"
+            "- **Yield:** each district's own harvest record (up to 25 seasons) where one exists; "
+            "the range shown is where 8 seasons in 10 have landed.\n"
+            "- **Crop recommender:** 96% top-1 accuracy across 22 crops on held-out data.\n"
+            "- **Price forecast:** tested against simple rules for every crop and horizon; the model is "
+            "used only where it beat them.\n"
+            "- **Leaf screening:** about 80% accuracy on held-out photos of maize, potato, soybean and tomato.\n\n"
+            "None of them has been tested on your own field yet, so use them to compare options and "
+            "trust your own experience. Every number on the dashboard says where it came from; the "
+            "full test results are under **About the models**."), ["Recommend crops for my region"]
+
+
+def _intent_carbon(lang: str) -> Reply:
+    return ("### Soil carbon credits\n\n"
+            "Zero tillage, cover crops, keeping crop residue and agroforestry store carbon in the soil. "
+            "The **Carbon credits** tool on the dashboard estimates the tonnes of CO₂e a year and an "
+            "illustrative value for your plot.\n\n"
+            "It is an **estimate only**: a credit can be sold only after soil sampling, an approved "
+            "methodology and verification by a registry, usually through an aggregator or FPO."), []
+
+
+_PAGES = [
+    (r"\btractors?\b|\bharvesters?\b|\bmachinery\b|\brent (a )?(machine|equipment)",
+     "Book a Tractor", "/book-a-tractor.html",
+     "Find tractors and implements by district. It is a **demo with sample operators**: nothing is booked or charged."),
+    (r"\bmarketplace\b|\bsell (my )?(produce|harvest) online\b|\bfind (a )?buyers?\b",
+     "Marketplace", "/marketplace.html",
+     "List produce or browse buyers, with real mandi prices beside every listing. Listings and sellers are **sample data**."),
+    (r"\bexperts?\b|\bagronomists?\b|\bconsult|\bkvk\b|\bscientists?\b",
+     "Gyan Seva", "/gyan-seva.html",
+     "Find agronomists by district and specialism, or the KVK scientist for your area. The expert list is "
+     "**illustrative**; the KVK contact is the verified option."),
+    (r"\bdraw (my )?(farm|field|plot)|\bboundary\b|\bmap (my )?(farm|field)\b",
+     "Draw farm", "/farm-boundary.html",
+     "Draw your field on the map: it measures the area and fetches soil for that exact spot, and every tool then uses it."),
+    (r"\bback ?up\b|\bexport (my )?data\b|\bmy data\b|\bdelete (my )?data\b|\bprivacy\b",
+     "Your data", "/your-data.html",
+     "Everything you enter stays on this phone. Back it up to a file, restore it, or delete it from **Your data**."),
+    (r"\bseason plan\b|\bplan (my|the) season\b|\bstep by step\b",
+     "Plan your season", "/decide.html",
+     "Answer one question at a time (farm, shortlist, trade-offs) and save a plan you can follow through the season."),
+]
+
+
+def _intent_page(text: str) -> Optional[Tuple[str, List[str], Dict[str, str]]]:
+    for pattern, label, href, blurb in _PAGES:
+        if re.search(pattern, text):
+            return f"### {label}\n\n{blurb}", [], _action(f"Open {label} →", href)
+    return None
+
+
 _SLASH_ALIASES = {
     "/help": "help", "/?": "help",
     "/crops": "list crops", "/regions": "list regions",
@@ -1210,6 +1456,17 @@ def answer(message: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, 
         reply, sug = _intent_help(lang)
         return _pack(reply, sug)
 
+    # Who/what the assistant is
+    if re.search(r"\b(who are you|what are you|your name|are you (a )?(bot|human|robot|ai))\b", text):
+        return _pack("I'm **Mitti Mantra's farm assistant**. I answer from this site's own data and "
+                     "models (crops, district yields, mandi prices, MSP, schemes, pests, irrigation), "
+                     "not from the open internet, and I say where each number comes from. I can't see "
+                     "your field, so check anything serious with your KVK.",
+                     ["What can you do?", "Recommend crops for my region"])
+    if re.search(r"\bjoke\b", text):
+        return _pack("Why did the farmer win an award? He was **outstanding in his field**. 🌾\n\n"
+                     "Now, what can I help you grow?", ["Recommend crops for my region", "MSP of wheat"])
+
     # Lists
     if _matches("list_crops", text, r"\blist (of )?(all )?crops\b|\bwhich crops\b|\bavailable crops\b"):
         reply, sug = _intent_list_crops(lang)
@@ -1267,6 +1524,61 @@ def answer(message: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, 
     # skipped it via its `if crop and ...` guard) and any comparison
     # phrasing the old narrow regex didn't cover -- before this ever ran.
     # Consolidated into this single check, now reachable.
+    # Two or more crops named with a comparison word
+    _named = _find_crops(text)
+    if (len(_named) >= 2 and not re.search(r"\bmsp\b", text)
+            and re.search(r"\bcompare\b|\bvs\.?\b|\bversus\b|\bor\b|\bbetter\b|\bdifference\b", text)):
+        reply, sug = _intent_compare(_named[:4], region, season, lang)
+        out = _pack(reply, sug, region=region, season=season)
+        out["actions"] = [_action("Open Compare crops →", _dashboard_link("compare", region_id=region))]
+        return out
+
+    # Weather (before the price forecast, which "weather forecast" would match)
+    if (re.search(r"\bweather\b|\btemperature\b|\bwill it rain\b|\brainfall\b|\bmausam\b", text)
+            and not re.search(r"\bprice\b|\birrigat", text)):
+        reply, sug = _intent_weather(region, season, lang)
+        out = _pack(reply, sug, region=region, season=season)
+        out["actions"] = [_action("Open My Farm →", _dashboard_link("home"))]
+        return out
+
+    # Leaf symptoms (before pest, which needs the words pest/disease)
+    if (re.search(r"\b(spots?|spotted|lesions?|yellow(ing)?|wilt(ing|ed)?|blight|rot(ting)?|curl(ing)?|"
+                  r"mildew|rust|holes?|patches|dhabbe|daag)\b", text)
+            and re.search(r"\b(leaf|leaves|patt?e|patton|plants?|stems?|fruits?)\b", text)):
+        reply, sug = _intent_symptoms(crop, region, season, lang)
+        out = _pack(reply, sug, crop=crop, region=region)
+        out["actions"] = [_action("Open leaf screening →", _dashboard_link("disease")),
+                          _action("Find an expert →", "/gyan-seva.html")]
+        return out
+
+    # Fertilizer doses
+    if re.search(r"\b(fertili[sz]ers?|urea|dap|mop|potash|npk|nutrients?|khaad|khad)\b", text):
+        if not crop:
+            return _pack("Which crop? e.g. _\"how much urea for rice\"_.", ["Fertilizer for rice", "Fertilizer for wheat"])
+        reply, sug = _intent_fertilizer(crop, region, lang)
+        out = _pack(reply, sug, crop=crop, region=region)
+        out["actions"] = [_action("Open fertilizer planner →", _dashboard_link("fertilizer", crop_id=crop["crop_id"]))]
+        return out
+
+    # Model accuracy / trust
+    if re.search(r"\baccura|\bhow (good|reliable|correct)\b|\bcan i trust\b|\bmodels?\b.*\b(work|good|tested)\b", text):
+        out = _pack(*_intent_models(lang))
+        out["actions"] = [_action("Open model status →", _dashboard_link("ml"))]
+        return out
+
+    # Carbon credits
+    if re.search(r"\bcarbon\b", text):
+        out = _pack(*_intent_carbon(lang))
+        out["actions"] = [_action("Open carbon estimator →", _dashboard_link("carbon"))]
+        return out
+
+    # The site's other pages
+    _page = _intent_page(text)
+    if _page:
+        out = _pack(_page[0], _page[1])
+        out["actions"] = [_page[2]]
+        return out
+
     if _matches("msp_vs_market", text, r"\bmsp (vs|versus|against|compared? (to|with))\b|\bmsp.{0,12}market\b"):
         if not crop:
             reply, sug = _need_crop("/mspvsmarket")
@@ -1357,6 +1669,11 @@ def answer(message: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, 
 
     # Loan
     if _matches("loan", text, r"\bloan\b|\bemi\b|\binterest\b"):
+        _emi = _plain_emi(text)
+        if _emi and re.search(r"lakh|lac|%|percent|months?|years?|\bat\b", text):
+            out = _pack(*_emi)
+            out["actions"] = [_action("Open loan calculator →", _dashboard_link("loan"))]
+            return out
         # Same defect as the schemes branch: `_intent_loan` parses amounts and
         # tenure out of the raw message, and was being passed the parsed `nums`
         # list, so any loan/EMI/interest question crashed with TypeError.

@@ -731,16 +731,16 @@
       return `<div class="mkt-insight mkt-insight--empty"${blockId ? ` id="${esc(blockId)}"` : ''}>📊 <b>Market Insight:</b> ${esc(insight.message)}</div>`;
     }
     const verdictText = {
-      within: 'within the current mandi reference range.',
-      above: 'above the current mandi reference range.',
-      below: 'below the current mandi reference range — a good deal for buyers.',
+      within: 'within the latest mandi reference range.',
+      above: 'above the latest mandi reference range.',
+      below: 'below the latest mandi reference range — a good deal for buyers.',
     }[insight.verdict];
     const msp = insight.msp;
     const hasChart = insight.chart && insight.chart.history && insight.chart.history.length >= 2;
     return `<div class="mkt-insight"${blockId ? ` id="${esc(blockId)}"` : ''}>
       <div class="mkt-insight__title">📊 Market Insight <span class="mkt-insight__tag">AI-assisted estimate</span></div>
-      <div class="mkt-insight__body">Recent mandi reference (${esc(insight.market || 'nearby market')}, as of ${esc(insight.asOf)}): <b>${inr(insight.lo)}–${inr(insight.hi)} / quintal</b> (avg ${inr(insight.avg)}).
-      This listing's price is <b>${verdictText}</b></div>
+      <div class="mkt-insight__body">Latest mandi reference (${esc(insight.market || 'nearby market')}, as of ${esc(insight.asOf)}): <b>${inr(insight.lo)}–${inr(insight.hi)} / quintal</b> (avg ${inr(insight.avg)}).
+      This listing's price is <b>${verdictText}</b>${(Date.now() - new Date(insight.asOf).getTime()) > 365 * 864e5 ? ' That reference is over a year old, so treat it as a rough guide.' : ''}</div>
       ${msp ? `<div class="mkt-insight__msp">${msp.mandi_above_msp ? '✓' : '⚠'} Mandi price is <b>${msp.mandi_above_msp ? 'above' : 'below'} MSP</b> (₹${Math.round(msp.msp_inr_per_kg * 100).toLocaleString('en-IN')}/quintal, ${esc(msp.msp_year)}) by ${Math.abs(msp.mandi_msp_gap_pct)}%.</div>` : ''}
       ${hasChart ? `<div class="mkt-insight__chart-title">Price trend — actual &amp; ML forecast</div>
       <div class="mkt-insight__chart-wrap"><canvas id="${esc(chartId)}"></canvas></div>` : ''}
@@ -965,7 +965,7 @@
         <span>Vegetation index (est.) <b>${Number(fh.mean_ndvi).toFixed(2)}</b></span>
         <span>Canopy cover <b>${Math.round(fh.canopy_cover_pct)}%</b></span>
       </div>
-      <p class="mkt-note">A planning estimate from this farm's location, computed by the same field-health engine used elsewhere in MittiMantra — not satellite imagery, a field inspection, or a seller's own claim.</p>
+      <p class="mkt-note">A planning estimate from this farm's location, computed by the same field-health engine used elsewhere in Mitti Mantra — not satellite imagery, a field inspection, or a seller's own claim.</p>
     </div>`;
   }
 
