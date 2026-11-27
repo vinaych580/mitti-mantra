@@ -173,6 +173,25 @@ def _price_forecast(district_id: str, crop_id: str):
     return d, {**fc, "district": d, "freshness": price_freshness(fc["origin_week"])}
 
 
+@router.get("/v1/districts/{district_id}/price-forecast/crops")
+def get_district_forecast_crops(district_id: str):
+    """Crops this district has prices for that the price model covers, newest first:
+    what the dashboard offers when a farmer picks a crop with no prices here."""
+    from ml import price_model
+
+    store = _require_store()
+    d = store.district(district_id)
+    if d is None:
+        raise HTTPException(status_code=404, detail=f"Unknown district: {district_id}")
+    model = price_model.load()
+    covered = set(model.crops) if model is not None else set()
+    rows = store.query("SELECT crop_id, MAX(week) AS last_week FROM price_district_weekly "
+                       "WHERE district_id = ? AND price_paise_kg > 0 GROUP BY crop_id", (d["district_id"],))
+    crops = sorted(({"crop_id": r["crop_id"], "data_through": r["last_week"]} for r in rows
+                    if r["crop_id"] in covered), key=lambda c: (c["data_through"], c["crop_id"]), reverse=True)
+    return {"district": d, "crops": crops}
+
+
 @router.get("/v1/districts/{district_id}/price-forecast")
 def get_district_price_forecast(district_id: str, crop_id: str):
     """Weekly price 1-26 weeks ahead with 80% ranges (Phase 2, spec 2.2). Each horizon

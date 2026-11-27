@@ -7691,3 +7691,86 @@ html[data-theme="dark"] .mm-palette__item.is-active .mm-palette__ico { color: #9
 
 /* A ranked crop with no harvest record in the district (demo-recommender.js). */
 .answer__new { color: var(--accent-deep); font-weight: 600; }
+
+/* ---------- Phase 2 price and recommendation evidence ---------- */
+.mm-subhead {
+  font-size: .85rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 16px 0 12px;
+}
+
+.mm-chart-note,
+.mm-basis {
+  font-size: var(--fs-2xs);
+  color: var(--ink-faint);
+  line-height: 1.5;
+  margin: 10px 0 0;
+}
+
+.mm-basis {
+  margin-top: 14px;
+}
+
+.list-row--pick {
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--brand) 55%, transparent);
+  background: var(--brand-soft);
+}
+
+.mm-rec-basis {
+  font-size: .76rem;
+  color: var(--ink-soft);
+  margin-top: 3px;
+  overflow-wrap: anywhere;
+}
+
+.mm-rec-basis--wide {
+  margin: 4px 0 12px;
+  font-size: var(--fs-2xs);
+}
+
+.mm-rec-basis--warn {
+  color: var(--accent-deep);
+}
+
+.mm-stale {
+  margin-bottom: 14px;
+}
+
+/* A range ("578–1,264 kg/ac") reads as one value; don't break it at the dash. */
+.kpi__sub [data-no-translate],
+.list-row__val [data-no-translate] {
+  white-space: nowrap;
+}
+
+.mm-crop-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.chip--btn {
+  border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  cursor: pointer;
+  min-height: 36px;
+  font: inherit;
+  font-size: .8rem;
+  font-weight: 600;
+}
+
+.chip--btn:hover,
+.chip--btn:focus-visible {
+  background: var(--brand-soft);
+  color: var(--brand-deep);
+}
+
+/* Method labels ("Typical for this time of year ...") are sentences; wrap them
+   inside a row instead of running past its edge on a phone. */
+.list-row__name .chip {
+  white-space: normal;
+  max-width: 100%;
+  line-height: 1.35;
+}

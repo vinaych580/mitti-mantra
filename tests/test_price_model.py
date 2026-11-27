@@ -81,3 +81,17 @@ def test_price_routes():
                       params={"crop_id": "saffron"}).status_code == 404
     assert client.get("/api/v1/districts/haryana_karnal/sell-advice",
                       params={"crop_id": "wheat", "quantity_kg": -1}).status_code == 422
+
+
+@needs_artifact
+def test_forecast_crops_lists_only_what_the_forecast_can_serve():
+    from backend.main import app
+    client = TestClient(app)
+    r = client.get("/api/v1/districts/haryana_karnal/price-forecast/crops")
+    assert r.status_code == 200, r.text
+    crops = [c["crop_id"] for c in r.json()["crops"]]
+    assert "wheat" in crops and "saffron" not in crops
+    for c in crops[:5]:  # each one listed really forecasts
+        assert client.get("/api/v1/districts/haryana_karnal/price-forecast",
+                          params={"crop_id": c}).status_code == 200, c
+    assert client.get("/api/v1/districts/nowhere_atall/price-forecast/crops").status_code == 404

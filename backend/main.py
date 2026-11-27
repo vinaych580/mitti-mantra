@@ -94,10 +94,11 @@ async def _warm_ml_models() -> None:
     def _warm() -> None:
         # Phase 2: the released yield artifact replaces the legacy yield forest and
         # the recommendation classifier; those load only when no artifact ships.
-        from ml import yield_anomaly
+        from ml import price_model, yield_anomaly
         if yield_anomaly.load() is None:
             _load_yield_models()
             _load_recommend_models()
+        price_model.load()  # the weekly forecast and sell advice
         _load_price_models()
 
     threading.Thread(target=_warm, name="ml-warmup", daemon=True).start()

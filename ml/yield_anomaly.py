@@ -26,11 +26,12 @@ from __future__ import annotations
 
 import logging
 import math
-import threading
 from pathlib import Path
 from typing import Any
 
 import numpy as np
+
+from ml._artifact import LazyArtifact
 
 logger = logging.getLogger(__name__)
 
@@ -425,29 +426,13 @@ class YieldModel:
         return out
 
 
-_model: YieldModel | None = None
-_model_loaded = False
-_lock = threading.Lock()
+_artifact: LazyArtifact[YieldModel] = LazyArtifact("yield model", YieldModel)
 
 
 def load(path: Path = RELEASED) -> YieldModel | None:
     """The released model, loaded once; None when no artifact is shipped."""
-    global _model, _model_loaded
-    if _model_loaded:
-        return _model
-    with _lock:
-        if not _model_loaded:
-            try:
-                import joblib
-                _model = YieldModel(joblib.load(path)) if path.exists() else None
-            except Exception as exc:  # a broken artifact must not take the API down
-                logger.warning("yield model not loaded: %s", exc)
-                _model = None
-            _model_loaded = True
-    return _model
+    return _artifact.get(path)
 
 
 def reset() -> None:
-    global _model, _model_loaded
-    with _lock:
-        _model, _model_loaded = None, False
+    _artifact.reset()
