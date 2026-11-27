@@ -33,7 +33,9 @@
 // v63: Phase 1 -- region-geo.js points at the pipeline's pilot table; the nav
 // logo no longer collapses at 375px under long (Tamil) button labels, and the
 // your-data file button wraps instead of widening the page.
-const VERSION = 'mittimantra-v78';
+// v80: about.html, about.css and about.js (the /about page and its demo
+// path) join the precache; the landing footer links to it.
+const VERSION = 'mittimantra-v80';
 const CORE = [
   './',
   './index.html',
@@ -43,6 +45,8 @@ const CORE = [
   './gyan-seva.html',
   './book-a-tractor.html',
   './your-data.html',
+  './about.html',
+  './about.css',
   './decide.html',
   './season.html',
   './season.css',
@@ -87,6 +91,7 @@ const CORE = [
   './map-tractors.js',
   './hero-title.js',
   './your-data.js',
+  './about.js',
   './Data/marketplace-listings.js',
   './Data/india-states.geo.json',
   './assets/marketplace/rice.webp',

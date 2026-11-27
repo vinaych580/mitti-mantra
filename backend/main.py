@@ -2068,6 +2068,10 @@ if os.path.exists(frontend_dir):
     async def your_data_route(request: Request):
         return FileResponse(os.path.join(frontend_dir, "your-data.html"))
 
+    @app.api_route("/about", methods=["GET"])
+    async def about_route(request: Request):
+        return FileResponse(os.path.join(frontend_dir, "about.html"))
+
     @app.api_route("/farm-boundary", methods=["GET"])
     async def farm_boundary_route(request: Request):
         return FileResponse(os.path.join(frontend_dir, "farm-boundary.html"))

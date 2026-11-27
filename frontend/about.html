@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About · Mitti Mantra</title>
+  <meta name="description" content="What Mitti Mantra is for, how it works, how it is built, and the defects found and fixed along the way. With a two-minute demo path.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@400;600&family=Noto+Sans+Telugu:wght@400;600&family=Noto+Sans+Kannada:wght@400;600&family=Noto+Sans+Tamil:wght@400;600&family=Noto+Serif+Devanagari:wght@500;600&family=Noto+Serif+Telugu:wght@500;600&family=Noto+Serif+Kannada:wght@500;600&family=Noto+Serif+Tamil:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="about.css">
+  <link rel="icon" href="assets/logo-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/logo-192.png">
+</head>
+<body class="about-page">
+  <nav class="nav scrolled" id="nav">
+    <div class="nav__wrap">
+      <a href="index.html" class="logo" aria-label="Mitti Mantra home">
+        <img src="assets/logo-128.png" alt="Mitti Mantra — Growing the future" class="logo__img" width="128" height="128">
+      </a>
+      <ul class="nav__links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="decide.html" data-i18n>Plan your season</a></li>
+        <li><a href="season.html" data-i18n>My season</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="farm-boundary.html">Draw farm</a></li>
+        <li><a href="marketplace.html">Marketplace</a></li>
+        <li><a href="gyan-seva.html">Gyan Seva</a></li>
+      </ul>
+      <div class="nav__cta">
+        <a href="dashboard.html" class="btn btn-primary">Open dashboard</a>
+        <button class="nav__burger" id="burger" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="mobile-backdrop" id="mBackdrop"></div>
+  <aside class="mobile-panel" id="mPanel">
+    <button class="mobile-panel__close" id="mClose" aria-label="Close">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="decide.html" data-i18n>Plan your season</a></li>
+      <li><a href="season.html" data-i18n>My season</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="farm-boundary.html">Draw farm</a></li>
+      <li><a href="marketplace.html">Marketplace</a></li>
+      <li><a href="gyan-seva.html">Gyan Seva</a></li>
+      <li><a href="your-data.html">Your data</a></li>
+    </ul>
+    <a href="dashboard.html" class="btn btn-primary">Open dashboard</a>
+  </aside>
+
+  <main class="ab" id="main">
+    <header class="ab-hero">
+      <div class="ab-wrap">
+        <p class="eyebrow" data-i18n>About Mitti Mantra</p>
+        <h1 class="ab-hero__title" data-i18n>A farm planner that shows its working</h1>
+        <p class="ab-hero__lede" data-i18n>Mitti Mantra helps a farmer or a farm advisor in India compare crops before the season commits the money: expected yield, cost, profit and risk, each with where the number came from.</p>
+        <ul class="ab-jump" aria-label="On this page">
+          <li><a href="#demo" data-i18n>Two-minute demo</a></li>
+          <li><a href="#problem" data-i18n>The problem</a></li>
+          <li><a href="#approach" data-i18n>The approach</a></li>
+          <li><a href="#built" data-i18n>How it is built</a></li>
+          <li><a href="#models" data-i18n>The models</a></li>
+          <li><a href="#defects" data-i18n>Defects found and fixed</a></li>
+        </ul>
+      </div>
+    </header>
+
+    <!-- The demo comes first: reviewers arrive here to see the app, and the
+         rest of the page explains what they just saw. -->
+    <section class="ab-section ab-demo" id="demo" aria-labelledby="demoTitle">
+      <div class="ab-wrap">
+        <h2 class="ab-h2" id="demoTitle" data-i18n>Try the two-minute demo</h2>
+        <p class="ab-intro" data-i18n>Six stops through the app with one prepared farm. Each dashboard link opens the right tool with this farm filled in.</p>
+
+        <div class="ab-farm">
+          <dl class="ab-farm__facts">
+            <div><dt data-i18n>District</dt><dd data-i18n>Medak, Telangana</dd></div>
+            <div><dt data-i18n>Season</dt><dd data-i18n>Kharif</dd></div>
+            <div><dt data-i18n>Area</dt><dd data-i18n>3 acres</dd></div>
+            <div><dt data-i18n>Budget</dt><dd data-i18n>₹25,000 per acre</dd></div>
+          </dl>
+          <div class="ab-farm__actions">
+            <button type="button" class="btn btn-primary" id="demoUse" data-i18n>Use the demo farm</button>
+            <button type="button" class="btn btn-ghost" id="demoRestore" hidden data-i18n>Put my farm details back</button>
+          </div>
+          <p class="ab-farm__note" data-i18n>Saves these farm details on this phone so the guided planner starts with them. Nothing is sent anywhere, and you can put your own details back here.</p>
+          <div class="ab-farm__status" aria-live="polite">
+            <p id="demoOn" hidden data-i18n>Demo farm saved on this phone.</p>
+            <p id="demoOff" hidden data-i18n>Your own farm details are back.</p>
+            <p id="demoPlot" class="ab-farm__warn" hidden data-i18n>This phone has a saved plot. The guided planner plans for that plot, not the demo farm; the dashboard links still use the demo farm.</p>
+          </div>
+        </div>
+
+        <ol class="ab-steps">
+          <li class="ab-step">
+            <span class="ab-step__n" aria-hidden="true">1</span>
+            <div class="ab-step__body">
+              <h3 class="ab-step__title"><a href="decide.html" data-i18n>Plan your season</a></h3>
+              <p data-i18n>The guided planner suggests three crops for the farm, then lets you move rain, water and budget to see how each one holds up.</p>
+            </div>
+          </li>
+          <li class="ab-step">
+            <span class="ab-step__n" aria-hidden="true">2</span>
+            <div class="ab-step__body">
+              <h3 class="ab-step__title"><a href="dashboard.html?tool=recommend&amp;region_id=telangana_medak&amp;season=kharif&amp;area_acres=3&amp;budget_per_acre=25000" data-i18n>Smart recommend</a></h3>
+              <p data-i18n>Each crop shows a yield range and a profit range, and the district record they come from.</p>
+            </div>
+          </li>
+          <li class="ab-step">
+            <span class="ab-step__n" aria-hidden="true">3</span>
+            <div class="ab-step__body">
+              <h3 class="ab-step__title"><a href="dashboard.html?tool=simulate&amp;region_id=telangana_medak&amp;season=kharif&amp;area_acres=3&amp;crop_id=soybean" data-i18n>Yield &amp; profit</a></h3>
+              <p data-i18n>Soybean on the same farm. Change the rain, the water or the mandi price and watch the profit move.</p>
+            </div>
+          </li>
+          <li class="ab-step">
+            <span class="ab-step__n" aria-hidden="true">4</span>
+            <div class="ab-step__body">
+              <h3 class="ab-step__title"><a href="dashboard.html?tool=sell&amp;region_id=telangana_medak&amp;crop_id=soybean" data-i18n>Best time to sell</a></h3>
+              <p data-i18n>Selling the soybean now against holding it, each option with its range and the cost of storing.</p>
+            </div>
+          </li>
+          <li class="ab-step">
+            <span class="ab-step__n" aria-hidden="true">5</span>
+            <div class="ab-step__body">
+              <h3 class="ab-step__title"><a href="dashboard.html?tool=loan" data-i18n>Loan feasibility</a></h3>
+              <p data-i18n>Could the season's cost be borrowed and repaid from the expected profit? Enter the cost and profit from step 3.</p>
+            </div>
+          </li>
+          <li class="ab-step">
+            <span class="ab-step__n" aria-hidden="true">6</span>
+            <div class="ab-step__body">
+              <h3 class="ab-step__title"><a href="dashboard.html?tool=home&amp;region_id=telangana_medak&amp;season=kharif&amp;area_acres=3&amp;budget_per_acre=25000" data-i18n>My Farm</a></h3>
+              <p data-i18n>The farm on one screen: weather, soil, prices and what to do next.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ab-section" id="problem" aria-labelledby="problemTitle">
+      <div class="ab-wrap ab-cols">
+        <div>
+          <h2 class="ab-h2" id="problemTitle" data-i18n>The problem</h2>
+          <p class="ab-intro" data-i18n>Small and medium farmers in India decide what to sow with scattered information about soil, weather, input costs and mandi prices. The result is avoidable yield loss, unstable profit and more financial risk.</p>
+        </div>
+        <aside class="ab-persona" aria-labelledby="personaTitle">
+          <h3 class="ab-h3" id="personaTitle" data-i18n>Who it is designed for</h3>
+          <p data-i18n>Ramesh is a composite persona, not a real user: 38, three semi-irrigated acres in Telangana, choosing between cotton, soybean and maize, more at home in Telugu and Hindi than in English.</p>
+          <p data-i18n>He wants the best profit per acre, to avoid a failed crop in a bad-rain year, and a risk figure he can understand.</p>
+          <p data-i18n>Farm advisors, who serve many farmers and compare scenarios side by side, matter just as much.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="ab-section" id="approach" aria-labelledby="approachTitle">
+      <div class="ab-wrap">
+        <h2 class="ab-h2" id="approachTitle" data-i18n>The approach</h2>
+        <div class="ab-grid">
+          <article class="ab-card">
+            <h3 class="ab-h3" data-i18n>Simulation first, machine learning on top</h3>
+            <p data-i18n>Every estimate has a deterministic path that can be explained: crop parameters, soil, weather and costs worked through a simulator. Trained models are used where they beat simple baselines; where they do not, the baseline is served.</p>
+          </article>
+          <article class="ab-card">
+            <h3 class="ab-h3" data-i18n>Every answer says where it came from</h3>
+            <p data-i18n>Every response carries a source field (prediction_source) that says whether a number came from a trained model, the district's own record or the rule-based fallback. The screens show it next to the number.</p>
+          </article>
+          <article class="ab-card">
+            <h3 class="ab-h3" data-i18n>Honest labelling</h3>
+            <p data-i18n>Sample data is labelled as sample. Old prices say how old they are. When the yield model missed its accuracy target on unseen years, the app kept serving each district's five-year average instead.</p>
+          </article>
+        </div>
+        <p class="ab-status" data-i18n>There are no users and no pilot yet. The design choices are informed guesses until farmers have tried the planner on a phone in Telugu or Hindi.</p>
+      </div>
+    </section>
+
+    <section class="ab-section" id="built" aria-labelledby="builtTitle">
+      <div class="ab-wrap">
+        <h2 class="ab-h2" id="builtTitle" data-i18n>How it is built</h2>
+        <p class="ab-intro" data-i18n>One repository and no build step. Vercel serves the pages as static files and runs the API as one Python function.</p>
+        <figure class="ab-fig">
+          <div class="ab-fig__scroll">
+            <svg class="ab-arch" viewBox="0 0 820 470" role="img" aria-labelledby="archCaption" data-no-translate focusable="false">
+              <defs>
+                <marker id="abArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0 0L10 5L0 10z" class="ab-arch__head"/>
+                </marker>
+              </defs>
+
+              <!-- Phone -->
+              <rect x="10" y="40" width="210" height="300" rx="16" class="ab-arch__zone"/>
+              <text x="26" y="66" class="ab-arch__zt">Phone or browser</text>
+              <rect x="26" y="82" width="178" height="74" rx="10" class="ab-arch__box ab-arch__box--brand"/>
+              <text x="40" y="106" class="ab-arch__t">PWA</text>
+              <text x="40" y="126" class="ab-arch__s">HTML + vanilla JS,</text>
+              <text x="40" y="143" class="ab-arch__s">EN / HI / TE</text>
+              <rect x="26" y="168" width="178" height="74" rx="10" class="ab-arch__box"/>
+              <text x="40" y="192" class="ab-arch__t">Service worker</text>
+              <text x="40" y="212" class="ab-arch__s">offline shell,</text>
+              <text x="40" y="229" class="ab-arch__s">offline simulator</text>
+              <rect x="26" y="254" width="178" height="70" rx="10" class="ab-arch__box"/>
+              <text x="40" y="278" class="ab-arch__t">localStorage</text>
+              <text x="40" y="298" class="ab-arch__s">farm profile, plots,</text>
+              <text x="40" y="314" class="ab-arch__s">plans (no accounts)</text>
+
+              <!-- Vercel -->
+              <rect x="256" y="12" width="330" height="446" rx="16" class="ab-arch__zone"/>
+              <text x="272" y="38" class="ab-arch__zt">Vercel</text>
+              <rect x="272" y="52" width="298" height="56" rx="10" class="ab-arch__box"/>
+              <text x="286" y="76" class="ab-arch__t">Static files</text>
+              <text x="286" y="96" class="ab-arch__s">frontend/ · CDN</text>
+              <rect x="272" y="128" width="298" height="70" rx="10" class="ab-arch__box ab-arch__box--brand"/>
+              <text x="286" y="152" class="ab-arch__t">Python function</text>
+              <text x="286" y="172" class="ab-arch__s">api/index.py → FastAPI</text>
+              <text x="286" y="189" class="ab-arch__s">/api/*, validated requests</text>
+              <rect x="272" y="218" width="142" height="80" rx="10" class="ab-arch__box"/>
+              <text x="286" y="242" class="ab-arch__t">engine/</text>
+              <text x="286" y="262" class="ab-arch__s">simulator,</text>
+              <text x="286" y="279" class="ab-arch__s">advisory rules</text>
+              <rect x="428" y="218" width="142" height="80" rx="10" class="ab-arch__box"/>
+              <text x="442" y="242" class="ab-arch__t">ml/models</text>
+              <text x="442" y="262" class="ab-arch__s">yield, price,</text>
+              <text x="442" y="279" class="ab-arch__s">disease (ONNX)</text>
+              <rect x="272" y="318" width="298" height="56" rx="10" class="ab-arch__box ab-arch__box--soil"/>
+              <text x="286" y="342" class="ab-arch__t">serving.sqlite + dataset/*.csv</text>
+              <text x="286" y="362" class="ab-arch__s">curated store, seed tables</text>
+              <rect x="272" y="390" width="298" height="54" rx="10" class="ab-arch__box ab-arch__box--quiet"/>
+              <text x="286" y="413" class="ab-arch__s">built offline by pipelines/ from</text>
+              <text x="286" y="431" class="ab-arch__s">DES, Agmarknet, NASA POWER, SHC</text>
+
+              <!-- External -->
+              <rect x="620" y="128" width="190" height="246" rx="16" class="ab-arch__zone"/>
+              <text x="636" y="154" class="ab-arch__zt">Public services</text>
+              <rect x="636" y="168" width="158" height="56" rx="10" class="ab-arch__box"/>
+              <text x="650" y="192" class="ab-arch__t">SoilGrids</text>
+              <text x="650" y="211" class="ab-arch__s">soil at a point</text>
+              <rect x="636" y="234" width="158" height="56" rx="10" class="ab-arch__box"/>
+              <text x="650" y="258" class="ab-arch__t">Open-Meteo</text>
+              <text x="650" y="277" class="ab-arch__s">weather</text>
+              <rect x="636" y="300" width="158" height="62" rx="10" class="ab-arch__box"/>
+              <text x="650" y="324" class="ab-arch__t">data.gov.in</text>
+              <text x="650" y="343" class="ab-arch__s">live mandi prices</text>
+              <text x="650" y="357" class="ab-arch__s">(optional key)</text>
+
+              <!-- Flows -->
+              <path d="M204 110 H272" class="ab-arch__flow" marker-end="url(#abArrow)"/>
+              <text x="212" y="100" class="ab-arch__lbl">pages</text>
+              <path d="M204 140 C236 140 240 163 272 163" class="ab-arch__flow" marker-start="url(#abArrow)" marker-end="url(#abArrow)"/>
+              <text x="210" y="160" class="ab-arch__lbl">JSON</text>
+              <path d="M343 198 V218" class="ab-arch__flow" marker-end="url(#abArrow)"/>
+              <path d="M499 198 V218" class="ab-arch__flow" marker-end="url(#abArrow)"/>
+              <path d="M343 298 V318" class="ab-arch__flow" marker-end="url(#abArrow)"/>
+              <path d="M499 298 V318" class="ab-arch__flow" marker-end="url(#abArrow)"/>
+              <path d="M570 163 C600 163 600 196 636 196" class="ab-arch__flow" marker-end="url(#abArrow)"/>
+              <path d="M570 170 C604 170 604 262 636 262" class="ab-arch__flow" marker-end="url(#abArrow)"/>
+              <path d="M570 177 C608 177 608 331 636 331" class="ab-arch__flow" marker-end="url(#abArrow)"/>
+              <path d="M115 40 C115 6 715 6 715 168" class="ab-arch__flow ab-arch__flow--dash" marker-end="url(#abArrow)"/>
+              <text x="600" y="22" class="ab-arch__lbl">farm boundary page</text>
+            </svg>
+          </div>
+          <figcaption id="archCaption" class="ab-fig__cap" data-i18n>The app on the phone talks to one FastAPI function. The function reads a curated data store and seed tables, runs the simulator and the models, and calls three public services for soil, weather and live mandi prices. The farm boundary page asks SoilGrids directly.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="ab-section" id="models" aria-labelledby="modelsTitle">
+      <div class="ab-wrap ab-cols">
+        <div>
+          <h2 class="ab-h2" id="modelsTitle" data-i18n>The models</h2>
+          <p class="ab-intro" data-i18n>Yield: the model beat each district's five-year average on every test split, but not by the 10% asked of it on unseen years. So the app serves the five-year average, with a calibrated 80% range.</p>
+          <p class="ab-intro" data-i18n>Price: a separate model for each forecast horizon, checked against simple baselines crop by crop. Where it does not beat them, the forecast says what it uses instead.</p>
+        </div>
+        <div class="ab-links">
+          <h3 class="ab-h3" data-i18n>See what is running</h3>
+          <ul class="ab-linklist">
+            <li><a href="dashboard.html?tool=ml" data-i18n>About the models</a><span data-i18n>which models are loaded, their accuracy and dates</span></li>
+            <li><a href="/api/ml/status" data-i18n>Model status (JSON)</a><span data-i18n>the same, straight from the API</span></li>
+          </ul>
+          <p class="ab-small" data-i18n>Model cards, written from each training run, are in the source repository:</p>
+          <ul class="ab-paths">
+            <li><code>ml/models/yield/model_card.md</code></li>
+            <li><code>ml/models/price/model_card.md</code></li>
+          </ul>
+          <p class="ab-small"><a href="https://github.com/vinaych580/mitti-mantra" rel="noopener" data-i18n>Source code</a></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="ab-section" id="defects" aria-labelledby="defectsTitle">
+      <div class="ab-wrap">
+        <h2 class="ab-h2" id="defectsTitle" data-i18n>Defects found and fixed</h2>
+        <p class="ab-intro" data-i18n>In November 2026 every API route was probed with edge cases and the app was checked at phone width. The register lists 34 defects. These are the ones that most changed what a farmer sees.</p>
+        <ul class="ab-defects">
+          <li class="ab-defect">
+            <span class="ab-defect__id" data-no-translate>N-1, N-2</span>
+            <p class="ab-defect__was" data-i18n>The rainfall and irrigation controls did nothing: no rain scored slightly higher than normal rain.</p>
+            <p class="ab-defect__now" data-i18n>Scenarios now respond to water through the FAO-33 yield response, labelled as a rule-based response.</p>
+          </li>
+          <li class="ab-defect">
+            <span class="ab-defect__id" data-no-translate>N-3, N-4</span>
+            <p class="ab-defect__was" data-i18n>Crops that lose money were shown as top recommendations.</p>
+            <p class="ab-defect__now" data-i18n>Losing crops are never shown beside profitable ones. When every crop loses, the app says so and why.</p>
+          </li>
+          <li class="ab-defect">
+            <span class="ab-defect__id" data-no-translate>N-5</span>
+            <p class="ab-defect__was" data-i18n>Yield and weather history for 22 of 30 regions were random numbers.</p>
+            <p class="ab-defect__now" data-i18n>Replaced with public records: district yields (DES), mandi prices (Agmarknet) and weather (NASA POWER). A validation gate rejects synthetic rows.</p>
+          </li>
+          <li class="ab-defect">
+            <span class="ab-defect__id" data-no-translate>N-7</span>
+            <p class="ab-defect__was" data-i18n>The default budget was below the cost of growing most major crops.</p>
+            <p class="ab-defect__now" data-i18n>The default is now the typical cost for the district and season.</p>
+          </li>
+          <li class="ab-defect">
+            <span class="ab-defect__id" data-no-translate>N-9</span>
+            <p class="ab-defect__was" data-i18n>Price forecasts ran from data a year old and were marked high confidence.</p>
+            <p class="ab-defect__now" data-i18n>Forecasts say how old their data is, and confidence is capped at low when it is stale.</p>
+          </li>
+          <li class="ab-defect">
+            <span class="ab-defect__id" data-no-translate>N-14</span>
+            <p class="ab-defect__was" data-i18n>No security headers on any response.</p>
+            <p class="ab-defect__now" data-i18n>Security headers on every response; a page content policy runs in report-only mode.</p>
+          </li>
+          <li class="ab-defect">
+            <span class="ab-defect__id" data-no-translate>N-16, N-34</span>
+            <p class="ab-defect__was" data-i18n>No CI, and the test suite was failing.</p>
+            <p class="ab-defect__now" data-i18n>The suite passes and runs on every push and pull request.</p>
+          </li>
+          <li class="ab-defect">
+            <span class="ab-defect__id" data-no-translate>#14</span>
+            <p class="ab-defect__was" data-i18n>The dashboard showed a total loss as its top pick.</p>
+            <p class="ab-defect__now" data-i18n>It now shows the answer that every option loses money.</p>
+          </li>
+          <li class="ab-defect">
+            <span class="ab-defect__id" data-no-translate>#20</span>
+            <p class="ab-defect__was" data-i18n>Sample tractor listings carried realistic mobile numbers, and the booking screen said to call them.</p>
+            <p class="ab-defect__now" data-i18n>Sample listings show no phone number, and a sample booking says that nothing was booked.</p>
+          </li>
+        </ul>
+        <p class="ab-status" data-i18n>Still open: Kannada and Tamil lack some newer strings, and crop costs are on a 2021 basis while prices are from 2025–26, which flatters every return a little. The full register and the notes for each phase are in the repository.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer ab-footer">
+    <div class="container">
+      <div class="footer__bottom">
+        <div>© <span data-year>2026</span> Mitti Mantra · Growing the future.</div>
+        <div class="ab-footer__links">
+          <a href="your-data.html">Your data</a>
+          <a href="/docs">API docs</a>
+          <a href="https://github.com/vinaych580/mitti-mantra" rel="noopener" data-i18n>Source code</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script defer src="farm-state.js"></script>
+  <script defer src="mm-core.js"></script>
+  <script defer src="site-ui.js"></script>
+  <script defer src="mm-palette.js"></script>
+  <script defer src="about.js"></script>
+  <script defer src="i18n.js"></script>
+  <script defer src="toolbar.js"></script>
+</body>
+</html>

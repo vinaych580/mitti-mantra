@@ -80,6 +80,10 @@
       "destination": "/frontend/your-data.html"
     },
     {
+      "source": "/about",
+      "destination": "/frontend/about.html"
+    },
+    {
       "source": "/farm-boundary",
       "destination": "/frontend/farm-boundary.html"
     },
