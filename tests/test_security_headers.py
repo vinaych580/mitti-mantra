@@ -48,6 +48,38 @@ def test_every_external_script_host_in_the_pages_is_allowed():
             assert src in allowed, f"{page.name}: {src} not in script-src"
 
 
+# Code an enforced page policy would block: script-src has no 'unsafe-inline',
+# so inline <script> blocks, on*= handler attributes (also when JS builds them
+# into innerHTML) and javascript: URLs must stay out of the frontend.
+_INLINE_HANDLER = r"""[\s"'`]on[a-z]+\s*=\s*["'\\]"""
+
+
+def _frontend_sources():
+    front = ROOT / "frontend"
+    for path in sorted([*front.glob("*.html"), *front.glob("*.js"), *front.glob("Data/*.js")]):
+        if path.name != "sw.js":
+            yield path, path.read_text(encoding="utf-8")
+
+
+def test_pages_have_no_inline_scripts():
+    import re
+    for path, text in _frontend_sources():
+        if path.suffix != ".html":
+            continue
+        for attrs in re.findall(r"<script\b([^>]*)>", text):
+            if "src=" in attrs or re.search(r'type="(application/(ld\+)?json|speculationrules)"', attrs):
+                continue
+            pytest.fail(f"{path.name}: inline <script{attrs}> (move it to a file)")
+
+
+def test_frontend_has_no_inline_event_handlers_or_js_urls():
+    import re
+    for path, text in _frontend_sources():
+        for n, line in enumerate(text.splitlines(), 1):
+            assert not re.search(_INLINE_HANDLER, line), f"{path.name}:{n}: inline handler: {line.strip()[:120]}"
+            assert not re.search(r"""["'`]\s*javascript:""", line, re.I), f"{path.name}:{n}: javascript: URL"
+
+
 def test_csp_report_is_logged_without_query_strings(caplog):
     report = {"csp-report": {"document-uri": "https://x.test/dashboard?phone=99999",
                              "violated-directive": "script-src-elem",

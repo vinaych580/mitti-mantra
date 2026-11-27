@@ -5,10 +5,11 @@ static-file headers in vercel.json (tests/test_security_headers.py checks the tw
 agree). On Vercel the frontend is served as static files, never by FastAPI; locally
 `uvicorn backend.main:app` serves both, and gets the same headers.
 
-The page Content-Security-Policy ships as **report-only**. The pages still carry
-inline `style=` attributes everywhere, two inline scripts and a few inline event
-handlers, and Leaflet, Chart.js and the 3D globe load from CDNs; an enforced policy
-could break a page in ways no test here covers. Violations are reported to
+The page Content-Security-Policy ships as **report-only**. Inline scripts and
+event handlers are gone (tests/test_security_headers.py keeps them out), but the
+pages still carry inline `style=` attributes everywhere (hence style-src
+'unsafe-inline'), and Leaflet, Chart.js and the 3D globe load from CDNs; an
+enforced policy could break a page in ways no test here covers. Violations are reported to
 /api/v1/csp-report and logged, so the policy can be tightened and then enforced once
 the reports are clean. Everything else is enforced from day one: none of it changes
 what a page can do.

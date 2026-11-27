@@ -1866,7 +1866,7 @@
           <div class="alert__body">
             <strong>🌱 ${area} acres is enough to diversify.</strong>
             Spreading this land across a few crops instead of putting it all into ${cropLabel(top.crop_id)} can lower risk without giving up much profit.
-            <a href="#" onclick="document.querySelector('.sidebar__btn[data-tool=mix]').click();return false;" style="color:var(--brand);font-weight:600;">See an optimal multi-crop mix →</a>
+            <a href="#" data-goto-tool="mix" style="color:var(--brand);font-weight:600;">See an optimal multi-crop mix →</a>
           </div>
         </div>` : ''}
 
@@ -2799,7 +2799,7 @@
       const cal = r.calendar || null;
       if (!cal) {
         out.innerHTML = `<div class="alert alert--gold"><svg class="alert__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-          <div class="alert__body"><strong>No calendar data yet for ${cropLabel(f.crop_id)}</strong><p>This crop was recently added. Calendar data will be populated in a future update. Meanwhile, check the <a href="#" onclick="document.querySelector('.sidebar__btn[data-tool=irrigation]').click();return false;" style="color:var(--brand);font-weight:600;">irrigation schedule</a> for timing.</p></div></div>`;
+          <div class="alert__body"><strong>No calendar data yet for ${cropLabel(f.crop_id)}</strong><p>This crop was recently added. Calendar data will be populated in a future update. Meanwhile, check the <a href="#" data-goto-tool="irrigation" style="color:var(--brand);font-weight:600;">irrigation schedule</a> for timing.</p></div></div>`;
         return;
       }
       const LABELS = {
@@ -4676,6 +4676,17 @@
       ${logs.length > 8 ? `<p class="scan-history__more">Showing the latest 8 of ${logs.length}.</p>` : ''}`;
     if (window.AgriSimI18n && window.AgriSimI18n.getLanguage() !== 'en') window.AgriSimI18n.retranslate();
   }
+
+  // In-result links to another tool (<a href="#" data-goto-tool="mix">). They
+  // were inline onclick handlers, which an enforced Content-Security-Policy
+  // blocks.
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[data-goto-tool]');
+    if (!link) return;
+    e.preventDefault();
+    const btn = document.querySelector(`.sidebar__btn[data-tool="${link.getAttribute('data-goto-tool')}"]`);
+    if (btn) btn.click();
+  });
 
   document.addEventListener('click', (e) => {
     const del = e.target.closest('[data-scan-del]');

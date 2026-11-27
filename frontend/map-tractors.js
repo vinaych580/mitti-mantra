@@ -25,6 +25,14 @@
 
   const els = {};
 
+  // "Book Now" in a map popup. The popup is HTML that Leaflet inserts, so the
+  // click is delegated (it was an inline onclick, which an enforced
+  // Content-Security-Policy blocks).
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest && e.target.closest(".map-popup__btn[data-book-tractor]");
+    if (btn && !btn.disabled) window.openBookingModal(Number(btn.dataset.bookTractor));
+  });
+
   /* ---------- Haversine distance in km ---------- */
   function distanceKm(lat1, lng1, lat2, lng2) {
     const R = 6371;
@@ -74,7 +82,7 @@
         <div class="map-popup__row">${t._distanceKm.toFixed(1)} km away</div>
         <div class="map-popup__row">Operator: ${esc(t.operatorName || 'Partner')}</div>
         <div class="map-popup__row">₹${t.pricePerHour.toLocaleString("en-IN")}/hr · <span class="map-popup__avail">${esc(t.availability)}</span></div>
-        <button class="map-popup__btn"${isBooked ? ' disabled style="opacity:.6;cursor:not-allowed;"' : ''} onclick="window.openBookingModal(${t.id})">${isBooked ? 'Currently Booked' : 'Book Now'}</button>
+        <button class="map-popup__btn"${isBooked ? ' disabled style="opacity:.6;cursor:not-allowed;"' : ''} data-book-tractor="${t.id}">${isBooked ? 'Currently Booked' : 'Book Now'}</button>
       </div>
     `;
   }
@@ -144,7 +152,7 @@
           const isBooked = t.availability === 'Booked';
           return `
       <div class="nearby-item" data-id="${t.id}">
-        <img src="${esc(t.image)}" alt="${esc(t.name)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src=window.MM_TRACTOR_FALLBACK;this.classList.add('is-fallback');">
+        <img src="${esc(t.image)}" alt="${esc(t.name)}" loading="lazy" referrerpolicy="no-referrer" data-img-fallback="tractor">
         <div class="nearby-item__body">
           <div class="nearby-item__head">
             <h4>${esc(t.name)}</h4>
@@ -157,7 +165,7 @@
           </div>
           <div class="nearby-item__foot">
             <strong>₹${t.pricePerHour.toLocaleString("en-IN")}/hr</strong>
-            <button class="nearby-item__btn"${isBooked ? ' disabled style="opacity:.6;cursor:not-allowed;"' : ''} onclick="event.stopPropagation(); window.openBookingModal(${t.id})">${isBooked ? 'Booked' : 'Book Now'}</button>
+            <button class="nearby-item__btn"${isBooked ? ' disabled style="opacity:.6;cursor:not-allowed;"' : ''} data-book-tractor="${t.id}">${isBooked ? 'Booked' : 'Book Now'}</button>
           </div>
         </div>
       </div>
@@ -167,7 +175,14 @@
       .join("");
 
     els.list.querySelectorAll(".nearby-item").forEach((el) => {
-      el.addEventListener("click", () => {
+      el.addEventListener("click", (e) => {
+        // "Book Now" opens the booking modal instead of focusing the map.
+        const book = e.target.closest(".nearby-item__btn[data-book-tractor]");
+        if (book && !book.disabled) {
+          e.stopPropagation();
+          window.openBookingModal(Number(book.dataset.bookTractor));
+          return;
+        }
         const id = Number(el.dataset.id);
         const found = markers.find((m) => m.tractor.id === id);
         if (found) {
