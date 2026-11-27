@@ -30,10 +30,10 @@ that need research or owner decisions moved back.
 
 | # | Piece | Spec | Size | Risk | Needs from owner | Status |
 |---|---|---|---|---|---|---|
-| 0 | This plan | – | S | none | – | PR open |
-| 1 | Sidebar regrouped into Plan / Grow / Sell / Money; "tools have moved" note | 4.1 (nav part) | S | low | tab labels per language reviewed by a native speaker | building |
-| 2 | One demo banner on Marketplace, Book a Tractor, Gyan Seva; booking stops implying live availability | 4.11 | S | low | – | building |
-| 3 | Buttons disabled during their own request; skeletons instead of spinners | 4.7 (part) | S | low | – | building |
+| 0 | This plan | – | S | none | – | [#18](https://github.com/vinaych580/mitti-mantra/pull/18) |
+| 1 | Sidebar regrouped into Plan / Grow / Sell / Money; "tools have moved" note | 4.1 (nav part) | S | low | tab labels per language reviewed by a native speaker | [#19](https://github.com/vinaych580/mitti-mantra/pull/19) |
+| 2 | One demo banner on Marketplace, Book a Tractor, Gyan Seva; booking stops implying live availability | 4.11 | S | low | – | [#20](https://github.com/vinaych580/mitti-mantra/pull/20) |
+| 3 | Buttons disabled during their own request; skeletons instead of spinners | 4.7 (part) | S | low | – | [#21](https://github.com/vinaych580/mitti-mantra/pull/21) |
 | 4 | Mobile shell: bottom tab bar, tool list as a sheet, one-line farm bar, 44 px targets, chat/language buttons out of the content | 4.2 | M | medium | – | after 1 (uses its sections) |
 | 5 | Popover/sheet focus handling (F-11), reduced motion for globe, Lenis and reveals | 4.8 (part) | S | low | – | after 4 (the sheet is the main new popover) |
 | 6 | "My season" home: timeline, current stage, one primary action; planner entry before a plan exists | 4.1 (home part) | M | medium | confirm "My season" replaces "My Farm" as the first screen | after 4 |
@@ -123,4 +123,10 @@ Updated as each piece lands.
 
 | # | PR | Built | Measured | Left |
 |---|---|---|---|---|
-| 0 | (this PR) | plan | – | – |
+| 0 | [#18](https://github.com/vinaych580/mitti-mantra/pull/18) | this plan | – | – |
+| 1 | [#19](https://github.com/vinaych580/mitti-mantra/pull/19) `phase4-ia`, `sw.js` v69 | Rail regrouped: My Farm on top; Plan, Grow, Sell, Money (each with its question); "About the models" for ML status. Every `data-tool` unchanged. One-time "Tools have moved" note for returning visitors. Home reachable by arrow keys on mobile. | 375 px and 1280 px, EN/HI, light/dark; old deep links (`pests`, `prices`, `score`, `ml`) open the right tool. `--ink-faint` measured 3.9:1 on the rail, so the section question uses `--ink-soft`. Preview serves the new rail and v69. | Native-speaker check of section names. "My season" home is piece 6. |
+| 2 | [#20](https://github.com/vinaych580/mitti-mantra/pull/20) `phase4-demo-banner`, v70 | `.mm-demo-banner` on Marketplace, Book a Tractor, Gyan Seva. Sample tractors: no operator phone shown or stored, no `tel:` link, success says nothing was booked. Demand box and fleet stats call the statuses sample data; the "book ahead" urgency is gone. | **Found:** the 528 generated listings carry realistic 10-digit mobile numbers (could be real people's), and the booking screen told users to call them. Full sample booking walked at 375 px EN/HI/dark. Preview serves banners, v70, `Data/tractors.js` 200. | Card badges (Available/Limited/Booked) stay as labelled sample data. The generator (`Data/generate_tractors.js`) still makes the numbers; regenerating without them is a follow-up. |
+| 3 | [#21](https://github.com/vinaych580/mitti-mantra/pull/21) `phase4-states`, v71 | Skeleton loading (heading, three figures, two lines) with the step in words; run buttons disabled + `aria-busy` until the loading state is replaced (F-10); hi/te for 14 loading phrases. | Second click during a request starts no second request; error path (forced 500) releases the button; skeleton in light and dark. Preview serves v71. | Offline last result, offline/partial-coverage wording (piece 7). |
+
+All three bump `sw.js` from v68; they conflict on that one line. Merge in any order and rebase the next onto
+`master`, taking the next free number. None is merged; production stays at v68 until the owner says so.
