@@ -3699,6 +3699,7 @@ body.mm-menu-open .qw-panel {
 
 .chart-box canvas {
   max-height: 280px;
+  max-width: 100%;
 }
 
 .chart-grid {
@@ -3713,7 +3714,10 @@ body.mm-menu-open .qw-panel {
 
 @media (max-width: 640px) {
   .chart-grid {
-    grid-template-columns: 1fr;
+    /* Same reason as above: a bare 1fr held the column at the canvas's
+       300px default plus padding, and Yield & profit scrolled the page
+       sideways at 375px (397px wide). */
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
