@@ -424,6 +424,8 @@
     'Plan this in the dashboard →': 'ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ನಲ್ಲಿ ಇದನ್ನು ಯೋಜಿಸಿ →',
     'Fits your budget': 'ನಿಮ್ಮ ಬಜೆಟ್‌ಗೆ ಸರಿಹೊಂದುತ್ತದೆ',
     'Usual cost covered': 'ಸಾಮಾನ್ಯ ವೆಚ್ಚದ ಪಾಲು',
+    'Sample request saved on this phone. These experts are sample data, so nobody was contacted and nothing was charged.': 'ಮಾದರಿ ವಿನಂತಿಯನ್ನು ಈ ಫೋನ್‌ನಲ್ಲಿ ಉಳಿಸಲಾಗಿದೆ. ಈ ತಜ್ಞರು ಮಾದರಿ ದತ್ತಾಂಶ, ಆದ್ದರಿಂದ ಯಾರನ್ನೂ ಸಂಪರ್ಕಿಸಿಲ್ಲ, ಯಾವ ಶುಲ್ಕವೂ ವಿಧಿಸಿಲ್ಲ.',
+    'Choose your state and district in the form above first, so the request says where you farm.': 'ಮೊದಲು ಮೇಲಿನ ಫಾರ್ಮ್‌ನಲ್ಲಿ ನಿಮ್ಮ ರಾಜ್ಯ ಮತ್ತು ಜಿಲ್ಲೆಯನ್ನು ಆರಿಸಿ, ಆಗ ನೀವು ಎಲ್ಲಿ ಕೃಷಿ ಮಾಡುತ್ತೀರಿ ಎಂದು ವಿನಂತಿಯಲ್ಲಿ ಇರುತ್ತದೆ.',
     "What-if result for a well-managed field at the costs and price you entered. Smart recommend and Compare crops use this district's recorded yields instead, so their numbers are usually lower.": 'ನೀವು ನೀಡಿದ ವೆಚ್ಚ ಮತ್ತು ಬೆಲೆಯಲ್ಲಿ ಚೆನ್ನಾಗಿ ನಿರ್ವಹಿಸಿದ ಹೊಲದ ಊಹಾ ಫಲಿತಾಂಶ. ಸ್ಮಾರ್ಟ್ ಶಿಫಾರಸು ಮತ್ತು ಬೆಳೆ ಹೋಲಿಕೆ ಈ ಜಿಲ್ಲೆಯ ದಾಖಲಾದ ಇಳುವರಿಯನ್ನು ಬಳಸುತ್ತವೆ, ಆದ್ದರಿಂದ ಅವುಗಳ ಅಂಕಿಗಳು ಸಾಮಾನ್ಯವಾಗಿ ಕಡಿಮೆ.',
     'Not enough crops for this season': 'ಈ ಋತುವಿಗೆ ಸಾಕಷ್ಟು ಬೆಳೆಗಳಿಲ್ಲ',
     'same numbers as Smart recommend': 'ಸ್ಮಾರ್ಟ್ ಶಿಫಾರಸಿನ ಅದೇ ಅಂಕಿಗಳು',

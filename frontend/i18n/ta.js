@@ -424,6 +424,8 @@
     'Plan this in the dashboard →': 'டாஷ்போர்டில் இதைத் திட்டமிடுங்கள் →',
     'Fits your budget': 'உங்கள் பட்ஜெட்டுக்குள் அடங்கும்',
     'Usual cost covered': 'வழக்கமான செலவில் பங்கு',
+    'Sample request saved on this phone. These experts are sample data, so nobody was contacted and nothing was charged.': 'மாதிரி கோரிக்கை இந்த போனில் சேமிக்கப்பட்டது. இந்த நிபுணர்கள் மாதிரித் தரவு, எனவே யாரையும் தொடர்பு கொள்ளவில்லை, கட்டணம் எதுவும் வசூலிக்கவில்லை.',
+    'Choose your state and district in the form above first, so the request says where you farm.': 'முதலில் மேலே உள்ள படிவத்தில் உங்கள் மாநிலம், மாவட்டத்தைத் தேர்ந்தெடுங்கள்; அப்போது நீங்கள் எங்கு விவசாயம் செய்கிறீர்கள் என்பது கோரிக்கையில் இருக்கும்.',
     "What-if result for a well-managed field at the costs and price you entered. Smart recommend and Compare crops use this district's recorded yields instead, so their numbers are usually lower.": 'நீங்கள் கொடுத்த செலவு, விலையில் நன்கு பராமரிக்கப்பட்ட வயலுக்கான அனுமான முடிவு. ஸ்மார்ட் பரிந்துரையும் பயிர் ஒப்பீடும் இந்த மாவட்டத்தின் பதிவான மகசூலைப் பயன்படுத்துகின்றன, எனவே அவற்றின் எண்கள் பொதுவாகக் குறைவு.',
     'Not enough crops for this season': 'இந்தப் பருவத்துக்குப் போதுமான பயிர்கள் இல்லை',
     'same numbers as Smart recommend': 'ஸ்மார்ட் பரிந்துரையின் அதே எண்கள்',

@@ -132,7 +132,17 @@ function getNamePool(state) {
   return { first: NORTH_FIRST, last: NORTH_LAST };
 }
 
-function getGender(rng) { return rng() < 0.35 ? "F" : "M"; }
+// Gender follows the first name (and "Kaur"), so the title matches the
+// person: the old coin flip gave us "Ms. Suresh" and "Mr. Priya".
+const FEMALE_FIRST = new Set(["Ritu","Priya","Asha","Kavita","Neeta","Sangeeta","Sunita","Savita","Geeta","Rekha",
+  "Usha","Meena","Lakshmi","Meenakshi","Sudha","Kavitha","Thenmozhi","Bhavani","Padma","Saranya","Deepa",
+  "Arulmozhi","Hetal","Rima","Neha","Bhavna","Smita","Meenal","Vrushali","Madhuri","Rupali","Sonali",
+  "Suparna","Puja","Rani","Mita","Sumita","Shyamali","Rinku","Preeti","Sudeshna","Harpreet","Manpreet",
+  "Simranjit","Prabhjot","Hemla","Phulo","Durga","Soumya"]);
+function getGender(rng) { return rng() < 0.35 ? "F" : "M"; } // still drawn, so the seeded sequence is unchanged
+function genderOf(firstName, lastName) {
+  return (FEMALE_FIRST.has(firstName) || lastName === "Kaur") ? "F" : "M";
+}
 function getTitle(qual, gender) {
   if (qual.startsWith("Ph.D")) return "Dr.";
   if (qual.startsWith("B.Tech") || qual.startsWith("M.Tech")) return "Er.";
@@ -713,9 +723,10 @@ for (const [state, districts] of Object.entries(DISTRICT_DATA)) {
       const seed = id * 7919 + state.charCodeAt(0) * 31 + district.charCodeAt(0) * 13 + i * 101;
       const rng = seededRng(seed);
 
-      const gender = getGender(rng);
+      getGender(rng);
       const firstName = pick(namePool.first, rng);
       const lastName = pick(namePool.last, rng);
+      const gender = genderOf(firstName, lastName);
       const qual = pick(QUALIFICATIONS, rng);
       const title = getTitle(qual, gender);
       const name = `${title} ${firstName} ${lastName}`;

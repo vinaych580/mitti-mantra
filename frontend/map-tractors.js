@@ -239,15 +239,41 @@
     });
   }
 
-  /* ---------- Geolocation, with per-error messaging + retry + manual pin ---------- */
-  function initLocation() {
-    if (!("geolocation" in navigator)) {
-      els.status.innerHTML = `📍 Location not supported by this browser — showing tractors near ${FALLBACK_ORIGIN.label}. Click the map to set your location manually.`;
-      return;
-    }
+  /* ---------- Starting point and geolocation ----------
+     The page used to ask for GPS permission the moment it opened, and fell
+     back to Bhopal even when a farm was saved. Now it starts from the saved
+     farm (its drawn plot, else its district), uses GPS on its own only when
+     permission was already granted, and otherwise asks only when the
+     visitor taps "Use my location". */
+  function savedFarmOrigin() {
+    try {
+      const FS = window.FarmState;
+      const plot = FS && FS.load && FS.load();
+      if (plot && isFinite(plot.lat) && isFinite(plot.lon)) {
+        return { lat: plot.lat, lng: plot.lon, label: plot.name ? `your plot "${plot.name}"` : "your saved plot" };
+      }
+      const prof = window.MM && window.MM.profile && window.MM.profile.get && window.MM.profile.get();
+      const rc = prof && prof.region_id && FS && FS.REGION_CENTROIDS &&
+        FS.REGION_CENTROIDS.find(r => r.region_id === prof.region_id);
+      if (rc) return { lat: rc.lat, lng: rc.lon, label: rc.displayName || prof.region_id };
+    } catch (_) { /* no saved farm */ }
+    return null;
+  }
 
+  function showStartStatus(origin, reason) {
+    const where = origin ? origin.label : FALLBACK_ORIGIN.label;
+    const lead = reason ? `${reason} — showing` : "Showing";
+    els.status.innerHTML =
+      `📍 ${lead} tractors near ${where}. ` +
+      ("geolocation" in navigator ? `<button id="locRetryBtn" type="button" class="map-status__link">Use my location</button> or ` : "") +
+      `click the map to set your location.`;
+    const retryBtn = document.getElementById("locRetryBtn");
+    if (retryBtn) retryBtn.addEventListener("click", askLocation);
+  }
+
+  function askLocation() {
+    if (!("geolocation" in navigator)) return;
     els.status.textContent = "📍 Finding your location…";
-
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         map.setView([pos.coords.latitude, pos.coords.longitude], 12);
@@ -255,24 +281,28 @@
         els.status.textContent = "📍 Showing tractors nearest to you.";
       },
       (err) => {
-        let reason;
-        if (err.code === 1) reason = "Location permission denied";
-        else if (err.code === 2) reason = "Couldn't determine your location (no signal)";
-        else reason = "Location lookup timed out";
-
-        els.status.innerHTML =
-          `📍 ${reason} — showing tractors near ${FALLBACK_ORIGIN.label}. ` +
-          `<button id="locRetryBtn" type="button" class="map-status__link">Try again</button> ` +
-          `or click the map to set your location manually.`;
-
+        const reason = err.code === 1 ? "Location permission denied"
+          : err.code === 2 ? "Couldn't determine your location (no signal)"
+          : "Location lookup timed out";
         recomputeDistances();
         refresh();
-
-        const retryBtn = document.getElementById("locRetryBtn");
-        if (retryBtn) retryBtn.addEventListener("click", initLocation);
+        showStartStatus(savedFarmOrigin(), reason);
       },
       { enableHighAccuracy: false, timeout: 12000, maximumAge: 60000 }
     );
+  }
+
+  function initLocation() {
+    const origin = savedFarmOrigin();
+    if (origin) {
+      map.setView([origin.lat, origin.lng], 9);
+      setOrigin(origin.lat, origin.lng, origin.label);
+    }
+    showStartStatus(origin);
+    if (!("geolocation" in navigator) || !navigator.permissions || !navigator.permissions.query) return;
+    navigator.permissions.query({ name: "geolocation" })
+      .then((st) => { if (st.state === "granted") askLocation(); })
+      .catch(() => {});
   }
 
   /* ---------- Boot ---------- */

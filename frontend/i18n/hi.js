@@ -443,6 +443,8 @@
     'Plan this in the dashboard →': 'डैशबोर्ड में इसकी योजना बनाएं →',
     'Fits your budget': 'आपके बजट में',
     'Usual cost covered': 'सामान्य लागत का हिस्सा',
+    'Sample request saved on this phone. These experts are sample data, so nobody was contacted and nothing was charged.': 'नमूना अनुरोध इस फ़ोन पर सहेजा गया। ये विशेषज्ञ नमूना डेटा हैं, इसलिए किसी से संपर्क नहीं हुआ और कोई शुल्क नहीं लिया गया।',
+    'Choose your state and district in the form above first, so the request says where you farm.': 'पहले ऊपर के फ़ॉर्म में अपना राज्य और ज़िला चुनें, ताकि अनुरोध में पता रहे कि आप कहाँ खेती करते हैं।',
     "What-if result for a well-managed field at the costs and price you entered. Smart recommend and Compare crops use this district's recorded yields instead, so their numbers are usually lower.": 'यह आपके डाले गए ख़र्च और भाव पर, अच्छी तरह संभाले गए खेत का अनुमान है। स्मार्ट सिफ़ारिश और फ़सल तुलना इस ज़िले की दर्ज उपज पर चलती हैं, इसलिए उनके आंकड़े आमतौर पर कम होते हैं।',
     'Not enough crops for this season': 'इस मौसम के लिए पर्याप्त फ़सलें नहीं',
     'same numbers as Smart recommend': 'स्मार्ट सिफ़ारिश जैसे ही आंकड़े',

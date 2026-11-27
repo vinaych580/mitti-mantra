@@ -426,6 +426,8 @@
     'Plan this in the dashboard →': 'డాష్‌బోర్డ్‌లో దీన్ని ప్లాన్ చేయండి →',
     'Fits your budget': 'మీ బడ్జెట్‌లో సరిపోతుంది',
     'Usual cost covered': 'సాధారణ ఖర్చులో భాగం',
+    'Sample request saved on this phone. These experts are sample data, so nobody was contacted and nothing was charged.': 'నమూనా అభ్యర్థన ఈ ఫోన్‌లో సేవ్ అయింది. ఈ నిపుణులు నమూనా డేటా, కాబట్టి ఎవరినీ సంప్రదించలేదు, ఏ రుసుమూ వసూలు చేయలేదు.',
+    'Choose your state and district in the form above first, so the request says where you farm.': 'ముందుగా పై ఫారమ్‌లో మీ రాష్ట్రం, జిల్లాను ఎంచుకోండి, అప్పుడు మీరు ఎక్కడ వ్యవసాయం చేస్తారో అభ్యర్థనలో ఉంటుంది.',
     "What-if result for a well-managed field at the costs and price you entered. Smart recommend and Compare crops use this district's recorded yields instead, so their numbers are usually lower.": 'మీరు ఇచ్చిన ఖర్చులు, ధర వద్ద బాగా నిర్వహించిన పొలానికి ఇది ఊహా ఫలితం. స్మార్ట్ సిఫారసు, పంటల పోలిక ఈ జిల్లాలో నమోదైన దిగుబడులను వాడతాయి, అందుకే వాటి సంఖ్యలు సాధారణంగా తక్కువగా ఉంటాయి.',
     'Not enough crops for this season': 'ఈ సీజన్‌కు సరిపడా పంటలు లేవు',
     'same numbers as Smart recommend': 'స్మార్ట్ సిఫారసులోని అవే సంఖ్యలు',
