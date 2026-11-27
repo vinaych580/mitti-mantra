@@ -34,7 +34,7 @@ that need research or owner decisions moved back.
 | 1 | Sidebar regrouped into Plan / Grow / Sell / Money; "tools have moved" note | 4.1 (nav part) | S | low | tab labels per language reviewed by a native speaker | [#19](https://github.com/vinaych580/mitti-mantra/pull/19) |
 | 2 | One demo banner on Marketplace, Book a Tractor, Gyan Seva; booking stops implying live availability | 4.11 | S | low | – | [#20](https://github.com/vinaych580/mitti-mantra/pull/20) |
 | 3 | Buttons disabled during their own request; skeletons instead of spinners | 4.7 (part) | S | low | – | [#21](https://github.com/vinaych580/mitti-mantra/pull/21) |
-| 4 | Mobile shell: bottom tab bar, tool list as a sheet, one-line farm bar, 44 px targets, chat/language buttons out of the content | 4.2 | M | medium | – | after 1 (uses its sections) |
+| 4 | Mobile shell: bottom tab bar, tool list as a sheet, one-line farm bar, 44 px targets, chat/language buttons out of the content | 4.2 | M | medium | – | [#22](https://github.com/vinaych580/mitti-mantra/pull/22), stacked on #19 |
 | 5 | Popover/sheet focus handling (F-11), reduced motion for globe, Lenis and reveals | 4.8 (part) | S | low | – | after 4 (the sheet is the main new popover) |
 | 6 | "My season" home: timeline, current stage, one primary action; planner entry before a plan exists | 4.1 (home part) | M | medium | confirm "My season" replaces "My Farm" as the first screen | after 4 |
 | 7 | Offline: last result per tool kept with its date; offline/partial-coverage wording; nearest covered district as a labelled reference | 4.7 (rest) | M | low | – | any time |
@@ -57,7 +57,7 @@ that need research or owner decisions moved back.
 3. **"My season" as the first screen** (piece 6). Today "My Farm" opens first.
 4. **Confidence-word thresholds** (piece 9): which range widths and coverage levels map to Strong / Fair / Weak.
 5. **Dev dependencies in CI**: Playwright with axe (12) and Lighthouse CI (11). Neither ships to users.
-6. **When to merge.** Not before the 2026-11-28 presentation unless the owner asks.
+6. **When to merge.** The owner authorised merging on 2026-11-28 (a separate merge-and-test session does it).
 
 ## Piece details
 
@@ -128,5 +128,8 @@ Updated as each piece lands.
 | 2 | [#20](https://github.com/vinaych580/mitti-mantra/pull/20) `phase4-demo-banner`, v70 | `.mm-demo-banner` on Marketplace, Book a Tractor, Gyan Seva. Sample tractors: no operator phone shown or stored, no `tel:` link, success says nothing was booked. Demand box and fleet stats call the statuses sample data; the "book ahead" urgency is gone. | **Found:** the 528 generated listings carry realistic 10-digit mobile numbers (could be real people's), and the booking screen told users to call them. Full sample booking walked at 375 px EN/HI/dark. Preview serves banners, v70, `Data/tractors.js` 200. | Card badges (Available/Limited/Booked) stay as labelled sample data. The generator (`Data/generate_tractors.js`) still makes the numbers; regenerating without them is a follow-up. |
 | 3 | [#21](https://github.com/vinaych580/mitti-mantra/pull/21) `phase4-states`, v71 | Skeleton loading (heading, three figures, two lines) with the step in words; run buttons disabled + `aria-busy` until the loading state is replaced (F-10); hi/te for 14 loading phrases. | Second click during a request starts no second request; error path (forced 500) releases the button; skeleton in light and dark. Preview serves v71. | Offline last result, offline/partial-coverage wording (piece 7). |
 
-All three bump `sw.js` from v68; they conflict on that one line. Merge in any order and rebase the next onto
-`master`, taking the next free number. None is merged; production stays at v68 until the owner says so.
+| 4 | [#22](https://github.com/vinaych580/mitti-mantra/pull/22) `phase4-mobile-shell`, v72, stacked on #19 | Below 860 px: bottom tab bar (Home, Plan, Grow, Sell, More); each tab opens its section of the same `.sidebar` as a bottom sheet (dialog, focus in, Tab wraps, Esc/backdrop/× return focus, search spans sections); the disclosure groups are gone. One-line farm bar (district first, tap to edit). Chat launcher keeps above the bar (`dock()` in `chatbot.js`), "अA" disc above it, both hidden while a sheet is open; telemetry moves below the active tool. | 375 px EN/HI light/dark, keyboard paths, `?tool=pests` lands on Pest alerts with Grow current and the tool 214 px down; 1280 px unchanged. Found while testing: the nowrap farm bar widened the page to 536 px (grid item `min-width:auto`); sheet title hidden by a broad selector; open tab unreadable in dark. All fixed. | No swipe-to-close. Native-speaker check of tab labels. |
+
+Merge order: #18 (docs) any time; #19 before #22; #20 and #21 in any order. Every code PR bumps `sw.js` from
+v68, so each one after the first is rebased onto `master` and takes the next free number. The owner lifted the
+"not before the presentation" hold on 2026-11-28; merging is done by the merge session, not here.
