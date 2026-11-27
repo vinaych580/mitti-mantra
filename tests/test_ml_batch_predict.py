@@ -54,6 +54,7 @@ from pathlib import Path
 import pytest
 
 import ml.predict as P
+from utils import store
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -131,6 +132,12 @@ def test_batch_yield_returns_empty_without_models(no_models):
     assert batched == {}
 
 
+# The goldens were generated with the serving store (district record); without it
+# (a fresh clone before `node scripts/fetch_serving_store.cjs`) they cannot match.
+needs_store = pytest.mark.skipif(not store.available(), reason="needs dataset/serving.sqlite")
+
+
+@needs_store
 @pytest.mark.parametrize("case", _load_golden("recommend_crops_golden.json"))
 def test_recommend_crops_unchanged_on_ml_path(case, models_loaded):
     actual = P.recommend_crops(
@@ -140,6 +147,7 @@ def test_recommend_crops_unchanged_on_ml_path(case, models_loaded):
     assert actual == case["expected"]
 
 
+@needs_store
 @pytest.mark.parametrize("case", _load_golden("recommend_crops_golden_heuristic.json"))
 def test_recommend_crops_unchanged_on_heuristic_path(case, no_models):
     actual = P.recommend_crops(
