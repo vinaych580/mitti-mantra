@@ -281,6 +281,7 @@
     'Accessibility': 'ಪ್ರವೇಶಿಸುವಿಕೆ',
     'Large text': 'ದೊಡ್ಡ ಪಠ್ಯ',
     'High contrast': 'ಹೆಚ್ಚಿನ ಕಾಂಟ್ರಾಸ್ಟ್',
+    'Reduce motion': 'ಚಲನೆ ಕಡಿಮೆ ಮಾಡಿ',
     'Privacy': 'ಗೌಪ್ಯತೆ',
     'Count my tool usage': 'ನನ್ನ ಟೂಲ್ ಬಳಕೆಯನ್ನು ಎಣಿಸಿ',
     'Share anonymous counts': 'ಅನಾಮಧೇಯ ಎಣಿಕೆಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳಿ',
@@ -538,6 +539,9 @@
 
   // Home page answer: a top crop with no harvest record in the district.
   "Not grown in this district before": "ಈ ಜಿಲ್ಲೆಯಲ್ಲಿ ಹಿಂದೆ ಬೆಳೆದಿಲ್ಲ",
+    'You are back online': 'ನೀವು ಮತ್ತೆ ಆನ್‌ಲೈನ್‌ನಲ್ಲಿದ್ದೀರಿ',
+    'You are offline': 'ನೀವು ಆಫ್‌ಲೈನ್‌ನಲ್ಲಿದ್ದೀರಿ',
+    'km away': 'ಕಿ.ಮೀ. ದೂರ',
 };
 
 // Season planning workflow (Phase 0: brought level with hi and te).

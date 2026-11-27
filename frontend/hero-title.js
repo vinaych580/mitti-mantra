@@ -11,7 +11,10 @@
    whenever the language changes. */
 (() => {
   const h = document.getElementById('heroTitle');
-  if (!h || h.children.length || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  // The in-app Reduce motion switch too (mm-core.js stores it; this runs before mm-core).
+  let appRm = false;
+  try { appRm = !!JSON.parse(localStorage.getItem('mm_a11y') || '{}').reduceMotion; } catch (_) { /* default */ }
+  if (!h || h.children.length || appRm || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const src = document.createElement('span');
   src.hidden = true;
   src.textContent = h.textContent;

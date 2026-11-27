@@ -5467,6 +5467,29 @@ body.page-farm-boundary {
   }
 }
 
+/* The same net for the in-app "Reduce motion" switch (tools panel), for
+   phones whose owner cannot find, or does not have, the OS setting.
+   mm-core.js sets html.mm-rm. View transitions are opted into by an
+   at-rule that a class cannot reach, so their animation is cancelled. */
+html.mm-rm *,
+html.mm-rm *::before,
+html.mm-rm *::after {
+  animation-duration: .01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: .01ms !important;
+  scroll-behavior: auto !important;
+}
+
+html.mm-rm {
+  scroll-behavior: auto !important;
+}
+
+html.mm-rm::view-transition-group(*),
+html.mm-rm::view-transition-old(*),
+html.mm-rm::view-transition-new(*) {
+  animation: none !important;
+}
+
 /* ---- Page-to-page transitions ----
    Navigating between pages cross-fades the content instead of flashing
    white, and the nav -- the same bar on every page -- is its own group so it
@@ -5713,6 +5736,66 @@ body.page-farm-boundary {
       rgba(29, 26, 21, .06) 0%, rgba(29, 26, 21, .12) 50%, rgba(29, 26, 21, .06) 100%);
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite linear;
+}
+
+/* Phase 4.7 skeleton: the outline of a result (heading, three figures, two
+   lines) in the clay radii. The bars use --ink at low alpha so they read in
+   light, dark and high-contrast themes alike. */
+.loading--skel {
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 14px;
+  padding: 6px 0 18px;
+}
+.loading--skel::after {
+  display: none;
+}
+.skel {
+  display: grid;
+  gap: 12px;
+}
+.skel__head,
+.skel__kpis > div,
+.skel__line {
+  border-radius: var(--r-sm, 8px);
+  background: color-mix(in srgb, var(--ink) 8%, transparent);
+  animation: pulse 1.5s infinite ease-in-out;
+}
+.skel__head {
+  width: 45%;
+  height: 20px;
+}
+.skel__kpis {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.skel__kpis > div {
+  height: 64px;
+  border-radius: var(--r-md, 14px);
+}
+.skel__line {
+  height: 12px;
+}
+.skel__line--short {
+  width: 62%;
+}
+.loading__text {
+  font-size: var(--fs-2xs, .82rem);
+  color: var(--ink-soft);
+}
+.is-busy,
+.is-busy:hover {
+  cursor: progress;
+  opacity: .6;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .skel__head,
+  .skel__kpis > div,
+  .skel__line {
+    animation: none;
+  }
 }
 
 @keyframes shimmer {
@@ -7500,6 +7583,32 @@ body {
   .mm-farm-bar[data-mode="summary"] .mm-plotpick--empty {
     display: none;
   }
+  /* With a drawn plot the picker shares the row: it shrinks (the plot name
+     ellipsizes in the select) instead of pushing Change past the screen
+     edge, which widened the page to 399 px at 375. "+ another plot" stays
+     on the farm page and in the menu. */
+  .mm-farm-bar[data-mode="summary"] .mm-farm-bar__plot-slot {
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: 34%;
+  }
+  .mm-farm-bar[data-mode="summary"] .mm-plotpick,
+  .mm-farm-bar[data-mode="summary"] .mm-plotpick__row {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .mm-farm-bar[data-mode="summary"] .mm-plotpick select {
+    /* Enough for "Plot · 3.0 ac" to start; the district text shrinks first. */
+    min-width: 6.5em;
+    max-width: 100%;
+    text-overflow: ellipsis;
+  }
+  .mm-farm-bar[data-mode="summary"] .mm-plotpick__add {
+    display: none;
+  }
+  .mm-farm-bar[data-mode="summary"] .mm-farm-bar__plot-slot:not(:empty) ~ .mm-farm-bar__text {
+    flex: 1 1 0;
+  }
 }
 
 html[data-theme="dark"] .mm-tabbar,
@@ -8290,6 +8399,47 @@ html[data-theme="dark"] .mm-palette__item.is-active .mm-palette__ico { color: #9
 .chip--btn:focus-visible {
   background: var(--brand-soft);
   color: var(--brand-deep);
+}
+
+/* Phase 4.7: a tool's last result, kept on the phone and shown offline. The
+   copy sits in a recessed panel under a dated line, so it never passes for
+   a fresh answer. */
+.mm-saved {
+  margin-top: 14px;
+  padding: 14px 16px 4px;
+  border-radius: var(--r-md);
+  background: var(--bg-soft);
+  border: 1px dashed color-mix(in srgb, var(--ink) 18%, transparent);
+}
+
+.mm-saved__head {
+  margin: 0 0 10px;
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.mm-saved__chart,
+.mm-saved__none {
+  margin: 8px 0;
+  font-size: var(--fs-2xs);
+  color: var(--ink-soft);
+}
+
+.mm-saved__copy button[disabled] {
+  opacity: .55;
+  cursor: default;
+}
+
+/* Nearest covered district, offered under "no prices here". */
+.mm-ref {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.mm-ref p {
+  margin: 0 0 8px;
 }
 
 /* Method labels ("Typical for this time of year ...") are sentences; wrap them
