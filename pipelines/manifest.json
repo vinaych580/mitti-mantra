@@ -1,58 +1,58 @@
 {
-  "built_at": "2026-11-19T07:54:40+00:00",
+  "built_at": "2026-11-28T11:23:42+00:00",
   "tables": {
     "yield_dcy": {
       "rows": 269821,
-      "sha256": "11bee401b3d2a752759e42e6b90cd7ea8e3e2b1b02bc2963ef1d81debd32e849",
+      "sha256": "7a4a448e0197cbd4472a580e78377f812da250e10a148f6cb34f5110c2e516fd",
       "sources": [
         "DES APY via India Data Portal"
       ]
     },
     "price_district_weekly": {
       "rows": 980831,
-      "sha256": "9485d1981db443f45c923a8d7246662e2cce168949288eaab293d392dde9c51d",
+      "sha256": "41c0a2a8e06be4742faa24c2486dcb39776876c9ce763accac1734ab4debad6d",
       "sources": [
         "Agmarknet APMC arrivals and prices via India Data Portal"
       ]
     },
     "weather_daily": {
-      "rows": 7703472,
-      "sha256": "239a52c04359bf9fc108f92fded4f8f18d18c052212951dbb3e70066ca4d5c12",
+      "rows": 7659888,
+      "sha256": "b539d96bad5bb088581c00db60201c2af8bd604f47a1cc03ae6cd0c729848c48",
       "sources": [
         "NASA POWER daily (MERRA-2)"
       ]
     },
     "weather_season": {
-      "rows": 62923,
-      "sha256": "65f9fdf078134491009e6ea3148eb2356ab69ace1d6ddee2e9d2daab89977bf5",
+      "rows": 62567,
+      "sha256": "92ebae8b173ad6e39eb7a5bf018f798625e4bcc637c8348575b085a03e9576de",
       "sources": [
         "NASA POWER daily (MERRA-2)"
       ]
     },
     "weather_stage": {
-      "rows": 922635,
-      "sha256": "e9fb47c98eb0d53c33a02b3d85e0ad4d80fab851b5de6faad70d929c3e34fdd6",
+      "rows": 917415,
+      "sha256": "7400469a58f4d9b6e5c06381b27dd05a7fc38b73c9b2b76c895f025302091740",
       "sources": [
         "Derived from NASA POWER daily with the app's crop calendar (pipelines/weather_stage.py)"
       ]
     },
     "monsoon_onset": {
-      "rows": 18759,
-      "sha256": "d759ff4fce08e68309e2df2a9a7ba1482b8f1f197365326d773a1e6dee552fbb",
+      "rows": 18627,
+      "sha256": "cd6ddc40352166c11b19a1c33e681c26d1651d94acb264dd10af15fcfa5e3a54",
       "sources": [
         "Derived from NASA POWER daily with the app's crop calendar (pipelines/weather_stage.py)"
       ]
     },
     "cost_state_crop": {
       "rows": 3527,
-      "sha256": "1c7b701e4b29cc2b0fc056c202fc0466f024bcf21837dccc0269cfabfc35e06b",
+      "sha256": "eef8998393d403874394b1018efe6a653a09298578aaa2c2bb1a050c6ca87c7f",
       "sources": [
         "DES Cost of Cultivation (CACP farm surveys) via India Data Portal"
       ]
     },
     "msp": {
       "rows": 504,
-      "sha256": "7e82cb257e19a11944da6a7be6c70b0558efb6de5c34698ea81ab852000a7a44",
+      "sha256": "75a5c6b1a9336574954b8ba19874faaffe616073e5eaac87905270c0ece397d5",
       "sources": [
         "CACP Minimum Support Prices via India Data Portal",
         "CCEA sugarcane FRP announcements (pipelines/reference/sugarcane_frp.csv)"
@@ -60,29 +60,29 @@
     },
     "soil_district": {
       "rows": 16382,
-      "sha256": "8b70b7e61ab5b98f2cba76aeba84eb8f4d302fcd875b29ff5084cd9d85a5fff1",
+      "sha256": "c9e7451fe152efc258adc47efa5852d7ab1558a38d29f73a35a6cc1c6c06b62e",
       "sources": [
         "Soil Health Card nutrient analysis (DA&FW) via India Data Portal"
       ]
     },
     "irrigation_share": {
       "rows": 106698,
-      "sha256": "a737a751b53b85ce4fe4b2573da67b67636c4c83f678b3be3274ba56ddd67392",
+      "sha256": "e593e1735407b384c3271883bc131e501ccb18a65deff65b1619af648491162c",
       "sources": [
         "DES Land Use Statistics, crop-wise irrigated area, via India Data Portal"
       ]
     },
     "districts": {
       "rows": 765,
-      "sha256": "85d857fe14c979caf554406466505427e5741b1bca2176a114ac49b326d1fad6",
+      "sha256": "c09490b2ef956ad9bc6544c348afe6f296178013e286bc9be59e0f46ae4083c5",
       "sources": []
     }
   },
   "serving": {
     "release_tag": "data-store",
-    "asset": "serving-40c84f668c60071d.sqlite",
-    "sha256": "40c84f668c60071d9e0e3fd9b1c7e42122751883b4991515534deb1bec71d728",
-    "bytes": 39428096,
-    "built_at": "2026-11-19T16:13:17+00:00"
+    "asset": "serving-5178d492ae94d5e8.sqlite",
+    "sha256": "5178d492ae94d5e85200d5f2b93825e7d8235182c1c2d81df793a9e26de9061f",
+    "bytes": 39309312,
+    "built_at": "2026-11-28T11:24:16+00:00"
   }
 }
